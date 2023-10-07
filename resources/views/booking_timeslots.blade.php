@@ -262,6 +262,7 @@
                     <th>id</th>
 
                     <th>Customer</th>
+                    <th>Brand/Model </th>
                     <th>Book Type</th>
 					<th>Customer phno</th>
 
@@ -298,6 +299,7 @@
                     <td>{{$i}}</td>
 
                     <td>{{$key->name}} </td>
+                    <td>{{$key->brand}}/{{$key->brand_model}} </td>
 
                     <td>@if($key->book_type==1) Eworkshop @elseif($key->book_type==2) Offer ({{$key->offertitle}}) @else Normal Service @endif </td>
 					

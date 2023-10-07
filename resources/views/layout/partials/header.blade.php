@@ -3,6 +3,9 @@
   .info .img_logo{
     width:192px;
   }
+  .card{
+    font-size:13px;
+  }
   </style>
 
   @php
@@ -79,12 +82,7 @@
           </li>
 
        
-              <li class="nav-item">
-                <a href="{{url('timeslot')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Book Timeslots</p>
-                </a>
-              </li>
+             
               <!-- <li class="nav-item">
                 <a href="{{ url('customertype') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -100,6 +98,27 @@
 
             </ul>
           </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-briefcase"></i>
+              <p>
+             Bookings
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{url('timeslot')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Book Timeslots</p>
+                </a>
+              </li>
+			       
+           
+              </ul>
+			  </li>
+
 
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
