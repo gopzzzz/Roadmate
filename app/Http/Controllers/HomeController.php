@@ -69,7 +69,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+		$role=Auth::user()->user_type;
+        return view('dashboard',compact('role'));
     }
 	
 	public function customerlistfetch(Request $request){
@@ -155,6 +156,7 @@ class HomeController extends Controller
 	public function timeslotfetch(Request $request){
 		$id=$request->id;
 		$timslot=Booktimemasters::find($id);
+		
 		print_r(json_encode($timslot));
 	}
 	
