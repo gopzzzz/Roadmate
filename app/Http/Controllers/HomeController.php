@@ -70,7 +70,11 @@ class HomeController extends Controller
     public function index()
     {
 		$role=Auth::user()->user_type;
-        return view('dashboard',compact('role'));
+		$date=date('Y-m-d');
+	    $tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
+		$customers=DB::table('user_lists')->count();
+		$shops=DB::table('shops')->count();
+        return view('dashboard',compact('role','tbookings','customers','shops'));
     }
 	
 	public function customerlistfetch(Request $request){
