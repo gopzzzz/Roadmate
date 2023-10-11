@@ -131,6 +131,8 @@
 	$('#exampleModal11').modal('show');
   });
 
+
+
   $('.selectvehicleadd').on('change',function(){
 	var id=$(this).val();
 	if(id){
@@ -178,6 +180,175 @@
 					});	
 	}
   });
+
+
+
+  
+
+
+	$('.edit_country').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('countryfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          //$('#image').val(obj.name);
+		  $('#countryid').val(obj.id);
+          $('#country_name').val(obj.country_name);
+		  $('#status').val(obj.deleted_status);
+         
+					},
+					});	
+		}
+		$('#editcountry_modal').modal('show');
+	});
+	
+	$('.edit_state').click(function () {
+    var id = $(this).data('id');
+
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('statefetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (res) {
+                console.log(res); // Log the response to the console for debugging
+
+                var obj = JSON.parse(res);
+
+                $('#stateid').val(obj.id);
+                $('#state_name').val(obj.state_name);
+				$('#status').val(obj.deleted_status);
+                // Set the selected country in the dropdown
+                $('#country_name').val(obj.country_id); // Make sure obj.country_id is correct
+
+            },
+        });
+    }
+    $('#editcountry_modal').modal('show');
+});
+
+
+$('.edit_district').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('districtfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#districtid').val(obj.id);
+		 $('#country_name').val(obj.country_id);
+		 $('#status').val(obj.deleted_status);
+          $('#state_name').val(obj.state_id);
+		  $('#district_name').val(obj.district_name);
+
+					},
+					});	
+		}
+		$('#editdistrict_modal').modal('show');
+	});
+	
+
+
+	$('.edit_place').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('placefetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#placeid').val(obj.id);
+		 $('#country_name').val(obj.country_id);
+
+          $('#state_name').val(obj.state_id);
+		  $('#district_name').val(obj.district_id);
+		  $('#place_name').val(obj.place_name);
+		  $('#type').val(obj.type);
+		  $('#status').val(obj.deleted_status);
+
+					},
+					});	
+		}
+		$('#editplace_modal').modal('show');
+	});
+	
+
+
+$('.statefetchadd').on('change', function () {
+    var countryId = $(this).val();
+
+    if (countryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchstate') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                countryId: countryId
+            },
+            success: function (res) {
+                console.log(res);
+                $('#state').empty();
+                var html_each = "<option value='0'>Select state</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.state_name + '</option>';
+                });
+                $('#state').append(html_each);
+            },
+        });
+    }
+});
+
+
+
+    $('.districtfetchadd').on('change', function () {
+        var stateId = $(this).val();
+
+        if (stateId) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{{ route('fetchdistrict') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    stateId: stateId // Changed from countryId to stateId
+                },
+                success: function (res) {
+                    console.log(res);
+                    $('#district').empty();
+                    var html_each = "<option value='0'>Select district</option>";
+                    $.each(res, function (key, value) {
+                        html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
+                    });
+                    $('#district').append(html_each);
+                },
+            });
+        }
+    });
+
+
 
   $('.brandmodelfetchadd').on('change',function(){
 	 

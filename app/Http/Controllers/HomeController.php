@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ 
 use Illuminate\Http\Request;
 use App\Executives;
 use App\Booktimemasters;
@@ -44,6 +44,11 @@ use App\Tbl_shopbankdetails;
 use App\Tbl_customertype;
 use App\Tbl_notification;
 use App\Tbl_accdelete_requests;
+use App\Tbl_countrys;
+use App\Tbl_states;
+use App\Tbl_districts;
+use App\Tbl_places;
+
 use DB;
 use Hash;
 use Auth;
@@ -2604,6 +2609,222 @@ function sendNotification1($msg1,$title)
 			//echo "<pre>";print_r($accdelete_requests);exit;
 			return view('account_delete_requests',compact('accdelete_requests','role'));
 		}
+		public function country(){
+			$role=Auth::user()->user_type;
+			$empl=DB::table('tbl_countrys')->get();
+
+			return view('country',compact('role','empl'));
+		}
+		public function countryinsert(Request $request){
+			$country = new Tbl_countrys;
+			$country->country_name = $request->country_name;
+			$country->deleted_status = 0;
+			$country->save();
+			return redirect('country');
+		}
+		public function countryfetch(Request $request){
+			$id=$request->id;
+			$country=Tbl_countrys::find($id);
+			print_r(json_encode($country));
+		}
+		public function countryedit(Request $request){
+			$id=$request->id;
+			$country=Tbl_countrys::find($id);
+			$country->country_name=$request->country_name;
+			$country->deleted_status=$request->status;
+
+			$country->save();
+			return redirect('country');
+		}
+		public function state(){
+			$role=Auth::user()->user_type;
+			$con=DB::table('tbl_countrys')
+			->where('deleted_status',0)
+			->get();
+
+			$cond=DB::table('tbl_states')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_states.*','tbl_countrys.country_name')
+			->get();
+
+			return view('state',compact('role','con','cond'));
+		}
+		public function stateinsert(Request $request){
+			
+			$state = new Tbl_states;
+			$state->country_id = $request->country;
+			$state->state_name = $request->state_name;
+			$state->deleted_status = 0;
+
+			$state->save();
+		
+			return redirect('state');
+		}
+		public function statefetch(Request $request){
+			$id=$request->id;
+			$state=Tbl_states::find($id);
+			
+			print_r(json_encode($state));
+		}
+		public function stateedit(Request $request){
+			$id=$request->id;
+			$state=Tbl_states::find($id);
+			$state->country_id=$request->country;
+
+			$state->state_name=$request->state_name;
+			$state->deleted_status=$request->status;
+
+			$state->save();
+			return redirect('state');
+		}
+		public function district(){
+			$role=Auth::user()->user_type;
+			$con=DB::table('tbl_countrys')
+			->where('deleted_status',0)
+			->get();
+			$cond=DB::table('tbl_states')
+			->where('deleted_status',0)
+			->get();
+			$conde = DB::table('tbl_districts')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_districts.*', 'tbl_states.state_name', 'tbl_countrys.country_name')
+			->get();
+		
+			return view('district',compact('role','con','cond','conde'));
+		}
+		public function districtinsert(Request $request){
+			
+			$district = new Tbl_districts;
+			$district->state_id = $request->state;
+			$district->deleted_status = 0;
+
+			$district->district_name = $request->district_name;
+			$district->save();
+		
+			return redirect('district');
+		}
+		public function fetchStates($countryId)
+		{
+			$states = DB::table('tbl_states') 
+				->where('country_id', $countryId)
+				->where('deleted_status', 0)
+				->get();
+		
+			return response()->json($states);
+		}
+		
+		public function districtfetch(Request $request){
+			$id=$request->id;
+
+			$district=DB::table('tbl_districts')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->where('tbl_districts.id',$id)
+			->select('tbl_districts.*','tbl_states.country_id')
+			->first();
+			print_r(json_encode($district));
+		}
+		public function districtedit(Request $request){
+			$id=$request->id;
+			$district=Tbl_districts::find($id);
+
+			$district->state_id=$request->state;
+			$district->district_name=$request->district_name;
+
+			$district->deleted_status=$request->status;
+
+			$district->save();
+			return redirect('district');
+		}
 	
-	
+
+
+		public function place(){
+			$role=Auth::user()->user_type;
+			$con=DB::table('tbl_countrys')
+			->where('deleted_status',0)
+			->get();
+            $cond=DB::table('tbl_states')
+			->where('deleted_status',0)
+			->get();
+			$dis=DB::table('tbl_districts')
+			->where('deleted_status',0)
+			->get();
+			$plac = DB::table('tbl_places')
+			->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
+			->get();
+		
+
+
+		
+			return view('place',compact('role','con','cond','dis','plac'));
+		}
+		public function placeinsert(Request $request){
+			
+			$place = new Tbl_places;
+			$place->district_id = $request->district;
+			$place->type = $request->type;
+			$place->deleted_status = 0;
+
+			$place->place_name = $request->place_name;
+			$place->save();
+		
+			return redirect('place');
+		}
+		public function placefetch(Request $request){
+			$id=$request->id;
+			
+			$place = DB::table('tbl_places')
+			->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->where('tbl_places.id',$id)
+			->select('tbl_places.*', 'tbl_districts.district_name', 'tbl_states.state_name', 'tbl_countrys.country_name','tbl_states.country_id','tbl_districts.state_id')
+			->first();
+			
+			print_r(json_encode($place));
+		}
+		public function placeedit(Request $request){
+			$id=$request->id;
+			$place=Tbl_places::find($id);
+
+			$place->district_id=$request->district;
+
+			$place->place_name=$request->place_name;
+
+			$place->deleted_status=$request->status;
+			$place->type=$request->status;
+
+			$place->save();
+
+			
+			return redirect('place');
+		}
+		public function fetchstate(Request $request) {
+			$countryId = $request->countryId;
+		
+			$states = DB::table('tbl_states')
+				->where('country_id', $countryId)
+				->where('deleted_status',0)
+				->select('id', 'state_name')
+				->get();
+		
+			return response()->json($states);
+		}
+		
+		
+		public function fetchdistrict(Request $request) {
+			$stateId = $request->input('stateId'); 
+		
+			$districts = DB::table('tbl_districts')
+				->where('state_id', $stateId)
+				->select('id', 'district_name')
+				->get();
+		
+			return response()->json($districts);
+		}
+		
 }
