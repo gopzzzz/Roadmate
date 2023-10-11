@@ -44,6 +44,7 @@ use App\Tbl_shopbankdetails;
 use App\Tbl_customertype;
 use App\Tbl_notification;
 use App\Tbl_accdelete_requests;
+use App\Tbl_notification_historys;
 use App\Tbl_countrys;
 use App\Tbl_states;
 use App\Tbl_districts;
@@ -73,7 +74,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+		$role=Auth::user()->user_type;
+		$date=date('Y-m-d');
+	    $tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
+		$customers=DB::table('user_lists')->count();
+		$shops=DB::table('shops')->count();
+        return view('dashboard',compact('role','tbookings','customers','shops'));
     }
 	
 	public function customerlistfetch(Request $request){
@@ -110,11 +116,7 @@ class HomeController extends Controller
 					
 	}
 	public function booking_timeslots(){
-		//$exe=Executives::all();
-		// $exe=DB::table('executives')
-		// ->left('','.','')
-		// ->where('',1)
-		// ->get();
+		
 		$shops=Shops::all();
 		$custmr=User_lists::all();
 		$custmr1=User_lists::all();
@@ -122,10 +124,12 @@ class HomeController extends Controller
 		$timslot=Booktimemasters::all();
 		$timslot = DB::table('booktimemasters')
             ->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+			->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+			->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
 			->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
 			->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
 			->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
-			->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number')
+			->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
 			->orderBy('booktimemasters.id', 'desc')
 			->get();
 			$role=Auth::user()->user_type;
@@ -161,6 +165,7 @@ class HomeController extends Controller
 	public function timeslotfetch(Request $request){
 		$id=$request->id;
 		$timslot=Booktimemasters::find($id);
+		
 		print_r(json_encode($timslot));
 	}
 	
@@ -2052,10 +2057,10 @@ public function walletdebtthis(){
 public function notification(){
 
 	$customertype = Tbl_customertype::all(); 
-	$notification=DB::table('tbl_notifications')
-			->leftJoin('tbl_customertypes', 'tbl_notifications.customertype_id', '=', 'tbl_customertypes.id')
-			->select('tbl_customertypes.customer_type','tbl_notifications.*')
-			->orderBy('tbl_notifications.id', 'DESC')
+	$notification=DB::table('tbl_notification_historys')
+			->leftJoin('tbl_customertypes', 'tbl_notification_historys.user_type', '=', 'tbl_customertypes.id')
+			//->select('tbl_notification_historys.*','tbl_customertypes.customer_type')
+			->orderBy('tbl_notification_historys.id', 'DESC')
 		   ->get();
 	$role=DB::table('role')->get();
 	
@@ -2229,9 +2234,13 @@ function sendNotification1($msg1,$title)
 	//echo $msg1;exit;
     $friendToken = [];
 	$friendToken=DB::table('user_lists')
+	->where('device_token','!=','null')
 	->select('user_lists.device_token')
+	->limit(5)
 	->get()
 	->toArray();
+
+	//echo "<pre>";print_r($friendToken);exit;
 
 	$msg = array
     (
@@ -2240,12 +2249,7 @@ function sendNotification1($msg1,$title)
          "sound" => "mySound"
     );
   
-	//print_r($msg);exit;
-    // foreach ($data1->fcmnotify as $username) {
-    //     $friendToken[] = DB::table('user_lists')->where('id', $username->usernames)
-    //         ->get()->pluck('device_token')[0];
-    //         $dialog_id=$username->dialog_id;
-    // }
+	
   
     $url = 'https://fcm.googleapis.com/fcm/send';
     foreach ($friendToken as $tok) {
@@ -2255,7 +2259,7 @@ function sendNotification1($msg1,$title)
 			
 		);
 		
-		//echo "<pre>";print_r($fields);exit;
+		
         $headers = array(
             'Authorization: key=AAAALcAJIGo:APA91bE19OVa4q934aQNj7NR-o653sdLzUDj-7HAuCLLxOPREHU3Yv75VcVnbI58gKgkUewBvwu4uyTxN0KcklAlweB1VPv0HDjuwMViM9cDOa4OEgVwYM7mp2vxdRhig8jTcngdwox2',
             'Content-type: Application/json'
@@ -2271,6 +2275,8 @@ function sendNotification1($msg1,$title)
         curl_exec($ch);
         curl_close($ch);
     }
+	
+
 
 	$res = ['error' => null, 'result' => "sucess"];
 	
@@ -2279,10 +2285,14 @@ function sendNotification1($msg1,$title)
     return $res;
 }
 		public function notificationinsert(Request $request){
-			$notification=new Tbl_notification;
-			$notification->title=$request->title;
-			$notification->customertype_id=$request->customertype_id;
-			$notification->message=$request->message;
+			$notification=new Tbl_notification_historys;
+			$notification->notificationtable_typeid=1;
+			$notification->notification_title=$request->title;
+			$notification->user_type=$request->customertype_id;
+			$notification->notification_message=$request->message;
+			$notification->notificationtablerow_id=0;
+			$notification->allorindividual=1;
+			$notification->user_id=0;
 			$notification->save();
 			$cutype=$request->customertype_id;
 			$message=$request->message;
@@ -2290,7 +2300,7 @@ function sendNotification1($msg1,$title)
 			if($cutype==1){
 				$this->mobilenotificationshop($message,$cutype,$title);
 			}else if($cutype==2){
-				//$this->mobilenotificationcustomer($message,$cutype);
+				
 				$this->sendNotification1($message,$title);
 			}else{
 				$this->mobilenotificationexecutive($message,$cutype,$title);
