@@ -26,7 +26,7 @@
 
               <li class="breadcrumb-item"><a href="#">Home</a></li>
 
-              <li class="breadcrumb-item active">Add Executive</li>
+              <li class="breadcrumb-item active">Add Franchises</li>
 
             </ol>
 
@@ -68,20 +68,20 @@
 
               <div class="card-header">
 
-                <h3 class="card-title">Executives</h3>
+                <h3 class="card-title">Franchises</h3>
 
                 <p align="right">
 
                
 
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Executive</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Franchises</button>
 
               
  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
 
 
-<form method="POST" action="{{url('exeinsert')}}" enctype="multipart/form-data">
+<form method="POST" action="{{url('franinsert')}}" enctype="multipart/form-data">
 
 
 
@@ -101,7 +101,7 @@
 
 
 
-<h5 class="modal-title" id="exampleModalLabel">Add Executive</h5>
+<h5 class="modal-title" id="exampleModalLabel">Add Franchises</h5>
 
 
 
@@ -136,23 +136,11 @@
 
 
 
-<input class="form-control" name="exename" placeholder="Enter Name" required>
+<input class="form-control" name="franchise_name" placeholder="Enter Name" required>
 
 
 </div>
 
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Email</label>
-
-
-
-<input class="form-control" name="email" placeholder="Enter Email" required>
-
-
-</div>
 
 
 <div class="form-group col-sm-6">
@@ -163,10 +151,46 @@
 
 
 
-<input class="form-control" name="phonenumber" placeholder="Enter Phone Number" required>
+<input class="form-control" name="phone_number" placeholder="Enter Phone Number" required>
 
 
 </div>
+
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">Country</label>
+
+
+
+<select name="country" class="form-control">
+
+<option value="0">Select Country</option>
+<option value="1">India</option>
+<option value="2">China</option>
+<option value="3">America</option>
+</select>
+
+
+</div>
+<div class="form-group col-sm-6">
+
+<label class="exampleModalLabel">States</label>
+
+
+
+<select name="states" class="form-control">
+
+<option value="0">Select States</option>
+<option value="1">Kerala</option>
+<option value="2">Tamil Nadu</option>
+<option value="3">Banglore</option>
+</select>
+
+
+</div>
+
 
 <div class="form-group col-sm-6">
 
@@ -187,16 +211,35 @@
 
 </div>
 
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">Muncipality/Corporation</label>
+
+
+
+<select name="place_id" id="place_id" class="form-control">
+
+<option value="0">Select Muncipality/Corporation</option>
+<option value="1">Ernakulam</option>
+<option value="2">Malappuram</option>
+<option value="3">Palakkad</option>
+</select>
+
+
+</div>
+
 
 <div class="form-group col-sm-6">
 
 
 
-<label class="exampleModalLabel">Location</label>
+<label class="exampleModalLabel">Area Name</label>
 
 
 
-<input class="form-control" name="location" placeholder="Enter Location" required>
+<input class="form-control" name="area" placeholder="Enter Area" required>
 
 
 </div>
@@ -207,29 +250,42 @@
 
 
 
-<label class="exampleModalLabel">Address</label>
+<label class="exampleModalLabel">Pincode</label>
 
 
 
-<textarea class="form-control" name="address" placeholder="Enter address"></textarea>
+<textarea class="form-control" name="pincode" placeholder="Enter pincode"></textarea>
 
 
 </div>
+
+
 <div class="form-group col-sm-6">
 
 
 
-<label class="exampleModalLabel">Image</label>
+<label class="exampleModalLabel">Email</label>
 
 
 
-<input class="form-control" type="file" name="image" >
+<input class="form-control" name="email" placeholder="Enter Email" required>
 
 
 </div>
 
 
+<div class="form-group col-sm-6">
 
+
+
+<label class="exampleModalLabel">Password</label>
+
+
+
+<input class="form-control" name="password" placeholder="Enter Password" required>
+
+
+</div>
 
 
 
@@ -292,16 +348,14 @@
                     <th>Name</th>
 
                     <th>Phone Number</th>
-
+                    
+                    <th>Area Name</th>
+                    <th>Pincode</th>
+                    <th>Muncipality/Corporation</th>
                     <th>Email</th>
+                    <!-- <th></th>
 
-                   
-
-                    <th>Addrress</th>
-
-                    <th></th>
-
-                    <th></th>
+                    <th></th> -->
                     @if($role==1)
 
 					<th>Action</th>
@@ -312,56 +366,43 @@
                   </thead>
 
                   <tbody>
+    @php
+    $i = 1;
+    @endphp
 
-                  @php 
+    @foreach($fran as $key)
+    <tr>
+        <td>{{ $i }}</td>
+        <td>{{ $key->franchise_name }}</td>
+        <td>{{ $key->phone_number }}</td>
+        <td>{{ $key->area }}</td>
+        <td>{{ $key->pincode }}</td>
+        <td>{{ $key->place_id }}</td>
+        <td>
+            @if ($key->user)
+            {{ $key->user->franchise_name }}
+                {{ $key->user->email }}
+                {{ $key->user->user_type }}
+            @else
+                User data not available
+            @endif
+        </td>
 
-                  $i=1;
+        @if($role == 1)
+        <td>
+            <i class="fa fa-edit edit_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+            <!-- <i class="fa fa-eye view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i> -->
+            <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+            <!-- <a href="{{ url('exedelete') }}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i></a> -->
+        </td>
+        @endif
 
-                  @endphp
-
-                  @foreach($exe as $key)
-
-                  <tr>
-
-                    <td>{{$i}}</td>
-
-                    <td>{{$key->name}}
-
-                     
-
-                    </td>
-
-                    <td>{{$key->phonenum}}</td>
-
-                    <td>{{$key->email}}</td>
-					
-					<td>{{$key->addrress}}</td>
-          <td><button type="button" class="btn btn-sm btn-success visitedshop" data-id="{{$key->id}}" ><i class="fa fa-eye"></i>Visited Shop</button></td>
-          <td><button type="button" class="btn btn-sm btn-primary addedshop" data-id="{{$key->id}}" ><i class="fa fa-eye"></i>Added Shop</button></td>
-					
-					@if($role==1)
-<td><i class="fa fa-edit edit_exe"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-					<i class="fa fa-eye view_execu"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-					  <i class="fa fa-view view_execu"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-					   <a href="{{url('exedelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
-					</td>@endif
-
-             
-
-                  </tr>
-
-                  @php 
-
-                  $i++;
-
-                
-
-                  @endphp
-
-                  @endforeach
-
-                  </tbody>
-
+    </tr>
+    @php
+    $i++;
+    @endphp
+    @endforeach
+</tbody>
                   <tfoot>
 
                   <tr>
@@ -370,14 +411,14 @@
 
                    <th>Name</th>
 
-                    <th>Phone Number</th>
-
+                    
+                   <th>Phone Number</th>
+                   
+                    <th>Area Name</th>
+                    <th>Pincode</th>
+                    <th>Muncipality/Corporation</th>
                     <th>Email</th>
-
-                    <th>Addrress</th>
-                    <th></th>
-
-                    <th></th> 
+                    <!-- <th></th>  -->
                     @if($role==1)
 
 					<th>Action</th>
@@ -388,46 +429,35 @@
 
                 </table>
 				
-				<div class="modal" id="editexecutive_modal" tabindex="-1" role="dialog">
+                <div class="modal" id="editfranchises_modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit Executive</h5>
+        <h5 class="modal-title">Edit Franchises</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="{{url('exeedit')}}" enctype="multipart/form-data" name="exeedit">
+      <form method="POST" action="{{url('franedit')}}" enctype="multipart/form-data" name="franedit">
 
 @csrf
       <div class="modal-body row">
 
 
       <div class="form-group col-sm-6">
-<input type="hidden" name="id" id="exeid">
+<input type="hidden" name="id" id="id">
 
 
 <label class="exampleModalLabel">Name</label>
 
 
 
-<input class="form-control" name="exename" id="name" required>
+<input class="form-control" name="franchise_name" id="franchise_name" required>
 
 
 </div>
 
-<div class="form-group col-sm-6">
 
-
-
-<label class="exampleModalLabel">Email</label>
-
-
-
-<input class="form-control" name="email" id="email" required>
-
-
-</div>
 
 
 <div class="form-group col-sm-6">
@@ -438,22 +468,23 @@
 
 
 
-<input class="form-control" name="phonenumber" id="phnum" required>
+<input class="form-control" name="phone_number" id="phone_number" required>
 
 
 </div>
+
 
 <div class="form-group col-sm-6">
 
 
 
-<label class="exampleModalLabel">District</label>
+<label class="exampleModalLabel">Muncipality/Corporation</label>
 
 
 
-<select name="district" id="district" class="form-control">
+<select name="place_id" id="place_id" class="form-control">
 
-<option value="0">Select Disrtict</option>
+<option value="0">Select Muncipality/Corporation</option>
 <option value="1">Ernakulam</option>
 <option value="2">Malappuram</option>
 <option value="3">Palakkad</option>
@@ -467,11 +498,11 @@
 
 
 
-<label class="exampleModalLabel">Location</label>
+<label class="exampleModalLabel">Area Name</label>
 
 
 
-<input class="form-control" id="location" name="location"  required>
+<input class="form-control" id="area" name="area"  required>
 
 
 </div>
@@ -482,28 +513,15 @@
 
 
 
-<label class="exampleModalLabel">Address</label>
+<label class="exampleModalLabel">Pincode</label>
 
 
 
-<textarea class="form-control" id="address" name="address" placeholder="Enter address"></textarea>
+<input class="form-control" id="pincode" name="pincode" placeholder="Enter pincode">
 
 
 </div>
- <div class="form-group col-sm-6">
-
-
-
-                      <label class="exampleModalLabel">Image</label>
-
-
-
-                      <input type="file"  name="image"  >
-
-
-                      </div>
-
-      </div>
+ 
       
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Save changes</button>
@@ -514,7 +532,7 @@
   </div>
 </div>
 
- <div class="modal" id="viewexecutive_modal" tabindex="-1" role="dialog">
+ <div class="modal" id="viewfranchises_modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -527,19 +545,19 @@
 
 
       <div class="form-group col-sm-6">
-<input type="hidden" name="id" id="exeviewid">
+<input type="hidden" name="id" id="franviewid">
 
 
 <label class="exampleModalLabel">Name</label>
 
 
 
-<input class="form-control" name="exename" id="name1" required>
+<input class="form-control" name="franchise_name" id="franchise_name" required>
 
 
 </div>
 
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
 
 
 
@@ -550,7 +568,7 @@
 <input class="form-control" name="email" id="email1" required>
 
 
-</div>
+</div> -->
 
 
 <div class="form-group col-sm-6">
@@ -561,7 +579,7 @@
 
 
 
-<input class="form-control" name="phonenumber" id="phnum1" required>
+<input class="form-control" name="phone_number" id="phone_number" required>
 
 
 </div>
@@ -570,13 +588,13 @@
 
 
 
-<label class="exampleModalLabel">District</label>
+<label class="exampleModalLabel">Muncipality/Corporation</label>
 
 
 
-<select name="district" id="district1" class="form-control">
+<select name="place_id" id="place_id" class="form-control">
 
-<option value="0">Select Disrtict</option>
+<option value="0">Select Muncipality/Corporation</option>
 <option value="1">Ernakulam</option>
 <option value="2">Malappuram</option>
 <option value="3">Palakkad</option>
@@ -590,11 +608,11 @@
 
 
 
-<label class="exampleModalLabel">Location</label>
+<label class="exampleModalLabel">Area Name</label>
 
 
 
-<input class="form-control" id="location1" name="location"  required>
+<input class="form-control" id="area" name="area"  required>
 
 
 </div>
@@ -605,15 +623,15 @@
 
 
 
-<label class="exampleModalLabel">Address</label>
+<label class="exampleModalLabel">Pincode</label>
 
 
 
-<textarea class="form-control" id="address1" name="address" placeholder="Enter address"></textarea>
+<input class="form-control" id="pincode" name="pincode" placeholder="Enter address">
 
 
 </div>
- <div class="form-group col-sm-6">
+ <!-- <div class="form-group col-sm-6">
 
 
 
@@ -624,7 +642,7 @@
                       <input type="file"  name="image"  >
 
 
-                      </div>
+                      </div> -->
 
       </div>
       

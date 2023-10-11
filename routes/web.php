@@ -72,6 +72,47 @@ Route::get('/executive', [
     'uses' => 'HomeController@executive'
 ])->name('executive');
 
+
+Route::get('/franchises', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franchises'
+])->name('franchises');
+
+Route::post('/franinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franinsert'
+])->name('franinsert');
+
+Route::post('/franfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franfetch'
+])->name('franfetch');
+
+Route::post('/franedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franedit'
+])->name('franedit');
+
+Route::get('/crm', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crm'
+])->name('crm');
+
+Route::post('/crminsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crminsert'
+])->name('crminsert');
+
+Route::post('/crmfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crmfetch'
+])->name('crmfetch');
+
+Route::post('/crmedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crmedit'
+])->name('crmedit');
+
 Route::post('/addedshop', [
     'middleware' => 'auth',
     'uses' => 'HomeController@addedshop'

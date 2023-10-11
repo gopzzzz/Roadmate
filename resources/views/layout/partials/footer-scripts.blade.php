@@ -378,6 +378,64 @@
 		}
 		$('#editexecutive_modal').modal('show');
 	});
+
+	$('.edit_fran').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('franfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#franchise_name').val(obj.franchise_name);
+		 // $('#image').val(obj.image);
+        //   $('#email').val(obj.email);
+          $('#phone_number').val(obj.phone_number);
+          $('#place_id').val(obj.place_id);
+        //   $('#location').val(obj.location);
+          $('#area').val(obj.area);
+		  $('#pincode').val(obj.pincode);
+          $('#id').val(obj.id);
+         
+					},
+					});	
+		}
+		$('#editfranchises_modal').modal('show');
+	});
+
+	
+	$('.edit_crm').click(function(){
+		var id=$(this).data('id');
+	    // alert(id);
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('crmfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+				id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#crm_name').val(obj.crm_name);
+		
+          $('#phone_number').val(obj.phone_number);
+          $('#address').val(obj.address);
+       
+          $('#dob').val(obj.dob);
+          $('#crm_id').val(obj.id);
+         
+					},
+					});	
+		}
+		$('#editcrms_modal').modal('show');
+	});
+
 	//
 	$('.edit_sup').click(function(){
 		var id=$(this).data('id');
@@ -434,6 +492,36 @@
 		}
 		$('#viewexecutive_modal').modal('show');
 	});
+
+	$('.view_fran').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('franfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#franchise_name').val(obj.franchise_name);
+		 // $('#image').val(obj.image);
+        //   $('#email').val(obj.email);
+          $('#phone_number').val(obj.phone_number);
+          $('#place_id').val(obj.place_id);
+        //   $('#location').val(obj.location);
+          $('#area').val(obj.area);
+		  $('#pincode').val(obj.pincode);
+          $('#id').val(obj.id);
+         
+					},
+					});	
+		}
+		$('#viewfranchises_modal').modal('show');
+	});
+
   $('.edit_banner').click(function(){
 		var id=$(this).data('id');
 	

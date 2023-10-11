@@ -144,9 +144,25 @@
           </li>
 
        
-          
+          <li class="nav-item">
+            <a href="{{url('franchises')}}" class="nav-link">
+              <i class="nav-icon fas fa-id-card "></i>
+              <p>
+               Franchises
+               <!-- <span class="right badge badge-danger">New</span>-->
+              </p>
+            </a>
+          </li>
 
-        
+          <li class="nav-item">
+            <a href="{{url('crm')}}" class="nav-link">
+              <i class="nav-icon fas fa-id-card "></i>
+              <p>
+               CRM
+               <!-- <span class="right badge badge-danger">New</span>-->
+              </p>
+            </a>
+          </li>
 
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">

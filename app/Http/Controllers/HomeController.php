@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Executives;
+use App\tbl_franchises;
+use App\tbl_crms;
 use App\Booktimemasters;
 use App\Banner;
 use App\User;
@@ -241,6 +243,112 @@ class HomeController extends Controller
 		DB::delete('delete from executives where id = ?',[$id]);
 		return redirect('executive');
 	}
+
+	public function franchises(){
+		$fran = tbl_franchises::with('user')->get();
+		$role=Auth::user()->user_type;
+		return view('franchises',compact('fran','role'));
+	}
+
+
+	public function franinsert(Request $request){
+		$user = new User;
+		$user->name=$request->franchise_name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->user_type = 3; // You may need to adjust this based on your user type logic.
+
+    if($user->save()){
+		$franchis=new tbl_franchises;
+		$franchis->id=$request->id;
+
+			$franchis->franchise_name=$request->franchise_name;
+			 $franchis->place_id=$request->place_id;
+			$franchis->area=$request->area;
+			$franchis->pincode=$request->pincode;
+			$franchis->phone_number=$request->phone_number;
+			$franchis->user_id=$user->id;
+			
+			
+			$franchis->save();
+	}
+		
+    // return redirect('franchises');
+		return redirect('franchises');
+	}
+
+	public function franfetch(Request $request){
+		$id=$request->id;
+		$franchis=tbl_franchises::find($id);
+		print_r(json_encode($franchis));
+	}
+
+	
+	public function franedit(Request $request){
+		$id=$request->id;
+		$franchis=tbl_franchises::find($id);
+		$franchis->franchise_name=$request->franchise_name;
+		$franchis->place_id=$request->place_id;
+		$franchis->area=$request->area;
+		$franchis->pincode=$request->pincode;
+		$franchis->phone_number=$request->phone_number;
+		// $franchis->email=$request->email;
+		$franchis->save();
+		return redirect('franchises');
+	}
+
+	public function crm(){
+		$cr = tbl_crms::with('user')->get();
+		$role=Auth::user()->user_type;
+		return view('crm',compact('cr','role'));
+	}
+
+
+	public function crminsert(Request $request){
+		$user = new User;
+		$user->name=$request->crm_name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->user_type = 2; // You may need to adjust this based on your user type logic.
+
+    if($user->save()){
+		$cr=new tbl_crms;
+		
+			$cr->crm_name=$request->crm_name;
+			//  $cr->place_id=$request->place_id;
+			$cr->address=$request->address;
+			$cr->dob=$request->dob;
+			$cr->phone_number=$request->phone_number;
+			$cr->user_id=$user->id;
+			
+			
+			$cr->save();
+	}
+		
+    // return redirect('franchises');
+		return redirect('crm');
+	}
+
+	public function crmfetch(Request $request){
+		$id=$request->id;
+		$cr=tbl_crms::find($id);
+		print_r(json_encode($cr));
+	}
+
+	public function crmedit(Request $request){
+		$id=$request->id;
+		$cr=tbl_crms::find($id);
+		$cr->crm_name=$request->crm_name;
+		$cr->address=$request->address;
+		$cr->dob=$request->dob;
+		$cr->phone_number=$request->phone_number;
+		// $franchis->phone_number=$request->phone_number;
+		// $franchis->email=$request->email;
+		$cr->save();
+		return redirect('crm');
+	}
+
+
 	//superadmin
 	public function superadmin(){
 		$sup=DB::table('users')->get();
@@ -258,9 +366,6 @@ class HomeController extends Controller
 			$sup->user_type=$request->user_type;
 			$sup->save();
 			return redirect('superadmin');
-		
-		
-	
 		
 	}
 
