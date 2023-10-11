@@ -2806,7 +2806,7 @@ function sendNotification1($msg1,$title)
 			$place->place_name=$request->place_name;
 
 			$place->deleted_status=$request->status;
-			$place->type=$request->status;
+			$place->type=$request->type;
 
 			$place->save();
 
