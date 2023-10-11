@@ -72,6 +72,47 @@ Route::get('/executive', [
     'uses' => 'HomeController@executive'
 ])->name('executive');
 
+
+Route::get('/franchises', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franchises'
+])->name('franchises');
+
+Route::post('/franinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franinsert'
+])->name('franinsert');
+
+Route::post('/franfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franfetch'
+])->name('franfetch');
+
+Route::post('/franedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franedit'
+])->name('franedit');
+
+Route::get('/crm', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crm'
+])->name('crm');
+
+Route::post('/crminsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crminsert'
+])->name('crminsert');
+
+Route::post('/crmfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crmfetch'
+])->name('crmfetch');
+
+Route::post('/crmedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@crmedit'
+])->name('crmedit');
+
 Route::post('/addedshop', [
     'middleware' => 'auth',
     'uses' => 'HomeController@addedshop'
@@ -1045,6 +1086,8 @@ Route::post('/stateedit', [App\Http\Controllers\HomeController::class, 'stateedi
 Route::get('/district', 'HomeController@district')->name('district');
 Route::post('/districtinsert', [App\Http\Controllers\HomeController::class, 'districtinsert'])->name('districtinsert');
 Route::post('/fetchstate', [App\Http\Controllers\HomeController::class, 'fetchstate'])->name('fetchstate');
+Route::post('/fetchplaces', [App\Http\Controllers\HomeController::class, 'fetchplaces'])->name('fetchplaces');
+
 
 Route::post('/districtfetch', [App\Http\Controllers\HomeController::class, 'districtfetch'])->name('districtfetch');
 Route::post('/districtedit', [App\Http\Controllers\HomeController::class, 'districtedit'])->name('districtedit');

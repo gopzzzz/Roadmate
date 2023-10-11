@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
 use App\Executives;
+use App\tbl_franchises;
+use App\tbl_crms;
 use App\Booktimemasters;
 use App\Banner;
 use App\User;
@@ -251,6 +253,138 @@ class HomeController extends Controller
 		DB::delete('delete from executives where id = ?',[$id]);
 		return redirect('executive');
 	}
+
+	public function franchises(){
+		$fran = DB::table('tbl_franchises')
+		->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+		->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+		->select('tbl_franchises.*','tbl_places.place_name','tbl_places.type','tbl_districts.district_name','tbl_states.state_name')
+		->get();
+		$role=Auth::user()->user_type;
+		$con=DB::table('tbl_countrys')
+			->where('deleted_status',0)
+			->get();
+            $cond=DB::table('tbl_states')
+			->where('deleted_status',0)
+			->get();
+		$dis=DB::table('tbl_districts')
+		->where('deleted_status',0)
+		->get();
+		$plac = DB::table('tbl_places')
+		->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+		->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
+		->get();
+	
+		return view('franchises',compact('fran','role','con','cond','dis','plac'));
+	}
+
+
+	public function franinsert(Request $request){
+		$user = new User;
+		$user->name=$request->franchise_name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->user_type = 3; // You may need to adjust this based on your user type logic.
+
+    if($user->save()){
+		$franchis=new tbl_franchises;
+		$franchis->id=$request->id;
+
+			$franchis->franchise_name=$request->franchise_name;
+			 $franchis->place_id=$request->place_id;
+			$franchis->area=$request->area;
+			$franchis->pincode=$request->pincode;
+			$franchis->phone_number=$request->phone_number;
+			$franchis->user_id=$user->id;
+			
+			
+			$franchis->save();
+	}
+		
+    // return redirect('franchises');
+		return redirect('franchises');
+	}
+
+	public function franfetch(Request $request){
+		$id=$request->id;
+		$franchis=DB::table('tbl_franchises')
+		->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+		->where('tbl_franchises.id',$id)
+		->select('tbl_franchises.*','tbl_places.place_name')
+		->first();
+		print_r(json_encode($franchis));
+	}
+
+	
+	public function franedit(Request $request){
+		$id=$request->id;
+		$franchis=tbl_franchises::find($id);
+
+		$franchis->franchise_name=$request->franchise_name;
+		$franchis->place_id=$request->place_id;
+		$franchis->area=$request->area;
+		$franchis->pincode=$request->pincode;
+		$franchis->phone_number=$request->phone_number;
+		// $franchis->email=$request->email;
+		$franchis->save();
+		return redirect('franchises');
+	}
+
+	public function crm(){
+		$cr = tbl_crms::with('user')->get();
+		$role=Auth::user()->user_type;
+		return view('crm',compact('cr','role'));
+	}
+
+
+	public function crminsert(Request $request){
+		$user = new User;
+		$user->name=$request->crm_name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->user_type = 2; // You may need to adjust this based on your user type logic.
+
+    if($user->save()){
+		$cr=new tbl_crms;
+		
+			$cr->crm_name=$request->crm_name;
+			//  $cr->place_id=$request->place_id;
+			$cr->address=$request->address;
+			$cr->dob=$request->dob;
+			$cr->phone_number=$request->phone_number;
+			$cr->user_id=$user->id;
+			
+			
+			$cr->save();
+	}
+		
+    // return redirect('franchises');
+		return redirect('crm');
+	}
+
+	public function crmfetch(Request $request){
+		$id=$request->id;
+		$cr=tbl_crms::find($id);
+		print_r(json_encode($cr));
+	}
+
+	public function crmedit(Request $request){
+		$id=$request->id;
+		$cr=tbl_crms::find($id);
+		$cr->crm_name=$request->crm_name;
+		$cr->address=$request->address;
+		$cr->dob=$request->dob;
+		$cr->phone_number=$request->phone_number;
+		// $franchis->phone_number=$request->phone_number;
+		// $franchis->email=$request->email;
+		$cr->save();
+		return redirect('crm');
+	}
+
+
 	//superadmin
 	public function superadmin(){
 		$sup=DB::table('users')->get();
@@ -268,9 +402,6 @@ class HomeController extends Controller
 			$sup->user_type=$request->user_type;
 			$sup->save();
 			return redirect('superadmin');
-		
-		
-	
 		
 	}
 
@@ -2722,6 +2853,18 @@ function sendNotification1($msg1,$title)
 				->get();
 		
 			return response()->json($states);
+		}
+
+		public function fetchplaces(Request $request){
+			$type = $request->type;
+			$district_id = $request->district_id;
+			$places = DB::table('tbl_places')
+				->where('district_id', $district_id)
+				->where('type', $type)
+				->where('deleted_status',0)
+				->get();
+		
+			return response()->json($places);
 		}
 		
 		public function districtfetch(Request $request){
