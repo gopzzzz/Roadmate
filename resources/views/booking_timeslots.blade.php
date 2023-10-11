@@ -74,7 +74,7 @@
 
                
 
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Booking Timeslots</button>
+           @if($role==1)     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Booking Timeslots</button>@endif
 
               
  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -247,11 +247,7 @@
 
               <div class="card-body">
                  <form>
-                   <!-- <div class="col-md-4">
-                      <div class="form-group">
-                        <input type="text" name="search_bookingting_slot" class="form-control" id="search_bookingting_slot" placeholder="Search" value="">
-                      </div>
-                    </div> -->
+                
                 </form>
                 <table id="example1" class="table table-bordered table-striped">
 
@@ -262,14 +258,18 @@
                     <th>id</th>
 
                     <th>Customer</th>
+                    <th>Brand/Model </th>
                     <th>Book Type</th>
+                    @if($role==1)
 					<th>Customer phno</th>
+          @endif
 
                     <th>Shop Category</th>
 
                     <th>Shop</th>
+                    @if($role==1)
 					<th>Shop mob</th>
-
+          @endif
                     <th>Date</th>
                     <th>Time</th>
                     <th>Shop Total Amount </th>
@@ -298,16 +298,18 @@
                     <td>{{$i}}</td>
 
                     <td>{{$key->name}} </td>
+                    <td>{{$key->brand}}/{{$key->brand_model}} </td>
 
                     <td>@if($key->book_type==1) Eworkshop @elseif($key->book_type==2) Offer ({{$key->offertitle}}) @else Normal Service @endif </td>
-					
+                    @if($role==1)
 					<td>{{$key->phnum}} </td>
-
+          @endif
                     <td>{{$key->category}}</td>
 
                     <td>{{$key->shopname}}</td>
-					
+                    @if($role==1)
 					<td>{{$key->phone_number}}</td>
+          @endif
 					
 					<td>{{$key->adate}}</td>
 					

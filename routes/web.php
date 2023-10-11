@@ -1,7 +1,7 @@
-<?php
-
+<?php 
+ 
 use Illuminate\Support\Facades\Route;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -1072,3 +1072,32 @@ Route::get('/accrequests', 'WebController@index')->name('accrequests');
 Route::post('/account/delete_request', 'WebController@delete_request')->name('account.delete_request');
 //Admin
 Route::get('/account_delete_requests', 'HomeController@account_delete_requests')->name('admin.account_delete_requests');
+Route::get('/country', 'HomeController@country')->name('country');
+Route::post('/countryinsert', [App\Http\Controllers\HomeController::class, 'countryinsert'])->name('countryinsert');
+Route::post('/countryfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@countryfetch'
+])->name('countryfetch');
+Route::post('/countryedit', [App\Http\Controllers\HomeController::class, 'countryedit'])->name('countryedit');
+Route::get('/state', 'HomeController@state')->name('state');
+Route::post('/stateinsert', [App\Http\Controllers\HomeController::class, 'stateinsert'])->name('stateinsert');
+Route::post('/statefetch', [App\Http\Controllers\HomeController::class, 'statefetch'])->name('statefetch');
+Route::post('/stateedit', [App\Http\Controllers\HomeController::class, 'stateedit'])->name('stateedit');
+Route::get('/district', 'HomeController@district')->name('district');
+Route::post('/districtinsert', [App\Http\Controllers\HomeController::class, 'districtinsert'])->name('districtinsert');
+Route::post('/fetchstate', [App\Http\Controllers\HomeController::class, 'fetchstate'])->name('fetchstate');
+
+Route::post('/districtfetch', [App\Http\Controllers\HomeController::class, 'districtfetch'])->name('districtfetch');
+Route::post('/districtedit', [App\Http\Controllers\HomeController::class, 'districtedit'])->name('districtedit');
+Route::get('/place', 'HomeController@place')->name('place');
+Route::post('/placeinsert', [App\Http\Controllers\HomeController::class, 'placeinsert'])->name('placeinsert');
+Route::post('/fetchdistrict', [App\Http\Controllers\HomeController::class, 'fetchdistrict'])->name('fetchdistrict');
+
+Route::post('/placefetch', [App\Http\Controllers\HomeController::class, 'placefetch'])->name('placefetch');
+Route::post('/placeedit', [App\Http\Controllers\HomeController::class, 'placeedit'])->name('placeedit');
+
+
+
+
+
+

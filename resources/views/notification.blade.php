@@ -113,11 +113,11 @@
     @endphp
     @foreach($notification as $key)
     <tr>
-      <!-- <td>{{$i}}</td> -->
-      <td>{{$key->id}}</td>
-      <td>{{$key->title }}</td>
-      <td>@if($key->customertype_id==1) Shop @elseif($key->customertype_id==2) Customer @else Executive @endif</td>
-      <td>{{$key->message}}</td>
+      
+      <td>{{$i}}</td>
+      <td>{{$key->notification_title }}</td>
+      <td>@if($key->user_type==1) Shop @elseif($key->user_type==2) Customer @else Executive @endif</td>
+      <td>{{$key->notification_message}}</td>
 
 
      
