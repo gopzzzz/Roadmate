@@ -311,17 +311,104 @@ $('.statefetchadd').on('change', function () {
             success: function (res) {
                 console.log(res);
                 $('#state').empty();
+				
                 var html_each = "<option value='0'>Select state</option>";
                 $.each(res, function (key, value) {
                     html_each += '<option value=' + value.id + '>' + value.state_name + '</option>';
                 });
                 $('#state').append(html_each);
+				
+            },
+        });
+    }
+});
+
+$('#countrylist .countrylist').on('change', function () {
+	//alert();
+    var countryId = $(this).val();
+
+    if (countryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchstate') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                countryId: countryId
+            },
+            success: function (res) {
+                console.log(res);
+               
+				$('#state_name').empty();
+                var html_each = "<option value='0'>Select state</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.state_name + '</option>';
+                });
+                
+				$('#state_name').append(html_each);
             },
         });
     }
 });
 
 
+$('.selecttype').on('change', function () {
+    var type = $(this).val();
+	var district_id=$('#district').val();
+	//alert(district_id);
+
+    if (district_id) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchplaces') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                type: type,district_id:district_id
+            },
+            success: function (res) {
+                console.log(res);
+                $('#place_id').empty();
+			
+                var html_each = "<option value='0'>Select Places</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
+                });
+                $('#place_id').append(html_each);
+			
+            },
+        });
+    }
+});
+
+$('.selecttype').on('change', function () {
+    var type = $(this).val();
+	var district_id=$('#district_name').val();
+	//alert(district_id);
+
+    if (district_id) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchplaces') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                type: type,district_id:district_id
+            },
+            success: function (res) {
+                console.log(res);
+               
+				$('#place_idd').empty();
+                var html_each = "<option value='0'>Select Places</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
+                });
+             
+				$('#place_idd').append(html_each);
+            },
+        });
+    }
+});
 
     $('.districtfetchadd').on('change', function () {
         var stateId = $(this).val();
@@ -338,11 +425,13 @@ $('.statefetchadd').on('change', function () {
                 success: function (res) {
                     console.log(res);
                     $('#district').empty();
+					$('#district_name').empty();
                     var html_each = "<option value='0'>Select district</option>";
                     $.each(res, function (key, value) {
                         html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
                     });
                     $('#district').append(html_each);
+					$('#district_name').append(html_each);
                 },
             });
         }
@@ -567,8 +656,8 @@ $('.statefetchadd').on('change', function () {
 		 // $('#image').val(obj.image);
         //   $('#email').val(obj.email);
           $('#phone_number').val(obj.phone_number);
-          $('#place_id').val(obj.place_id);
-        //   $('#location').val(obj.location);
+          $('#type').val(obj.place_id);
+           $('#placevalue').val(obj.place_name);
           $('#area').val(obj.area);
 		  $('#pincode').val(obj.pincode);
           $('#id').val(obj.id);
@@ -579,6 +668,18 @@ $('.statefetchadd').on('change', function () {
 		$('#editfranchises_modal').modal('show');
 	});
 
+
+	$('#clickme').on('click',function(){
+     $('.editplaceTree').show();
+	 $('#hideme').show();
+	 $('#clickme').hide();
+	});
+
+	$('#hideme').on('click',function(){
+     $('.editplaceTree').hide();
+	 $('#hideme').hide();
+	 $('#clickme').show();
+	});
 	
 	$('.edit_crm').click(function(){
 		var id=$(this).data('id');

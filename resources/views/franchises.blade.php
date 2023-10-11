@@ -164,13 +164,12 @@
 
 
 
-<select name="country" class="form-control">
-
-<option value="0">Select Country</option>
-<option value="1">India</option>
-<option value="2">China</option>
-<option value="3">America</option>
-</select>
+<select name="country" class="form-control statefetchadd" id="country">
+                    <option value="0">Select country</option>
+                    @foreach($con as $country)
+                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+                    @endforeach
+                </select>
 
 
 </div>
@@ -180,13 +179,9 @@
 
 
 
-<select name="states" class="form-control">
-
-<option value="0">Select States</option>
-<option value="1">Kerala</option>
-<option value="2">Tamil Nadu</option>
-<option value="3">Banglore</option>
-</select>
+<select name="states" class="form-control districtfetchadd" id="state">
+                    <option value="0">Select state</option>
+                </select>
 
 
 </div>
@@ -200,16 +195,32 @@
 
 
 
-<select name="district" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
+<select name="district" class="form-control" id="district">
+                    <option value="0">Select district</option>
+                </select>
 
 
 </div>
+
+<div class="form-group col-sm-6">
+
+<label class="exampleModalLabel">Type</label>
+
+<select name="type" class="form-control selecttype" required>
+<option value="0">Select Type</option>
+	<option value="1">Panchayath</option>
+
+
+
+	<option value="2">Muncipality</option>
+
+	<option value="3">Coperatiion</option>
+	
+
+
+</select>
+
+</div>			
 
 <div class="form-group col-sm-6">
 
@@ -221,10 +232,7 @@
 
 <select name="place_id" id="place_id" class="form-control">
 
-<option value="0">Select Muncipality/Corporation</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
+
 </select>
 
 
@@ -351,11 +359,11 @@
                     
                     <th>Area Name</th>
                     <th>Pincode</th>
+                    <th>State</th>
+                    <th>District</th>
+                    <th>Type</th>
                     <th>Muncipality/Corporation</th>
-                    <th>Email</th>
-                    <!-- <th></th>
-
-                    <th></th> -->
+                   
                     @if($role==1)
 
 					<th>Action</th>
@@ -377,16 +385,11 @@
         <td>{{ $key->phone_number }}</td>
         <td>{{ $key->area }}</td>
         <td>{{ $key->pincode }}</td>
-        <td>{{ $key->place_id }}</td>
-        <td>
-            @if ($key->user)
-            {{ $key->user->franchise_name }}
-                {{ $key->user->email }}
-                {{ $key->user->user_type }}
-            @else
-                User data not available
-            @endif
-        </td>
+        <td>{{ $key->state_name}}</td>
+        <td>{{ $key->district_name }}</td>
+        <td>@if($key->type==1) PanChayath @elseif($key->type==2) Muncipality @elseif($key->type==3) Corperation @endif</td>
+        <td>{{ $key->place_name }}</td>
+       
 
         @if($role == 1)
         <td>
@@ -416,8 +419,11 @@
                    
                     <th>Area Name</th>
                     <th>Pincode</th>
+                    <th>State</th>
+                    <th>District</th>
+                    <th>Type</th>
                     <th>Muncipality/Corporation</th>
-                    <th>Email</th>
+                  
                     <!-- <th></th>  -->
                     @if($role==1)
 
@@ -441,7 +447,7 @@
       <form method="POST" action="{{url('franedit')}}" enctype="multipart/form-data" name="franedit">
 
 @csrf
-      <div class="modal-body row">
+      <div class="modal-body row" id="countrylist">
 
 
       <div class="form-group col-sm-6">
@@ -473,8 +479,7 @@
 
 </div>
 
-
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-12">
 
 
 
@@ -482,16 +487,79 @@
 
 
 
-<select name="place_id" id="place_id" class="form-control">
+<input class="form-control" id="placevalue" readonly required>
+<p>Do yo want edit place ?<strong id="clickme">click</strong><strong id="hideme" style="display:none;">Hide</strong></p>
 
-<option value="0">Select Muncipality/Corporation</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
+
+</div>
+
+<div class="form-group col-sm-6 editplaceTree" style="display:none;" >
+    <label class="exampleModalLabel">Country</label>
+    <select name="country" id="country_name" class="form-control countrylist">
+        <option value="0">Select Country</option>
+        @foreach($con as $country)
+            <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6 editplaceTree" style="display:none;">
+    <label class="exampleModalLabel">State</label>
+    <select name="state" id="state_name" class="form-control districtfetchadd">
+        <option value="0">Select State</option>
+        @foreach($cond as $state)
+            <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6 editplaceTree" style="display:none;">
+    <label class="exampleModalLabel">District</label>
+    <select name="district" id="district_name" class="form-control ">
+        <option value="0">Select District</option>
+        @foreach($dis as $district)
+            <option value="{{ $district->id }}">{{ $district->district_name }}</option>
+        @endforeach
+    </select>
+</div>
+                                        
+<div class="form-group col-sm-6 editplaceTree" style="display:none;">
+
+<label class="exampleModalLabel">Type</label>
+
+<select name="type" id="type" class="form-control selecttype"  required>
+<option value="0">Select Type</option>
+	<option value="1">Panchayath</option>
+
+
+
+	<option value="2">Muncipality</option>
+
+	<option value="3">Coperatiion</option>
+	
+
+
+</select>
+
+</div>	
+
+
+<div class="form-group col-sm-12 editplaceTree" style="display:none;">
+
+
+
+<label class="exampleModalLabel">Muncipality/Corporation</label>
+
+
+
+<select name="place_id" id="place_idd" class="form-control">
+
+
 </select>
 
 
 </div>
+
+
+
 
 
 <div class="form-group col-sm-6">
@@ -668,7 +736,12 @@
         <tr>
         <td>id</td>
         <td>Shop name</td>
-        <td>Phone number</td>
+         <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><td>Phone number</td>
         <td>Address</td>
         <td></td>
         </tr>
@@ -678,12 +751,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+       
 
               </div>
 

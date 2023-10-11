@@ -255,9 +255,30 @@ class HomeController extends Controller
 	}
 
 	public function franchises(){
-		$fran = tbl_franchises::with('user')->get();
+		$fran = DB::table('tbl_franchises')
+		->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+		->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+		->select('tbl_franchises.*','tbl_places.place_name','tbl_places.type','tbl_districts.district_name','tbl_states.state_name')
+		->get();
 		$role=Auth::user()->user_type;
-		return view('franchises',compact('fran','role'));
+		$con=DB::table('tbl_countrys')
+			->where('deleted_status',0)
+			->get();
+            $cond=DB::table('tbl_states')
+			->where('deleted_status',0)
+			->get();
+		$dis=DB::table('tbl_districts')
+		->where('deleted_status',0)
+		->get();
+		$plac = DB::table('tbl_places')
+		->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+		->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
+		->get();
+	
+		return view('franchises',compact('fran','role','con','cond','dis','plac'));
 	}
 
 
@@ -289,7 +310,11 @@ class HomeController extends Controller
 
 	public function franfetch(Request $request){
 		$id=$request->id;
-		$franchis=tbl_franchises::find($id);
+		$franchis=DB::table('tbl_franchises')
+		->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+		->where('tbl_franchises.id',$id)
+		->select('tbl_franchises.*','tbl_places.place_name')
+		->first();
 		print_r(json_encode($franchis));
 	}
 
@@ -297,6 +322,7 @@ class HomeController extends Controller
 	public function franedit(Request $request){
 		$id=$request->id;
 		$franchis=tbl_franchises::find($id);
+
 		$franchis->franchise_name=$request->franchise_name;
 		$franchis->place_id=$request->place_id;
 		$franchis->area=$request->area;
@@ -2827,6 +2853,18 @@ function sendNotification1($msg1,$title)
 				->get();
 		
 			return response()->json($states);
+		}
+
+		public function fetchplaces(Request $request){
+			$type = $request->type;
+			$district_id = $request->district_id;
+			$places = DB::table('tbl_places')
+				->where('district_id', $district_id)
+				->where('type', $type)
+				->where('deleted_status',0)
+				->get();
+		
+			return response()->json($places);
 		}
 		
 		public function districtfetch(Request $request){

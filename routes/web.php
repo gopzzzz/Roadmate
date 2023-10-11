@@ -1086,6 +1086,8 @@ Route::post('/stateedit', [App\Http\Controllers\HomeController::class, 'stateedi
 Route::get('/district', 'HomeController@district')->name('district');
 Route::post('/districtinsert', [App\Http\Controllers\HomeController::class, 'districtinsert'])->name('districtinsert');
 Route::post('/fetchstate', [App\Http\Controllers\HomeController::class, 'fetchstate'])->name('fetchstate');
+Route::post('/fetchplaces', [App\Http\Controllers\HomeController::class, 'fetchplaces'])->name('fetchplaces');
+
 
 Route::post('/districtfetch', [App\Http\Controllers\HomeController::class, 'districtfetch'])->name('districtfetch');
 Route::post('/districtedit', [App\Http\Controllers\HomeController::class, 'districtedit'])->name('districtedit');
