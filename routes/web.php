@@ -45,6 +45,11 @@ Route::post('/updatestatus', [
     'uses' => 'HomeController@updatestatus'
 ])->name('updatestatus');
 
+Route::post('/updatecallstatus', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@updatecallstatus'
+])->name('updatecallstatus');
+
 
 Route::post('/timeslotedit', [
     'middleware' => 'auth',

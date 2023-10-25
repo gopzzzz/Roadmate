@@ -117,6 +117,16 @@ class HomeController extends Controller
 					}
 					
 	}
+
+	public function updatecallstatus(Request $request) {
+		$record = Booktimemasters::where('id', $request->keyid)->first();
+		return response()->json([
+			'crm_status' => $record->crm_status,
+			'crm_remark' => $record->crm_remark,
+		]);
+	}
+	
+
 	public function booking_timeslots(){
 		
 		$shops=Shops::all();
@@ -280,6 +290,7 @@ class HomeController extends Controller
 	
 		return view('franchises',compact('fran','role','con','cond','dis','plac'));
 	}
+	
 
 
 	public function franinsert(Request $request){

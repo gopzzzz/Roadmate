@@ -24,7 +24,7 @@
 
             <ol class="breadcrumb float-sm-right">
 
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="home">Home</a></li>
 
               <li class="breadcrumb-item active">Add Franchises</li>
 
@@ -208,16 +208,9 @@
 
 <select name="type" class="form-control selecttype" required>
 <option value="0">Select Type</option>
-	<option value="1">Panchayath</option>
-
-
-
-	<option value="2">Muncipality</option>
-
-	<option value="3">Coperatiion</option>
-	
-
-
+<option value="1">Panchayath</option>
+<option value="2">Muncipality</option>
+<option value="3">Coperatiion</option>
 </select>
 
 </div>			
@@ -226,7 +219,7 @@
 
 
 
-<label class="exampleModalLabel">Muncipality/Corporation</label>
+<label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
 
 
 
@@ -262,7 +255,7 @@
 
 
 
-<textarea class="form-control" name="pincode" placeholder="Enter pincode"></textarea>
+<input class="form-control" name="pincode" placeholder="Enter pincode">
 
 
 </div>
@@ -344,6 +337,7 @@
               <!-- /.card-header -->
 
               <div class="card-body">
+              <h2>Total Franchises: {{ $franchiseCount }}</h2>
 
                 <table id="example1" class="table table-bordered table-striped">
 
@@ -362,7 +356,7 @@
                     <th>State</th>
                     <th>District</th>
                     <th>Type</th>
-                    <th>Muncipality/Corporation</th>
+                    <th>Muncipality/Corporation/Panchayat</th>
                    
                     @if($role==1)
 
@@ -422,7 +416,7 @@
                     <th>State</th>
                     <th>District</th>
                     <th>Type</th>
-                    <th>Muncipality/Corporation</th>
+                    <th>Muncipality/Corporation/Panchayat</th>
                   
                     <!-- <th></th>  -->
                     @if($role==1)
@@ -483,7 +477,7 @@
 
 
 
-<label class="exampleModalLabel">Muncipality/Corporation</label>
+<label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
 
 
 
@@ -546,7 +540,7 @@
 
 
 
-<label class="exampleModalLabel">Muncipality/Corporation</label>
+<label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
 
 
 

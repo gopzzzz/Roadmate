@@ -42,7 +42,7 @@
 
 
 
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item"><a href="home">Home</a></li>
 
 
 
@@ -460,7 +460,7 @@
 
 
 
-                                 <div class="modal-body row">
+                                 <div class="modal-body row" id="countrylist">
 
 
 
@@ -470,9 +470,10 @@
 
                                        <input type="hidden" name="id" id="districtid">
 
-                                       <div class="form-group col-sm-12">
+
+<div class="form-group col-sm-12">
     <label class="exampleModalLabel">Country</label>
-    <select name="country" id="country_name" class="form-control">
+    <select name="country" id="country_name" class="form-control countrylist">
         <option value="0">Select Country</option>
         @foreach($con as $country)
             <option value="{{ $country->id }}">{{ $country->country_name }}</option>
@@ -481,7 +482,7 @@
 </div>
 <div class="form-group col-sm-12">
     <label class="exampleModalLabel">State</label>
-    <select name="state" id="state_name" class="form-control">
+    <select name="state" id="state_name" class="form-control districtfetchadd">
         <option value="0">Select State</option>
         @foreach($cond as $state)
             <option value="{{ $state->id }}">{{ $state->state_name }}</option>

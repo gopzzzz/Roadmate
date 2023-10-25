@@ -131,7 +131,49 @@
 	$('#exampleModal11').modal('show');
   });
 
+  $(document).on('click', '.callpending-modal', function () {
+    var id = $(this).data('id');
+    $('#keyidd').val(id);
 
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('updatecallstatus') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                keyid: id
+            },
+            success: function (res) {
+                console.log(res);
+                $('#status').val(res.crm_status);
+                $('#remark').val(res.crm_remark);
+            },
+        });
+    }
+
+    $('#exampleModal111').modal('show');
+});
+
+
+  if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('countryfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          //$('#image').val(obj.name);
+		  $('#countryid').val(obj.id);
+          $('#country_name').val(obj.country_name);
+		  $('#status').val(obj.deleted_status);
+         
+					},
+					});	
+		}
+		$('#editcountry_modal').modal('show');
 
   $('.selectvehicleadd').on('change',function(){
 	var id=$(this).val();
