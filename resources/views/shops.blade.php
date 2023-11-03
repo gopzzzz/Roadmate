@@ -24,7 +24,7 @@
 
             <ol class="breadcrumb float-sm-right">
 
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="home">Home</a></li>
 
               <li class="breadcrumb-item active">Shops</li>
 
@@ -448,7 +448,7 @@
                     <td>{{$i}}</td>
                     
 
-                    <td><img src="{{ asset('/img/'.$key->image) }}" alt="" width="50"/></td>
+                    <td><img src="{{ asset('/img/'.$key->image) }}" alt="" width="75"/></td>
                     <td>{{$key->category}}</td>
                     <td>{{$key->shopname}}</td>
                     <td>{{$key->address}}</td>
@@ -516,6 +516,7 @@
                 </table>
 
                 <div class="clearfix" id="shop_pagination">
+                  
                 {!! $shops->render( "pagination::bootstrap-4") !!}
                     
 

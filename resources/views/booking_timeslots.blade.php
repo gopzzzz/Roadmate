@@ -4,6 +4,8 @@
 
 @section('content')
 
+
+
 <div class="content-wrapper">
 
     <!-- Content Header (Page header) -->
@@ -24,7 +26,7 @@
 
             <ol class="breadcrumb float-sm-right">
 
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="home">Home</a></li>
 
               <li class="breadcrumb-item active">Add Executive</li>
 
@@ -276,7 +278,7 @@
                     <th>Shop offer Amount </th>
 					
 					
-					@if($role==1)
+					@if($role==1 || $role==2)
 					<th>Action</th>
           @endif
                   </tr>
@@ -318,12 +320,28 @@
           <td>{{$key->offeramt_shop}}</td>
           
 					
-					@if($role==1)<td><i class="fa fa-edit edit_timeslot"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+					<!-- @if($role==1)<td><i class="fa fa-edit edit_timeslot"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 					<i class="fa fa-eye view_timeslot"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 					   <a href="{{url('timeslotdelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
              @if($key->work_status==0)  <button type="button" data-id="{{$key->id}}" data-toggle="modal"  class="btn tbn-sm btn-success pending-modal">Status</button>@endif
-            </td>@endif
-             
+            
+            </td>@endif -->
+            @if($role==1)
+<td>
+    <i class="fa fa-edit edit_timeslot" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+    <i class="fa fa-eye view_timeslot" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+    <a href="{{ url('timeslotdelete') }}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i></a>
+    @if($key->work_status == 0)
+        <button type="button" data-id="{{ $key->id }}" data-toggle="modal" class="btn btn-sm btn-success pending-modal">Status</button>
+    @endif
+</td>
+@elseif($role == 2)
+<td>
+
+    <button type="button" data-id="{{ $key->id }}" data-toggle="modal" data-target="#exampleModal111" class="btn btn-sm btn-success callpending-modal" id="statusButton"> @if($key->crm_status==1) Called @else Not Called @endif</button>
+</td>
+@endif
+
                   </tr>
 
                   @php 
@@ -588,6 +606,43 @@
   </div>
 </div>
 
+<div class="modal fade" id="exampleModal111" tabindex="-1" role="dialog" aria-labelledby="exampleModal111Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Call Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ url('updatecallstatus') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="keyid" id="keyidd">
+                    <!-- <input type="hidden" name="keyvalue" id="keyvalue" value="2"> -->
+                    <div class="form-group">
+                        <label for="crm_status">Status</label>
+                        <select name="crm_status" class="form-control" id="status">
+                            <option value="0">Not Called</option>
+                            <option value="1">Called</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="crm_remark">Remark</label>
+                        <textarea name="remark" id="remark" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 
               </div>
 
@@ -614,5 +669,7 @@
     <!-- /.content -->
 
   </div>
+
+
 
   @endsection

@@ -349,6 +349,39 @@
                               </ul>
                              
 
+
+                      <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-university"></i>
+                              <p>
+                                 Market Shops
+                                  <i class="fas fa-angle-left right"></i>
+
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                              <li class="nav-item">
+                                  <a href="{{ url('marketproducts') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Market Products</p>
+                                  </a>
+                              </li>
+                              </ul>
+                      </li>
+
+
+                      <li class="nav-item">
+                        <a href="{{url('vouchers')}}" class="nav-link">
+                        <i class="voucher-icon fas fa-gift"></i>
+
+                        <p>
+                         Vouchers
+               <!-- <span class="right badge badge-danger">New</span>-->
+                        </p>
+                        </a>
+                    </li>
+
+
                       <li class="nav-item has-treeview">
                           <a href="#" class="nav-link">
                               <i class="nav-icon fas fa-user"></i>

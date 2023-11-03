@@ -7,7 +7,7 @@
 				<div class="col-sm-6"></div>
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="#">Home</a>
+						<li class="breadcrumb-item"><a href="home">Home</a>
 						</li>
 						<li class="breadcrumb-item active">Add Banner</li>
 					</ol>
@@ -79,7 +79,9 @@
 									<tr>
 										<td>{{$i}}</td>
 										<td>
-											<img src="{{ asset('/img/'.$key->banner_image) }}" alt="" width="50" />
+										<img src="{{ asset('img/'.$key->banner_image) }}" alt="" width="200" height="100" />
+
+											<!-- <img src="{{ asset('/uploads/banner/'.$key->banner_image) }}" alt="" width="50" /> -->
 										</td>
 										@if($role==1)<td> <i class="fa fa-edit edit_banner" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 										<i class="fa fa-eye view_banner" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>

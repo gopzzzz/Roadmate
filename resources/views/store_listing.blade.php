@@ -24,7 +24,7 @@
 
             <ol class="breadcrumb float-sm-right">
 
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="home">Home</a></li>
 
               <li class="breadcrumb-item active">Stores</li>
 
@@ -210,10 +210,10 @@
                   <tr>
 
                     <td>{{$i}}</td>
-					<td>@if($key->user_type==1){{$key->name}} @elseif($key->user_type==2) {{$key->shopname}}@endif</td>
-                    <td><img src="{{ asset('/img/'.$key->image_1) }}" alt="" width="50"/></td>
-                    <td><img src="{{ asset('/img/'.$key->image_2) }}" alt="" width="50"/></td>
-                    <td><img src="{{ asset('/img/'.$key->image_3) }}" alt="" width="50"/></td>
+					          <td>@if($key->user_type==1){{$key->name}} @elseif($key->user_type==2) {{$key->shopname}}@endif</td>
+                    <td><img src="{{ asset('/img/'.$key->image_1) }}" alt="" width="65"/></td>
+                    <td><img src="{{ asset('/img/'.$key->image_2) }}" alt="" width="65"/></td>
+                    <td><img src="{{ asset('/img/'.$key->image_3) }}" alt="" width="65"/></td>
                     <td>{{$key->product_name}}</td>
                     <td>{{$key->price}}</td>
                     <td>{{$key->description}}</td>
@@ -227,8 +227,8 @@
                     </td>   
                     @if($role==1) <td>
                     <i class="fa fa-eye editstore"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-					<i class="fa fa-edit viewstore"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-                   <a href="{{url('storedelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
+					          <i class="fa fa-edit viewstore"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+                    <a href="{{url('storedelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
                     </td>
                    @endif
 

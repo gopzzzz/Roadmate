@@ -42,7 +42,7 @@
 
 
 
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item"><a href="home">Home</a></li>
 
 
 
@@ -566,7 +566,7 @@
 
 <div class="form-group col-sm-12">
 
-
+<div>
                                        <label class="exampleModalLabel">place</label>
 
 

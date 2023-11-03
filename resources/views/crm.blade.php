@@ -24,7 +24,7 @@
 
             <ol class="breadcrumb float-sm-right">
 
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="home">Home</a></li>
 
               <li class="breadcrumb-item active">Add Franchises</li>
 
@@ -304,7 +304,7 @@
         <td>{{ $key->phone_number }}</td>
         <td>{{ $key->address }}</td>
         <td>{{ $key->dob }}</td>
-        <!-- <td>{{ $key->place_id }}</td> -->
+        
         <td>
             @if ($key->user)
             {{ $key->user->crm_name }}
@@ -320,7 +320,7 @@
             <i class="fa fa-edit edit_crm" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
             <!-- <i class="fa fa-eye view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i> -->
             <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-            <!-- <a href="{{ url('exedelete') }}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i></a> -->
+
         </td>
         @endif
 
