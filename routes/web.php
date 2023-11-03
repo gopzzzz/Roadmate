@@ -1097,6 +1097,23 @@ Route::post('/fetchdistrict', [App\Http\Controllers\HomeController::class, 'fetc
 
 Route::post('/placefetch', [App\Http\Controllers\HomeController::class, 'placefetch'])->name('placefetch');
 Route::post('/placeedit', [App\Http\Controllers\HomeController::class, 'placeedit'])->name('placeedit');
+Route::get('/market_category', 'HomeController@market_category')->name('market_category');
+
+Route::post('/marketinsert', [App\Http\Controllers\HomeController::class, 'marketinsert'])->name('marketinsert');
+Route::post('/marketfetch', [App\Http\Controllers\HomeController::class, 'marketfetch'])->name('marketfetch');
+Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'marketedit'])->name('marketedit');
+// Route::post('/ordertransinsert', [App\Http\Controllers\HomeController::class, 'ordertransinsert'])->name('ordertransinsert');
+Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
+
+Route::get('/order_master', 'HomeController@order_master')->name('order_master');
+// Route::post('/orderinsert', [App\Http\Controllers\HomeController::class, 'orderinsert'])->name('orderinsert');
+// Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
+// Route::get('orderdelete/{id}', [
+//     'middleware' => 'auth',
+//     'uses' => 'HomeController@orderdelete'
+// ])->name('orderdelete');
+// Route::post('/orderedit', [App\Http\Controllers\HomeController::class, 'orderedit'])->name('orderedit');
+
 
 
 

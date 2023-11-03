@@ -460,7 +460,7 @@
 
 
 
-                                 <div class="modal-body row">
+                                 <div class="modal-body row" id="countrylist">
 
 
 
@@ -472,7 +472,7 @@
 
                                        <div class="form-group col-sm-12">
     <label class="exampleModalLabel">Country</label>
-    <select name="country" id="country_name" class="form-control">
+    <select name="country" id="country_name" class="form-control countrylist">
         <option value="0">Select Country</option>
         @foreach($con as $country)
             <option value="{{ $country->id }}">{{ $country->country_name }}</option>
@@ -488,6 +488,7 @@
         @endforeach
     </select>
 </div>
+<div class="form-group col-sm-12">
 
 
                                        <label class="exampleModalLabel">Districts</label>
@@ -495,7 +496,7 @@
 
 
                                        <input type="text" class="form-control" name="district_name" id="district_name" required>
-
+</div>
 
                                        <div class="form-group col-sm-12">
 

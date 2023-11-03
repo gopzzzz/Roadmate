@@ -182,9 +182,32 @@
   });
 
 
+  $('.edit_marketcategory').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
 
-  
+					url: "{{ route('marketfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          //$('#image').val(obj.name);
+		  $('#marketid').val(obj.id);
+          $('#category_name').val(obj.category_name);
 
+		  $('#status').val(obj.status);
+         
+					},
+					});	
+		}
+		$('#editmarketcategory_modal').modal('show');
+	});
+	
+	
 
 	$('.edit_country').click(function(){
 		var id=$(this).data('id');
@@ -235,7 +258,7 @@
             },
         });
     }
-    $('#editcountry_modal').modal('show');
+    $('#editstate_modal').modal('show');
 });
 
 
@@ -350,6 +373,7 @@ $('#countrylist .countrylist').on('change', function () {
         });
     }
 });
+
 
 
 $('.selecttype').on('change', function () {
@@ -1609,7 +1633,8 @@ $('.selecttype').on('change', function () {
 		  $('#normal').val(obj.normal_price);
 		  $('#desc').val(obj.description);
 		  $('#type').val(obj.vehicle_type);
-		  
+		  $('#status').val(obj.deleted_status);
+
 					},
 					});	
 		}

@@ -90,7 +90,7 @@
 
 <select name="packages" class="form-control" required>
 
-	<option value="0">Select shop</option>
+	<option value="0">Select packages</option>
 
 	@foreach($packages as $packages)
 

@@ -516,16 +516,16 @@
 
                                        <input type="hidden" name="id" id="placeid">
 
-                                       <div class="form-group col-sm-6">
+                                       <div class="form-group col-sm-12">
     <label class="exampleModalLabel">Country</label>
-    <select name="country" id="country_name " class="form-control countrylist">
+    <select name="country" id="country_name" class="form-control countrylist">
         <option value="0">Select Country</option>
         @foreach($con as $country)
             <option value="{{ $country->id }}">{{ $country->country_name }}</option>
         @endforeach
     </select>
 </div>
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-12">
     <label class="exampleModalLabel">State</label>
     <select name="state" id="state_name" class="form-control districtfetchadd">
         <option value="0">Select State</option>
@@ -534,7 +534,7 @@
         @endforeach
     </select>
 </div>
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-12">
     <label class="exampleModalLabel">District</label>
     <select name="district" id="district_name" class="form-control ">
         <option value="0">Select District</option>
@@ -564,6 +564,7 @@
 
 </div>				
 
+<div class="form-group col-sm-12">
 
 
                                        <label class="exampleModalLabel">place</label>
@@ -571,7 +572,7 @@
 
 
                                        <input type="text" class="form-control" name="place_name" id="place_name" required>
-
+</div>
 
                                        <div class="form-group col-sm-12">
 

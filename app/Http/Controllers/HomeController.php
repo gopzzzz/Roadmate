@@ -51,6 +51,10 @@ use App\Tbl_countrys;
 use App\Tbl_states;
 use App\Tbl_districts;
 use App\Tbl_places;
+use App\Tbl_rm_categorys;
+use App\Tbl_order_masters;
+
+use App\Tbl_order_trans;
 
 use DB;
 use Hash;
@@ -2858,7 +2862,7 @@ function sendNotification1($msg1,$title)
 		public function fetchplaces(Request $request){
 			$type = $request->type;
 			$district_id = $request->district_id;
-			$places = DB::table('tbl_places')
+			$places= DB::table('tbl_places')
 				->where('district_id', $district_id)
 				->where('type', $type)
 				->where('deleted_status',0)
@@ -2974,10 +2978,168 @@ function sendNotification1($msg1,$title)
 		
 			$districts = DB::table('tbl_districts')
 				->where('state_id', $stateId)
+				->where('deleted_status',0)
+
 				->select('id', 'district_name')
 				->get();
 		
 			return response()->json($districts);
 		}
+		public function market_category(){
+			$role=Auth::user()->user_type;
+			$mark=DB::table('tbl_rm_categorys')->get();
+
+			return view('market_category',compact('mark','role'));
+		}	
+		public function marketinsert(Request $request){
+			$mark = new Tbl_rm_categorys;
+			$mark->category_name = $request->category_name;
+			if($files=$request->file('categoryimage')){  
+				$name=$files->getClientOriginalName();  
+				$files->move('img/',$name);
+				$mark->image=$name; 
+
+				$mark->cat_id = 0;
+ 
+			$mark->status = 0;
+			$mark->save();
+			}
+			return redirect('market_category');
+		}
+		public function marketfetch(Request $request){
+			$id=$request->id;
+			$market=Tbl_rm_categorys::find($id);
+			print_r(json_encode($market));
+		}
+		public function marketedit(Request $request){
+			$id=$request->id;
+			$mark=Tbl_rm_categorys::find($id);
+			
+			
+				$mark->category_name=$request->category_name;
+			$mark->status=$request->status;
+			if($files=$request->file('categoryimage')){  
+				$name=$files->getClientOriginalName();  
+				$files->move('img',$name);  
+				
+				$mark->image=$name; 
+				
+			}  
+			$mark->save();
+			
+			return redirect('market_category');
+		}
+		public function order_trans($orderId)
+		{
+		$role=Auth::user()->user_type;
+			$mark=DB::table('tbl_rm_products')
+			
+			->get();
+			$markk=DB::table('tbl_order_masters')
+			
+			->get();
+			$order = DB::table('tbl_order_trans')
+			->leftJoin('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
+			->leftJoin('tbl_rm_products', 'tbl_order_trans.product_id', '=', 'tbl_rm_products.id')
+			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
+			->where('tbl_order_trans.order_id',$orderId)
+			->select(
+				'tbl_order_trans.*',
+				'tbl_order_masters.discount',
+				'tbl_order_masters.total_amount',
+				'tbl_order_masters.total_mrp',
+				'tbl_order_masters.shipping_charge',
+				'tbl_rm_products.product_title',
+				'shops.shopname',
+				'shops.address' 
+			)
+			->get();
 		
+		
+			return view('order_trans',compact('role','mark','markk','order'));
+		}
+
+
+
+		public function order_master(){
+			$role=Auth::user()->user_type;
+			$order=DB::table('tbl_order_masters')
+			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+
+			->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
+			->get();
+			$mark=DB::table('shops')
+			
+			->get();
+		
+			
+			$orderr=DB::table('tbl_coupens')->get();
+
+			return view('order_master',compact('order','role','orderr','mark'));
+		}
+// 		public function orderinsert(Request $request){
+			
+// 			$order = new Tbl_order_masters();
+// 			$order->shop_id = $request->shopname;
+// 			$order->total_amount = $request->total_amount;
+// 			$order->discount = $request->discount;
+// 			$order->payment_mode=$request->paymentmode;
+// 			$order->tax_amount = $request->tax_amount;
+
+// 			$order->total_mrp = $request->total_mrp;
+// 			$order->shipping_charge = $request->shipping_charge;
+
+// 			$order->payment_status = $request->pay_status;
+// 			$order->order_status = $request->orderstat;
+
+// 			$order->delivery_date = $request->delivery_date;
+// 			$order->order_date = $request->order_date;
+// 			$order->coupen_id =  $request->coupencode;
+// 			$order->wallet_redeem_id= 0;
+
+
+// 			$order->save();
+		
+// 			return redirect('order_master');
+		
+// }
+// public function orderfetch(Request $request){
+// 	$id=$request->id;
+// 	$order=Tbl_order_masters::find($id);
+// 	print_r(json_encode($order));
+// }
+// public function orderedit(Request $request){
+// 	$id=$request->id;
+// 	$order=Tbl_order_masters::find($id);
+	
+// 	$order->shop_id = $request->shopname;
+// 			$order->total_amount = $request->total_amount;
+// 			$order->discount = $request->discount;
+// 			$order->payment_mode=$request->paymentmode;
+
+// 			$order->tax_amount = $request->tax_amount;
+
+// 			$order->total_mrp = $request->total_mrp;
+// 			$order->shipping_charge = $request->shipping_charge;
+
+// 			$order->payment_status = $request->pay_status;
+// 			$order->order_status = $request->orderstat;
+
+// 			$order->delivery_date = $request->delivery_date;
+// 			$order->order_date = $request->order_date;
+// 			$order->coupen_id =  $request->coupencode;
+// 			$order->wallet_redeem_id= 0;
+
+// 	$order->save();
+	
+// 	return redirect('order_master');
+// }
+// public function orderdelete($id){
+// 	DB::delete('delete from tbl_order_masters where id = ?',[$id]);
+// 	return redirect('order_master');
+// }
+
+
+
 }

@@ -79,7 +79,7 @@
 									<tr>
 										<td>{{$i}}</td>
 										<td>
-											<img src="{{ asset('/uploads/banner/'.$key->banner_image) }}" alt="" width="50" />
+											<img src="{{ asset('/img/'.$key->banner_image) }}" alt="" width="50" />
 										</td>
 										@if($role==1)<td> <i class="fa fa-edit edit_banner" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 										<i class="fa fa-eye view_banner" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>

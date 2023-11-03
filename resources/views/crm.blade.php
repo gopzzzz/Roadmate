@@ -182,7 +182,7 @@
 
 
 
-<input class="form-control" name="dob" placeholder="Enter pincode">
+<input class="form-control" name="dob" placeholder="Enter date of birth">
 
 
 </div>
