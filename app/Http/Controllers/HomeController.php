@@ -51,7 +51,8 @@ use App\Tbl_countrys;
 use App\Tbl_states;
 use App\Tbl_districts;
 use App\Tbl_places;
-
+use App\Tbl_rm_products;
+use App\Tbl_coupens;
 use DB;
 use Hash;
 use Auth;
@@ -119,6 +120,16 @@ class HomeController extends Controller
 	}
 
 	public function updatecallstatus(Request $request) {
+		Booktimemasters::where('id', $request->keyid)
+			->update([
+				'crm_status' => $request->crm_status,
+				'crm_remark' => $request->remark,
+			]);
+	
+		return redirect('timeslot');
+	}
+	
+	public function updatecallstatusfetch(Request $request) {
 		$record = Booktimemasters::where('id', $request->keyid)->first();
 		return response()->json([
 			'crm_status' => $record->crm_status,
@@ -126,7 +137,7 @@ class HomeController extends Controller
 		]);
 	}
 	
-
+	
 	public function booking_timeslots(){
 		
 		$shops=Shops::all();
@@ -1133,6 +1144,70 @@ class HomeController extends Controller
 		$shop->save();
 		return redirect('shops');
 	}
+
+
+	public function marketproducts(){
+		
+		$market = DB::table('tbl_rm_products')
+        ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+        
+        ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+        ->get();
+		
+		$mark=DB::table('tbl_rm_categorys')->get();
+		$role=Auth::user()->user_type;
+		return view('marketproducts',compact('market','mark','role'));
+	}
+
+	public function marketproductinsert(Request $request){
+		$market=new Tbl_rm_products;
+		if($files=$request->file('prodimage')){  
+			
+			$name=$files->getClientOriginalName();  
+			$files->move('img/',$name);  
+			
+			$market->image=$name; 
+			$market->product_title=$request->product_title;
+			$market->discription=$request->discription;
+			$market->original_amount=$request->original_amount;
+			$market->offer_price=$request->offer_price;
+			$market->cat_id=$request->category;
+
+			$market->status=0;
+			$market->save();
+		}  
+		
+		return redirect('marketproducts');
+	}
+
+	public function marketproductfetch(Request $request){
+		$id=$request->id;
+		$market=tbl_rm_products::find($id);
+		print_r(json_encode($market));
+	}
+
+	public function marketproductedit(Request $request){
+		$id=$request->id;
+		$market=Tbl_rm_products::find($id);
+		$market->product_title=$request->product_title;
+			$market->discription=$request->discription;
+			$market->original_amount=$request->original_amount;
+			$market->offer_price=$request->offer_price;
+			$market->cat_id=$request->category;
+			$market->status=$request->status;
+		if($files=$request->file('prodimage')){  
+			$name=$files->getClientOriginalName();  
+			$files->move('img/',$name);  
+		
+			$market->image=$name; 
+		} 
+			$market->save();
+		 
+		
+		return redirect('marketproducts');
+	}
+
+
 	public function customers(Request $request){
 
 		if($request->ajax())
@@ -2989,6 +3064,55 @@ function sendNotification1($msg1,$title)
 				->get();
 		
 			return response()->json($districts);
+		}
+
+		public function vouchers(){
+			$vouch=DB::table('tbl_coupens')
+			
+            ->leftJoin('shops', 'tbl_coupens.shop_id', '=', 'shops.id')
+        
+        ->select('tbl_coupens.*', 'shops.shopname')
+        ->get();
+
+		$vouch1=DB::table('shops')->get();
+			$role=Auth::user()->user_type;
+			return view('vouchers',compact('vouch','vouch1','role'));
+		}
+		
+		public function voucherinsert(Request $request){
+			$vouch=new Tbl_coupens;
+	
+			$vouch->coupencode=$request->coupencode;
+			$vouch->discount=$request->discount;
+			$vouch->description=$request->description;
+			$vouch->status=$request->status;
+			$vouch->expiry_status=$request->expiry_status;
+			$vouch->expiry_date=$request->expiry_date;
+			$vouch->shop_id=$request->shopname;
+			
+			$vouch->save();
+			return redirect('vouchers');
+		}
+
+		public function voucherfetch(Request $request){
+			$id=$request->id;
+			$vouch=Tbl_coupens::find($id);
+			print_r(json_encode($vouch));
+		}
+
+		public function voucheredit(Request $request){
+			$id=$request->id;
+			$vouch=Tbl_coupens::find($id);
+
+			$vouch->coupencode=$request->coupencode;
+			$vouch->discount=$request->discount;
+			$vouch->description=$request->description;
+			$vouch->status=$request->status;
+			$vouch->expiry_status=$request->expiry_status;
+			$vouch->expiry_date=$request->expiry_date;
+			$vouch->shop_id=$request->shopname;
+			$vouch->save();
+			return redirect('vouchers');
 		}
 		
 }

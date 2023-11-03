@@ -50,6 +50,10 @@ Route::post('/updatecallstatus', [
     'uses' => 'HomeController@updatecallstatus'
 ])->name('updatecallstatus');
 
+Route::post('/updatecallstatusfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@updatecallstatusfetch'
+])->name('updatecallstatusfetch');
 
 Route::post('/timeslotedit', [
     'middleware' => 'auth',
@@ -790,7 +794,7 @@ Route::get('packfeaturesdelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@packfeaturesdelete'
 ])->name('packfeaturesdelete');
-
+ 
 Route::get('/common', [
     'middleware' => 'auth',
     'uses' => 'HomeController@common'
@@ -1042,6 +1046,46 @@ Route::get('termconditiondelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@termconditiondelete'
 ])->name('termconditiondelete');
+
+
+
+
+
+
+Route::get('/marketproducts', 'HomeController@marketproducts')->name('marketproducts');
+
+Route::post('/marketproductinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductinsert'
+])->name('marketproductinsert');
+
+Route::post('marketproductfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductfetch'
+])->name('marketproductfetch');
+
+Route::post('/marketproductedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductedit'
+])->name('marketproductedit');
+
+
+Route::get('/vouchers', 'HomeController@vouchers')->name('vouchers');
+
+Route::post('/voucherinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@voucherinsert'
+])->name('voucherinsert');
+
+Route::post('voucherfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@voucherfetch'
+])->name('voucherfetch');
+
+Route::post('/voucheredit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@voucheredit'
+])->name('voucheredit');
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');
