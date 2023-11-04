@@ -536,7 +536,7 @@
 </div>
 <div class="form-group col-sm-12">
     <label class="exampleModalLabel">District</label>
-    <select name="district" id="district_name" class="form-control">
+    <select name="district" id="district_name" class="form-control ">
         <option value="0">Select District</option>
         @foreach($dis as $district)
             <option value="{{ $district->id }}">{{ $district->district_name }}</option>
@@ -564,6 +564,7 @@
 
 </div>				
 
+<div class="form-group col-sm-12">
 
 <div>
                                        <label class="exampleModalLabel">place</label>
@@ -571,7 +572,7 @@
 
 
                                        <input type="text" class="form-control" name="place_name" id="place_name" required>
-
+</div>
 
                                        <div class="form-group col-sm-12">
 

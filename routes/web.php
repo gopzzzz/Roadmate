@@ -55,6 +55,15 @@ Route::post('/updatecallstatusfetch', [
     'uses' => 'HomeController@updatecallstatusfetch'
 ])->name('updatecallstatusfetch');
 
+Route::post('/updatecallstatusfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@updatecallstatusfetch'
+])->name('updatecallstatusfetch');
+
+Route::post('/updatecallstatusfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@updatecallstatusfetch'
+])->name('updatecallstatusfetch');
 
 Route::post('/timeslotedit', [
     'middleware' => 'auth',
@@ -795,7 +804,7 @@ Route::get('packfeaturesdelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@packfeaturesdelete'
 ])->name('packfeaturesdelete');
-
+ 
 Route::get('/common', [
     'middleware' => 'auth',
     'uses' => 'HomeController@common'
@@ -1048,6 +1057,46 @@ Route::get('termconditiondelete/{id}', [
     'uses' => 'HomeController@termconditiondelete'
 ])->name('termconditiondelete');
 
+
+
+
+
+
+Route::get('/marketproducts', 'HomeController@marketproducts')->name('marketproducts');
+
+Route::post('/marketproductinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductinsert'
+])->name('marketproductinsert');
+
+Route::post('marketproductfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductfetch'
+])->name('marketproductfetch');
+
+Route::post('/marketproductedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductedit'
+])->name('marketproductedit');
+
+
+Route::get('/vouchers', 'HomeController@vouchers')->name('vouchers');
+
+Route::post('/voucherinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@voucherinsert'
+])->name('voucherinsert');
+
+Route::post('voucherfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@voucherfetch'
+])->name('voucherfetch');
+
+Route::post('/voucheredit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@voucheredit'
+])->name('voucheredit');
+
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');
 Route::post('/customertypefetch', [App\Http\Controllers\HomeController::class, 'customertypefetch'])->name('customertypefetch');
@@ -1107,6 +1156,23 @@ Route::post('/fetchdistrict', [App\Http\Controllers\HomeController::class, 'fetc
 
 Route::post('/placefetch', [App\Http\Controllers\HomeController::class, 'placefetch'])->name('placefetch');
 Route::post('/placeedit', [App\Http\Controllers\HomeController::class, 'placeedit'])->name('placeedit');
+Route::get('/market_category', 'HomeController@market_category')->name('market_category');
+
+Route::post('/marketinsert', [App\Http\Controllers\HomeController::class, 'marketinsert'])->name('marketinsert');
+Route::post('/marketfetch', [App\Http\Controllers\HomeController::class, 'marketfetch'])->name('marketfetch');
+Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'marketedit'])->name('marketedit');
+// Route::post('/ordertransinsert', [App\Http\Controllers\HomeController::class, 'ordertransinsert'])->name('ordertransinsert');
+Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
+
+Route::get('/order_master', 'HomeController@order_master')->name('order_master');
+// Route::post('/orderinsert', [App\Http\Controllers\HomeController::class, 'orderinsert'])->name('orderinsert');
+// Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
+// Route::get('orderdelete/{id}', [
+//     'middleware' => 'auth',
+//     'uses' => 'HomeController@orderdelete'
+// ])->name('orderdelete');
+// Route::post('/orderedit', [App\Http\Controllers\HomeController::class, 'orderedit'])->name('orderedit');
+
 
 
 

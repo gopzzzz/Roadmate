@@ -337,7 +337,7 @@
               <!-- /.card-header -->
 
               <div class="card-body">
-              <h2>Total Franchises: {{ $franchiseCount }}</h2>
+             
 
                 <table id="example1" class="table table-bordered table-striped">
 

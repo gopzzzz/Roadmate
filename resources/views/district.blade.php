@@ -489,6 +489,7 @@
         @endforeach
     </select>
 </div>
+<div class="form-group col-sm-12">
 
 
                                        <label class="exampleModalLabel">Districts</label>
@@ -496,7 +497,7 @@
 
 
                                        <input type="text" class="form-control" name="district_name" id="district_name" required>
-
+</div>
 
                                        <div class="form-group col-sm-12">
 

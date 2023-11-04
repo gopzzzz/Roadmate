@@ -35,6 +35,9 @@
 <script src="{{asset('admin/dist/js/demo.js')}}"></script>
 
 
+
+
+
 <!-- DataTables -->
 <script src="{{asset('admin/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
@@ -138,7 +141,7 @@
     if (id) {
         $.ajax({
             type: "POST",
-            url: "{{ route('updatecallstatus') }}",
+            url: "{{ route('updatecallstatusfetch') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 keyid: id
@@ -155,6 +158,9 @@
 });
 
 
+$(document).on('click', '.edit_country', function () {
+    var id = $(this).data('id');
+    $('#countryid').val(id);
   if(id){
       $.ajax({
 					type: "POST",
@@ -174,6 +180,7 @@
 					});	
 		}
 		$('#editcountry_modal').modal('show');
+	});
 
   $('.selectvehicleadd').on('change',function(){
 	var id=$(this).val();
@@ -224,9 +231,65 @@
   });
 
 
+  $('.edit_voucher').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('voucherfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          //$('#image').val(obj.name);
+		  $('#shopname').val(obj.shop_id);
+
+		  $('#voucher_id').val(obj.id);
+          $('#coupencode').val(obj.coupencode);
+		  $('#discount').val(obj.discount);
+		  $('#description').val(obj.description);
+		//   $('#status').val(obj.status);
+		  $('#status1').val(obj.status);
+		//   $('#expiry_status').val(obj.expiry_status); 
+		  $('#expiry_status1').val(obj.expiry_status)
+		  $('#expiry_date').val(obj.expiry_date);
+         
+					},
+					});	
+		}
+		$('#editvoucher_modal').modal('show');
+	});
+	
+	$('.edit_marketcategory').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('marketfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          //$('#image').val(obj.name);
+		  $('#marketid').val(obj.id);
+          $('#category_name').val(obj.category_name);
+
+		  $('#status').val(obj.status);
+         
+					},
+					});	
+		}
+		$('#editmarketcategory_modal').modal('show');
+	});
+	
 
   
-
 
 	$('.edit_country').click(function(){
 		var id=$(this).data('id');
@@ -277,7 +340,7 @@
             },
         });
     }
-    $('#editcountry_modal').modal('show');
+    $('#editstate_modal').modal('show');
 });
 
 
@@ -392,6 +455,7 @@ $('#countrylist .countrylist').on('change', function () {
         });
     }
 });
+
 
 
 $('.selecttype').on('change', function () {
@@ -533,7 +597,7 @@ $('.selecttype').on('change', function () {
 		$('#edittimeslot_modal').modal('show');
 	});
 
-
+	
 
 	$(document).on('click','.view_timeslot',function(){
 		var id=$(this).data('id');
@@ -882,6 +946,36 @@ $('.selecttype').on('change', function () {
 		$('#viewbanner_modal').modal('show');
 	});
 
+	$('.edit_marketproduct').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('marketproductfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#image').val(obj.name);
+		//   $('#categoryname').val(obj.cat_id);
+		  $('#categoryname').val(obj.cat_id);
+
+          $('#product_title').val(obj.product_title);
+		  $('#discription').val(obj.discription);
+		  $('#original_amount').val(obj.original_amount);
+		  $('#offer_price').val(obj.offer_price);
+		  $('#status').val(obj.status);
+
+          $('#marketid').val(obj.id);
+         
+					},
+					});	
+		}
+		$('#editmarketproduct_modal').modal('show');
+	});
 
   $('.edit_shopcategory').click(function(){
 		var id=$(this).data('id');
@@ -1651,7 +1745,8 @@ $('.selecttype').on('change', function () {
 		  $('#normal').val(obj.normal_price);
 		  $('#desc').val(obj.description);
 		  $('#type').val(obj.vehicle_type);
-		  
+		  $('#status').val(obj.deleted_status);
+
 					},
 					});	
 		}
@@ -2723,4 +2818,5 @@ $(window).on('load', function(){
                 }
         });
   });
+
 </script>

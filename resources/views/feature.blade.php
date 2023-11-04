@@ -186,7 +186,7 @@
 
 
 
-                                       <input type="text"  class="form-control" name="feature" placeholder="Enter fuel type" required>
+                                       <input type="text"  class="form-control" name="feature" placeholder="Enter features" required>
 
 
 
