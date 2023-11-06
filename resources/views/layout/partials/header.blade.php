@@ -576,7 +576,7 @@
                       <li class="nav-item">
                           <a href="{{url('account_delete_requests')}}" class="nav-link">
                               <i class="far fa-circle nav-icon"></i>
-                              <p>Account Delete Requests</p>
+                              <p> Delete Requests</p>
                           </a>
                       </li>
 
