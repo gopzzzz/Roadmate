@@ -26,7 +26,7 @@
 
               <li class="breadcrumb-item"><a href="home">Home</a></li>
 
-              <li class="breadcrumb-item active">Add Franchises</li>
+              <li class="breadcrumb-item active">Add Staff</li>
 
             </ol>
 
@@ -68,13 +68,13 @@
 
               <div class="card-header">
 
-                <h3 class="card-title">CRMS</h3>
+                <h3 class="card-title">Staff</h3>
 
                 <p align="right">
 
                
 
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add CRMS</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Staff</button>
 
               
  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -216,8 +216,25 @@
 </div>
 
 
+<div class="form-group col-sm-6">
 
 
+
+<label class="exampleModalLabel">Role</label>
+
+
+
+<select name="role" class="form-control">
+
+<option value="0">Select Role</option>
+<option value="2">CRM</option>
+<option value="4">BDM</option>
+<option value="5">PURCHASE MANAGER</option>
+
+</select>
+
+
+</div>
 
 
 </div>
@@ -278,7 +295,7 @@
                     <th>Phone Number</th>
                     <th>Address</th>
                     <th>DOB</th>
-                    <!-- <th>Muncipality/Corporation</th> -->
+                    <th>Designation</th>
                     <th>Email</th>
                     <!-- <th></th>
 
@@ -297,23 +314,21 @@
     $i = 1;
     @endphp
 
-    @foreach($cr as $key)
-    <tr>
-        <td>{{ $i }}</td>
-        <td>{{ $key->crm_name }}</td>
-        <td>{{ $key->phone_number }}</td>
-        <td>{{ $key->address }}</td>
-        <td>{{ $key->dob }}</td>
-        
-        <td>
-            @if ($key->user)
-            {{ $key->user->crm_name }}
-                {{ $key->user->email }}
-                {{ $key->user->user_type }}
-            @else
-                User data not available
-            @endif
-        </td>
+   @foreach($crr as $key)
+<tr>
+    <td>{{ $i }}</td>
+    <td>{{ $key->crm_name }}</td>
+    <td>{{ $key->phone_number }}</td>
+    <td>{{ $key->address }}</td>
+    <td>{{ $key->dob }}</td>
+    <td>
+        @if ($key->user_type)
+            {{ $key->designation }}
+            <td>{{ $key->email }}</td>
+        @else
+            User data not available
+        @endif
+    </td>
 
         @if($role == 1)
         <td>
@@ -342,7 +357,7 @@
 
                     <th>Address</th>
                     <th>DOB</th>
-                    <!-- <th>Muncipality/Corporation</th> -->
+                    <th>Designation</th>
                     <th>Email</th>
                     <!-- <th></th>  -->
                     @if($role==1)

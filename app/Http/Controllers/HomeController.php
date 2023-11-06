@@ -359,10 +359,33 @@ class HomeController extends Controller
 		return redirect('franchises');
 	}
 
+	// public function marketproducts(){
+		
+	// 	$market = DB::table('tbl_rm_products')
+    //     ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+        
+    //     ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+    //     ->get();
+		
+	// 	$mark=DB::table('tbl_rm_categorys')->get();
+	// 	$role=Auth::user()->user_type;
+	// 	return view('marketproducts',compact('market','mark','role'));
+	// }
+
 	public function crm(){
 		$cr = tbl_crms::with('user')->get();
+		
+		$crr = DB::table('tbl_crms')
+        ->leftJoin('users', 'tbl_crms.user_id', '=', 'users.id')
+
+                ->leftJoin('tbl_roles', 'users.user_type', '=', 'tbl_roles.id')
+
+        ->select('tbl_crms.*', 'users.user_type','users.email','tbl_roles.designation')
+
+        ->get();
+
 		$role=Auth::user()->user_type;
-		return view('crm',compact('cr','role'));
+		return view('crm',compact('cr','crr','role'));
 	}
 
 
@@ -371,7 +394,8 @@ class HomeController extends Controller
 		$user->name=$request->crm_name;
     $user->email = $request->email;
     $user->password = Hash::make($request->password);
-    $user->user_type = 2; // You may need to adjust this based on your user type logic.
+	
+    $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
 
     if($user->save()){
 		$cr=new tbl_crms;

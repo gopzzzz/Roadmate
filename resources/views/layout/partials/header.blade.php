@@ -262,7 +262,7 @@
             <a href="{{url('crm')}}" class="nav-link">
               <i class="nav-icon fas fa-id-card "></i>
               <p>
-               CRM
+               Staff
                <!-- <span class="right badge badge-danger">New</span>-->
               </p>
             </a>
