@@ -20,13 +20,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .invoice-header {
-            background-color: #007BFF;
-            color: #fff;
+            background-color: #e4cf23;
+            color: #e90f0e;
             padding: 20px;
             text-align: center;
         }
         .invoice-title {
-            font-size: 32px;
+            font-size: 40px;
             text-transform: uppercase;
         }
         .invoice-details {

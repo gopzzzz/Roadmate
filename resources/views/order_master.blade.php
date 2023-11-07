@@ -528,7 +528,7 @@
     @endif
 </td>         <td>{{$key->delivery_date}}</td>
          <td>{{$key->order_date}}</td>
-         <td style="width: 100px;">
+         <td style="width: 50px;">
          <!-- <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a> -->
 
          <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
@@ -536,7 +536,7 @@
 </td>
 
 
-         @if($role==1) <td>
+         @if($role==1) 
 
 
 
@@ -548,7 +548,7 @@
 
 
 
-         </td>@endif
+         @endif
 
 
 
