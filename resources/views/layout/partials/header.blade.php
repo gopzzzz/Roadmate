@@ -693,6 +693,94 @@
                               </p>
                           </a>
                       </li>
+                      @elseif($role==4)
+                      <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-briefcase"></i>
+                              <p>
+                              Franchise Module
+                                  <i class="right fas fa-angle-left"></i>
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                <a href="{{ url('country') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Country</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('state') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>State</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('district') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>District</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('place') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Place</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('franchises') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Franchise List</p>
+                </a>
+              </li>
+
+                          </ul>
+                      </li>
+
+                      @elseif($role==5)
+                      <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-briefcase"></i>
+                              <p>
+                                  Market Place
+                                  <i class="right fas fa-angle-left"></i>
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                                  <a href="{{ url('market_category') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Categories</p>
+                                  </a>
+                              </li>
+                              <li class="nav-item">
+                                  <a href="{{ url('marketproducts') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Products</p>
+                                  </a>
+                              </li>
+
+                              <li class="nav-item">
+                                  <a href="{{ url('vouchers') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Vouchers</p>
+                                  </a>
+                              </li>
+
+                              
+
+                              <li class="nav-item">
+                                  <a href="{{ url('order_master') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>orders</p>
+                                  </a>
+                              </li>
+
+                           
+
+                          </ul>
+                      </li>
+
                   @endif
 
 

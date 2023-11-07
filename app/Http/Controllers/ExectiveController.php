@@ -482,6 +482,13 @@ catch (Exception $e)
   $shop->agrimentverification_status=$request->agrimentverification_status;
 
   $shop->address=$request->address;
+  
+    if($request->place_id){
+      
+     $shops->place_id=$request->place_id;
+   
+  }
+  
 
   $shop->pincode=$request->pincode;
 
@@ -592,6 +599,13 @@ public function shopreg_exe_authorised(Request $request){
   $shops->logitude=$request->logitude;
 
   $shops->trans_id=$request->trans_id;
+  
+  if($request->place_id){
+      
+     $shops->place_id=$request->place_id;
+   
+  }
+  
 
   $shops->exeid=$request->exeid;
 
@@ -612,24 +626,12 @@ public function shopreg_exe_authorised(Request $request){
     if($shopcat->save()){
 
 
+      $result=0;
 
-      $otp=rand(1000, 9999);
-
-      $authKey =  env('AUTH_KEY',"");
-
-      // $sms="{$otp} is your Roadmate verification code. Please DO NOT share this OTP with anyone to ensure account security";
-
-      $mob=$request->phnum;
-
-      $sms=$otp;
+      echo json_encode(array('error' => false, "data" => $result, "message" => "Success"));
 
        
 
-     // $this->sendsms($sms,$mob);
-
- 
-
-    //  $affectedRows = Shops::where('phone_number',$mob)->update(array('otp' => $otp));
 
     }else{
 
@@ -746,6 +748,13 @@ public function shopreg_exe_unauthorised(Request $request){
   $shops->address=$request->address;
 
   $shops->pincode=$request->pincode;
+  
+    if($request->place_id){
+      
+     $shops->place_id=$request->place_id;
+   
+  }
+  
 
   $shops->lattitude=$request->latitude;
 
@@ -774,24 +783,9 @@ public function shopreg_exe_unauthorised(Request $request){
     if($shopcat->save()){
 
 
+      $result=0;
 
-      $otp=rand(1000, 9999);
-
-      $authKey =  env('AUTH_KEY',"");
-
-      // $sms="{$otp} is your Roadmate verification code. Please DO NOT share this OTP with anyone to ensure account security";
-
-      $mob=$request->phnum;
-
-      $sms=$otp;
-
-       
-
-     // $this->sendsms($sms,$mob);
-
- 
-
-    //  $affectedRows = Shops::where('phone_number',$mob)->update(array('otp' => $otp));
+      echo json_encode(array('error' => false, "data" => $result, "message" => "Success"));
 
     }else{
 
@@ -1353,6 +1347,7 @@ catch (Exception $e)
 
 }
 
+
 public function exefcmupdate(){
 
   $postdata = file_get_contents("php://input");					
@@ -1465,6 +1460,333 @@ catch (Exception $e)
 
 }
 
+}
+
+
+
+
+
+public function countrylist(){
+    
+    
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+ 
+
+  try{	
+
+   
+
+    $countrylist=DB::table('tbl_countrys')
+
+    ->where('deleted_status',0)
+
+    ->get();
+
+     
+
+        if($countrylist == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false, "data" => $countrylist, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+}
+public function statelist(){
+    
+     $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+  
+   $conid=$data1->country_id;
+
+ 
+
+  try{	
+
+   
+
+    $statelist=DB::table('tbl_states')
+    
+    ->where('country_id',$conid)
+
+    ->where('deleted_status',0)
+
+    ->get();
+
+     
+
+        if($statelist == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false, "data" => $statelist, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+    
+}
+public function districtlist(){
+      $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+  
+   $state=$data1->state_id;
+
+ 
+
+  try{	
+
+   
+
+    $districtlist=DB::table('tbl_districts')
+    
+    ->where('state_id',$state)
+
+    ->where('deleted_status',0)
+
+    ->get();
+
+     
+
+        if($districtlist == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false, "data" => $districtlist, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+}
+public function placelist(){
+    
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+  
+  $district=$data1->district_id;
+   
+  $type=$data1->type;
+
+ 
+
+  try{	
+
+   
+
+    $placelist=DB::table('tbl_places')
+    
+    ->where('district_id',$district)
+    
+    ->where('type',$type)
+
+    ->where('deleted_status',0)
+
+    ->get();
+
+     
+
+        if($placelist == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false, "data" => $placelist, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+}
+public function serachplaces(){
+    
+    
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+  
+  $district=$data1->district_id;
+   
+  $type=$data1->type;
+  
+  $place_name=$data1->place_name;
+
+ 
+
+  try{	
+
+   
+
+    $placelist=DB::table('tbl_places')
+    
+    ->where('district_id',$district)
+    
+    ->where('type',$type)
+
+    ->where('deleted_status',0)
+    
+    ->where('place_name', 'LIKE', "%" . $place_name . "%")
+    
+    ->limit(5)
+
+    ->get();
+
+     
+
+        if($placelist == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false, "data" => $placelist, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
 }
 
 }

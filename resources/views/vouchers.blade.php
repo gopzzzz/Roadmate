@@ -307,10 +307,10 @@
                     <!-- <th></th>
 
                     <th></th> -->
-                    @if($role==1)
+                 
 
 					<th>Action</th>
-          @endif
+       
 
                   </tr>
 
@@ -333,11 +333,11 @@
 
         <td>{{ $key->expiry_date }}</td>
 
-        @if($role == 1)
+      
         <td>
             <i class="fa fa-edit edit_voucher" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
 </td>
-        @endif
+      
 
     </tr>
     @php
@@ -360,10 +360,10 @@
 <th>Expiry Status</th>
 <th>Expiry Date</th> 
                     <!-- <th></th>  -->
-                    @if($role==1)
+                  
 
 					<th>Action</th>
-          @endif
+      
                   </tr>
 
                   </tfoot>

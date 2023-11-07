@@ -308,11 +308,11 @@
          <th>Deleted status</th>
 
 
-         @if($role==1)
+        
 
          <th>Action</th>
 
-         @endif
+       
 
       </tr>
 
@@ -360,7 +360,7 @@
     @elseif ($key->type == 2)
         Muncipality
     @elseif ($key->type == 3)
-        Cooperation
+        Corperation
     @else
         <!-- Handle other cases or display a default value if needed -->
     @endif
@@ -382,7 +382,7 @@
 
 
 
-         @if($role==1) <td>
+          <td>
 
 
 
@@ -393,7 +393,7 @@
 
 
 
-         </td>@endif
+         </td>
 
 
 
@@ -442,12 +442,11 @@
          <th>Deleted status</th>
 
 
-         @if($role==1)
+        
 
          <th>Action</th>
 
-         @endif
-
+       
       </tr>
 
 

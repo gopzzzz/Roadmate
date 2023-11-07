@@ -1027,7 +1027,7 @@ public function updatecompletedstatus($cusid,$offeramount,$shopid){
 
   (
 
-       "body" => "Your vehicle work completed,amount paid".$offeramount,
+       "body" => "Your vehicle work is complete, please make a payment of RS.".$offeramount,
 
        "title" => $shopnamee,
 
@@ -1035,15 +1035,7 @@ public function updatecompletedstatus($cusid,$offeramount,$shopid){
 
   );
 
-    // foreach ($data1->fcmnotify as $username) {
-
-    //     $friendToken[] = DB::table('user_lists')->where('id', $username->usernames)
-
-    //         ->get()->pluck('device_token')[0];
-
-    //         $dialog_id=$username->dialog_id;
-
-    // }
+   
 
   
 
@@ -2578,7 +2570,7 @@ catch (Exception $e)
     echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
 
     //commnt by alwin 19sep2021
-    $this->sendNotificationcustomer($title,$desc);
+   // $this->sendNotificationcustomer($title,$desc);
 
    
 

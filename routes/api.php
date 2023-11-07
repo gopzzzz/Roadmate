@@ -8,26 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-/*
-
-|--------------------------------------------------------------------------
-
-| API Routes
-
-|--------------------------------------------------------------------------
-
-|
-
-| Here is where you can register API routes for your application. These
-
-| routes are loaded by the RouteServiceProvider within a group which
-
-| is assigned the "api" middleware group. Enjoy building your API!
-
-|
-
-*/
-
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -707,6 +687,22 @@ Route::post('exefcmupdate','ExectiveController@exefcmupdate');
 Route::post('update_paycustomer','ExectiveController@update_paycustomer');
 
 
+Route::get('countrylist','ExectiveController@countrylist');
+
+
+Route::post('statelist','ExectiveController@statelist');
+
+Route::post('districtlist','ExectiveController@districtlist');
+
+Route::post('placelist','ExectiveController@placelist');
+
+Route::post('serachplaces','ExectiveController@serachplaces');
+
+
+
+
+
+
 
 
 
@@ -783,3 +779,7 @@ Route::post('soldoutproduct','Mbservices@soldoutproduct');
 Route::post('send_testsmsotp','Mbservices@send_testsmsotp')->name('send_testsmsotp');
 
 Route::post('deactivate_account','Mbservices@deactivate_account')->name('deactivate_account');
+
+/*==============================================================================================
+Shop marketing new feature addon (07-11-2023)
+=============================================================================================*/

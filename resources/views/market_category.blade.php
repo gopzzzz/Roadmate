@@ -264,11 +264,11 @@
 										<th>Category Image</th>
                                         <th>Status</th>
 
-		 @if($role==1)
+		
 
 		 <th>Action</th>
 
-		 @endif
+		
 
 	  </tr>
 
@@ -290,8 +290,8 @@
 
 @if($key->status==0) Active @else Inactive @endif
 
-@if($role==1)<td> <i class="fa fa-edit edit_marketcategory" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-										</td>@endif
+<td> <i class="fa fa-edit edit_marketcategory" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+</td>
 									</tr>@php $i++; @endphp @endforeach</tbody>
 								<tfoot>
 									<tr>
@@ -300,9 +300,9 @@
 										<th>Category Image</th>
                                         <th>Status</th>
 
-										@if($role==1)
+									
 										<th>Action</th>
-										@endif
+										
 									</tr>
 								</tfoot>
 							</table>
