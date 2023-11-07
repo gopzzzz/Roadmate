@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
+
+
 use App\Executives;
 use App\tbl_franchises;
 use App\tbl_crms;
@@ -387,38 +389,29 @@ class HomeController extends Controller
 		$role=Auth::user()->user_type;
 		return view('crm',compact('cr','crr','role'));
 	}
-
-
-	public function crminsert(Request $request){
-		$user = new User;
-		$user->name=$request->crm_name;
-    $user->email = $request->email;
-    $user->password = Hash::make($request->password);
+	public function crminsert(Request $request) {
+		
 	
-    $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
-
-    if($user->save()){
-		$cr=new tbl_crms;
-		
-			$cr->crm_name=$request->crm_name;
-			//  $cr->place_id=$request->place_id;
-			$cr->address=$request->address;
-			$cr->dob=$request->dob;
-			$cr->phone_number=$request->phone_number;
-			$cr->user_id=$user->id;
-			
-			
-			$cr->save();
-	}
-		
-    // return redirect('franchises');
-		return redirect('crm');
-	}
-
-	public function crmfetch(Request $request){
-		$id=$request->id;
-		$cr=tbl_crms::find($id);
-		print_r(json_encode($cr));
+		// Insert user record
+		$user = new User;
+		$user->name = $request->crm_name;
+		$user->email = $request->email;
+		$user->password = Hash::make($request->password);
+		$user->user_type = $request->role;
+	
+		$user->save();
+	
+		// Insert CRM record
+		$cr = new tbl_crms;
+		$cr->crm_name = $request->crm_name;
+		$cr->address = $request->address;
+		$cr->dob = date('Y-m-d', strtotime($request->dob)); // Convert date to correct format
+		$cr->phone_number = $request->phone_number;
+		$cr->user_id = $user->id;
+	
+		$cr->save();
+	
+		return redirect('crm')->with('success', 'Data inserted successfully.');
 	}
 
 	public function crmedit(Request $request){
