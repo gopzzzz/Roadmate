@@ -783,3 +783,6 @@ Route::post('deactivate_account','Mbservices@deactivate_account')->name('deactiv
 /*==============================================================================================
 Shop marketing new feature addon (07-11-2023)
 =============================================================================================*/
+
+Route::get('mhomepage','ShopmarketingController@mhomepage');
+Route::post('categoryproductlist','ShopmarketingController@categoryproductlist');
