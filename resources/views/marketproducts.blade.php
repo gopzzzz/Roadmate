@@ -289,11 +289,11 @@
 
                     <th>Status</th>
 
-                    @if($role==1)
+                    
 
 <th>Action</th>
 
-@endif
+
 
                   </tr>
 
@@ -325,7 +325,7 @@
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
 
 					         
-                    @if($role==1)
+                  
 
                     
                     <td>
@@ -339,7 +339,7 @@
 
 
 
-</td>@endif
+</td>
 
 
 
@@ -391,11 +391,11 @@ $i++;
 
                     <th>Status</th>
 
-@if($role==1)
+
 
 <th>Action</th>
 
-@endif
+
 
 </tr>
 

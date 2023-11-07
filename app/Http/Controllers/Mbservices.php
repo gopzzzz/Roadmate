@@ -319,6 +319,8 @@ public function mobilenotification($msg){
       
 
         ->select(DB::raw('shops.*, ROUND(cast(6371 * acos ( cos ( radians('.$latitude.') ) * cos( radians( `lattitude` ) ) * cos( radians( `logitude` ) - radians('.$longitude.') ) + sin ( radians('.$latitude.') ) * sin( radians( `lattitude` ) ) ) as decimal(8,2)) , 2) AS distance'))
+        
+     ->groupBy('shops.id')
 
         
 
@@ -4211,8 +4213,8 @@ catch (Exception $e)
       $model_id=$data1->modelid; 
 
       $index=$data1->index;
-      $offset=($index*10)+1;
-      $limit=($index+1)*10;
+      $offset=($index*10);
+      $limit=10;
 
 
       $date=date('Y-m-d');
@@ -6158,7 +6160,7 @@ catch (Exception $e)
 
    ->leftJoin('shops', 'tbl_shop_offers.shop_id', '=', 'shops.id')
 
-   ->leftJoin('user_vehicles', 'tbl_shop_offers.model_id', '=', 'user_vehicles.vehicle_model')
+   //->leftJoin('user_vehicles', 'tbl_shop_offers.model_id', '=', 'user_vehicles.vehicle_model')
 
   // ->leftJoin('tbl_shop_offers', 'shop_offer_models.offer_id', '=', 'tbl_shop_offers.id')
 

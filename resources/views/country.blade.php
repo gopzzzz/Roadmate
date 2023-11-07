@@ -260,12 +260,12 @@
 
                               <th>Countrys</th>
 
-                              @if($role==1)
+                            
                               <th>Deleted status</th>
 
                               <th>Action</th>
 
-                              @endif
+                             
 
                            </tr>
 
@@ -313,7 +313,7 @@
  </td>
 
 
-                              @if($role==1) <td>
+                            <td>
 
 
 
@@ -325,7 +325,7 @@
 
 
 
-                              </td>@endif
+                              </td>
 
 
 
@@ -367,12 +367,12 @@
 
                               <th>Countrys</th>
 
-                              @if($role==1)
+                            
                               <th>Deletes status</th>
 
                               <th>Action</th>
 
-                              @endif
+                             
 
                            </tr>
 

@@ -278,11 +278,11 @@
          <th>Deleted status</th>
 
 
-         @if($role==1)
+        
 
          <th>Action</th>
 
-         @endif
+       
 
       </tr>
 
@@ -338,7 +338,7 @@
 
 
 
-         @if($role==1) <td>
+        <td>
 
 
 
@@ -349,7 +349,7 @@
 
 
 
-         </td>@endif
+         </td>
 
 
 
@@ -396,11 +396,11 @@
          <th>Deleted status</th>
 
 
-         @if($role==1)
+        
 
          <th>Action</th>
 
-         @endif
+       
 
       </tr>
 
