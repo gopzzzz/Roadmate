@@ -1192,7 +1192,7 @@ class HomeController extends Controller
 		if($files=$request->file('prodimage')){  
 			
 			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
+			$files->move('market/',$name);  
 			
 			$market->image=$name; 
 			$market->product_title=$request->product_title;
@@ -1225,7 +1225,7 @@ class HomeController extends Controller
 			$market->status=$request->status;
 		if($files=$request->file('prodimage')){  
 			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
+			$files->move('market/',$name);  
 		
 			$market->image=$name; 
 		} 
@@ -3155,7 +3155,7 @@ function sendNotification1($msg1,$title)
 			$mark->category_name = $request->category_name;
 			if($files=$request->file('categoryimage')){  
 				$name=$files->getClientOriginalName();  
-				$files->move('img/',$name);
+				$files->move('market/',$name);
 				$mark->image=$name; 
 
 				$mark->cat_id = 0;
@@ -3179,7 +3179,7 @@ function sendNotification1($msg1,$title)
 			$mark->status=$request->status;
 			if($files=$request->file('categoryimage')){  
 				$name=$files->getClientOriginalName();  
-				$files->move('img',$name);  
+				$files->move('market',$name);  
 				
 				$mark->image=$name; 
 				

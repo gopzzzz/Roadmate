@@ -316,7 +316,7 @@
                   <td>{{$i}}</td>
                     
 
-                    <td><img src="{{ asset('/img/'.$key->image) }}" alt="" width="75"/></td>
+                    <td><img src="{{ asset('/market/'.$key->image) }}" alt="" width="75"/></td>
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->product_title}}</td>
                     <td>{{$key->discription}}</td>
