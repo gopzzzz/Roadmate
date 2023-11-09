@@ -780,6 +780,74 @@
 
                           </ul>
                       </li>
+                      @elseif($role==6)
+                      <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-briefcase"></i>
+                              <p>
+                              Franchise Module
+                                  <i class="right fas fa-angle-left"></i>
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                <a href="{{ url('country') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Country</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('state') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>State</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('district') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>District</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('place') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Place</p>
+                </a>
+              </li>
+             
+
+                          </ul>
+                      </li>
+
+                      <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-university"></i>
+                              <p>
+                                  Shops
+                                  <i class="fas fa-angle-left right"></i>
+
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                           
+                              <li class="nav-item">
+                                  <a href="{{ url('vshops') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Visited Shops</p>
+                                  </a>
+                              </li>
+
+                              <li class="nav-item">
+                                  <a href="{{ url('ashops') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Added Shops</p>
+                                  </a>
+                              </li>
+                             
+
+
+                          </ul>
+                      </li>
 
                   @endif
 
