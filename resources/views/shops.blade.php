@@ -423,11 +423,10 @@
 
                     <th>Shop Type</th>
 
-                    @if($role==1)
+                  
 
 <th>Action</th>
 
-@endif
 
                   </tr>
 
@@ -456,15 +455,17 @@
                     <td>{{$key->pincode}}</td>
                     <td>@if($key->authorised_status==0) <button type="button" class="btn btn-info btn-sm">Visted Shop</button> @elseif($key->authorised_status==1)  <button type="button" class="btn btn-success btn-sm">Autherised Shop</button> @endif</td>
 					         
-                    @if($role==1)
+                   
 
                     <td>
 							  <i class="fa fa-edit edit_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+                @if($role==1)
                     <i class="fa fa-eye view_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                    <a href="{{url('shopdelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
-                    </td>
+                   @endif
+                  </td>
 
-@endif
+
                    
 
                   </tr>
@@ -503,11 +504,11 @@
 
                       <th>Shop Type</th>
 
-                      @if($role==1)
+                     
 
 <th>Action</th>
 
-@endif
+
 
                     </tr>
 

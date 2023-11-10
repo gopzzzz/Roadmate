@@ -790,3 +790,6 @@ Route::get('categorylist','ShopmarketingController@categorylist');
 Route::post('productdetails','ShopmarketingController@productdetails');
 Route::post('wishlist','ShopmarketingController@wishlist');
 Route::post('cart','ShopmarketingController@cart');
+Route::post('deliveryaddress','ShopmarketingController@deliveryaddress');
+Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
+Route::get('product','ShopmarketingController@product');
