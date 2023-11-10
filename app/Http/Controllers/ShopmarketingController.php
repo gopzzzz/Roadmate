@@ -77,10 +77,7 @@ catch (Exception $e)
 }
 }
 public function categoryproductlist(){
-    
-    
-    
-    
+       
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -88,45 +85,26 @@ public function categoryproductlist(){
   $data1 = json_decode($json);
 
   $categoryId=$data1->categoryid;
-  
-
-
   try{	
 
-   
-
-   
-
-    $productlist=DB::table('tbl_rm_products')
-    
-   ->where('cat_id',$categoryId)
-
-    ->get();
-
-     
-
+      $productlist = DB::table('tbl_rm_products')
+          ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+          ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+          ->where('tbl_rm_products.cat_id', $categoryId) 
+          ->get();
         if($productlist == null){
 
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
+                 echo json_encode(array('error' => true, "message" => "Error"));
 
              }
 
             else{								
 
-            
-
-            $json_data = 0;
+             $json_data = 0;
 
             echo json_encode(array('error' => false,"productlist"=>$productlist, "message" => "Success"));
 
                 }
-
-    
-
-  
-
 }
 
 catch (Exception $e)
