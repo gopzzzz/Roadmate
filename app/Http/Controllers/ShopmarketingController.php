@@ -425,67 +425,25 @@ public function deliveryaddress(){
   }
 
  }
-
- public function product(){
-    
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
-
+ public function product() {
+  $postdata = file_get_contents("php://input");
   $json = str_replace(array("\t","\n"), "", $postdata);
-
   $data1 = json_decode($json);
 
-  
+  try {
+      $products = DB::table('tbl_rm_products')
+          ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+          ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+          ->get();
 
-
-  try{	
-
-   
-
-   
-
-    $product=DB::table('tbl_rm_products')
-     ->get();
-
-     
-
-        if($product == null){
-
-               
-
+      if ($products == null) {
           echo json_encode(array('error' => true, "message" => "Error"));
-
-             }
-
-            else{								
-
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false,"product"=>$product, "message" => "Success"));
-
-                }
-
-    
-
-  
-
-}
-
-catch (Exception $e)
-
-{
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
-
-        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
-
-}
+      } else {
+          echo json_encode(array('error' => false, "products" => $products, "message" => "Success"));
+      }
+  } catch (Exception $e) {
+      echo json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+  }
 }
 
 
@@ -520,10 +478,7 @@ catch (Exception $e)
 
  }
 
-
-
-            
-            }
+  }
   
 
 
