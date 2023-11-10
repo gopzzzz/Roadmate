@@ -132,7 +132,7 @@
 
 
 <select name="category" class="form-control">
-  <option value="0">Select Category</option>
+<option value="0">Select Category</option>
   @foreach($mark as $key)
 
 <option value="{{$key->id}}">{{$key->category_name}}</option>
@@ -155,13 +155,13 @@
 </div>
 <div class="form-group col-sm-6">
 
-
+<input type="hidden" name="prod_id">
 
 <label class="exampleModalLabel">Image</label>
 
 
 
-<input class="form-control" type="file"  name="prodimage" accept="image/*" >
+<input class="form-control" type="file"  name="images[]" accept="image/*" multiple required>
 
 
 </div>
@@ -281,7 +281,7 @@
 
                     <th>Product name</th>
 
-                    <th>Desciption</th>
+                    <th>Description</th>
 
                     <th>Orignial Amount </th>
 
@@ -322,12 +322,10 @@
                     <td>{{$key->discription}}</td>
                     <td>{{$key->original_amount}}</td>
                     <td>{{$key->offer_price}}</td>
+
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
 
-					         
-                  
 
-                    
                     <td>
 
 
@@ -383,7 +381,7 @@ $i++;
 
                     <th>Product name</th>
 
-                    <th>Desciption</th>
+                    <th>Description</th>
 
                     <th>Orignial Amount </th>
 
@@ -407,7 +405,13 @@ $i++;
 
 </table>
 
-
+<script>
+  $(document).ready(function(){
+  $('#fil').change(function() {
+  $('#target').submit();
+});
+});
+  </script>
     
 
 
@@ -467,7 +471,7 @@ $i++;
 
 
 
-<input class="form-control" type="file"  name="prodimage" accept="image/*" >
+<input class="form-control" type="file"  name="prodimage" accept="image/*" multiple>
 
 
 </div>
@@ -541,14 +545,33 @@ $i++;
     
                   
 
-
-
-                
-
-
-                 
-
-
+<div class="modal" tabindex="-1" role="dialog" id="imageshowmodal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Images</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+        <thead>
+        <tr>
+        <td>id</td>
+        <!-- <td>Product Id</td> -->
+        <td>Images</td>
+        
+        </tr>
+        </thead>
+        <tbody id="imageshowtbody">
+        </tbody>
+        </table>
+      </div>
+      
+    </div>
+  </div>
+</div>
 
                </div>
 

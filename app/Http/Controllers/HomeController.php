@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
+
+
 use App\Executives;
 use App\tbl_franchises;
 use App\tbl_crms;
@@ -56,6 +58,7 @@ use App\Tbl_coupens;use App\Tbl_rm_categorys;
 use App\Tbl_order_masters;
 
 use App\Tbl_order_trans;
+use App\Tbl_productimages;
 
 use DB;
 use Hash;
@@ -387,9 +390,9 @@ class HomeController extends Controller
 		$role=Auth::user()->user_type;
 		return view('crm',compact('cr','crr','role'));
 	}
-
-
-	public function crminsert(Request $request){
+	public function crminsert(Request $request) {
+		
+	
 		$user = new User;
 		$user->name=$request->crm_name;
     $user->email = $request->email;
@@ -410,15 +413,8 @@ class HomeController extends Controller
 			
 			$cr->save();
 	}
-		
-    // return redirect('franchises');
-		return redirect('crm');
-	}
-
-	public function crmfetch(Request $request){
-		$id=$request->id;
-		$cr=tbl_crms::find($id);
-		print_r(json_encode($cr));
+	
+		return redirect('crm')->with('success', 'Data inserted successfully.');
 	}
 
 	public function crmedit(Request $request){
@@ -1187,26 +1183,38 @@ class HomeController extends Controller
 		return view('marketproducts',compact('market','mark','role'));
 	}
 
-	public function marketproductinsert(Request $request){
-		$market=new Tbl_rm_products;
-		if($files=$request->file('prodimage')){  
-			
-			$name=$files->getClientOriginalName();  
-			$files->move('market/',$name);  
-			
-			$market->image=$name; 
-			$market->product_title=$request->product_title;
-			$market->discription=$request->discription;
-			$market->original_amount=$request->original_amount;
-			$market->offer_price=$request->offer_price;
-			$market->cat_id=$request->category;
+	public function marketproductinsert(Request $request)
+{
+    $market = new Tbl_rm_products;
+    $market1 = new Tbl_productimages;
 
-			$market->status=0;
-			$market->save();
-		}  
-		
-		return redirect('marketproducts');
-	}
+    $market->product_title = $request->product_title;
+    $market->discription = $request->discription;
+    $market->original_amount = $request->original_amount;
+    $market->offer_price = $request->offer_price;
+    $market->cat_id = $request->category;
+    
+    $market->status = 0;
+    $market->save();
+    $prod_id = $market->id;
+
+    $request->validate([
+        'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    foreach ($request->file('images') as $image) {
+        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move('market', $imageName);
+
+        Tbl_productimages::create([
+            'prod_id' => $prod_id,
+            'images' => $imageName,
+        ]);
+    }
+
+    return redirect('marketproducts');
+}
+
 
 	public function marketproductfetch(Request $request){
 		$id=$request->id;
@@ -1214,6 +1222,11 @@ class HomeController extends Controller
 		print_r(json_encode($market));
 	}
 
+	public function productimagefetch(Request $request){
+		$id=$request->id;
+		$market1=DB::table('tbl_productimages')->where('prod_id', $id)->get();
+		print_r(json_encode($market1));
+	}
 	public function marketproductedit(Request $request){
 		$id=$request->id;
 		$market=Tbl_rm_products::find($id);
@@ -2874,6 +2887,7 @@ function sendNotification1($msg1,$title)
 			$country = new Tbl_countrys;
 			$country->country_name = $request->country_name;
 			$country->deleted_status = 0;
+			$country->added_id=Auth::user()->id;
 			$country->save();
 			return redirect('country');
 		}
@@ -2910,7 +2924,7 @@ function sendNotification1($msg1,$title)
 			$state->country_id = $request->country;
 			$state->state_name = $request->state_name;
 			$state->deleted_status = 0;
-
+			$state->added_id=Auth::user()->id;
 			$state->save();
 		
 			return redirect('state');
@@ -2953,7 +2967,7 @@ function sendNotification1($msg1,$title)
 			$district = new Tbl_districts;
 			$district->state_id = $request->state;
 			$district->deleted_status = 0;
-
+			$district->added_id=Auth::user()->id;
 			$district->district_name = $request->district_name;
 			$district->save();
 		
@@ -3035,7 +3049,7 @@ function sendNotification1($msg1,$title)
 			$place->district_id = $request->district;
 			$place->type = $request->type;
 			$place->deleted_status = 0;
-
+            $place->added_id=Auth::user()->id;
 			$place->place_name = $request->place_name;
 			$place->save();
 		

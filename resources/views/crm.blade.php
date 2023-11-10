@@ -3,6 +3,9 @@
 
 
 @section('content')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 
 <div class="content-wrapper">
 
@@ -277,6 +280,41 @@
                
 
               </div>
+
+
+              <script>
+$(document).ready(function() {
+    // Phone number validation
+    $('input[name="phone_number"]').on('input', function() {
+        var phoneNumber = $(this).val();
+        if (!/^[0-9]{10}$/.test(phoneNumber)) {
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Email validation
+    $('input[name="email"]').on('input', function() {
+        var email = $(this).val();
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Password validation
+    $('input[name="password"]').on('input', function() {
+        var password = $(this).val();
+        if (password.length < 8) {
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+});
+</script>
 
               <!-- /.card-header -->
 
