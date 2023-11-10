@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use DB;
+use App\Tbl_deliveryaddres;
+use App\shops;
 
 class ShopmarketingController extends Controller
 {
@@ -139,6 +141,9 @@ catch (Exception $e)
 
 }
 }
+
+
+  
 
 public function categorylist(){
     
@@ -407,8 +412,43 @@ catch (Exception $e)
 
 }
 }
-
 public function deliveryaddress(){
+
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+ 
+
+  $query=new Tbl_deliveryaddres;
+  $query->shop_id=$data1->shop_id;
+
+  $query->area=$data1->area;
+  $query->landmark=$data1->landmark;
+  $query->city=$data1->city;
+  $query->district=$data1->district;
+  $query->state=$data1->state;
+  $query->country=$data1->country;
+  $query->pincode=$data1->pincode;
+
+
+  if($query->save()){
+
+    $last=$query->id;
+
+    echo json_encode(array('error' => false, "data" => $last, "message" => "Success"));
+
+  }else{
+
+    echo json_encode(array('error' => true, "message" => "Error"));
+
+  }
+
+ }
+
+ public function product(){
     
     
     
@@ -419,8 +459,7 @@ public function deliveryaddress(){
 
   $data1 = json_decode($json);
 
-  $shopId=$data1->shop_id;
-
+  
 
 
   try{	
@@ -429,18 +468,12 @@ public function deliveryaddress(){
 
    
 
-    $deliveryaddress=DB::table('tbl_deliveryaddress')
-    
-    
-   ->where('shop_id',$shopId)
- 
-
-
-    ->get();
+    $product=DB::table('tbl_rm_products')
+     ->get();
 
      
 
-        if($deliveryaddress == null){
+        if($product == null){
 
                
 
@@ -454,7 +487,7 @@ public function deliveryaddress(){
 
             $json_data = 0;
 
-            echo json_encode(array('error' => false,"deliveryaddress"=>$deliveryaddress, "message" => "Success"));
+            echo json_encode(array('error' => false,"product"=>$product, "message" => "Success"));
 
                 }
 
@@ -477,5 +510,46 @@ catch (Exception $e)
 }
 }
 
-   }
+
+ public function deliveryaddressupdate(){
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+ $data1 = json_decode($json);
+
+ $deliveryid=$data1->deliveryid;
+ $shop_id=$data1->shop_id;
+
+ $deliveryaddressupdate=shops::find($shop_id);
+
+ $deliveryaddressupdate->delivery_id=$deliveryid;
+
+
+ if($deliveryaddressupdate->save()){
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+
+ }else{
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+
+ }
+
+ }
+
+
+
+            
+            }
+  
+
+
+
+
+   
 
