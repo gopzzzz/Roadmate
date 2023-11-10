@@ -58,6 +58,7 @@ use App\Tbl_coupens;use App\Tbl_rm_categorys;
 use App\Tbl_order_masters;
 
 use App\Tbl_order_trans;
+use App\Tbl_productimages;
 
 use DB;
 use Hash;
@@ -392,24 +393,26 @@ class HomeController extends Controller
 	public function crminsert(Request $request) {
 		
 	
-		// Insert user record
 		$user = new User;
-		$user->name = $request->crm_name;
-		$user->email = $request->email;
-		$user->password = Hash::make($request->password);
-		$user->user_type = $request->role;
+		$user->name=$request->crm_name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
 	
-		$user->save();
-	
-		// Insert CRM record
-		$cr = new tbl_crms;
-		$cr->crm_name = $request->crm_name;
-		$cr->address = $request->address;
-		$cr->dob = date('Y-m-d', strtotime($request->dob)); // Convert date to correct format
-		$cr->phone_number = $request->phone_number;
-		$cr->user_id = $user->id;
-	
-		$cr->save();
+    $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
+
+    if($user->save()){
+		$cr=new tbl_crms;
+		
+			$cr->crm_name=$request->crm_name;
+			//  $cr->place_id=$request->place_id;
+			$cr->address=$request->address;
+			$cr->dob=$request->dob;
+			$cr->phone_number=$request->phone_number;
+			$cr->user_id=$user->id;
+			
+			
+			$cr->save();
+	}
 	
 		return redirect('crm')->with('success', 'Data inserted successfully.');
 	}
@@ -1180,26 +1183,38 @@ class HomeController extends Controller
 		return view('marketproducts',compact('market','mark','role'));
 	}
 
-	public function marketproductinsert(Request $request){
-		$market=new Tbl_rm_products;
-		if($files=$request->file('prodimage')){  
-			
-			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
-			
-			$market->image=$name; 
-			$market->product_title=$request->product_title;
-			$market->discription=$request->discription;
-			$market->original_amount=$request->original_amount;
-			$market->offer_price=$request->offer_price;
-			$market->cat_id=$request->category;
+	public function marketproductinsert(Request $request)
+{
+    $market = new Tbl_rm_products;
+    $market1 = new Tbl_productimages;
 
-			$market->status=0;
-			$market->save();
-		}  
-		
-		return redirect('marketproducts');
-	}
+    $market->product_title = $request->product_title;
+    $market->discription = $request->discription;
+    $market->original_amount = $request->original_amount;
+    $market->offer_price = $request->offer_price;
+    $market->cat_id = $request->category;
+    
+    $market->status = 0;
+    $market->save();
+    $prod_id = $market->id;
+
+    $request->validate([
+        'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    foreach ($request->file('images') as $image) {
+        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move('market', $imageName);
+
+        Tbl_productimages::create([
+            'prod_id' => $prod_id,
+            'images' => $imageName,
+        ]);
+    }
+
+    return redirect('marketproducts');
+}
+
 
 	public function marketproductfetch(Request $request){
 		$id=$request->id;
@@ -1207,6 +1222,11 @@ class HomeController extends Controller
 		print_r(json_encode($market));
 	}
 
+	public function productimagefetch(Request $request){
+		$id=$request->id;
+		$market1=DB::table('tbl_productimages')->where('prod_id', $id)->get();
+		print_r(json_encode($market1));
+	}
 	public function marketproductedit(Request $request){
 		$id=$request->id;
 		$market=Tbl_rm_products::find($id);
@@ -1218,7 +1238,7 @@ class HomeController extends Controller
 			$market->status=$request->status;
 		if($files=$request->file('prodimage')){  
 			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
+			$files->move('market/',$name);  
 		
 			$market->image=$name; 
 		} 
@@ -2867,6 +2887,7 @@ function sendNotification1($msg1,$title)
 			$country = new Tbl_countrys;
 			$country->country_name = $request->country_name;
 			$country->deleted_status = 0;
+			$country->added_id=Auth::user()->id;
 			$country->save();
 			return redirect('country');
 		}
@@ -2903,7 +2924,7 @@ function sendNotification1($msg1,$title)
 			$state->country_id = $request->country;
 			$state->state_name = $request->state_name;
 			$state->deleted_status = 0;
-
+			$state->added_id=Auth::user()->id;
 			$state->save();
 		
 			return redirect('state');
@@ -2946,7 +2967,7 @@ function sendNotification1($msg1,$title)
 			$district = new Tbl_districts;
 			$district->state_id = $request->state;
 			$district->deleted_status = 0;
-
+			$district->added_id=Auth::user()->id;
 			$district->district_name = $request->district_name;
 			$district->save();
 		
@@ -3028,7 +3049,7 @@ function sendNotification1($msg1,$title)
 			$place->district_id = $request->district;
 			$place->type = $request->type;
 			$place->deleted_status = 0;
-
+            $place->added_id=Auth::user()->id;
 			$place->place_name = $request->place_name;
 			$place->save();
 		
@@ -3148,7 +3169,7 @@ function sendNotification1($msg1,$title)
 			$mark->category_name = $request->category_name;
 			if($files=$request->file('categoryimage')){  
 				$name=$files->getClientOriginalName();  
-				$files->move('img/',$name);
+				$files->move('market/',$name);
 				$mark->image=$name; 
 
 				$mark->cat_id = 0;
@@ -3172,7 +3193,7 @@ function sendNotification1($msg1,$title)
 			$mark->status=$request->status;
 			if($files=$request->file('categoryimage')){  
 				$name=$files->getClientOriginalName();  
-				$files->move('img',$name);  
+				$files->move('market',$name);  
 				
 				$mark->image=$name; 
 				
