@@ -786,3 +786,7 @@ Shop marketing new feature addon (07-11-2023)
 
 Route::get('mhomepage','ShopmarketingController@mhomepage');
 Route::post('categoryproductlist','ShopmarketingController@categoryproductlist');
+Route::get('categorylist','ShopmarketingController@categorylist');
+Route::post('productdetails','ShopmarketingController@productdetails');
+Route::post('wishlist','ShopmarketingController@wishlist');
+Route::post('cart','ShopmarketingController@cart');
