@@ -176,10 +176,13 @@
 
 
 
-<input type="date" class="form-control" name="date" placeholder="Enter Date" required>
+<input type="date" class="form-control" name="date" placeholder="Enter Date" required min="{{ date('Y-m-d') }}">
 
 
 </div>
+
+
+
 
 <div class="form-group col-sm-6">
 
@@ -452,7 +455,7 @@
 
 
 
-<input type="date" class="form-control" name="date" placeholder="Enter Date" id="date" required>
+<input type="date" class="form-control" name="date" placeholder="Enter Date" id="date" required min="{{ date('Y-m-d') }}">
 
 
 </div>
@@ -673,6 +676,13 @@
 
   </div>
 
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dateInput = document.querySelector('input[name="date"]');
 
+        // Update the min attribute to allow the current date
+        dateInput.min = new Date().toISOString().split('T')[0];
+    });
+</script> -->
 
   @endsection

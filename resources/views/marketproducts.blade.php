@@ -199,19 +199,6 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 
 
@@ -316,7 +303,7 @@
                   <td>{{$i}}</td>
                     
 
-                    <td><img src="{{ asset('/market/'.$key->image) }}" alt="" width="75"/></td>
+                  <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td>
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->product_title}}</td>
                     <td>{{$key->discription}}</td>
@@ -635,6 +622,17 @@ $i++;
 
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('input[name="original_amount"], input[name="offer_price"]').on('input', function() {
+            var value = $(this).val();
+            if (!$.isNumeric(value) && value !== '') {
+                alert('Please enter a valid number.');
+                $(this).val(''); // Clear the input if not a number
+            }
+        });
+    });
+</script>
 
 @endsection

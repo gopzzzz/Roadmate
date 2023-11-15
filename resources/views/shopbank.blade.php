@@ -101,7 +101,7 @@
                                     
                                     <label class="exampleModalLabel">Bank</label>
 
-<input type="text"  class="form-control" name="bank" placeholder="Enter fuel type" required>
+<input type="text"  class="form-control" name="bank" placeholder="Enter Bank" required>
 
 </div>
 

@@ -145,7 +145,7 @@
 
 
 
-<input class="form-control" name="percentage"  required>
+<input class="form-control" name="percentage" type="number" step="any" oninput="validatePercentage(this)" required>
 
 
 </div>
@@ -437,5 +437,15 @@
     <!-- /.content -->
 
   </div>
+
+  <script>
+    function validatePercentage(input) {
+        // Remove non-numeric characters using a regular expression
+        input.value = input.value.replace(/[^0-9.]/g, '');
+
+        // You can add further validation logic if needed
+    }
+</script>
+
 
   @endsection

@@ -65,11 +65,11 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Title</label>
-                                       <input type="text" name="title" class="form-control" Placeholder="Enter Title" >
+                                       <input type="text" name="title" class="form-control" Placeholder="Enter Title" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Description</label>
-                                       <textarea  name="desc" class="form-control" Placeholder="Enter Description" ></textarea>
+                                       <textarea  name="desc" class="form-control" Placeholder="Enter Description" required></textarea>
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Fuel Type</label>
@@ -91,7 +91,7 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Brand</label>
-                                       <select name="vehtype" class="form-control brandmodelfetch" id="brandlist">
+                                       <select name="vehtype" class="form-control brandmodelfetch" id="brandlist" required>
                                        </select>
                                     </div>
                                     <div class="form-group col-sm-6">
@@ -101,19 +101,19 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Image</label>
-                                       <input type="file" name="image" class="form-control"  >
+                                       <input type="file" name="image" class="form-control" accept="image/*" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Amount</label>
-                                       <input type="text" name="amount" class="form-control"  >
+                                       <input type="text" name="amount" class="form-control" oninput="validateAmount(this)" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Shop Amount</label>
-                                       <input type="text" name="shopamount" class="form-control"  >
+                                       <input type="text" name="shopamount" class="form-control" oninput="validateAmount(this)" required >
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Offer Amount</label>
-                                       <input type="text" name="offeramount" class="form-control"  >
+                                       <input type="text" name="offeramount" class="form-control" oninput="validateAmount(this)" required >
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">Status</label>
@@ -162,7 +162,8 @@
                               <td>{{$key->veh_type}}</td>
                               <td>{{$key->fuel_type}}</td>
                               <td>{{$key->amount}}</td>
-                              <td>{{$key->image}}</td>
+                              <td><img src="{{ asset('/img/'.$key->image) }}" alt="" width="95"/></td>
+                              <!-- <td>{{$key->image}}</td> -->
                               <td>{{$key->offer_amount}}</td>
                               <td style="width:200px;"><button type="button" class="btn btn-success btn-sm add_vehicle" data-id="{{$key->id}}">Vehicle</button>
                                  <button type="button" class="btn btn-success btn-sm addfeatures" data-id="{{$key->id}}">Features</button>
@@ -488,4 +489,16 @@
    </div>
    <!-- /.content -->
 </div>
+
+<script>
+    function validateAmount(input) {
+        // Use a regular expression to check if the input contains only numbers
+        if (!/^\d*\.?\d*$/.test(input.value)) {
+            // If not, display an alert and clear the input
+            alert("Please enter only numeric values for the amount.");
+            input.value = "";
+        }
+    }
+</script>
+
 @endsection

@@ -69,28 +69,28 @@
 
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Title</label>
-                                      <input type="text" name="title" class="form-control" Placeholder="Enter Title" >
+                                      <input type="text" name="title" class="form-control" Placeholder="Enter Title" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Description</label>
-                                      <textarea  name="desc" class="form-control" Placeholder="Enter Description" ></textarea>
+                                      <textarea  name="desc" class="form-control" Placeholder="Enter Description" required></textarea>
                                     </div>
                                 
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Image</label>
-                                      <input type="file" name="image" class="form-control"  >
+                                      <input type="file" name="image" class="form-control" accept="image/*" required >
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Normal Amount</label>
-                                      <input type="text" name="norm_amunt" class="form-control"  Placeholder="Enter Normal Amount">
+                                      <input type="text" name="norm_amunt" class="form-control"  Placeholder="Enter Normal Amount" oninput="validateAmount(this)" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Discount Amount</label>
-                                      <input type="text" name="dis_amunt" class="form-control"  Placeholder="Enter Discount Amount">
+                                      <input type="text" name="dis_amunt" class="form-control"  Placeholder="Enter Discount Amount" oninput="validateAmount(this)" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">End Date</label>
-                                      <input type="date" name="edate" class="form-control" Placeholder="Enter Description" >
+                                      <input type="date" name="edate" class="form-control" oninput="validateFutureDate(this)" required>
                                     </div>
 									
                                  </div>
@@ -213,15 +213,15 @@
                                 
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Normal Amount</label>
-                                      <input type="text" name="norm_amunt" class="form-control"  id="norm_amunt">
+                                      <input type="text" name="norm_amunt" class="form-control"  id="norm_amunt" oninput="validateAmount(this)">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Discount Amount</label>
-                                      <input type="text" name="dis_amunt" class="form-control"  id="dis_amunt">
+                                      <input type="text" name="dis_amunt" class="form-control"  id="dis_amunt" oninput="validateAmount(this)">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">End Date</label>
-                                      <input type="date" name="edate" class="form-control" id="edate" >
+                                      <input type="date" name="edate" class="form-control" id="edate" oninput="validateFutureDate(this)">
                                     </div>
                                  <div class="modal-footer">
                                    
@@ -315,4 +315,33 @@
    </section>
    <!-- /.content -->
 </div>
+
+
+
+<script>
+    function validateAmount(input) {
+        // Use a regular expression to check if the input contains only numbers
+        if (!/^\d*\.?\d*$/.test(input.value)) {
+            // If not, display an alert and clear the input
+            alert("Please enter only numeric values for the amount.");
+            input.value = "";
+        }
+    }
+</script>
+<script>
+    function validateFutureDate(input) {
+        // Get the current date
+        var currentDate = new Date();
+
+        // Get the entered date from the input field
+        var enteredDate = new Date(input.value);
+
+        // Compare the dates
+        if (enteredDate <= currentDate) {
+            // If the entered date is not in the future, display an alert and clear the input
+            alert("Please select a future date.");
+            input.value = "";
+        }
+    }
+</script>
 @endsection

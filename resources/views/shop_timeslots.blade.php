@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <div class="content-wrapper">
 
    <!-- Content Header (Page header) -->
@@ -429,5 +430,17 @@
    <!-- /.content -->
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize flatpickr on the input field
+        flatpickr("#open", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K", // Use 12-hour time with AM/PM
+            time_24hr: false, // Set to true if you want 24-hour time format
+            defaultDate: new Date(),
+        });
+    </script>
 
 @endsection
