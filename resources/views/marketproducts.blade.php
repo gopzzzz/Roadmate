@@ -316,7 +316,7 @@
                   <td>{{$i}}</td>
                     
 
-                    <td><img src="{{ asset('/market/'.$key->image) }}" alt="" width="75"/></td>
+                  <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td>
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->product_title}}</td>
                     <td>{{$key->discription}}</td>

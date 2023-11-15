@@ -3251,67 +3251,6 @@ function sendNotification1($msg1,$title)
 
 			return view('order_master',compact('order','role','orderr','mark'));
 		}
-// 		public function orderinsert(Request $request){
-			
-// 			$order = new Tbl_order_masters();
-// 			$order->shop_id = $request->shopname;
-// 			$order->total_amount = $request->total_amount;
-// 			$order->discount = $request->discount;
-// 			$order->payment_mode=$request->paymentmode;
-// 			$order->tax_amount = $request->tax_amount;
-
-// 			$order->total_mrp = $request->total_mrp;
-// 			$order->shipping_charge = $request->shipping_charge;
-
-// 			$order->payment_status = $request->pay_status;
-// 			$order->order_status = $request->orderstat;
-
-// 			$order->delivery_date = $request->delivery_date;
-// 			$order->order_date = $request->order_date;
-// 			$order->coupen_id =  $request->coupencode;
-// 			$order->wallet_redeem_id= 0;
-
-
-// 			$order->save();
-		
-// 			return redirect('order_master');
-		
-// }
-// public function orderfetch(Request $request){
-// 	$id=$request->id;
-// 	$order=Tbl_order_masters::find($id);
-// 	print_r(json_encode($order));
-// }
-// public function orderedit(Request $request){
-// 	$id=$request->id;
-// 	$order=Tbl_order_masters::find($id);
-	
-// 	$order->shop_id = $request->shopname;
-// 			$order->total_amount = $request->total_amount;
-// 			$order->discount = $request->discount;
-// 			$order->payment_mode=$request->paymentmode;
-
-// 			$order->tax_amount = $request->tax_amount;
-
-// 			$order->total_mrp = $request->total_mrp;
-// 			$order->shipping_charge = $request->shipping_charge;
-
-// 			$order->payment_status = $request->pay_status;
-// 			$order->order_status = $request->orderstat;
-
-// 			$order->delivery_date = $request->delivery_date;
-// 			$order->order_date = $request->order_date;
-// 			$order->coupen_id =  $request->coupencode;
-// 			$order->wallet_redeem_id= 0;
-
-// 	$order->save();
-	
-// 	return redirect('order_master');
-// }
-// public function orderdelete($id){
-// 	DB::delete('delete from tbl_order_masters where id = ?',[$id]);
-// 	return redirect('order_master');
-// }
 
 
 
