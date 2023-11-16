@@ -1227,24 +1227,35 @@ class HomeController extends Controller
 		$market1=DB::table('tbl_productimages')->where('prod_id', $id)->get();
 		print_r(json_encode($market1));
 	}
-	public function marketproductedit(Request $request){
-		$id=$request->id;
-		$market=Tbl_rm_products::find($id);
-		$market->product_title=$request->product_title;
-			$market->discription=$request->discription;
-			$market->original_amount=$request->original_amount;
-			$market->offer_price=$request->offer_price;
-			$market->cat_id=$request->category;
-			$market->status=$request->status;
-		if($files=$request->file('prodimage')){  
-			$name=$files->getClientOriginalName();  
-			$files->move('market/',$name);  
-		
-			$market->image=$name; 
-		} 
-			$market->save();
-		 
-		
+	public function marketproductedit(Request $request)
+{
+    $id = $request->id;
+    $market = Tbl_rm_products::find($id);
+
+    $market->product_title = $request->product_title;
+    $market->discription = $request->discription;
+    $market->original_amount = $request->original_amount;
+    $market->offer_price = $request->offer_price;
+    $market->cat_id = $request->category;
+    $market->status = $request->status;
+
+    $market->save();
+	    // Remove old images related to the product
+		Tbl_productimages::where('prod_id', $id)->delete();
+
+		// Upload and update images
+		if ($request->hasFile('images')) {
+			foreach ($request->file('images') as $image) {
+				$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+				$image->move('market', $imageName);
+	
+				Tbl_productimages::create([
+					'prod_id' => $id,
+					'images' => $imageName,
+				]);
+			}
+		}
+	
 		return redirect('marketproducts');
 	}
 

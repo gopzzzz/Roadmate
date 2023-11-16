@@ -10,72 +10,53 @@ use App\shops;
 
 class ShopmarketingController extends Controller
 {
-   public function mhomepage(){
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
+  public function mhomepage(Request $request){
+    try {
+        $categorylist = DB::table('tbl_rm_categorys')
+            ->where('status', 0)
+            ->get();
 
-  $json = str_replace(array("\t","\n"), "", $postdata);
+        $productlist = DB::table('tbl_rm_products')
+            ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+            ->where('tbl_rm_products.status', 0)
+            ->where('tbl_rm_categorys.status', 0)
+            ->select('tbl_rm_products.*') 
+            ->get();
 
-  $data1 = json_decode($json);
-  
+        foreach ($productlist as $product) {
+            $productId = $product->id; 
 
+            $image = DB::table('tbl_productimages')
+                ->select('images')
+                ->where('prod_id', $productId)
+                ->first(); 
 
-  try{	
+            $product->image = $image ? $image->images : null;
+        }
 
-   
-
-    $categorylist=DB::table('tbl_rm_categorys')
-    
-   
-
-    ->get();
-
-    $productlist=DB::table('tbl_rm_products')
-    
-   
-
-    ->get();
-
-     
-
-        if($categorylist == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
-
-             }
-
-            else{								
-
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false, "categorylist" => $categorylist,"productlist"=>$productlist, "message" => "Success"));
-
-                }
-
-    
-
-  
-
+        if ($categorylist->isEmpty() && $productlist->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No categories and products found'
+            ]);
+        } else {
+            return response()->json([
+                'error' => false,
+                'categorylist' => $categorylist,
+                'productlist' => $productlist,
+                'message' => 'Success'
+            ]);
+        }
+    } catch (Exception $e) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Error fetching data'
+        ]);
+    }
 }
 
-catch (Exception $e)
 
-{
 
-        
-
-    //return Json("Sorry! Please check input parameters and values");
-
-        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
-
-}
-}
 public function categoryproductlist(){
        
   $postdata = file_get_contents("php://input");					
@@ -205,6 +186,7 @@ public function productdetails(){
     $productDetails = DB::table('tbl_rm_products')
     ->select('tbl_rm_products.*')
     ->where('tbl_rm_products.id', $productId) 
+    ->where('status',0)
     ->first(); 
 
 if ($productDetails) {
@@ -518,5 +500,8 @@ catch (Exception $e)
 
  }
 
+  
+
+              
 
 }

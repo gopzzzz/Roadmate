@@ -471,11 +471,10 @@ $i++;
 
 
 
-<input class="form-control" type="file"  name="prodimage" accept="image/*" multiple>
+<input class="form-control" type="file"  name="images[]" accept="image/*" multiple>
 
 
 </div>
-
 
 
 <div class="form-group col-sm-6">
