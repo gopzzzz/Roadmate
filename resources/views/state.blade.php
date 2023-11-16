@@ -180,7 +180,7 @@
 
                                     <div class="form-group col-sm-12">
 
-                                    <div class="form-group col-sm-12">
+                                    
     <label class="exampleModalLabel">Country</label>
     <select name="country" class="form-control">
         <option value="0">Select Country</option>
@@ -192,7 +192,7 @@
 
 
 
-
+<div class="form-group col-sm-12">
 
 
                                        <input type="text"  class="form-control" name="state_name" placeholder="Enter state name" required>
@@ -606,6 +606,19 @@
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<!-- Add the script for text validation -->
+<script>
+    $(document).ready(function() {
+        $('input[name="state_name"]').on('input', function() {
+            var value = $(this).val();
+            if (!/^[a-zA-Z\s]+$/.test(value) && value !== '') {
+                alert('Please enter only text.');
+                $(this).val(''); // Clear the input if not text
+            }
+        });
+    });
+</script>
 
 @endsection

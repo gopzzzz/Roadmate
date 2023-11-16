@@ -54,7 +54,8 @@ use App\Tbl_states;
 use App\Tbl_districts;
 use App\Tbl_places;
 use App\Tbl_rm_products;
-use App\Tbl_coupens;use App\Tbl_rm_categorys;
+use App\Tbl_coupens;
+use App\Tbl_rm_categorys;
 use App\Tbl_order_masters;
 
 use App\Tbl_order_trans;
@@ -225,27 +226,29 @@ class HomeController extends Controller
 		->get();
 		print_r(json_encode($visit));
 	}
-	public function exeinsert(Request $request){
-		$exe=new Executives;
-
-		if($files=$request->file('image')){  
-			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
-			
-			$exe->image=$name; 
-			$exe->name=$request->exename;
-			$exe->phonenum=$request->phonenumber;
-			$exe->email=$request->email;
-			$exe->addrress=$request->address;
-			$exe->district=$request->district;
-			$exe->location=$request->location;
-			$exe->save();
-			return redirect('executive');
-		
-		}  
 	
-		
-	}
+public function exeinsert(Request $request){
+   
+
+    $exe = new Executives;
+
+    if ($files = $request->file('image')) {
+        $name = $files->getClientOriginalName();
+        $files->move('img/', $name);
+
+        $exe->image = $name;
+        $exe->name = $request->exename;
+        $exe->phonenum = $request->phonenumber;
+        $exe->email = $request->email;
+        $exe->addrress = $request->address;
+        $exe->district = $request->district;
+        $exe->location = $request->location;
+        $exe->save();
+
+        return redirect('executive');
+    }
+}
+
 	public function executivenew(){
 		$exe=Executives::all();
 		
@@ -1115,6 +1118,7 @@ class HomeController extends Controller
 		$shop->lattitude=$request->latitude;
 		$shop->logitude=$request->longitude;
 		$shop->authorised_status=$request->autherised;
+		$shop->delivery_id=0;
 		$shop->status=1;
 		if($files=$request->file('image')){  
 			$name=$files->getClientOriginalName();  

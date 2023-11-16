@@ -120,28 +120,28 @@
 
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Product Name</label>
-                                      <input type="text" name="name" class="form-control" Placeholder="Enter Name" >
+                                      <input type="text" name="name" class="form-control" Placeholder="Enter Name" required>
                                     </div>
 									<div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Price</label>
-                                      <input type="text" name="price" class="form-control"  Placeholder="Enter Price">
+                                      <input type="text" name="price" class="form-control"  Placeholder="Enter Price" oninput="validateNumericInput(this)" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Description</label>
-                                      <textarea  name="desc" class="form-control" Placeholder="Enter Description" ></textarea>
+                                      <textarea  name="desc" class="form-control" Placeholder="Enter Description" required></textarea>
                                     </div>
                                 
                                     <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Image 1</label>
-                                      <input type="file" name="image1" class="form-control"  >
+                                      <input type="file" name="image1" class="form-control" accept="image/*" required>
                                     </div>
 									<div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Image 2</label>
-                                      <input type="file" name="image2" class="form-control"  >
+                                      <input type="file" name="image2" class="form-control" accept="image/*" required>
                                     </div>
 									<div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Image 3</label>
-                                      <input type="file" name="image3" class="form-control"  >
+                                      <input type="file" name="image3" class="form-control" accept="image/*" required>
                                     </div>
                                    
 									
@@ -459,5 +459,17 @@
     <!-- /.content -->
 
   </div>
+
+  <script>
+    function validateNumericInput(inputElement) {
+        var inputValue = inputElement.value.trim();
+
+        // Check if the input is a valid number
+        if (!/^\d+$/.test(inputValue)) {
+            alert('Please enter a valid numeric price.');
+            inputElement.value = ''; // Clear the input if not a valid number
+        }
+    }
+</script>
 
   @endsection

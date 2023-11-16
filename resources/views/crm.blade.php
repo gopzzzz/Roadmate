@@ -104,7 +104,7 @@
 
 
 
-<h5 class="modal-title" id="exampleModalLabel">Add CRMS</h5>
+<h5 class="modal-title" id="exampleModalLabel">Add Staff</h5>
 
 
 
@@ -185,13 +185,13 @@
 
 
 
-<input class="form-control" name="dob" placeholder="Enter date of birth">
+<input type="date" class="form-control" name="dob" placeholder="Enter date of birth" required max="<?php echo date('Y-m-d'); ?>">
 
 
 </div>
 
 
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
 
 
 
@@ -199,23 +199,29 @@
 
 
 
-<input class="form-control" name="email" placeholder="Enter Email" required>
+<input class="form-control" name="email" placeholder="Enter Email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
 
 
-</div>
+</div> -->
+
+<!-- <form novalidate> -->
+    <!-- Your form fields here -->
+
+    <div class="form-group col-sm-6">
+        <label class="exampleModalLabel">Email</label>
+        <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+        <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
+    </div>
+
+    <!-- Other form fields and buttons -->
+
+<!-- </form> -->
 
 
 <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Password</label>
-
-
-
-<input class="form-control" name="password" placeholder="Enter Password" required>
-
-
+    <label class="exampleModalLabel">Password</label>
+    <input type="password" class="form-control" name="password" placeholder="Enter Password" required pattern=".{8,}" title="Password must be at least 8 characters long">
+    <small id="passwordHelp" class="form-text text-muted">Password must be at least 8 characters long.</small>
 </div>
 
 
@@ -280,9 +286,8 @@
                
 
               </div>
-
-
-              <script>
+             
+              <!-- <script>
 $(document).ready(function() {
     // Phone number validation
     $('input[name="phone_number"]').on('input', function() {
@@ -314,7 +319,7 @@ $(document).ready(function() {
         }
     });
 });
-</script>
+</script> -->
 
               <!-- /.card-header -->
 
@@ -671,5 +676,85 @@ $(document).ready(function() {
     <!-- /.content -->
 
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.querySelector('input[name="phone_number"]');
+
+        phoneInput.addEventListener('input', function () {
+            var value = phoneInput.value;
+
+            // Remove non-numeric characters
+            var numericValue = value.replace(/\D/g, '');
+
+            // Limit to 10 digits
+            numericValue = numericValue.substring(0, 10);
+
+            // Update the input value with the cleaned numeric value
+            phoneInput.value = numericValue;
+
+            if (/[^\d]/.test(value) && value !== '') {
+                alert('Please enter a valid numeric phone number.');
+                phoneInput.value = ''; // Clear the input if non-numeric characters are present
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dobInput = document.querySelector('input[name="dob"]');
+        
+        // Calculate the minimum date for an 18-year-old
+        var minDate = new Date();
+        minDate.setFullYear(minDate.getFullYear() - 18);
+        
+        // Format the date in YYYY-MM-DD format
+        var formattedMinDate = minDate.toISOString().split('T')[0];
+
+        // Set the max attribute to restrict future dates
+        dobInput.max = formattedMinDate;
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var emailInput = document.querySelector('input[name="email"]');
+        var emailHelp = document.getElementById('emailHelp');
+
+        emailInput.addEventListener('input', function () {
+            var emailValue = emailInput.value.toLowerCase();
+            
+            // Check if the email has a valid format
+            if (!/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(emailValue) && emailValue !== '') {
+                emailInput.setCustomValidity('Please enter a valid email address.');
+                emailHelp.style.color = 'red';
+            } else {
+                emailInput.setCustomValidity('');
+                emailHelp.style.color = 'inherit';
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var passwordInput = document.querySelector('input[name="password"]');
+        var passwordHelp = document.getElementById('passwordHelp');
+
+        passwordInput.addEventListener('input', function () {
+            // Check if the password meets additional criteria (you can customize this)
+            if (passwordInput.value.length < 8 && passwordInput.value !== '') {
+                passwordInput.setCustomValidity('Password must be at least 8 characters long.');
+                passwordHelp.style.color = 'red';
+            } else {
+                passwordInput.setCustomValidity('');
+                passwordHelp.style.color = 'inherit';
+            }
+        });
+    });
+</script>
 
   @endsection

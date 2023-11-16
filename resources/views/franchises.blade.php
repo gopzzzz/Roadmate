@@ -255,12 +255,12 @@
 
 
 
-<input class="form-control" name="pincode" placeholder="Enter pincode">
+<input class="form-control" name="pincode" placeholder="Enter pincode" oninput="validatePincode(this)" required>
 
 
 </div>
 
-
+<!-- 
 <div class="form-group col-sm-6">
 
 
@@ -272,8 +272,13 @@
 <input class="form-control" name="email" placeholder="Enter Email" required>
 
 
-</div>
+</div> -->
 
+<div class="form-group col-sm-6">
+        <label class="exampleModalLabel">Email</label>
+        <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+        <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
+    </div>
 
 <div class="form-group col-sm-6">
 
@@ -462,14 +467,9 @@
 
 <div class="form-group col-sm-6">
 
-
-
 <label class="exampleModalLabel">Phone Number</label>
 
-
-
 <input class="form-control" name="phone_number" id="phone_number" required>
-
 
 </div>
 
@@ -772,5 +772,62 @@
     <!-- /.content -->
 
   </div>
+
+ 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.querySelector('input[name="phone_number"]');
+
+        phoneInput.addEventListener('input', function () {
+            var value = phoneInput.value;
+
+            // Remove non-numeric characters
+            var numericValue = value.replace(/\D/g, '');
+
+            // Limit to 10 digits
+            numericValue = numericValue.substring(0, 10);
+
+            // Update the input value with the cleaned numeric value
+            phoneInput.value = numericValue;
+
+            if (/[^\d]/.test(value) && value !== '') {
+                alert('Please enter a valid numeric phone number.');
+                phoneInput.value = ''; // Clear the input if non-numeric characters are present
+            }
+        });
+    });
+</script>
+
+<script>
+    function validatePincode(input) {
+        // Use a regular expression to check if the input contains only numbers
+        if (!/^\d*$/.test(input.value)) {
+            // If not, display an alert and clear the input
+            alert("Please enter only numeric values for the pincode.");
+            input.value = "";
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var emailInput = document.querySelector('input[name="email"]');
+        var emailHelp = document.getElementById('emailHelp');
+
+        emailInput.addEventListener('input', function () {
+            var emailValue = emailInput.value.toLowerCase();
+            
+            // Check if the email has a valid format
+            if (!/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(emailValue) && emailValue !== '') {
+                emailInput.setCustomValidity('Please enter a valid email address.');
+                emailHelp.style.color = 'red';
+            } else {
+                emailInput.setCustomValidity('');
+                emailHelp.style.color = 'inherit';
+            }
+        });
+    });
+</script>
 
   @endsection

@@ -3,6 +3,8 @@
 
 
 @section('content')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 
 <div class="content-wrapper">
 
@@ -181,50 +183,31 @@
 
                 </div>
                 <div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Phone Number 1</label>
+    <input class="form-control" name="phone1" type="text" oninput="validatePhoneNumber(this)" required>
+</div>
 
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Call Number</label>
+    <input class="form-control" name="phone2" type="text" oninput="validatePhoneNumber(this)" required>
+</div>      
 
-                <label class="exampleModalLabel">Phone Number 1</label>
-
-
-
-                <input class="form-control" name="phone1" required>
-
-
-                </div>
-				<div class="form-group col-sm-6">
-
-
-                <label class="exampleModalLabel">Call Number</label>
-
-
-
-                <input class="form-control" name="phone2" required>
-
-
-                </div>
-                <div class="form-group col-sm-6">
+<div class="form-group col-sm-6">
 
 
                 <label class="exampleModalLabel">Pincode</label>
 
 
 
-                <input class="form-control" name="pincode" required>
+                <input class="form-control" name="pincode" oninput="validatePincode(this)" required>
 
 
                 </div>
 				
-				<div class="form-group col-sm-6">
-
-
-                <label class="exampleModalLabel">Open Time</label>
-
-
-
-                <input class="form-control" name="open" required>
-
-
-                </div>
+                <div class="form-group col-sm-6">
+        <label class="exampleModalLabel">Open Time</label>
+        <input class="form-control" type="time" name="open" id="open" required>
+    </div>
 				<div class="form-group col-sm-6">
 
 
@@ -232,7 +215,7 @@
 
 
 
-                <input class="form-control" name="close" required>
+                <input type="time" class="form-control" name="close" id="close" required>
 
 
                 </div>
@@ -617,9 +600,8 @@
                      <label class="exampleModalLabel">Open Time</label>
 
 
-
-                       <input class="form-control" name="open" id="open" required>
-
+                     
+                       <input type="time" class="form-control" name="open" id="open" required>
 
                      </div>
 				    <div class="form-group col-sm-6">
@@ -1002,4 +984,83 @@
 
   </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.querySelector('input[name="phone1"]');
+
+        phoneInput.addEventListener('input', function () {
+            var value = phoneInput.value;
+
+            // Remove non-numeric characters
+            var numericValue = value.replace(/\D/g, '');
+
+            // Limit to 10 digits
+            numericValue = numericValue.substring(0, 10);
+
+            // Update the input value with the cleaned numeric value
+            phoneInput.value = numericValue;
+
+            if (/[^\d]/.test(value) && value !== '') {
+                alert('Please enter a valid numeric phone number.');
+                phoneInput.value = ''; // Clear the input if non-numeric characters are present
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.querySelector('input[name="phone2"]');
+
+        phoneInput.addEventListener('input', function () {
+            var value = phoneInput.value;
+
+            // Remove non-numeric characters
+            var numericValue = value.replace(/\D/g, '');
+
+            // Limit to 10 digits
+            numericValue = numericValue.substring(0, 10);
+
+            // Update the input value with the cleaned numeric value
+            phoneInput.value = numericValue;
+
+            if (/[^\d]/.test(value) && value !== '') {
+                alert('Please enter a valid numeric phone number.');
+                phoneInput.value = ''; // Clear the input if non-numeric characters are present
+            }
+        });
+    });
+</script>
+
+<script>
+    function validatePincode(input) {
+        // Use a regular expression to check if the input contains only numbers
+        if (!/^\d+$/.test(input.value)) {
+            // If not, display an alert and clear the input
+            alert("Please enter only numbers for the Pincode.");
+            input.value = "";
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize flatpickr on the input field
+        flatpickr("#open", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K", // Use 12-hour time with AM/PM
+            time_24hr: false, // Set to true if you want 24-hour time format
+            defaultDate: new Date(),
+        });
+    </script>
+
+<script>
+        // Initialize flatpickr on the input field
+        flatpickr("#close", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K", // Use 12-hour time with AM/PM
+            time_24hr: false, // Set to true if you want 24-hour time format
+            defaultDate: new Date(),
+        });
+    </script>
   @endsection

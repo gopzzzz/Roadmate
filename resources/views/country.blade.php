@@ -581,6 +581,19 @@
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<!-- Add the script for text validation -->
+<script>
+    $(document).ready(function() {
+        $('input[name="country_name"]').on('input', function() {
+            var value = $(this).val();
+            if (!/^[a-zA-Z\s]+$/.test(value) && value !== '') {
+                alert('Please enter only text.');
+                $(this).val(''); // Clear the input if not text
+            }
+        });
+    });
+</script>
 
 @endsection
