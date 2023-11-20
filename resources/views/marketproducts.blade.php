@@ -304,6 +304,7 @@
                     
 
                   <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td>
+                
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->product_title}}</td>
                     <td>{{$key->discription}}</td>
@@ -458,7 +459,7 @@ $i++;
 
 
 
-<input class="form-control" type="file"  name="prodimage" accept="image/*" multiple>
+<input class="form-control" type="file"  name="images[]" accept="image/*" multiple>
 
 
 </div>
@@ -531,39 +532,49 @@ $i++;
 
     
                   
-
 <div class="modal" tabindex="-1" role="dialog" id="imageshowmodal">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Images</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-bordered">
-        <thead>
-        <tr>
-        <td>id</td>
-        <!-- <td>Product Id</td> -->
-        <td>Images</td>
-        
-        </tr>
-        </thead>
-        <tbody id="imageshowtbody">
-        </tbody>
-        </table>
-      </div>
-      
-    </div>
-  </div>
+<form action="{{ route('marketproductimageinsert') }}" method="post" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Images</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="form-group col-sm-6">
+                    
+                    <label class="exampleModalLabel">Image</label>
+                    <input type="hidden" name="prod_id" id="prod_id">
+
+                    <input class="form-control" type="file" name="images[]" accept="image/*" multiple required>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td>id</td>
+                                <td>Images</td>
+                            </tr>
+                        </thead>
+                        <tbody id="imageshowtbody"></tbody>
+                    </table>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
-               </div>
 
-
-
+               <script>
+    $('.add-new-images').on('click', function () {
+        var prod_id = $(this).data('id');
+        $('#new_images_prod_id').val(prod_id);
+    });
+</script>
             </div>
 
 

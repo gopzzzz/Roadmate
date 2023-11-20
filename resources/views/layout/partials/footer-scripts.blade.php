@@ -2614,50 +2614,60 @@ $('document').ready(function() {
 });
 
 
-$('#example354').on('click', '.image_show', function () {
-    var id = $(this).data('id');
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    if (id) {
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "{{ route('productimagefetch') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                id: id
-            },
-            success: function (res) {
-                $('#imageshowtbody').empty();
-                console.log(res);
-                var i = 1;
+<script>
+    $('#example354').on('click', '.image_show', function () {
+        console.log('Button clicked');
+        var prod_id = $(this).data('id');
+        console.log('prod_id:', prod_id);
 
-                $.each(res, function (key, value) {
-                    var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
-					img.css({
-                        width: '100px', // Set the width to your desired size
-                        height: 'auto', // Set the height to 'auto' to maintain the aspect ratio
+        if (prod_id) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{{ route('productimagefetch') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    id: prod_id
+                },
+                success: function (res) {
+                    $('#imageshowtbody').empty();
+                    console.log(res);
+                    var i = 1;
+
+                    $.each(res, function (key, value) {
+                        var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
+                        img.css({
+                            width: '100px', // Set the width to your desired size
+                            height: 'auto', // Set the height to 'auto' to maintain the aspect ratio
+                        });
+                        var row = $('<tr>');
+                        var cell1 = $('<td>').text(i);
+                        var cell3 = $('<td>').append(img);
+                        row.append(cell1);
+                        row.append(cell3);
+
+                        $('#imageshowtbody').append(row);
+                        i++;
                     });
-                    var row = $('<tr>');
-                    var cell1 = $('<td>').text(i);
-                    // var cell2 = $('<td>').text(value.prod_id); // Display the product ID
-                    var cell3 = $('<td>').append(img);
-                    row.append(cell1);
-                    // row.append(cell2);
-                    row.append(cell3);
-                    $('#imageshowtbody').append(row);
-                    i++;
-                });
-            },
-        });
-    }
-    $('#imageshowmodal').modal('show');
-});
+					$('#prod_id').val(prod_id);
+                    $('#imageshowmodal').modal('show');
+                },
+            });
+        }
+    });
+</script>
 
+// <script>
+//     $('.image_show').on('click', function () {
+//         console.log('Button clicked');
+//         var prod_id = $(this).data('id');
+//         console.log('prod_id:', prod_id);
+//         // Add other code as needed
+//     });
+// </script>
 
-
-
-
-  </script>
   <script>
 	  $('#search').on('click', function() {
             var customer_search = $('#customer_search').val();

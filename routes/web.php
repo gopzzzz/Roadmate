@@ -1069,6 +1069,11 @@ Route::post('/marketproductinsert', [
     'uses' => 'HomeController@marketproductinsert'
 ])->name('marketproductinsert');
 
+Route::post('/marketproductimageinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@marketproductimageinsert'
+])->name('marketproductimageinsert');
+
 Route::post('marketproductfetch', [
     'middleware' => 'auth',
     'uses' => 'HomeController@marketproductfetch'
