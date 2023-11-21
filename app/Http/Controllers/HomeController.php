@@ -365,19 +365,7 @@ public function exeinsert(Request $request){
 		return redirect('franchises');
 	}
 
-	// public function marketproducts(){
-		
-	// 	$market = DB::table('tbl_rm_products')
-    //     ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-        
-    //     ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
-    //     ->get();
-		
-	// 	$mark=DB::table('tbl_rm_categorys')->get();
-	// 	$role=Auth::user()->user_type;
-	// 	return view('marketproducts',compact('market','mark','role'));
-	// }
-
+	
 	public function crm(){
 		$cr = tbl_crms::with('user')->get();
 		
@@ -2340,6 +2328,66 @@ public function notification(){
 	return view('notification',compact('customertype','notification','role'));
 	
 	}
+	public function sendfirbasemessage(Request $request){
+        $title=$request->titile;
+		$message=$request->message;
+		$custype=$request->custype;
+		if($custype==2){
+
+			$friendToken = [];
+	$friendToken=DB::table('user_lists')
+	->where('device_token','!=','null')
+	->select('user_lists.device_token')
+	//->limit(5)
+	->get()
+	->toArray();
+
+	//echo "<pre>";print_r($friendToken);exit;
+
+	$msg = array
+    (
+         "body" => $message,
+         "title" => $title,
+         "sound" => "mySound"
+    );
+  
+	
+  
+    $url = 'https://fcm.googleapis.com/fcm/send';
+    foreach ($friendToken as $tok) {
+        $fields = array(
+            'to' => $tok->device_token,
+			'notification' => $msg
+			
+		);
+		
+		
+        $headers = array(
+            'Authorization: key=AAAALcAJIGo:APA91bE19OVa4q934aQNj7NR-o653sdLzUDj-7HAuCLLxOPREHU3Yv75VcVnbI58gKgkUewBvwu4uyTxN0KcklAlweB1VPv0HDjuwMViM9cDOa4OEgVwYM7mp2vxdRhig8jTcngdwox2',
+            'Content-type: Application/json'
+        );
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+    }
+	
+
+
+	$res = ['error' => null, 'result' => "sucess"];
+	
+	
+
+    return $res;
+
+		}
+	}
 	public function mobilenotificationshop($message,$cutype,$title){
 		//echo $cutype;exit;
 		
@@ -2359,13 +2407,7 @@ public function notification(){
 		->get()
 		->toArray();
 
-		//print_r($friendToken);exit;
-	  
-		// foreach ($data1->fcmnotify as $username) {
-		//     $friendToken[] = DB::table('user_lists')->where('id', $username->usernames)
-		//         ->get()->pluck('device_token')[0];
-		//         $dialog_id=$username->dialog_id;
-		// }
+		
 	  
 		$url = 'https://fcm.googleapis.com/fcm/send';
 		foreach ($friendToken as $tok) {
@@ -2573,8 +2615,8 @@ function sendNotification1($msg1,$title)
 			if($cutype==1){
 				$this->mobilenotificationshop($message,$cutype,$title);
 			}else if($cutype==2){
-				
-				$this->sendNotification1($message,$title);
+				return redirect('notification');
+				//$this->sendNotification1($message,$title);
 			}else{
 				$this->mobilenotificationexecutive($message,$cutype,$title);
 			}

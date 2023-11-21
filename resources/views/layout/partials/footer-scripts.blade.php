@@ -2585,6 +2585,44 @@ $('.selecttype').on('change', function () {
 			$('#visitedshopmodal').modal('show');
 		});
 
+		$('#submitnotification').on('click',function(){
+			
+			var titile=$('#title_id').val();
+			var custype=$('#customer_types').val();
+			var message=$('#message_id').val();
+			
+			
+			if(custype){
+				$.ajax({
+                type: "POST",
+				dataType: "json",
+                url: "{{ route('sendfirbasemessage') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    titile: titile,custype:custype,message:message
+                },
+                success: function(res) {
+					$('#visitedshoptbody').empty();
+                    console.log(res);
+					var html_each='';
+					$i=1;
+                    $.each( res, function( key, value ) {
+						html_each+='<tr>'
+						html_each+='<td>'+$i+'</td>';
+						html_each+='<td>'+value.shopname+'</td>';
+						html_each+='<td>'+value.phone_number+'</td>';
+						html_each+='<td>'+value.address+'</td>';
+						
+						html_each+='</tr>';
+						$i++;
+						});
+					$('#visitedshoptbody').append(html_each);
+                },
+            });
+			}
+			$('#visitedshopmodal').modal('show');
+		});
+
 		
 $('document').ready(function() {
   $('.edit_customerype').click(function() {
@@ -2612,6 +2650,8 @@ $('document').ready(function() {
    // $('#dummyModal').modal('show');
   });
 });
+
+
 
 
 $('#example354').on('click', '.image_show', function () {

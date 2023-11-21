@@ -1101,7 +1101,11 @@ Route::post('voucherfetch', [
 Route::post('/voucheredit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@voucheredit'
-])->name('voucheredit');
+])->name('voucheredit'); 
+Route::post('/sendfirbasemessage', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@sendfirbasemessage'
+])->name('sendfirbasemessage'); 
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');

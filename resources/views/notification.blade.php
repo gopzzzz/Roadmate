@@ -65,7 +65,7 @@
 
               <div class="form-group col-sm-12">
                 <label class="exampleModalLabel">Customer Type</label>
-                <select name="customertype_id" class="form-control" >
+                <select name="customertype_id" class="form-control" id="customer_types">
                   <option>Select Customer Type</option>
                   @foreach($role as $key1)
                   <option value="{{$key1->id}}">{{$key1->name}}</option>
@@ -87,7 +87,7 @@
 
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" name="submit" class="btn btn-primary">Add</button>
+              <button type="submit" name="submit" id="submitnotification" class="btn btn-primary">Add</button>
             </div>
           </div>
         </div>
