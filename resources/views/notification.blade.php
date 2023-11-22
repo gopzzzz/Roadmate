@@ -87,7 +87,7 @@
 
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" name="submit" id="submitnotification" class="btn btn-primary">Add</button>
+              <button type="button" name="submit" id="submitnotification" class="btn btn-primary">Add</button>
             </div>
           </div>
         </div>

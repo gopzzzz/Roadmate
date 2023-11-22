@@ -1176,7 +1176,7 @@ public function exeinsert(Request $request){
 	}
 
 	public function marketproductinsert(Request $request)
-{
+	{
     $market = new Tbl_rm_products;
     $market1 = new Tbl_productimages;
 
@@ -1208,6 +1208,29 @@ public function exeinsert(Request $request){
 }
 
 
+public function marketproductimageinsert(Request $request)
+{
+    $prod_id = $request->prod_id;
+
+    $request->validate([
+        'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    foreach ($request->file('images') as $image) {
+        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move('market', $imageName);
+
+        Tbl_productimages::create([
+            'prod_id' => $prod_id,
+            'images' => $imageName,
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Images added successfully.');
+}
+
+
+
 	public function marketproductfetch(Request $request){
 		$id=$request->id;
 		$market=tbl_rm_products::find($id);
@@ -1217,8 +1240,11 @@ public function exeinsert(Request $request){
 	public function productimagefetch(Request $request){
 		$id=$request->id;
 		$market1=DB::table('tbl_productimages')->where('prod_id', $id)->get();
+		
 		print_r(json_encode($market1));
+		
 	}
+
 	public function marketproductedit(Request $request)
 {
     $id = $request->id;
@@ -1232,26 +1258,28 @@ public function exeinsert(Request $request){
     $market->status = $request->status;
 
     $market->save();
-	    // Remove old images related to the product
-		Tbl_productimages::where('prod_id', $id)->delete();
 
-		// Upload and update images
-		if ($request->hasFile('images')) {
-			foreach ($request->file('images') as $image) {
-				$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-				$image->move('market', $imageName);
+    // Remove old images related to the product
+    Tbl_productimages::where('prod_id', $id)->delete();
+
+    // Upload and update images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move('market', $imageName);
+
+            Tbl_productimages::create([
+                'prod_id' => $id,
+                'images' => $imageName,
+            ]);
+        }
+    }
+
+    return redirect('marketproducts');
+}
+
+
 	
-				Tbl_productimages::create([
-					'prod_id' => $id,
-					'images' => $imageName,
-				]);
-			}
-		}
-	
-		return redirect('marketproducts');
-	}
-
-
 	public function customers(Request $request){
 
 		if($request->ajax())
@@ -2338,7 +2366,7 @@ public function notification(){
 	$friendToken=DB::table('user_lists')
 	->where('device_token','!=','null')
 	->select('user_lists.device_token')
-	//->limit(5)
+	->limit(25)
 	->get()
 	->toArray();
 

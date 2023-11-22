@@ -2285,6 +2285,8 @@ catch (Exception $e)
 
 	->leftJoin('user_lists', 'store_lists.user_id', '=', 'user_lists.id')
 
+  // ->leftJoin('user_lists', 'store_lists.user_id', '=', 'user_lists.id')
+
     ->where('store_lists.user_id',$uid)
 
 	->where('store_lists.sale_satus',0)

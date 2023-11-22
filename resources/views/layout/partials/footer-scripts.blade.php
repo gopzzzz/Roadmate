@@ -2590,6 +2590,8 @@ $('.selecttype').on('change', function () {
 			var titile=$('#title_id').val();
 			var custype=$('#customer_types').val();
 			var message=$('#message_id').val();
+
+			alert(custype);
 			
 			
 			if(custype){
@@ -2602,21 +2604,9 @@ $('.selecttype').on('change', function () {
                     titile: titile,custype:custype,message:message
                 },
                 success: function(res) {
-					$('#visitedshoptbody').empty();
+					
                     console.log(res);
-					var html_each='';
-					$i=1;
-                    $.each( res, function( key, value ) {
-						html_each+='<tr>'
-						html_each+='<td>'+$i+'</td>';
-						html_each+='<td>'+value.shopname+'</td>';
-						html_each+='<td>'+value.phone_number+'</td>';
-						html_each+='<td>'+value.address+'</td>';
-						
-						html_each+='</tr>';
-						$i++;
-						});
-					$('#visitedshoptbody').append(html_each);
+					
                 },
             });
 			}
@@ -2651,53 +2641,55 @@ $('document').ready(function() {
   });
 });
 
+</script>
 
 
 
-$('#example354').on('click', '.image_show', function () {
-    var id = $(this).data('id');
+<script>
+    $('#example354').on('click', '.image_show', function () {
+        console.log('Button clicked');
+        var prod_id = $(this).data('id');
+        console.log('prod_id:', prod_id);
 
-    if (id) {
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "{{ route('productimagefetch') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                id: id
-            },
-            success: function (res) {
-                $('#imageshowtbody').empty();
-                console.log(res);
-                var i = 1;
+        if (prod_id) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{{ route('productimagefetch') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    id: prod_id
+                },
+                success: function (res) {
+                    $('#imageshowtbody').empty();
+                    console.log(res);
+                    var i = 1;
 
-                $.each(res, function (key, value) {
-                    var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
-					img.css({
-                        width: '100px', // Set the width to your desired size
-                        height: 'auto', // Set the height to 'auto' to maintain the aspect ratio
+                    $.each(res, function (key, value) {
+                        var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
+                        img.css({
+                            width: '100px', // Set the width to your desired size
+                            height: 'auto', // Set the height to 'auto' to maintain the aspect ratio
+                        });
+                        var row = $('<tr>');
+                        var cell1 = $('<td>').text(i);
+                        var cell3 = $('<td>').append(img);
+                        row.append(cell1);
+                        row.append(cell3);
+
+                        $('#imageshowtbody').append(row);
+                        i++;
                     });
-                    var row = $('<tr>');
-                    var cell1 = $('<td>').text(i);
-                    // var cell2 = $('<td>').text(value.prod_id); // Display the product ID
-                    var cell3 = $('<td>').append(img);
-                    row.append(cell1);
-                    // row.append(cell2);
-                    row.append(cell3);
-                    $('#imageshowtbody').append(row);
-                    i++;
-                });
-            },
-        });
-    }
-    $('#imageshowmodal').modal('show');
-});
+					$('#prod_id').val(prod_id);
+                    $('#imageshowmodal').modal('show');
+                },
+            });
+        }
+    });
+</script>
 
 
 
-
-
-  </script>
   <script>
 	  $('#search').on('click', function() {
             var customer_search = $('#customer_search').val();
