@@ -698,6 +698,9 @@ Route::post('placelist','ExectiveController@placelist');
 
 Route::post('serachplaces','ExectiveController@serachplaces');
 
+Route::post('uploadimage','ExectiveController@uploadimage');
+
+
 
 
 
@@ -781,6 +784,11 @@ Route::post('send_testsmsotp','Mbservices@send_testsmsotp')->name('send_testsmso
 Route::post('deactivate_account','Mbservices@deactivate_account')->name('deactivate_account');
 
 /*==============================================================================================
+Giveway checking (23-11-2023)
+=============================================================================================*/
+Route::post('checkgiveawaysubscription','Mbservices@checkgiveawaysubscription');
+
+/*==============================================================================================
 Shop marketing new feature addon (07-11-2023)
 =============================================================================================*/
 
@@ -794,3 +802,5 @@ Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::get('product','ShopmarketingController@product');
+
+

@@ -1062,6 +1062,36 @@ catch (Exception $e)
 } 	
 
 }
+public function uploadimage(Request $request){
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  if($files=$request->file('image')){  
+
+    $image = $request->file('image');
+
+    
+
+    $image_name = time().'_'.$image->getClientOriginalName();
+   
+        $path = public_path('uploads/') . "/" . $image_name;
+        //$files->move('uploads',$image_name); 
+        Image::make($image->getRealPath())->resize(150, 150)->save($path);
+
+        return response()->json(
+          [
+              'data' => 'Image compressed and added'
+          ], 
+          201
+      );
+          
+
+    } 
+
+}
 
 public function addvisitedshop(Request $request){
 

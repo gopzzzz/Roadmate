@@ -2626,27 +2626,21 @@ $('document').ready(function() {
         data: {  "_token": "{{ csrf_token() }}",
         id: id },
         success: function (res) {
-      //  $('#editunit_modal').html(res);
-        console.log(res);
-        var obj=JSON.parse(res)
-       $('#c_type').val(obj.customer_type);
       
-        $('#cust_editid').val(obj.id);
+        //console.log(res);
+        var obj=JSON.parse(res)
+         $('#c_type').val(obj.customer_type);
+         $('#cust_editid').val(obj.id);
        
         },
         }); 
   }
   $("#editcustomertype_modal").modal("show");
-   // $('#dummyModal').modal('show');
+  
   });
 });
 
-</script>
-
-
-
-<script>
-    $('#example354').on('click', '.image_show', function () {
+$('#example354').on('click', '.image_show', function () {
         console.log('Button clicked');
         var prod_id = $(this).data('id');
         console.log('prod_id:', prod_id);
@@ -2686,12 +2680,7 @@ $('document').ready(function() {
             });
         }
     });
-</script>
-
-
-
-  <script>
-	  $('#search').on('click', function() {
+ $('#search').on('click', function() {
             var customer_search = $('#customer_search').val();
 					
             $.ajax({
@@ -2766,8 +2755,7 @@ $('document').ready(function() {
                       
 
 		});
-	</script>
-	<script>
+
 		$('#search_bookingting_slot').keyup(function(){
 			var searchval=$(this).val();
 			$.ajax({
@@ -2798,8 +2786,7 @@ $('document').ready(function() {
 
 
 		});
-	</script>
-	<script>
+	
 		$('#search_shop').keyup(function(){
 			var searchval=$(this).val();
 			$.ajax({
@@ -2830,8 +2817,7 @@ $('document').ready(function() {
 
 
 		});
-	</script>
-	<script>
+
 		$('#search_shop_service').keyup(function(){
 			var searchval=$(this).val();
 			$.ajax({
@@ -2864,8 +2850,7 @@ $('document').ready(function() {
 
 
 		});
-	</script>
- <script>
+
 $(window).on('load', function(){ 
     $.ajaxSetup({
     headers: {
