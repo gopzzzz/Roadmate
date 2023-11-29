@@ -599,6 +599,7 @@ public function shopreg_exe_authorised(Request $request){
   $shops->logitude=$request->logitude;
 
   $shops->trans_id=$request->trans_id;
+
   
   if($request->place_id){
       
@@ -761,6 +762,8 @@ public function shopreg_exe_unauthorised(Request $request){
   $shops->logitude=$request->logitude;
 
   $shops->trans_id=$request->trans_id;
+  
+
 
   $shops->exeid=$request->exeid;
 

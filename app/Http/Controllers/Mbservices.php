@@ -5039,10 +5039,13 @@ catch (Exception $e)
   $lattitude=$data1->lat;
 
   $longitude=$data1->long;
-
+  // $index=$data1->index;
+  // $offset=($index*10);
+  // $limit=10;
 
 //Range to be covered in kms
    $radius=50;
+  
 
  
 
@@ -5125,7 +5128,8 @@ catch (Exception $e)
         ->havingRaw(DB::raw('distance < '.$radius))
 
         ->orderByRaw('distance ASC')
-
+        // ->offset($offset) 
+        // ->limit($limit) 
       
 
         ->get();

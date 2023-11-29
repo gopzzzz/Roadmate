@@ -60,6 +60,7 @@ use App\Tbl_order_masters;
 
 use App\Tbl_order_trans;
 use App\Tbl_productimages;
+use App\App_versions;
 
 use DB;
 use Hash;
@@ -3295,6 +3296,27 @@ function sendNotification1($msg1,$title)
 			return view('order_master',compact('order','role','orderr','mark'));
 		}
 
+		public function app_version(){
+			$role=Auth::user()->user_type;
+			
+			$app=DB::table('app_versions')->get();
 
+			return view('app_version',compact('role','app'));
+		}
+		public function appversionfetch(Request $request){
+			$id=$request->id;
+			$app=App_versions::find($id);
+			print_r(json_encode($app));
+		}
+		public function appversionedit(Request $request){
+			$id=$request->id;
+			$app=App_versions::find($id);
+			$app->version_name=$request->version_name;
+			$app->version_code=$request->version_code;
+			$app->app_type=$request->app_type;
+            $app->status=$request->status;
+		    $app->save();
+			return redirect('app_version');
+		}
 
 }

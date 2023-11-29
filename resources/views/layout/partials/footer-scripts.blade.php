@@ -288,6 +288,33 @@ $(document).on('click', '.edit_country', function () {
 		$('#editmarketcategory_modal').modal('show');
 	});
 	
+	$('.edit_appversion').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('appversionfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          //$('#image').val(obj.name);
+		  $('#appid').val(obj.id);
+          $('#version_name').val(obj.version_name);
+          $('#version_code').val(obj.version_code);
+          $('#app_type').val(obj.app_type);
+
+		  $('#status').val(obj.status);
+         
+					},
+					});	
+		}
+		$('#editappversion_modal').modal('show');
+	});
+	
 
   
 
@@ -2613,8 +2640,7 @@ $('document').ready(function() {
   });
 });
 
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</script>
 
 <script>
     $('#example354').on('click', '.image_show', function () {
@@ -2659,14 +2685,7 @@ $('document').ready(function() {
     });
 </script>
 
-// <script>
-//     $('.image_show').on('click', function () {
-//         console.log('Button clicked');
-//         var prod_id = $(this).data('id');
-//         console.log('prod_id:', prod_id);
-//         // Add other code as needed
-//     });
-// </script>
+
 
   <script>
 	  $('#search').on('click', function() {
