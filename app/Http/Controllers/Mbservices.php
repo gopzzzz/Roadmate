@@ -2285,6 +2285,8 @@ catch (Exception $e)
 
 	->leftJoin('user_lists', 'store_lists.user_id', '=', 'user_lists.id')
 
+  // ->leftJoin('user_lists', 'store_lists.user_id', '=', 'user_lists.id')
+
     ->where('store_lists.user_id',$uid)
 
 	->where('store_lists.sale_satus',0)
@@ -6861,6 +6863,72 @@ public function send_testsmsotp()
       $json_data = 1;
       echo json_encode(array('error' => true, "data" => $json_data, "message" => "failed"));
        }
+  }
+  public function checkgiveawaysubscription(){
+    
+
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $user_id=$data1->user_id;
+
+ 
+
+
+
+  
+
+ 
+
+  
+
+  	  try{	
+
+       $defaultveh=DB::table('tbl_subcriptions')
+
+
+       ->where('user_id',$user_id)
+
+       ->where('user_id',$user_id)
+
+       
+
+       ->first();
+
+     
+
+        if($defaultveh==null){
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+              $json_data = 0;
+
+              echo json_encode(array('error' => false, "data" => $defaultveh, "message" => "Success"));
+
+           }
+
+    
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
   }
 
 

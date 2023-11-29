@@ -2612,6 +2612,34 @@ $('.selecttype').on('change', function () {
 			$('#visitedshopmodal').modal('show');
 		});
 
+		$('#submitnotification').on('click',function(){
+			
+			var titile=$('#title_id').val();
+			var custype=$('#customer_types').val();
+			var message=$('#message_id').val();
+
+			alert(custype);
+			
+			
+			if(custype){
+				$.ajax({
+                type: "POST",
+				dataType: "json",
+                url: "{{ route('sendfirbasemessage') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    titile: titile,custype:custype,message:message
+                },
+                success: function(res) {
+					
+                    console.log(res);
+					
+                },
+            });
+			}
+			$('#visitedshopmodal').modal('show');
+		});
+
 		
 $('document').ready(function() {
   $('.edit_customerype').click(function() {
@@ -2625,18 +2653,17 @@ $('document').ready(function() {
         data: {  "_token": "{{ csrf_token() }}",
         id: id },
         success: function (res) {
-      //  $('#editunit_modal').html(res);
-        console.log(res);
-        var obj=JSON.parse(res)
-       $('#c_type').val(obj.customer_type);
       
-        $('#cust_editid').val(obj.id);
+        //console.log(res);
+        var obj=JSON.parse(res)
+         $('#c_type').val(obj.customer_type);
+         $('#cust_editid').val(obj.id);
        
         },
         }); 
   }
   $("#editcustomertype_modal").modal("show");
-   // $('#dummyModal').modal('show');
+  
   });
 });
 
@@ -2683,12 +2710,7 @@ $('document').ready(function() {
             });
         }
     });
-</script>
-
-
-
-  <script>
-	  $('#search').on('click', function() {
+ $('#search').on('click', function() {
             var customer_search = $('#customer_search').val();
 					
             $.ajax({
@@ -2763,8 +2785,7 @@ $('document').ready(function() {
                       
 
 		});
-	</script>
-	<script>
+
 		$('#search_bookingting_slot').keyup(function(){
 			var searchval=$(this).val();
 			$.ajax({
@@ -2795,8 +2816,7 @@ $('document').ready(function() {
 
 
 		});
-	</script>
-	<script>
+	
 		$('#search_shop').keyup(function(){
 			var searchval=$(this).val();
 			$.ajax({
@@ -2827,8 +2847,7 @@ $('document').ready(function() {
 
 
 		});
-	</script>
-	<script>
+
 		$('#search_shop_service').keyup(function(){
 			var searchval=$(this).val();
 			$.ajax({
@@ -2861,8 +2880,7 @@ $('document').ready(function() {
 
 
 		});
-	</script>
- <script>
+
 $(window).on('load', function(){ 
     $.ajaxSetup({
     headers: {

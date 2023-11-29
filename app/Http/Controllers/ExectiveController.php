@@ -104,6 +104,8 @@ use App\Executives;
 
 use App\Shop_provide_categories;
 
+use Intervention\Image\Facades\Image;
+
 
 
 class ExectiveController extends Controller
@@ -455,11 +457,12 @@ catch (Exception $e)
 
   if($files=$request->file('image')){  
 
-    $name=$files->getClientOriginalName();  
+    $image = $request->file('image');
+    $image_name = time().'_'.$image->getClientOriginalName();
+    $path = public_path('img/') . "/" . $image_name;
+    Image::make($image->getRealPath())->resize(350, 350)->save($path);
 
-    $files->move('img',$name);  
-
-     $shop->image=$name; 
+     $shop->image=$image_name; 
 
     } 
 
@@ -562,11 +565,12 @@ public function shopreg_exe_authorised(Request $request){
 
   if($files=$request->file('image')){  
 
-    $name=$files->getClientOriginalName();  
+    $image = $request->file('image');
+    $image_name = time().'_'.$image->getClientOriginalName();
+    $path = public_path('img/') . "/" . $image_name;
+    Image::make($image->getRealPath())->resize(350, 350)->save($path);
 
-    $files->move('img',$name);  
-
-     $shops->image=$name; 
+     $shops->image=$image_name; 
 
     } 
 
@@ -718,15 +722,13 @@ public function shopreg_exe_unauthorised(Request $request){
 
   if($files=$request->file('image')){  
 
-    $name=$files->getClientOriginalName();  
-
-    $files->move('img',$name);  
-
-     $shops->image=$name; 
+    $image = $request->file('image');
+    $image_name = time().'_'.$image->getClientOriginalName();
+    $path = public_path('img/') . "/" . $image_name;
+    Image::make($image->getRealPath())->resize(350, 350)->save($path);
+    $shops->image=$image_name; 
 
     } 
-
-	
 
   $shops->type=$request->type;
 
@@ -1065,6 +1067,29 @@ catch (Exception $e)
 } 	
 
 }
+public function uploadimage(Request $request){  
+   $this->validate($request, [
+  'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg'
+]);
+
+$image = $request->file('image');
+/* 
+  Note: Use $image = base64_decode($request['image'])
+  if the image is sent as a base64 encoded image.
+*/
+$image_name = time().'_'.$image->getClientOriginalName();
+$path = public_path('upload/') . "/" . $image_name;
+
+Image::make($image->getRealPath())->resize(350, 350)->save($path);
+
+return response()->json(
+  [
+      'data' => 'Image compressed and added'
+  ], 
+  201
+);
+}
+
 
 public function addvisitedshop(Request $request){
 
