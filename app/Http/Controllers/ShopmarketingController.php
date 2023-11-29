@@ -226,8 +226,6 @@ catch (Exception $e)
 public function wishlist(){
     
     
-    
-    
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -239,122 +237,69 @@ public function wishlist(){
 
 
   try{	
-
-   
-
-   
 
     $wishlist=DB::table('tbl_rm_wishlist')
-    
-    
-   ->where('shop_id',$shopId)
- 
-
-
+    ->join('tbl_rm_products', 'tbl_rm_wishlist.product_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_rm_wishlist.*', 'tbl_rm_products.product_title', 'tbl_rm_products.discription', 'tbl_rm_products.offer_price')
+    ->where('tbl_rm_wishlist.shop_id', $shopId)
     ->get();
+    
+    foreach ($wishlist as $product) {
+        $productId = $product->product_id;  
 
-     
+        $image = DB::table('tbl_productimages')
+            ->select('images')
+            ->where('prod_id', $productId)
+            ->first(); 
 
-        if($wishlist == null){
+        $product->image = $image ? $image->images : null;
+    }
 
-               
+    if (count($wishlist ) == 0) {
+        echo json_encode(array('error' => true, 'message' => 'Error'));
+    } else {                                
+        echo json_encode(array('error' => false, 'wishlist ' => $wishlist , 'message' => 'Success'));
+    }
 
-          echo json_encode(array('error' => true, "message" => "Error"));
-
-             }
-
-            else{								
-
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false,"wishlist"=>$wishlist, "message" => "Success"));
-
-                }
-}
-
-catch (Exception $e)
-
-{
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
-
-        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
-
+} catch (Exception $e) {
+    echo json_encode(array('error' => true, 'message' => 'Sorry! Please check input parameters and values'));
 }
 }
-
 public function cart(){
-    
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
+    $postdata = file_get_contents("php://input");                    
+    $json = str_replace(array("\t","\n"), "", $postdata);
+    $data1 = json_decode($json);
+    $shopId = $data1->shop_id;
 
-  $json = str_replace(array("\t","\n"), "", $postdata);
+    try {    
+        $cart = DB::table('tbl_cart')
+            ->join('tbl_rm_products', 'tbl_cart.product_id', '=', 'tbl_rm_products.id')
+            ->select('tbl_cart.*', 'tbl_rm_products.product_title', 'tbl_rm_products.discription', 'tbl_rm_products.offer_price')
+            ->where('tbl_cart.shop_id', $shopId)
+            ->get();
 
-  $data1 = json_decode($json);
+        foreach ($cart as $product) {
+            $productId = $product->product_id;  
 
-  $shopId=$data1->shop_id;
+            $image = DB::table('tbl_productimages')
+                ->select('images')
+                ->where('prod_id', $productId)
+                ->first(); 
 
+            $product->image = $image ? $image->images : null;
+        }
 
+        if (count($cart) == 0) {
+            echo json_encode(array('error' => true, 'message' => 'Error'));
+        } else {                                
+            echo json_encode(array('error' => false, 'cart' => $cart, 'message' => 'Success'));
+        }
 
-  try{	
-
-   
-
-   
-
-    $cart=DB::table('tbl_cart')
-    
-    
-   ->where('shop_id',$shopId)
- 
-
-
-    ->get();
-
-     
-
-        if($cart == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
-
-             }
-
-            else{								
-
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false,"cart"=>$cart, "message" => "Success"));
-
-                }
-
-    
-
-  
-
+    } catch (Exception $e) {
+        echo json_encode(array('error' => true, 'message' => 'Sorry! Please check input parameters and values'));
+    }
 }
 
-catch (Exception $e)
-
-{
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
-
-        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
-
-}
-}
 public function deliveryaddress(){
 
   $postdata = file_get_contents("php://input");					
