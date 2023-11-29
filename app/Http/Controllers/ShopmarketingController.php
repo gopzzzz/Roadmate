@@ -1,13 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use DB;
 use App\Tbl_deliveryaddres;
 use App\shops;
-
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -211,10 +207,6 @@ if ($productDetails) {
         'message' => 'Product not found'
     ]);
 }
-
-
-  
-
 }
 
 catch (Exception $e)
@@ -280,11 +272,6 @@ public function wishlist(){
             echo json_encode(array('error' => false,"wishlist"=>$wishlist, "message" => "Success"));
 
                 }
-
-    
-
-  
-
 }
 
 catch (Exception $e)
@@ -497,11 +484,5 @@ catch (Exception $e)
   echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
 
  }
-
- }
-
-  
-
-              
-
+}
 }

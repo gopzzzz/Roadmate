@@ -5276,12 +5276,4 @@ public function shop_current_oc(){
 
           }
 
-}
-
-
-
-
-
- 
-
-}
+}}

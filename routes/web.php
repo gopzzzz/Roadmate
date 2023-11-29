@@ -1188,8 +1188,11 @@ Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompre
 // ])->name('orderdelete');
 // Route::post('/orderedit', [App\Http\Controllers\HomeController::class, 'orderedit'])->name('orderedit');
 
+Route::get('/app_version', 'HomeController@app_version')->name('app_version');
 
+Route::post('/appversionfetch', [App\Http\Controllers\HomeController::class, 'appversionfetch'])->name('appversionfetch');
 
+Route::post('/appversionedit', [App\Http\Controllers\HomeController::class, 'appversionedit'])->name('appversionedit');
 
 
 

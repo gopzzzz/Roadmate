@@ -60,6 +60,15 @@
                       @if($role==1)
 
                       <li class="nav-item has-treeview">
+                          <a href="{{'app_version'}}" class="nav-link">
+                          <i class="fa fa-cogs"></i>
+                              <p>
+                                  App Version
+                                 
+                              </p>
+                          </a>
+</li>
+                      <li class="nav-item has-treeview">
                           <a href="#" class="nav-link">
                               <i class="fa fa-home"></i>
                               <p>
