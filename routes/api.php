@@ -802,5 +802,7 @@ Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::get('product','ShopmarketingController@product');
+Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
 
+Route::post('decrementQuantity','ShopmarketingController@decrementQuantity');
 

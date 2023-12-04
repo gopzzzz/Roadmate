@@ -1194,6 +1194,8 @@ Route::post('/appversionfetch', [App\Http\Controllers\HomeController::class, 'ap
 
 Route::post('/appversionedit', [App\Http\Controllers\HomeController::class, 'appversionedit'])->name('appversionedit');
 
+Route::get('/imgcompress', 'HomeController@imgcompress')->name('imgcompress');
 
+Route::post('/imagecompressinsert', [App\Http\Controllers\HomeController::class, 'imagecompressinsert'])->name('imagecompressinsert');
 
 

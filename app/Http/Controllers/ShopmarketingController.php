@@ -265,6 +265,10 @@ public function wishlist(){
     echo json_encode(array('error' => true, 'message' => 'Sorry! Please check input parameters and values'));
 }
 }
+
+
+
+
 public function cart(){
     $postdata = file_get_contents("php://input");                    
     $json = str_replace(array("\t","\n"), "", $postdata);
@@ -300,7 +304,7 @@ public function cart(){
     }
 }
 
-public function deliveryaddress(){
+public function deliveryaddressadd(){
 
   $postdata = file_get_contents("php://input");					
 
@@ -313,13 +317,13 @@ public function deliveryaddress(){
   $query=new Tbl_deliveryaddres;
   $query->shop_id=$data1->shop_id;
 
-  $query->area=$data1->area;
-  $query->landmark=$data1->landmark;
-  $query->city=$data1->city;
+  $query->address=$data1->address;
+  $query->addresssecond=$data1->addresssecond;
+  $query->state	=$data1->state;
   $query->district=$data1->district;
-  $query->state=$data1->state;
-  $query->country=$data1->country;
+  $query->city=$data1->city;
   $query->pincode=$data1->pincode;
+  $query->phone=$data1->phone;
 
 
   if($query->save()){
@@ -335,6 +339,7 @@ public function deliveryaddress(){
   }
 
  }
+ 
 
  public function product(){
     
@@ -400,7 +405,6 @@ catch (Exception $e)
 }
 }
 
-
  public function deliveryaddressupdate(){
   $postdata = file_get_contents("php://input");					
 
@@ -430,4 +434,33 @@ catch (Exception $e)
 
  }
 }
+public function deliveryaddresslist(){
+    
+    $postdata = file_get_contents("php://input");                    
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $shopId = $data1->shopid;
+    
+    try {    
+        $deliveryaddresslist = DB::table('tbl_deliveryaddres')
+            ->where('shop_id', $shopId)
+            ->get();
+
+        if ($deliveryaddresslist == null) {
+            echo json_encode(array('error' => true, "message" => "Error"));
+        } else {                                
+            $json_data = 0;
+            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddresslist, "message" => "Success"));
+        }
+    } catch (Exception $e) {
+        // Handle the exception here
+        echo json_encode(array('error' => true, "message" => "An error occurred."));
+    }
+}
+
+
+
 }

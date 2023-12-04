@@ -57,6 +57,7 @@ use App\Tbl_rm_products;
 use App\Tbl_coupens;
 use App\Tbl_rm_categorys;
 use App\Tbl_order_masters;
+use App\Tbl_images;
 
 use App\Tbl_order_trans;
 use App\Tbl_productimages;
@@ -3359,6 +3360,43 @@ function sendNotification1($msg1,$title)
             $app->status=$request->status;
 		    $app->save();
 			return redirect('app_version');
+		}
+		public function imgcompress(){
+			$role=Auth::user()->user_type;
+
+			return view('imgcompress',compact('role'));
+		}
+		
+public function imagecompressinsert(Request $request)
+		{
+			$request->validate([
+				'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+			]);
+		
+			$images = $request->file('images');
+		
+			if ($images) {
+				foreach ($images as $image) {
+					$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+					$path = public_path('Amith/') . "/" . $imageName;
+		
+					// Resize and compress image
+					Image::make($image->getRealPath())
+						->resize(350, 350, function ($constraint) {
+							$constraint->aspectRatio();
+							$constraint->upsize();
+						})
+						->save($path, 80); // Save with 80% quality, adjust as needed
+		
+					Tbl_images::create([
+						'image' => $imageName,
+					]);
+				}
+		
+				return redirect()->back()->with('success', 'Images added successfully.');
+			}
+		
+			return redirect()->back()->with('error', 'No images selected.');
 		}
 
 }
