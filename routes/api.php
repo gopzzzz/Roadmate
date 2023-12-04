@@ -806,3 +806,7 @@ Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist')
 
 Route::post('decrementQuantity','ShopmarketingController@decrementQuantity');
 
+Route::post('bulkupdate','ShopmobController@bulkupdate');
+Route::get('bulkdataupload','ShopmobController@bulkdataupload');
+Route::get('testrun','ShopmobController@testrun');
+

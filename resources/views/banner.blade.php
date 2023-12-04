@@ -27,10 +27,17 @@
 					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Add Banner</h3>
+
+							<form method="POST" action="{{url('imagecompress')}}" enctype="multipart/form-data">@csrf
+									<input type="file" name="image[]" multiple>	<button type="submit" name="submit" class="btn btn-primary">Add</button>
+</form>
 							<p align="right">
 								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Banner</button>
 								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-									<form method="POST" action="{{url('bannerinsert')}}" enctype="multipart/form-data">@csrf
+								
+								
+								
+								<form method="POST" action="{{url('bannerinsert')}}" enctype="multipart/form-data">@csrf
 										<div class="modal-dialog" role="document" style="width:80%;">
 											<div class="modal-content">
 												<div class="modal-header">

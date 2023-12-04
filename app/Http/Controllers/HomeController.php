@@ -68,6 +68,8 @@ use Hash;
 use Auth;
 use Response;
 
+use Intervention\Image\Facades\Image;
+
 class HomeController extends Controller
 {
     /**
@@ -3337,6 +3339,20 @@ function sendNotification1($msg1,$title)
 			$orderr=DB::table('tbl_coupens')->get();
 
 			return view('order_master',compact('order','role','orderr','mark'));
+		}
+
+		public function imagecompress(Request $request){
+			$image=$request->image;
+			for($i=0;$i<count($image);$i++){
+				$image[$i] = $request->file('image')[$i];
+				$image_name[$i] =$image[$i]->getClientOriginalName();
+				$path[$i] = public_path('test_image/') . "/" . $image_name[$i];
+				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
+			}
+
+			echo "successfull";exit;
+
+
 		}
 
 		public function app_version(){

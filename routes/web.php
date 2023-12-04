@@ -1180,8 +1180,8 @@ Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'markete
 Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
 
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
-// Route::post('/orderinsert', [App\Http\Controllers\HomeController::class, 'orderinsert'])->name('orderinsert');
-// Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
+Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompress');
+
 // Route::get('orderdelete/{id}', [
 //     'middleware' => 'auth',
 //     'uses' => 'HomeController@orderdelete'

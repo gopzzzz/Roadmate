@@ -114,6 +114,8 @@ use App\Tbl_shopbankdetails;
 
 use App\Brand_models;
 
+use App\Tbl_bulkdatas;
+
 
 
 class ShopmobController extends Controller
@@ -4231,21 +4233,6 @@ public function shoplistnew(){
 
       }
 
-// 			$service = new Shop_services;
-
-// 			$service->shop_id=$shop;
-
-// 			$service->shop_category=$shopcat;
-
-// 			$service->vehicle_type_id=$vehicle;
-
-// 			$service->vehicle_model_id=$value->model_id;
-
-// 			$service->vehicle_brand_id=$value->brand_id; 
-
-//             $service->shop_pro_cat_id=$shopcatpro; 
-
-// 			$service->save();
 			
 		
 
@@ -4603,9 +4590,12 @@ public function shoplistnew(){
  
 
   if($sc->save()){
+      
+      
 
     
-    if(empty($data1->status)){
+     if(empty($data1->status)){
+        
 			foreach($data1->shopoffermodel as $singlelist){	
 
       $datacheck=DB::table('shop_offer_models')
@@ -4620,7 +4610,6 @@ public function shoplistnew(){
 
       ->where('model_id',$singlelist->model)
 
-    //   ->where('fuel_type',$singlelist->fuel_type)
 
       ->value('id');	
 
@@ -4628,21 +4617,21 @@ public function shoplistnew(){
 
       if($datacheck==null){
 
-       $shopoffermodel = new Shop_offer_models();
+      $shopoffermodel = new Shop_offer_models();
 
-       $shopoffermodel->shop_id = $singlelist->shopid;
+      $shopoffermodel->shop_id = $singlelist->shopid;
 
-       $shopoffermodel->offer_id = $sc->id;
+      $shopoffermodel->offer_id = $sc->id;
 
-       $shopoffermodel->vehicle_typeid = $singlelist->vehicletype;
+      $shopoffermodel->vehicle_typeid = $singlelist->vehicletype;
 
-       $shopoffermodel->brand_id	 = $singlelist->brand;
+      $shopoffermodel->brand_id	 = $singlelist->brand;
 
-       $shopoffermodel->model_id = $singlelist->model;
+      $shopoffermodel->model_id = $singlelist->model;
 
-       $shopoffermodel->fuel_type = $singlelist->fuel_type;
+      $shopoffermodel->fuel_type = $singlelist->fuel_type;
 
-       $shopoffermodel->save();
+      $shopoffermodel->save();
 
      }	
 
@@ -4651,32 +4640,38 @@ public function shoplistnew(){
          }
        
     }else{
+        
+          $json_data = 1;     
+
+          $offerid=$sc->id;
+
+         echo json_encode(array('error' => false, "data" => $json_data,"offerid"=>$offerid, "message" => "Success"));
        
      
 			
-			$list = Brand_models::query()
-				        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
-				        ->where('brand_lists.vehicle',$data1->vehicle_typeid)
-                        ->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
+// 			$list = Brand_models::query()
+// 				        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+// 				        ->where('brand_lists.vehicle',$data1->vehicle_typeid)
+//                         ->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
 
-			            ->get();
+// 			            ->get();
 			            
-$data=[];
-foreach($list as $listnew) {
+// $data=[];
+// foreach($list as $listnew) {
    
-     $data[] = [
-    'shop_id' => $data1->shop_id,
-    'offer_id' => $sc->id,
-    'vehicle_typeid' => $listnew->vehicle_type,
-    'brand_id' => $listnew->brand_id,
-    'model_id' => $listnew->model_id,
-    'fuel_type' =>0,
-    'created_at' => now(),
-    'updated_at' => now(),
-  ];
+//      $data[] = [
+//     'shop_id' => $data1->shop_id,
+//     'offer_id' => $sc->id,
+//     'vehicle_typeid' => $listnew->vehicle_type,
+//     'brand_id' => $listnew->brand_id,
+//     'model_id' => $listnew->model_id,
+//     'fuel_type' =>0,
+//     'created_at' => now(),
+//     'updated_at' => now(),
+//   ];
 
-}
-Shop_offer_models::insert($data);
+// }
+// Shop_offer_models::insert($data);
 			
 			
 		
@@ -4688,9 +4683,6 @@ Shop_offer_models::insert($data);
 
         
 
-         $json_data = 1;     
-
-         echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
 
   }else{
 
@@ -5276,4 +5268,257 @@ public function shop_current_oc(){
 
           }
 
-}}
+}
+public function bulkupdate(){
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+ $shop_id=$data1->shop_id;
+
+  foreach($data1->servicelist as $singlelist){
+
+    //print_r($singlelist);exit;
+
+    $method=$singlelist->method;// vehicle or offer
+    $type=$singlelist->type; // vehicle / brand
+    $vehtype=$singlelist->vehtype;
+    $brand=$singlelist->brand;
+    $offer_id=$singlelist->offer_id;
+   
+
+    $new =new Tbl_bulkdatas;
+    $new->method = $method;
+    $new->type   =$type;
+    $new->vehtype=$vehtype;
+    $new->brand=$brand;
+    $new->offer_id=$offer_id;
+    $new->shop_id=$shop_id;
+    $new->save();
+
+
+  }
+
+  $json_data = 1;     
+
+  echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+
+}
+public function bulkdataupload(){
+  $data=DB::table('tbl_bulkdatas')->get();
+  foreach($data as $key){
+   if($key->method==1){
+
+     if($key->type==1){
+
+      $list = DB::table('brand_models')
+
+			->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+
+			->where('brand_lists.vehicle',$key->vehtype)
+
+			->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
+
+			->get();
+
+        $data=[];
+        $data_new=[];
+
+	    foreach($list as $value){
+
+		
+
+
+		$check=DB::table('shop_services')
+
+				 ->where([
+
+							['vehicle_type_id', '=',$key->vehtype],
+
+							['vehicle_model_id', '=', $value->model_id],
+
+							['shop_id', '=', $key->shop_id]
+						])
+
+				 ->exists();
+				 
+		
+
+		if(!$check)	{ 
+		    
+		  
+
+      $provide=DB::table('shop_provide_categories')->where('shop_id',$key->shop_id)->get();
+
+    foreach($provide as $procat){
+
+      $data[] = [
+        'shop_id' => $key->shop_id,
+        'shop_category' => $procat->shop_cat_id,
+        'vehicle_type_id' => $value->vehicle_type,
+        'vehicle_model_id' =>$value->model_id,
+        'vehicle_brand_id' =>$value->brand_id,
+        'shop_pro_cat_id'=>$procat->id,
+        'created_at' => now(),
+        'updated_at' => now(),
+      ];
+
+    }
+
+    Shop_services::insert($data);
+		
+
+   
+
+		}
+
+	
+
+	}
+	
+
+     }else if($key->type==2){
+
+      $list = DB::table('brand_models')
+
+			->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+
+			->where('brand_lists.vehicle',$key->vehtype)
+
+      
+			->where('brand_lists.id',$key->brand)
+
+			->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
+
+			->get();
+
+        $data=[];
+        $data_new=[];
+
+	    foreach($list as $value){
+
+		
+
+
+		$check=DB::table('shop_services')
+
+				 ->where([
+
+							['vehicle_type_id', '=', $vehicle],
+
+							['vehicle_model_id', '=', $value->model_id],
+
+							['shop_id', '=', $shop]
+						])
+
+				 ->exists();
+				 
+		
+
+		if(!$check)	{ 
+		    
+		  
+
+      $provide=DB::table('shop_provide_categories')->where('shop_id',$shop)->where('shop_cat_id',$shopcat)->get();
+
+    foreach($provide as $procat){
+
+      $data[] = [
+        'shop_id' => $shop,
+        'shop_category' => $shopcat,
+        'vehicle_type_id' => $vehicle,
+        'vehicle_model_id' =>$value->model_id,
+        'vehicle_brand_id' =>$value->brand_id,
+        'shop_pro_cat_id'=>$shopcatpro,
+        'created_at' => now(),
+        'updated_at' => now(),
+      ];
+
+    }
+
+    Shop_services::insert($data);
+		
+
+   
+
+		}
+
+	
+
+	}
+
+     }
+
+
+   }else if($key->method==2){
+       if($key->type==1){
+            			$list = Brand_models::query()
+				        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+				        ->where('brand_lists.vehicle',$key->vehtype)
+                        ->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
+
+			            ->get();
+			            
+$data=[];
+foreach($list as $listnew) {
+   
+     $data[] = [
+    'shop_id' => $key->shop_id,
+    'offer_id' => $key->offer_id,
+    'vehicle_typeid' => $listnew->vehicle_type,
+    'brand_id' => $listnew->brand_id,
+    'model_id' => $listnew->model_id,
+    'fuel_type' =>0,
+    'created_at' => now(),
+    'updated_at' => now(),
+  ];
+
+}
+Shop_offer_models::insert($data);
+       }else if($key->type==2){
+            			$list = Brand_models::query()
+				        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+				        ->where('brand_lists.vehicle',$key->vehtype)
+				         ->where('brand_lists.id',$key->brand)
+                        ->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
+
+			            ->get();
+			            
+$data=[];
+foreach($list as $listnew) {
+   
+     $data[] = [
+    'shop_id' => $key->shop_id,
+    'offer_id' => $key->offer_id,
+    'vehicle_typeid' => $listnew->vehicle_type,
+    'brand_id' => $listnew->brand_id,
+    'model_id' => $listnew->model_id,
+    'fuel_type' =>0,
+    'created_at' => now(),
+    'updated_at' => now(),
+  ];
+
+}
+Shop_offer_models::insert($data);
+       }
+    
+
+   }
+    DB::table('tbl_bulkdatas')->where('id',$key->id)->delete();
+  }
+}
+public function testrun(){
+      $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+ 
+
+  $status=DB::table('tbl_bulkdatas')->delete();
+
+}
+}
