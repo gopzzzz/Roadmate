@@ -2882,8 +2882,55 @@ $(window).on('load', function(){
   });
 
 
+  $('.edit_brands').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
 
+					url: "{{ route('brandsfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+         
+		  $('#brandid').val(obj.id);
+          $('#brands').val(obj.brand_name);
+
+         
+					},
+					});	
+		}
+		$('#editbrands_modal').modal('show');
+	});
 
   
+	$('.edit_brandproduct').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('brandproductsfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+         
+		  $('#brandproductid').val(obj.id);
+          $('#brands_id').val(obj.brand_id);
+		  $('#offer_price').val(obj.offer_price);
+		  $('#original_amount').val(obj.price);
+		  $('#status').val(obj.status);
+         
+					},
+					});	
+		}
+		$('#editbrandproduct_modal').modal('show');
+	});
 
 </script>

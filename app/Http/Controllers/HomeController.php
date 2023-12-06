@@ -60,7 +60,8 @@ use App\Tbl_order_masters;
 
 use App\Tbl_order_trans;
 use App\Tbl_productimages;
-
+use App\Tbl_brands;
+use App\Tbl_brand_products;
 use DB;
 use Hash;
 use Auth;
@@ -1182,8 +1183,8 @@ public function exeinsert(Request $request){
 
     $market->product_title = $request->product_title;
     $market->discription = $request->discription;
-    $market->original_amount = $request->original_amount;
-    $market->offer_price = $request->offer_price;
+    $market->original_amount = 0;
+    $market->offer_price = 0;
     $market->cat_id = $request->category;
     
     $market->status = 0;
@@ -3337,6 +3338,78 @@ function sendNotification1($msg1,$title)
 			return view('order_master',compact('order','role','orderr','mark'));
 		}
 
+		public function brands()
+		{
+			$brand=DB::table('tbl_brands')->get();
+			 $role=Auth::user()->user_type;
+			  return view('brands',compact('brand','role'));
+		 }
+		 public function brandsinsert(Request $request)
+		 {  
+			$brand= new Tbl_brands;
+			$brand->brand_name=$request->brand_name;
+		   
+			$brand->save();
+			return redirect('brands');
+		 }
+		 public function brandsfetch(Request $request){
+			 $id=$request->id;
+			 $brand = Tbl_brands::find($id);
+			 print_r(json_encode($brand));
+		
+		 }
+		 public function brandsedit(Request $request){
+			 $id=$request->id;
+			 $brand = Tbl_brands::find($id);
+			 $brand->brand_name=$request->brand_name;
+			
+			 $brand->save();
+			 return redirect('brands');
+		 
+		  }
+		  public function brandproducts($Id)
+		  {
+			  $brandprod = DB::table('tbl_brand_products')
+				  ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
+				  ->where('tbl_brand_products.product_id', $Id)
+				  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
+				  ->get();
+		  
+			  $brand = DB::table('tbl_brands')->get();
+			  $role = Auth::user()->user_type;
+		  
+			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id'));
+		  }
+		  
+		  public function brandproductsinsert(Request $request, $Id)
+		  {
+			  $brandprod = new Tbl_brand_products;
+			  $brandprod->product_id = $Id; // Set product_id to $Id
+			  $brandprod->brand_id = $request->brands;
+			  $brandprod->offer_price = $request->offer_price;
+			  $brandprod->price = $request->original_amount;
+			  $brandprod->status = 0;
+			  $brandprod->save();
+			  return back();
 
-
+		  }
+		  
+		  public function brandproductsfetch(Request $request){
+			$id=$request->id;
+			$brandprod = Tbl_brand_products::find($id);
+			print_r(json_encode($brandprod));
+	   
+		}
+		  
+		public function brandproductsedit(Request $request){
+			$id=$request->id;
+			$brandprod = Tbl_brand_products::find($id);
+			$brandprod->brand_id = $request->brands;
+			$brandprod->offer_price = $request->offer_price;
+			$brandprod->price = $request->original_amount;
+			$brandprod->status = $request->status;
+			$brandprod->save();
+			return back();
+		
+		 }
 }
