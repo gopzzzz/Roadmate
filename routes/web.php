@@ -1216,16 +1216,19 @@ Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'markete
 Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
 
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
-// Route::post('/orderinsert', [App\Http\Controllers\HomeController::class, 'orderinsert'])->name('orderinsert');
-// Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
+Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompress');
+
 // Route::get('orderdelete/{id}', [
 //     'middleware' => 'auth',
 //     'uses' => 'HomeController@orderdelete'
 // ])->name('orderdelete');
 // Route::post('/orderedit', [App\Http\Controllers\HomeController::class, 'orderedit'])->name('orderedit');
 
+Route::get('/app_version', 'HomeController@app_version')->name('app_version');
 
+Route::post('/appversionfetch', [App\Http\Controllers\HomeController::class, 'appversionfetch'])->name('appversionfetch');
 
+Route::post('/appversionedit', [App\Http\Controllers\HomeController::class, 'appversionedit'])->name('appversionedit');
 
 
 

@@ -67,6 +67,8 @@ use Hash;
 use Auth;
 use Response;
 
+use Intervention\Image\Facades\Image;
+
 class HomeController extends Controller
 {
     /**

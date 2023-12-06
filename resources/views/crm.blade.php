@@ -523,18 +523,7 @@ $(document).ready(function() {
 
 </div>
 
-<!-- <div class="form-group col-sm-6">
 
-
-
-<label class="exampleModalLabel">Email</label>
-
-
-
-<input class="form-control" name="email" id="email1" required>
-
-
-</div> -->
 
 
 <div class="form-group col-sm-6">

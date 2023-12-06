@@ -804,3 +804,7 @@ Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupda
 Route::get('product','ShopmarketingController@product');
 
 
+Route::post('bulkupdate','ShopmobController@bulkupdate');
+Route::get('bulkdataupload','ShopmobController@bulkdataupload');
+Route::get('testrun','ShopmobController@testrun');
+
