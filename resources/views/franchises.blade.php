@@ -4,6 +4,7 @@
 
 @section('content')
 
+
 <div class="content-wrapper">
 
     <!-- Content Header (Page header) -->
@@ -89,7 +90,7 @@
 
 
 
-<div class="modal-dialog" role="document" style="width:80%;">
+<div class="modal-dialog modal-lg" role="document">
 
 
 
@@ -101,7 +102,7 @@
 
 
 
-<h5 class="modal-title" id="exampleModalLabel">Add Franchises</h5>
+<h5 class="modal-title" id="exampleModalLabel">PERSONAL DETAILS</h5>
 
 
 
@@ -160,82 +161,6 @@
 
 
 
-<label class="exampleModalLabel">Country</label>
-
-
-
-<select name="country" class="form-control statefetchadd" id="country">
-                    <option value="0">Select country</option>
-                    @foreach($con as $country)
-                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
-                    @endforeach
-                </select>
-
-
-</div>
-<div class="form-group col-sm-6">
-
-<label class="exampleModalLabel">States</label>
-
-
-
-<select name="states" class="form-control districtfetchadd" id="state">
-                    <option value="0">Select state</option>
-                </select>
-
-
-</div>
-
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-
-
-<select name="district" class="form-control" id="district">
-                    <option value="0">Select district</option>
-                </select>
-
-
-</div>
-
-<div class="form-group col-sm-6">
-
-<label class="exampleModalLabel">Type</label>
-
-<select name="type" class="form-control selecttype" required>
-<option value="0">Select Type</option>
-<option value="1">Panchayath</option>
-<option value="2">Muncipality</option>
-<option value="3">Coperatiion</option>
-</select>
-
-</div>			
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
-
-
-
-<select name="place_id" id="place_id" class="form-control">
-
-
-</select>
-
-
-</div>
-
-
-<div class="form-group col-sm-6">
-
-
-
 <label class="exampleModalLabel">Area Name</label>
 
 
@@ -260,24 +185,11 @@
 
 </div>
 
-<!-- 
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Email</label>
-
-
-
-<input class="form-control" name="email" placeholder="Enter Email" required>
-
-
-</div> -->
 
 <div class="form-group col-sm-6">
         <label class="exampleModalLabel">Email</label>
         <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
-        <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
+        <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com</small>
     </div>
 
 <div class="form-group col-sm-6">
@@ -293,28 +205,102 @@
 
 </div>
 
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">FRANCHISE DETAILS</h5>
+
+</div>
+<div class="modal-body row">
+
+<div class="form-group col-sm-6">
 
 
 
+<label class="exampleModalLabel">Country</label>
+
+
+
+<select name="country" class="form-control statefetchadd" id="country">
+                    <option value="0">Select country</option>
+                    @foreach($con as $country)
+                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+                    @endforeach
+                </select>
+
+
+</div>
+<div class="form-group col-sm-6" >
+
+<label class="exampleModalLabel">States</label>
+
+
+
+<select name="states" class="form-control districtfetchadd" id="state">
+                    <option value="0">Select state</option>
+                </select>
+
+
+</div>
+
+<div class="form-group col-sm-6" >
+
+<label class="exampleModalLabel">Type</label>
+
+<select name="type" class="form-control selecttype" id="type" required>
+<option value="0">Select Type</option>
+<option value="1">Panchayath</option>
+<option value="2">Muncipality</option>
+<option value="3">Coperation</option>
+<option value="4">District</option>
+
+</select>
+
+</div>	
+
+
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">District</label>
+
+
+
+<select name="district" class="form-control districtadd" id="district">
+                    <option value="0">Select District</option>
+                </select>
+
+
+</div>
+
+		
+
+<div class="form-group col-sm-6" id="typediv">
+
+
+
+<label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
+
+
+
+<select name="place_id" id="place_id" class="form-control ">
+
+
+</select>
 
 
 </div>
 
 
+</div>
+</div>
 
 <div class="modal-footer">
-
-
-
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-
-
-<button type="submit" name="submit" class="btn btn-primary">Add</button>
-
-
-
+    <button type="submit" name="submit" class="btn btn-primary ml-auto">Add</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
+
+
+
 
 
 
@@ -340,7 +326,20 @@
               </div>
 
               <!-- /.card-header -->
+              <form method="POST" action="{{url('franchasefilter')}}" >
+               @csrf
+              <div style="display: flex; gap: 10px; align-items: center;">
+  <br> <br>   <select class="form-control" name="type" style="width: 15%;">
+        <option value="1" {{ $type== '1' ? 'selected' : '' }}>Panchayath</option>
+        <option value="2" {{ $type== '2' ? 'selected' : '' }}>Municipality</option>
+        <option value="3" {{ $type== '3' ? 'selected' : '' }}>Corporation</option>
+        <option value="4" {{ $type== '4' ? 'selected' : '' }}>District</option>
+    </select>
+    <button type="submit" class="btn btn-sm btn-success" style="width: 5%;">FILTER</button>
+</div>
+</form>
 
+                              
               <div class="card-body">
              
 
@@ -360,8 +359,9 @@
                     <th>Pincode</th>
                     <th>State</th>
                     <th>District</th>
-                    <th>Type</th>
-                    <th>Muncipality/Corporation/Panchayat</th>
+                  
+
+                    <th>Place</th>
                    
                     @if($role==1)
 
@@ -386,18 +386,25 @@
         <td>{{ $key->pincode }}</td>
         <td>{{ $key->state_name}}</td>
         <td>{{ $key->district_name }}</td>
-        <td>@if($key->type==1) PanChayath @elseif($key->type==2) Muncipality @elseif($key->type==3) Corperation @endif</td>
-        <td>{{ $key->place_name }}</td>
+        
+        <td>
+        @if($key->type!=4)
+          {{ $key->place_name }}
+        @else
+        {{ $key->district_name }}</td>
+
+      
+      @endif</td>
        
 
         @if($role == 1)
         <td>
             <i class="fa fa-edit edit_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-            <!-- <i class="fa fa-eye view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i> -->
             <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-            <!-- <a href="{{ url('exedelete') }}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i></a> -->
         </td>
         @endif
+
+        
 
     </tr>
     @php
@@ -420,8 +427,8 @@
                     <th>Pincode</th>
                     <th>State</th>
                     <th>District</th>
-                    <th>Type</th>
-                    <th>Muncipality/Corporation/Panchayat</th>
+                   
+                    <th>Place</th>
                   
                     <!-- <th></th>  -->
                     @if($role==1)
@@ -431,9 +438,9 @@
                   </tr>
 
                   </tfoot>
-
+                
                 </table>
-				
+                
                 <div class="modal" id="editfranchises_modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -619,18 +626,6 @@
 
 </div>
 
-<!-- <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Email</label>
-
-
-
-<input class="form-control" name="email" id="email1" required>
-
-
-</div> -->
 
 
 <div class="form-group col-sm-6">
@@ -831,3 +826,7 @@
 </script>
 
   @endsection
+
+
+
+  

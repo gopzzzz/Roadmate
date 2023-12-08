@@ -46,7 +46,7 @@
 
 
 
-                  <li class="breadcrumb-item active"> Category</li>
+                  <li class="breadcrumb-item active"> SubCategory</li>
 
 
 
@@ -118,7 +118,7 @@
 
 
 
-                     <h3 class="card-title">Category</h3>
+                     <h3 class="card-title">SubCategory</h3>
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Category</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add SubCategory</button>
 
 
 
@@ -134,7 +134,7 @@
 
 
 
-                        <form method="POST" action="{{url('marketinsert')}}" enctype="multipart/form-data">
+                     <form method="POST" action="{{ route('subcategoryinsert')}}" enctype="multipart/form-data">
 
 
 
@@ -153,8 +153,7 @@
                                  <div class="modal-header">
 
 
-
-                                    <h5 class="modal-title" id="exampleModalLabel">Category</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">SubCategory</h5>
 
 
 
@@ -173,32 +172,18 @@
                                  </div>
 
 
+                                 
 
                                  <div class="modal-body row">
-
-
-
-                                    <div class="form-group col-sm-6">
-
-
-
-                                       <label class="exampleModalLabel">Category</label>
-
-
-
-                                       <input type="text"  class="form-control" name="category_name" placeholder="Enter Category Name" required>
-
-
-
+                                    <input type="hidden" value="{{$catId}}" name="catid">
+                                    <div class="form-group col-sm-12">
+                                       <label class="exampleModalLabel">SubCategory Name</label>
+                                       <input type="text" class="form-control" name="subcategory_name" placeholder="Enter SubCategory Name" required>
                                     </div>
-									<div class="modal-body row">
-													<div class="form-group col-sm-6">
-														<label class="exampleModalLabel">Category Image</label>
-														<input type="file" name="categoryimage" accept="image/*" required>
-													</div>
-
-
-                                 </div>
+                                    <div class="form-group col-sm-6">
+                                       <label class="exampleModalLabel">SubCategory Image</label>
+                                       <input type="file" name="subcategoryimage" accept="image/*" required>
+                                    </div>  </div>
 
 
 
@@ -239,7 +224,7 @@
 
 
 						<!-- /.card-header -->
-						
+	
 						<div class="card-body">
 
 
@@ -248,72 +233,52 @@
 
 
 
-   <thead>
+    <thead>
+        <tr>
+            <th colspan="5" style="text-align: center; background-color: yellow;">
+                <h4 style="color: black;">CATEGORY: {{ $categoryname }}</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>ID</th>
+            <th>SubCategory Name</th>
+            <th>SubCategory Image</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
 
 
 
-	  <tr>
-
-
-
-		 <th>id</th>
-
-
-
-		 <th>Category Name</th>
-										<th>Category Image</th>
-                                        <th>Status</th>
-
-		
-
-		 <th>Action</th>
-
-       <th></th>
-
-
-	  </tr>
-
-
-
-   </thead>
-
-
-
-   <tbody>@php $i=1; @endphp @foreach($mark as $key)
-									<tr>
-										<td>{{$i}}</td>
-                                        <td>{{$key->category_name}}</td>
-
-										<td>
-											<img src="{{ asset('/market/'.$key->image) }}" alt=""  width="200" height="100" />
-										</td>
-                                        <td>
-
-@if($key->status==0) Active @else Inactive @endif
-
-<td> <i class="fa fa-edit edit_marketcategory" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-</td>
-<td style="width: 50px;">
-         <!-- <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a> -->
-
-         <a href="{{ route('subcategory', ['catId' => $key->id, 'categoryname' => $key->category_name]) }}" class="btn btn-success btn-sm order_trans">Subcategory</a>
-
-</td>
-									</tr>@php $i++; @endphp @endforeach</tbody>
-								<tfoot>
-									<tr>
-										<th>id</th>
-                                        <th>Category Name</th>
-										<th>Category Image</th>
-                                        <th>Status</th>
-
-									
-										<th>Action</th>
-                              <th>/th>
-
-									</tr>
-								</tfoot>
-							</table>
+                        <tbody>
+                           @php $i=1; @endphp
+                           @foreach($markk as $key)
+                           <tr>
+                              <td>{{$i}}</td>
+                              <td>{{$key->category_name}}</td>
+                              <td>
+                                 <img src="{{ asset('/market/'.$key->image) }}" alt="" width="200" height="100" />
+                              </td>
+                              <td>
+                                 @if($key->status==0) Active @else Inactive @endif
+                              </td>
+                              <td>
+                                 <i class="fa fa-edit edit_subcategory" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+                              </td>
+                           </tr>
+                           @php $i++; @endphp
+                           @endforeach
+                        </tbody>
+                        <tfoot>
+                           <tr>
+                              <th>id</th>
+                              <th>SubCategory Name</th>
+                              <th>SubCategory Image</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                           </tr>
+                        </tfoot>
+                     </table>
 									
 
 
@@ -321,7 +286,7 @@
 
 
 
-<div class="modal" id="editmarketcategory_modal" tabindex="-1" role="dialog">
+<div class="modal" id="editsubcategory_modal" tabindex="-1" role="dialog">
 
 
 
@@ -337,7 +302,7 @@
 
 
 
-			<h5 class="modal-title">Edit Category</h5>
+			<h5 class="modal-title">Edit SubCategory</h5>
 
 
 
@@ -357,7 +322,7 @@
 
 
 
-		 <form method="POST" action="{{url('marketedit')}}" enctype="multipart/form-data">
+       <form method="POST" action="{{url('subcategoryedit')}}" enctype="multipart/form-data">
 
 
 
@@ -373,20 +338,20 @@
 
 
 
-				  <input type="hidden" name="id" id="marketid">
+				  <input type="hidden" name="id" id="subcatid">
 
 
 				  <div class="form-group col-sm-6">
 
-				  <label class="exampleModalLabel">Category Name</label>
+				  <label class="exampleModalLabel">SubCategory Name</label>
 
 
 
-				  <input type="text" class="form-control" name="category_name" id="category_name" required>
+				  <input type="text" class="form-control" name="subcategory_name" id="subcategory_name" required>
 				  </div>
 				  <div class="form-group col-sm-6">
-				  <label class="exampleModalLabel">Category Image</label>
-													<input type="file" name="categoryimage" accept="image/*" id="categoryimage">
+				  <label class="exampleModalLabel">SubCategory Image</label>
+													<input type="file" name="subcategoryimage" accept="image/*" id="subcategoryimage">
 												</div>
 
 				  <div class="form-group col-sm-12">

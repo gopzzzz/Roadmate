@@ -107,6 +107,10 @@ Route::post('/franfetch', [
     'uses' => 'HomeController@franfetch'
 ])->name('franfetch');
 
+Route::post('/franchasefilter', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franchasefilter'
+])->name('franchasefilter');
 Route::post('/franedit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@franedit'
@@ -1198,4 +1202,11 @@ Route::get('/imgcompress', 'HomeController@imgcompress')->name('imgcompress');
 
 Route::post('/imagecompressinsert', [App\Http\Controllers\HomeController::class, 'imagecompressinsert'])->name('imagecompressinsert');
 
+
+
+Route::post('/subcategoryfetch', [App\Http\Controllers\HomeController::class, 'subcategoryfetch'])->name('subcategoryfetch');
+Route::get('/subcategory/{catId}/{categoryname}', 'HomeController@subcategory')->name('subcategory');
+Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, 'subcategoryinsert'])->name('subcategoryinsert');
+
+Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
 

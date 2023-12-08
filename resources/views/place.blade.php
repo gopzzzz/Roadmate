@@ -212,7 +212,7 @@
 
 	<option value="2">Muncipality</option>
 
-	<option value="3">Coperatiion</option>
+	<option value="3">Coperation</option>
 	
 
 
