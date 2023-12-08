@@ -1111,10 +1111,46 @@ Route::post('/voucheredit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@voucheredit'
 ])->name('voucheredit'); 
+
 Route::post('/sendfirbasemessage', [
     'middleware' => 'auth',
     'uses' => 'HomeController@sendfirbasemessage'
 ])->name('sendfirbasemessage'); 
+
+Route::get('/brands', 'HomeController@brands')->name('brands');
+
+Route::post('/brandsinsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@brandsinsert'
+])->name('brandsinsert');
+
+Route::post('brandsfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@brandsfetch'
+])->name('brandsfetch');
+
+Route::post('/brandsedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@brandsedit'
+])->name('brandsedit'); 
+
+
+Route::get('/brandproducts/{Id}', 'HomeController@brandproducts')->name('brandproducts');
+
+Route::post('/brandproductsinsert/{Id}', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@brandproductsinsert'
+])->name('brandproductsinsert');
+
+Route::post('brandproductsfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@brandproductsfetch'
+])->name('brandproductsfetch');
+
+Route::post('/brandproductsedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@brandproductsedit'
+])->name('brandproductsedit'); 
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');

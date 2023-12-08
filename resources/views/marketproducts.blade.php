@@ -172,31 +172,7 @@
                                     </div>
 
 
-<div class="form-group col-sm-6">
 
-
-
-<label class="exampleModalLabel">Original Amount</label>
-
-
-
-<input class="form-control" name="original_amount" placeholder="Enter original amount" required>
-
-
-</div>
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Offer Price</label>
-
-
-
-<input class="form-control" name="offer_price" placeholder="Enter offer price" required>
-
-
-</div>
 
 
 </div>
@@ -270,9 +246,9 @@
 
                     <th>Description</th>
 
-                    <th>Orignial Amount </th>
+                    <!-- <th>Orignial Amount </th>
 
-                    <th>Offer Price</th>
+                    <th>Offer Price</th> -->
 
                     <th>Status</th>
 
@@ -308,8 +284,8 @@
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->product_title}}</td>
                     <td>{{$key->discription}}</td>
-                    <td>{{$key->original_amount}}</td>
-                    <td>{{$key->offer_price}}</td>
+                    <!-- <td>{{$key->original_amount}}</td>
+                    <td>{{$key->offer_price}}</td> -->
 
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
 
@@ -321,9 +297,7 @@
 <i class="fa fa-edit edit_marketproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 
 
-
-
-
+<a href="{{ route('brandproducts',['Id' => $key->id])}}" class="btn btn-success btn-sm brand_products">Brand Products</a>
 
 </td>
 
@@ -371,9 +345,9 @@ $i++;
 
                     <th>Description</th>
 
-                    <th>Orignial Amount </th>
+                    <!-- <th>Orignial Amount </th>
 
-                    <th>Offer Price</th>
+                    <th>Offer Price</th> -->
 
                     <th>Status</th>
 
@@ -471,31 +445,6 @@ $i++;
                                     </div>
 
 
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Original Amount</label>
-
-
-
-<input class="form-control" name="original_amount" id="original_amount" required>
-
-
-</div>
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Offer Price</label>
-
-
-
-<input class="form-control" name="offer_price" id="offer_price" required>
-
-
-</div>
 
 
 <div class="form-group col-sm-6">

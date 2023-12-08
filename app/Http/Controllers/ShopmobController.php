@@ -2229,15 +2229,17 @@ echo json_encode(array('error' => false, "data" => $json_data, "message" => "Suc
 
     $shoplist=DB::table('shop_services')
 
-    ->leftJoin('shiop_categories', 'shop_services.shop_category', '=', 'shiop_categories.id')
+    // ->leftJoin('shiop_categories', 'shop_services.shop_category', '=', 'shiop_categories.id')
 
     ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+    
+      ->leftJoin('brand_models', 'shop_services.vehicle_model_id', '=', 'brand_models.id')
 
-    ->leftJoin('vehicle_types', 'shop_services.vehicle_type_id', '=', 'vehicle_types.id')
+    ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
 
-    ->leftJoin('brand_models', 'shop_services.vehicle_model_id', '=', 'brand_models.id')
+    ->leftJoin('vehicle_types', 'brand_lists.vehicle', '=', 'vehicle_types.id')
 
-    ->leftJoin('brand_lists', 'shop_services.vehicle_brand_id', '=', 'brand_lists.id')
+  
 
     ->where('shop_services.shop_id',$shop)
     
@@ -2247,7 +2249,7 @@ echo json_encode(array('error' => false, "data" => $json_data, "message" => "Suc
 
    
 
-    ->select('shop_services.*','shiop_categories.category','shops.shopname','shops.shopname','vehicle_types.veh_type','vehicle_types.veh_type','brand_models.brand_model','brand_lists.brand')
+    ->select('shop_services.*','shops.shopname','shops.shopname','vehicle_types.veh_type','vehicle_types.veh_type','brand_models.brand_model','brand_lists.brand')
 
      ->get();
 
@@ -5280,23 +5282,36 @@ public function bulkupdate(){
 
   foreach($data1->servicelist as $singlelist){
 
-    //print_r($singlelist);exit;
+    
 
     $method=$singlelist->method;// vehicle or offer
     $type=$singlelist->type; // vehicle / brand
     $vehtype=$singlelist->vehtype;
     $brand=$singlelist->brand;
     $offer_id=$singlelist->offer_id;
-   
-
-    $new =new Tbl_bulkdatas;
+    
+    $check=DB::table('tbl_bulkdatas')
+    ->where('method',$method)
+    ->where('type',$type)
+    ->where('type',$vehtype)
+    ->where('brand',$brand)
+    ->where('offer_id',$offer_id)
+    ->where('shop_id',$shop_id)->first();
+    
+    
+    if(!$check){
+        $new =new Tbl_bulkdatas;
     $new->method = $method;
     $new->type   =$type;
     $new->vehtype=$vehtype;
     $new->brand=$brand;
     $new->offer_id=$offer_id;
     $new->shop_id=$shop_id;
-    $new->save();
+    $new->save();  
+    }
+   
+
+  
 
 
   }
@@ -5307,8 +5322,10 @@ public function bulkupdate(){
 
 }
 public function bulkdataupload(){
-  $data=DB::table('tbl_bulkdatas')->get();
-  foreach($data as $key){
+  $mybulkdata=DB::table('tbl_bulkdatas')->get();
+  
+  foreach($mybulkdata as $key){
+     
    if($key->method==1){
 
      if($key->type==1){
@@ -5320,63 +5337,43 @@ public function bulkdataupload(){
 			->where('brand_lists.vehicle',$key->vehtype)
 
 			->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
+			
+			->orderBy('brand_models.id', 'ASC')
 
 			->get();
+			
 
-        $data=[];
-        $data_new=[];
+			
+		  $data=[];
+      
 
 	    foreach($list as $value){
-
-		
-
-
-		$check=DB::table('shop_services')
-
-				 ->where([
-
-							['vehicle_type_id', '=',$key->vehtype],
-
-							['vehicle_model_id', '=', $value->model_id],
-
-							['shop_id', '=', $key->shop_id]
-						])
-
-				 ->exists();
-				 
-		
-
-		if(!$check)	{ 
-		    
-		  
-
-      $provide=DB::table('shop_provide_categories')->where('shop_id',$key->shop_id)->get();
-
-    foreach($provide as $procat){
-
-      $data[] = [
+	        
+	        
+	   
+    $check=DB::table('shop_services')
+    ->where('shop_id',$key->shop_id)
+    ->where('vehicle_model_id',$value->model_id)->first();
+    
+    if(!$check){
+         $data[] = [
         'shop_id' => $key->shop_id,
-        'shop_category' => $procat->shop_cat_id,
-        'vehicle_type_id' => $value->vehicle_type,
-        'vehicle_model_id' =>$value->model_id,
-        'vehicle_brand_id' =>$value->brand_id,
-        'shop_pro_cat_id'=>$procat->id,
-        'created_at' => now(),
-        'updated_at' => now(),
+        'vehicle_model_id' =>$value->model_id
+       
       ];
-
+  
     }
-
-    Shop_services::insert($data);
-		
-
    
-
-		}
 
 	
 
 	}
+	
+	Shop_services::insert($data);
+
+		
+
+      
 	
 
      }else if($key->type==2){
@@ -5395,59 +5392,35 @@ public function bulkdataupload(){
 			->get();
 
         $data=[];
-        $data_new=[];
+     
 
 	    foreach($list as $value){
 
 		
 
 
-		$check=DB::table('shop_services')
 
-				 ->where([
-
-							['vehicle_type_id', '=', $vehicle],
-
-							['vehicle_model_id', '=', $value->model_id],
-
-							['shop_id', '=', $shop]
-						])
-
-				 ->exists();
-				 
-		
-
-		if(!$check)	{ 
-		    
-		  
-
-      $provide=DB::table('shop_provide_categories')->where('shop_id',$shop)->where('shop_cat_id',$shopcat)->get();
-
-    foreach($provide as $procat){
-
-      $data[] = [
-        'shop_id' => $shop,
-        'shop_category' => $shopcat,
-        'vehicle_type_id' => $vehicle,
-        'vehicle_model_id' =>$value->model_id,
-        'vehicle_brand_id' =>$value->brand_id,
-        'shop_pro_cat_id'=>$shopcatpro,
-        'created_at' => now(),
-        'updated_at' => now(),
+	   
+    $check=DB::table('shop_services')
+    ->where('shop_id',$key->shop_id)
+    ->where('vehicle_model_id',$value->model_id)->first();
+    
+    if(!$check){
+         $data[] = [
+        'shop_id' => $key->shop_id,
+        'vehicle_model_id' =>$value->model_id
+       
       ];
-
+  
     }
-
-    Shop_services::insert($data);
-		
-
    
-
-		}
+	
 
 	
 
 	}
+	
+	Shop_services::insert($data);
 
      }
 
@@ -5470,9 +5443,7 @@ foreach($list as $listnew) {
     'vehicle_typeid' => $listnew->vehicle_type,
     'brand_id' => $listnew->brand_id,
     'model_id' => $listnew->model_id,
-    'fuel_type' =>0,
-    'created_at' => now(),
-    'updated_at' => now(),
+    'fuel_type' =>0
   ];
 
 }
@@ -5518,7 +5489,15 @@ public function testrun(){
 
  
 
-  $status=DB::table('tbl_bulkdatas')->delete();
+    
+DB::table('shop_services AS s1')
+    ->join('shop_services AS s2', function($join) {
+        $join->on('s1.shop_id', '=', 's2.shop_id')
+            ->on('s1.vehicle_model_id', '=', 's2.vehicle_model_id')
+            ->where('s1.id', '>', 's2.id');
+    })
+    ->delete();
+
 
 }
 }
