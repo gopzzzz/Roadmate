@@ -59,7 +59,7 @@ use App\Tbl_coupens;
 use App\Tbl_rm_categorys;
 use App\Tbl_order_masters;
 use App\Tbl_images;
-
+use App\App_versions;
 use App\Tbl_order_trans;
 use App\Tbl_productimages;
 use App\Tbl_brands;
@@ -1308,7 +1308,7 @@ public function franinsert(Request $request){
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
         
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
-        ->get();
+        ->orderby('tbl_rm_products.id','desc')->get();
 		
 		$mark=DB::table('tbl_rm_categorys')->get();
 		$role=Auth::user()->user_type;
@@ -1317,35 +1317,34 @@ public function franinsert(Request $request){
 
 	public function marketproductinsert(Request $request)
 	{
-    $market = new Tbl_rm_products;
-    $market1 = new Tbl_productimages;
-
-    $market->product_title = $request->product_title;
-    $market->discription = $request->discription;
-    $market->original_amount = 0;
-    $market->offer_price = 0;
-    $market->cat_id = $request->category;
-    
-    $market->status = 0;
-    $market->save();
-    $prod_id = $market->id;
-
-    $request->validate([
-        'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    foreach ($request->file('images') as $image) {
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->move('market', $imageName);
-
-        Tbl_productimages::create([
-            'prod_id' => $prod_id,
-            'images' => $imageName,
-        ]);
-    }
-
-    return redirect('marketproducts');
-}
+		$market = new Tbl_rm_products;
+	
+		$market->product_title = $request->product_title;
+		$market->discription = $request->discription;
+		$market->original_amount = 0;
+		$market->offer_price = 0;
+		$market->cat_id = $request->category;
+		$market->status = 0;
+		$market->save();
+		$prod_id = $market->id;
+	
+		$request->validate([
+			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+		]);
+	
+		foreach ($request->file('images') as $image) {
+			$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+			$image->move(public_path('market'), $imageName); // Use public_path()
+	
+			Tbl_productimages::create([
+				'prod_id' => $prod_id,
+				'images' => $imageName,
+			]);
+		}
+	
+		return redirect('marketproducts')->with('success', 'Product added successfully');
+	}
+	
 
 
 public function marketproductimageinsert(Request $request)
@@ -1392,8 +1391,8 @@ public function marketproductimageinsert(Request $request)
 
     $market->product_title = $request->product_title;
     $market->discription = $request->discription;
-    $market->original_amount = $request->original_amount;
-    $market->offer_price = $request->offer_price;
+    $market->original_amount = 0;
+    $market->offer_price = 0;
     $market->cat_id = $request->category;
     $market->status = $request->status;
 
@@ -3353,7 +3352,9 @@ function sendNotification1($msg1,$title)
             ->leftJoin('shops', 'tbl_coupens.shop_id', '=', 'shops.id')
         
         ->select('tbl_coupens.*', 'shops.shopname')
-        ->get();
+        
+		->orderBy('tbl_coupens.id', 'desc')
+		->get();
 
 		$vouch1=DB::table('shops')->get();
 			$role=Auth::user()->user_type;
@@ -3398,7 +3399,8 @@ function sendNotification1($msg1,$title)
 		public function market_category(){
 			$role=Auth::user()->user_type;
 			$mark=DB::table('tbl_rm_categorys')
-		
+			->orderBy('tbl_rm_categorys.id', 'desc')
+
 			->get();
 
 			return view('market_category',compact('mark','role'));
@@ -3493,7 +3495,9 @@ function sendNotification1($msg1,$title)
 
 		public function brands()
 		{
-			$brand=DB::table('tbl_brands')->get();
+			$brand=DB::table('tbl_brands')
+			->orderBy('tbl_brands.id', 'desc')
+			->get();
 			 $role=Auth::user()->user_type;
 			  return view('brands',compact('brand','role'));
 		 }
@@ -3520,18 +3524,19 @@ function sendNotification1($msg1,$title)
 			 return redirect('brands');
 		 
 		  }
-		  public function brandproducts($Id)
+		  public function brandproducts($Id,$productTitle)
 		  {
 			  $brandprod = DB::table('tbl_brand_products')
 				  ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
 				  ->where('tbl_brand_products.product_id', $Id)
 				  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
+				  ->orderBy('tbl_brand_products.id', 'desc')
 				  ->get();
 		  
 			  $brand = DB::table('tbl_brands')->get();
 			  $role = Auth::user()->user_type;
 		  
-			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id'));
+			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','productTitle'));
 		  }
 		  
 		  public function brandproductsinsert(Request $request, $Id)
@@ -3556,13 +3561,13 @@ function sendNotification1($msg1,$title)
 		  
 		public function brandproductsedit(Request $request){
 			$id=$request->id;
-			$app=App_versions::find($id);
-			$app->version_name=$request->version_name;
-			$app->version_code=$request->version_code;
-			$app->app_type=$request->app_type;
-            $app->status=$request->status;
-		    $app->save();
-			return redirect('app_version');
+			$brandprod=Tbl_brand_products::find($id);
+			$brandprod->brand_id = $request->brands;
+			$brandprod->offer_price = $request->offer_price;
+			$brandprod->price = $request->original_amount;
+			$brandprod->status = $request->status;
+			$brandprod->save();
+			return back();
 		}
 		public function imgcompress(){
 			$role=Auth::user()->user_type;
@@ -3593,12 +3598,41 @@ public function imagecompressinsert(Request $request)
 		
 			$markk = DB::table('tbl_rm_categorys')
             ->where('cat_id',$catId)
+			->orderBy('tbl_rm_categorys.id', 'desc')
+
 				->get();
 		
 			return view('subcategory', compact('role', 'mark', 'markk', 'catId','categoryname'));
 		}
+		public function app_version() {
+			
+			$role = Auth::user()->user_type;
 		
+			$app = DB::table('app_versions')
+				->get();
+		
+			return view('app_version', compact('role','app'));
+		}
+		public function appversionfetch(Request $request){
+			$id=$request->id;
+			$app=App_versions::find($id);
+			print_r(json_encode($app));
+		}
+		public function appversionedit(Request $request){
+			$id=$request->id;
+			$app=App_versions::find($id);
 
+			$app->version_code= $request->version_code;
+			$app->version_name	= $request->version_name;
+			$app->app_type	= $request->app_type;
+
+			$app->status=$request->status;
+				$app->save();
+			
+			return back();
+		
+	}
+	
 		public function subcategoryinsert(Request $request)
 		{
 			$mark = new Tbl_rm_categorys;
@@ -3622,7 +3656,8 @@ public function imagecompressinsert(Request $request)
 		
 		 public function subcategoryfetch(Request $request){
 			$id=$request->id;
-			$app=Tbl_rm_categorys::find($id);
+			$app = Tbl_rm_categorys::find($id);
+
 			print_r(json_encode($app));
 		}
 		public function subcategoryedit(Request $request){
