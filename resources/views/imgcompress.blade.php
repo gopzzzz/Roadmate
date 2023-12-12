@@ -1,7 +1,7 @@
 @extends('layout.mainlayout')
 @section('content')
 <style>
-    /* Style for the checkbox */
+   
     input[type="checkbox"] {
         appearance: none; /* Remove default appearance */
         -webkit-appearance: none;
@@ -56,19 +56,24 @@
     }
 
     /* Style for the close button */
-    .close {
-        color: #fff;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+  /* Style for the close button */
+.close {
+    color: #fff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
 
-    .close:hover,
-    .close:focus {
-        color: #bbb;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
 
     /* Style for the image inside the modal */
     .modal-content img {
@@ -81,14 +86,8 @@
 
 </style>
 <div class="content-wrapper">
-<div class="modal" id="imageModal">
-    <div class="modal-content">
-        <div class="image-buttons">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modalImage" src="#" alt="Enlarged Image">
-        </div>
-    </div>
-</div>
+
+
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -110,6 +109,16 @@
     <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
     @endif
     <!-- Main content -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+    <div class="modal-content">
+        <div class="image-buttons">
+            <span aria-hidden="true" class="close" onclick="closeModal()">&#215;</span>
+            <span aria-hidden="true" style="position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer;" onclick="closeModal()">&#215;</span>
+            <img id="modalImage" src="#" alt="Enlarged Image" onclick="closeModal()">
+        </div>
+    </div>
+</div>
+
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -150,6 +159,10 @@
     <input type="checkbox" name="images[]" value="{{ $image->getFilename() }}"> Delete
     <button type="button" class="btn btn-success" style="margin-left: 10px;" onclick="openModal('{{ asset('Amith/' . $image->getFilename()) }}')">View</button>
 </div>       </div>
+
+
+
+
                                             </div>
                                         @endforeach
                                     </div>  
