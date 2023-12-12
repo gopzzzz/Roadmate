@@ -745,32 +745,35 @@ $('.selecttype').on('change', function () {
 	});
 
 	$('.edit_exe').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
-
-					url: "{{ route('executivefetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          $('#name').val(obj.name);
-		 // $('#image').val(obj.image);
-          $('#email').val(obj.email);
-          $('#phnum').val(obj.phonenum);
-          $('#district').val(obj.district);
-          $('#location').val(obj.location);
-          $('#address').val(obj.addrress);
-          $('#exeid').val(obj.id);
-         
-					},
-					});	
-		}
-		$('#editexecutive_modal').modal('show');
-	});
+    var id = $(this).data('id');
+    
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('executivefetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#name').val(obj.name);
+                $('#email').val(obj.email);
+                $('#phnum').val(obj.phonenum);
+                $('#district').val(obj.district);
+                $('#location').val(obj.location);
+                $('#address').val(obj.addrress);
+                $('#exeid').val(obj.id);
+                
+                // Set the image preview or update the image input as needed
+                // Example assuming you have an image preview element with id 'image-preview':
+                $('#image-preview').attr('src', 'img/' + obj.image);
+            },
+        });
+    }
+    $('#editexecutive_modal').modal('show');
+});
 
 	$('.edit_fran').click(function(){
 		var id=$(this).data('id');
