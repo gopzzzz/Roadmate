@@ -35,10 +35,61 @@
         font-weight: bold;
         margin-bottom: 10px;
     }
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Style for the modal content */
+    .modal-content {
+        margin: 5% auto; /* 5% from the top and centered */
+        display: block;
+        max-width: 800px;
+    }
+
+    /* Style for the close button */
+    .close {
+        color: #fff;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Style for the image inside the modal */
+    .modal-content img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Style for the close button */
+
+
 </style>
-
-
 <div class="content-wrapper">
+<div class="modal" id="imageModal">
+    <div class="modal-content">
+        <div class="image-buttons">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" src="#" alt="Enlarged Image">
+        </div>
+    </div>
+</div>
+
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -48,7 +99,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="home">Home</a></li>
-                        <li class="breadcrumb-item active">Add Brands</li>
+                        <li class="breadcrumb-item active">Add Images</li>
                     </ol>
                 </div>
             </div>
@@ -97,15 +148,11 @@
                                                     <div class="image-buttons">
                                                     <br>
     <input type="checkbox" name="images[]" value="{{ $image->getFilename() }}"> Delete
-    <button type="submit" class="btn btn-success" style="margin-left: 10px;">View</button>
-</div>
-
-                                                </div>
+    <button type="button" class="btn btn-success" style="margin-left: 10px;" onclick="openModal('{{ asset('Amith/' . $image->getFilename()) }}')">View</button>
+</div>       </div>
                                             </div>
                                         @endforeach
-                                    </div>
-
-                                   
+                                    </div>  
                                 </form>
                             @else
                                 <p>No images found.</p>
@@ -123,5 +170,14 @@
    
     <!-- /.content -->
 </div>
+<script>
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('imageModal').style.display = 'block';
+        }
 
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+    </script>
 @endsection
