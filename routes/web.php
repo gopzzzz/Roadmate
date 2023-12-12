@@ -1238,6 +1238,7 @@ Route::get('/imgcompress', 'HomeController@imgcompress')->name('imgcompress');
 
 Route::post('/imagecompressinsert', [App\Http\Controllers\HomeController::class, 'imagecompressinsert'])->name('imagecompressinsert');
 
+// Inside your routes/web.php
 
 
 Route::post('/subcategoryfetch', [App\Http\Controllers\HomeController::class, 'subcategoryfetch'])->name('subcategoryfetch');
@@ -1246,3 +1247,6 @@ Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, '
 
 Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
 
+Route::delete('/delete-image/{imageName}', 'HomeController@deleteImage');
+
+Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages');
