@@ -4,6 +4,11 @@ use Illuminate\Http\Request;
 use DB;
 use App\Tbl_deliveryaddres;
 use App\shops;
+use App\shop_services;
+
+use App\Tbl_carts;
+use App\Tbl_rm_wishlists;
+
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -238,10 +243,10 @@ public function wishlist(){
 
   try{	
 
-    $wishlist=DB::table('tbl_rm_wishlist')
-    ->join('tbl_rm_products', 'tbl_rm_wishlist.product_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_rm_wishlist.*', 'tbl_rm_products.product_title', 'tbl_rm_products.discription', 'tbl_rm_products.offer_price')
-    ->where('tbl_rm_wishlist.shop_id', $shopId)
+    $wishlist=DB::table('tbl_rm_wishlists')
+    ->join('tbl_rm_products', 'tbl_rm_wishlists.product_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_rm_wishlists.*', 'tbl_rm_products.product_title', 'tbl_rm_products.discription', 'tbl_rm_products.offer_price')
+    ->where('tbl_rm_wishlists.shop_id', $shopId)
     ->get();
     
     foreach ($wishlist as $product) {
@@ -265,6 +270,66 @@ public function wishlist(){
     echo json_encode(array('error' => true, 'message' => 'Sorry! Please check input parameters and values'));
 }
 }
+public function wishlistadd(){
+
+    $postdata = file_get_contents("php://input");					
+  
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+    $data1 = json_decode($json);
+  
+   
+  
+    $query=new Tbl_rm_wishlists;
+    $query->product_id=$data1->product_id;
+
+    $query->shop_id=$data1->shop_id;
+  
+ 
+   
+  
+  
+    if($query->save()){
+  
+      $last=$query->id;
+  
+      echo json_encode(array('error' => false, "data" => $last, "message" => "Success"));
+  
+    }else{
+  
+      echo json_encode(array('error' => true, "message" => "Error"));
+  
+    }
+  
+   }
+   public function wishlistdelete(){
+
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $id=$data1->id;
+
+    if(DB::table('tbl_rm_wishlists')->where('id', $id)->delete()){
+
+    $json_data = 1;      
+
+    echo json_encode(array('error' => false, "data" => $json_data,"message" => "success")); 
+
+    }else{
+
+    $json_data = 0;      
+
+    echo json_encode(array('error' => true, "data" => $json_data,"message" => "Error"));
+
+    }
+
+}
+
+
+
 public function cart(){
     $postdata = file_get_contents("php://input");                    
     $json = str_replace(array("\t","\n"), "", $postdata);
@@ -272,10 +337,10 @@ public function cart(){
     $shopId = $data1->shop_id;
 
     try {    
-        $cart = DB::table('tbl_cart')
-            ->join('tbl_rm_products', 'tbl_cart.product_id', '=', 'tbl_rm_products.id')
-            ->select('tbl_cart.*', 'tbl_rm_products.product_title', 'tbl_rm_products.discription', 'tbl_rm_products.offer_price')
-            ->where('tbl_cart.shop_id', $shopId)
+        $cart = DB::table('tbl_carts')
+            ->join('tbl_rm_products', 'tbl_carts.product_id', '=', 'tbl_rm_products.id')
+            ->select('tbl_carts.*', 'tbl_rm_products.product_title', 'tbl_rm_products.discription', 'tbl_rm_products.offer_price')
+            ->where('tbl_carts.shop_id', $shopId)
             ->get();
 
         foreach ($cart as $product) {
@@ -299,8 +364,65 @@ public function cart(){
         echo json_encode(array('error' => true, 'message' => 'Sorry! Please check input parameters and values'));
     }
 }
+public function cartadd(){
 
-public function deliveryaddress(){
+    $postdata = file_get_contents("php://input");					
+  
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+    $data1 = json_decode($json);
+  
+   
+  
+    $query=new Tbl_carts;
+    $query->product_id=$data1->product_id;
+
+    $query->shop_id=$data1->shop_id;
+  
+    $query->qty=$data1->qty;
+   
+  
+  
+    if($query->save()){
+  
+      $last=$query->id;
+  
+      echo json_encode(array('error' => false, "data" => $last, "message" => "Success"));
+  
+    }else{
+  
+      echo json_encode(array('error' => true, "message" => "Error"));
+  
+    }
+  
+   }
+
+   public function cartdelete(){
+
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $id=$data1->id;
+
+    if(DB::table('tbl_carts')->where('id', $id)->delete()){
+
+    $json_data = 1;      
+
+    echo json_encode(array('error' => false, "data" => $json_data,"message" => "success")); 
+
+    }else{
+
+    $json_data = 0;      
+
+    echo json_encode(array('error' => true, "data" => $json_data,"message" => "Error"));
+
+    }
+
+}
+public function deliveryaddressadd(){
 
   $postdata = file_get_contents("php://input");					
 
@@ -313,13 +435,13 @@ public function deliveryaddress(){
   $query=new Tbl_deliveryaddres;
   $query->shop_id=$data1->shop_id;
 
-  $query->area=$data1->area;
-  $query->landmark=$data1->landmark;
-  $query->city=$data1->city;
+  $query->address=$data1->address;
+  $query->addresssecond=$data1->addresssecond;
+  $query->state	=$data1->state;
   $query->district=$data1->district;
-  $query->state=$data1->state;
-  $query->country=$data1->country;
+  $query->city=$data1->city;
   $query->pincode=$data1->pincode;
+  $query->phone=$data1->phone;
 
 
   if($query->save()){
@@ -335,6 +457,7 @@ public function deliveryaddress(){
   }
 
  }
+ 
 
  public function product(){
     
@@ -400,7 +523,6 @@ catch (Exception $e)
 }
 }
 
-
  public function deliveryaddressupdate(){
   $postdata = file_get_contents("php://input");					
 
@@ -430,4 +552,34 @@ catch (Exception $e)
 
  }
 }
+public function deliveryaddresslist(){
+    
+    $postdata = file_get_contents("php://input");                    
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $shopId = $data1->shopid;
+    
+    try {    
+        $deliveryaddresslist = DB::table('tbl_deliveryaddres')
+            ->where('shop_id', $shopId)
+            ->get();
+
+        if ($deliveryaddresslist == null) {
+            echo json_encode(array('error' => true, "message" => "Error"));
+        } else {                                
+            $json_data = 0;
+            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddresslist, "message" => "Success"));
+        }
+    } catch (Exception $e) {
+        // Handle the exception here
+        echo json_encode(array('error' => true, "message" => "An error occurred."));
+    }
+}
+
+
+
+
 }

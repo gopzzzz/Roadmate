@@ -383,7 +383,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="{{url('exeedit')}}" enctype="multipart/form-data" name="exeedit">
+      <form method="POST" action="{{ route('exeedit') }}" enctype="multipart/form-data" name="exeedit">
 
 @csrf
       <div class="modal-body row">

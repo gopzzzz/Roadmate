@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 
 use App\Executives;
@@ -57,7 +58,8 @@ use App\Tbl_rm_products;
 use App\Tbl_coupens;
 use App\Tbl_rm_categorys;
 use App\Tbl_order_masters;
-
+use App\Tbl_images;
+use App\App_versions;
 use App\Tbl_order_trans;
 use App\Tbl_productimages;
 use App\Tbl_brands;
@@ -68,6 +70,8 @@ use Auth;
 use Response;
 
 use Intervention\Image\Facades\Image;
+
+use function PHPSTORM_META\elementType;
 
 class HomeController extends Controller
 {
@@ -156,7 +160,41 @@ class HomeController extends Controller
 		$custmr1=User_lists::all();
 		$shop_category=Shiop_categories::all();
 		$timslot=Booktimemasters::all();
-		$timslot = DB::table('booktimemasters')
+		$userid=Auth::user()->id;
+		$role=Auth::user()->user_type;
+
+		if($role==3){
+			$fran=DB::table('tbl_franchises')->where('user_id',$userid)->first();
+			if($fran->type==4){
+				$timslot = DB::table('booktimemasters')
+				->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+				->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+				->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
+				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
+				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
+				->where('booktimemasters.place_id',$fan->district_id)
+				->orderBy('booktimemasters.id', 'desc')
+				->get();
+			}else{
+				$timslot = DB::table('booktimemasters')
+				->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+				->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+				->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
+				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
+				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_places', 'booktimemasters.place_id', '=', 'tbl_places.id')
+				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
+				->where('booktimemasters.place_id',$fan->place_id)
+				->orderBy('booktimemasters.id', 'desc')
+				->get();
+			}
+			
+
+		}else{
+			$timslot = DB::table('booktimemasters')
             ->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
 			->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
 			->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
@@ -166,7 +204,11 @@ class HomeController extends Controller
 			->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
 			->orderBy('booktimemasters.id', 'desc')
 			->get();
-			$role=Auth::user()->user_type;
+
+		}
+		
+	
+			
 		return view('booking_timeslots',compact('timslot','custmr','custmr1','shop_category','shops','role'));
 	}
 	
@@ -264,21 +306,25 @@ public function exeinsert(Request $request){
 	}
 	public function exeedit(Request $request){
 		$id=$request->id;
-		$exeedit=Executives::find($id);
+		$exeedit=executives::find($id);
+	
+		$exeedit->name=$request->exename;
+		$exeedit->phonenum=$request->phonenumber;
+		$exeedit->email=$request->email;
+		$exeedit->addrress=$request->address;
+		$exeedit->district=$request->district;
+		$exeedit->location=$request->location;
 		if($files=$request->file('image')){  
 			$name=$files->getClientOriginalName();  
 			$files->move('img/',$name);  
-			
 			$exeedit->image=$name; 
-			$exeedit->name=$request->exename;
-			$exeedit->phonenum=$request->phonenumber;
-			$exeedit->email=$request->email;
-			$exeedit->addrress=$request->address;
-			$exeedit->district=$request->district;
-			$exeedit->location=$request->location;
+		
+		}
 			$exeedit->save();
 			
-		}  
+
+			
+		 
 		return redirect('executive');
 
 	}
@@ -289,12 +335,63 @@ public function exeinsert(Request $request){
 	}
 
 	public function franchises(){
+
+		 
+
+		$someCondition= DB::table('tbl_franchises')
+		->leftJoin('tbl_districts', 'tbl_franchises.district_id', '=', 'tbl_districts.id')
+		
+		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+		//->where('tbl_franchises.type','!=' ,4)
+		->select(
+			'tbl_franchises.*',
+			'tbl_districts.district_name as place_name',
+			'tbl_franchises.type as place_type',
+			'tbl_districts.district_name',
+			'tbl_states.state_name'
+		)
+		->get();
+	
+
 		$fran = DB::table('tbl_franchises')
-		->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+    ->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+    ->leftJoin('tbl_districts', 'tbl_franchises.place_id', '=', 'tbl_districts.id')
+    ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+    ->when($someCondition, function ($query) {
+        return $query->where('tbl_franchises.type', 4);
+    })
+    ->select(
+        'tbl_franchises.*',
+        'tbl_places.place_name as place_name',
+        'tbl_places.type as place_type',
+        'tbl_districts.district_name',
+        'tbl_states.state_name'
+    )
+    ->get();
+		$role=Auth::user()->user_type;
+		$con=DB::table('tbl_countrys')
+			->where('deleted_status',0)
+			->get();
+            $cond=DB::table('tbl_states')
+			->where('deleted_status',0)
+			->get();
+		$dis=DB::table('tbl_districts')
+		->where('deleted_status',0)
+		->get();
+		$plac = DB::table('tbl_places')
 		->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
 		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-		->select('tbl_franchises.*','tbl_places.place_name','tbl_places.type','tbl_districts.district_name','tbl_states.state_name')
+		->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
 		->get();
+
+		$type=4;
+	
+		return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
+	}
+	public function franchasefilter(Request $request)
+	{
+		$type = $request->type;
 		$role=Auth::user()->user_type;
 		$con=DB::table('tbl_countrys')
 			->where('deleted_status',0)
@@ -312,12 +409,40 @@ public function exeinsert(Request $request){
 		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
 		->get();
 	
-		return view('franchises',compact('fran','role','con','cond','dis','plac'));
-	}
+		if ($type == 4) {
+			$fran = DB::table('tbl_franchises')
+				->leftJoin('tbl_districts', 'tbl_franchises.district_id', '=', 'tbl_districts.id')
+				->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+				->where('tbl_franchises.type',4)
+				->select(
+					'tbl_franchises.*',
+					'tbl_districts.district_name as place_name',
+					'tbl_franchises.type as place_type',
+					'tbl_districts.district_name',
+					'tbl_states.state_name'
+				)
+				->get();
+		} else {
+			$fran = DB::table('tbl_franchises')
+				->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+				->leftJoin('tbl_districts', 'tbl_franchises.place_id', '=', 'tbl_districts.id')
+				->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+				->where('tbl_franchises.type',$type)
+				->select(
+					'tbl_franchises.*',
+					'tbl_places.place_name as place_name',
+					'tbl_places.type as place_type',
+					'tbl_districts.district_name',
+					'tbl_states.state_name'
+				)
+				->get();
+		}
 	
+	return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
+		
+	}
 
-
-	public function franinsert(Request $request){
+public function franinsert(Request $request){
 		$user = new User;
 		$user->name=$request->franchise_name;
     $user->email = $request->email;
@@ -329,7 +454,13 @@ public function exeinsert(Request $request){
 		$franchis->id=$request->id;
 
 			$franchis->franchise_name=$request->franchise_name;
-			 $franchis->place_id=$request->place_id;
+			$franchis->type=$request->type;
+			if($request->type==4){
+				$franchis->district=$request->district;
+			}else{
+				$franchis->place_id=$request->place_id;
+			}
+			
 			$franchis->area=$request->area;
 			$franchis->pincode=$request->pincode;
 			$franchis->phone_number=$request->phone_number;
@@ -359,7 +490,7 @@ public function exeinsert(Request $request){
 		$franchis=tbl_franchises::find($id);
 
 		$franchis->franchise_name=$request->franchise_name;
-		$franchis->place_id=$request->place_id;
+		$franchis->place_id=$request->place_idd;
 		$franchis->area=$request->area;
 		$franchis->pincode=$request->pincode;
 		$franchis->phone_number=$request->phone_number;
@@ -411,6 +542,12 @@ public function exeinsert(Request $request){
 		return redirect('crm')->with('success', 'Data inserted successfully.');
 	}
 
+	
+	public function crmfetch(Request $request){
+		$id=$request->id;
+		$cr=Tbl_crms::find($id);
+		print_r(json_encode($cr));
+	}
 	public function crmedit(Request $request){
 		$id=$request->id;
 		$cr=tbl_crms::find($id);
@@ -1217,7 +1354,7 @@ public function shop_vehicle($Id) {
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
         
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
-        ->get();
+        ->orderby('tbl_rm_products.id','desc')->get();
 		
 		$mark=DB::table('tbl_rm_categorys')->get();
 		$role=Auth::user()->user_type;
@@ -1226,35 +1363,34 @@ public function shop_vehicle($Id) {
 
 	public function marketproductinsert(Request $request)
 	{
-    $market = new Tbl_rm_products;
-    $market1 = new Tbl_productimages;
-
-    $market->product_title = $request->product_title;
-    $market->discription = $request->discription;
-    $market->original_amount = 0;
-    $market->offer_price = 0;
-    $market->cat_id = $request->category;
-    
-    $market->status = 0;
-    $market->save();
-    $prod_id = $market->id;
-
-    $request->validate([
-        'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    foreach ($request->file('images') as $image) {
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->move('market', $imageName);
-
-        Tbl_productimages::create([
-            'prod_id' => $prod_id,
-            'images' => $imageName,
-        ]);
-    }
-
-    return redirect('marketproducts');
-}
+		$market = new Tbl_rm_products;
+	
+		$market->product_title = $request->product_title;
+		$market->discription = $request->discription;
+		$market->original_amount = 0;
+		$market->offer_price = 0;
+		$market->cat_id = $request->category;
+		$market->status = 0;
+		$market->save();
+		$prod_id = $market->id;
+	
+		$request->validate([
+			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+		]);
+	
+		foreach ($request->file('images') as $image) {
+			$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+			$image->move(public_path('market'), $imageName); // Use public_path()
+	
+			Tbl_productimages::create([
+				'prod_id' => $prod_id,
+				'images' => $imageName,
+			]);
+		}
+	
+		return redirect('marketproducts')->with('success', 'Product added successfully');
+	}
+	
 
 
 public function marketproductimageinsert(Request $request)
@@ -1301,8 +1437,8 @@ public function marketproductimageinsert(Request $request)
 
     $market->product_title = $request->product_title;
     $market->discription = $request->discription;
-    $market->original_amount = $request->original_amount;
-    $market->offer_price = $request->offer_price;
+    $market->original_amount = 0;
+    $market->offer_price = 0;
     $market->cat_id = $request->category;
     $market->status = $request->status;
 
@@ -3117,17 +3253,29 @@ function sendNotification1($msg1,$title)
 			return response()->json($states);
 		}
 
-		public function fetchplaces(Request $request){
+		public function fetchplaces(Request $request)
+		{
 			$type = $request->type;
 			$district_id = $request->district_id;
-			$places= DB::table('tbl_places')
-				->where('district_id', $district_id)
-				->where('type', $type)
-				->where('deleted_status',0)
-				->get();
+			$state_id = $request->state_id;
+		
+			if ($type == 4) {
+				$places = DB::table('tbl_districts')
+					->where('state_id', $state_id)
+					->where('deleted_status', 0)
+					->select('id', 'district_name as place_id')
+					->get();
+			} else {
+				$places = DB::table('tbl_places')
+					->where('district_id', $district_id)
+					->where('type', $type)
+					->where('deleted_status', 0)
+					->get();
+			}
 		
 			return response()->json($places);
 		}
+		
 		
 		public function districtfetch(Request $request){
 			$id=$request->id;
@@ -3250,7 +3398,9 @@ function sendNotification1($msg1,$title)
             ->leftJoin('shops', 'tbl_coupens.shop_id', '=', 'shops.id')
         
         ->select('tbl_coupens.*', 'shops.shopname')
-        ->get();
+        
+		->orderBy('tbl_coupens.id', 'desc')
+		->get();
 
 		$vouch1=DB::table('shops')->get();
 			$role=Auth::user()->user_type;
@@ -3294,7 +3444,10 @@ function sendNotification1($msg1,$title)
 		}
 		public function market_category(){
 			$role=Auth::user()->user_type;
-			$mark=DB::table('tbl_rm_categorys')->get();
+			$mark=DB::table('tbl_rm_categorys')
+			->orderBy('tbl_rm_categorys.id', 'desc')
+
+			->get();
 
 			return view('market_category',compact('mark','role'));
 		}	
@@ -3388,7 +3541,9 @@ function sendNotification1($msg1,$title)
 
 		public function brands()
 		{
-			$brand=DB::table('tbl_brands')->get();
+			$brand=DB::table('tbl_brands')
+			->orderBy('tbl_brands.id', 'desc')
+			->get();
 			 $role=Auth::user()->user_type;
 			  return view('brands',compact('brand','role'));
 		 }
@@ -3415,18 +3570,19 @@ function sendNotification1($msg1,$title)
 			 return redirect('brands');
 		 
 		  }
-		  public function brandproducts($Id)
+		  public function brandproducts($Id,$productTitle)
 		  {
 			  $brandprod = DB::table('tbl_brand_products')
 				  ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
 				  ->where('tbl_brand_products.product_id', $Id)
 				  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
+				  ->orderBy('tbl_brand_products.id', 'desc')
 				  ->get();
 		  
 			  $brand = DB::table('tbl_brands')->get();
 			  $role = Auth::user()->user_type;
 		  
-			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id'));
+			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','productTitle'));
 		  }
 		  
 		  public function brandproductsinsert(Request $request, $Id)
@@ -3451,13 +3607,123 @@ function sendNotification1($msg1,$title)
 		  
 		public function brandproductsedit(Request $request){
 			$id=$request->id;
-			$brandprod = Tbl_brand_products::find($id);
+			$brandprod=Tbl_brand_products::find($id);
 			$brandprod->brand_id = $request->brands;
 			$brandprod->offer_price = $request->offer_price;
 			$brandprod->price = $request->original_amount;
 			$brandprod->status = $request->status;
 			$brandprod->save();
 			return back();
+		}
+		public function imgcompress(){
+			$role=Auth::user()->user_type;
+
+			return view('imgcompress',compact('role'));
+		}
 		
-		 }
+public function imagecompressinsert(Request $request)
+		{
+		$image=$request->image;
+			for($i=0;$i<count($image);$i++){
+				$image[$i] = $request->file('image')[$i];
+				$image_name[$i] =$image[$i]->getClientOriginalName();
+				$path[$i] = public_path('Amith/') . "/" . $image_name[$i];
+				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
+			}
+
+			echo "successfull";exit;
+
+
+		}
+
+		public function subcategory($catId,$categoryname) {
+			
+			$role = Auth::user()->user_type;
+			$mark = DB::table('tbl_rm_categorys')
+				->get();
+		
+			$markk = DB::table('tbl_rm_categorys')
+            ->where('cat_id',$catId)
+			->orderBy('tbl_rm_categorys.id', 'desc')
+
+				->get();
+		
+			return view('subcategory', compact('role', 'mark', 'markk', 'catId','categoryname'));
+		}
+		public function app_version() {
+			
+			$role = Auth::user()->user_type;
+		
+			$app = DB::table('app_versions')
+				->get();
+		
+			return view('app_version', compact('role','app'));
+		}
+		public function appversionfetch(Request $request){
+			$id=$request->id;
+			$app=App_versions::find($id);
+			print_r(json_encode($app));
+		}
+		public function appversionedit(Request $request){
+			$id=$request->id;
+			$app=App_versions::find($id);
+
+			$app->version_code= $request->version_code;
+			$app->version_name	= $request->version_name;
+			$app->app_type	= $request->app_type;
+
+			$app->status=$request->status;
+				$app->save();
+			
+			return back();
+		
+	}
+	
+		public function subcategoryinsert(Request $request)
+		{
+			$mark = new Tbl_rm_categorys;
+			$mark->category_name = $request->subcategory_name;
+			$mark->cat_id = $request->input('catid');
+		
+			if ($files = $request->file('subcategoryimage')) {
+				$name = $files->getClientOriginalName();
+				$files->move('market/', $name);
+				$mark->image = $name;
+				$mark->status = 0;
+				$mark->save();
+				Session::flash('success', 'Subcategory added successfully!');
+			} else {
+				// Display error toast
+				Session::flash('error', 'Error adding subcategory. Please try again.');
+			}
+		
+			return back();
+		}
+		
+		 public function subcategoryfetch(Request $request){
+			$id=$request->id;
+			$app = Tbl_rm_categorys::find($id);
+
+			print_r(json_encode($app));
+		}
+		public function subcategoryedit(Request $request){
+			$id=$request->id;
+			$markk=Tbl_rm_categorys::find($id);
+
+			$markk->category_name = $request->subcategory_name;
+			$markk->status=$request->status;
+
+		
+			if ($files = $request->file('subcategoryimage')) {  
+				$name = $files->getClientOriginalName();  
+				$files->move('market/', $name);
+				$markk->image = $name; 
+			}
+				
+				$markk->save();
+			
+			return back();
+		
+	}
+		
 }

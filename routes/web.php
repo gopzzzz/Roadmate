@@ -107,6 +107,10 @@ Route::post('/franfetch', [
     'uses' => 'HomeController@franfetch'
 ])->name('franfetch');
 
+Route::post('/franchasefilter', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franchasefilter'
+])->name('franchasefilter');
 Route::post('/franedit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@franedit'
@@ -1131,7 +1135,7 @@ Route::post('/brandsedit', [
 ])->name('brandsedit'); 
 
 
-Route::get('/brandproducts/{Id}', 'HomeController@brandproducts')->name('brandproducts');
+Route::get('/brandproducts/{Id}/{productTitle}', 'HomeController@brandproducts')->name('brandproducts');
 
 Route::post('/brandproductsinsert/{Id}', [
     'middleware' => 'auth',
@@ -1235,6 +1239,15 @@ Route::post('/appversionfetch', [App\Http\Controllers\HomeController::class, 'ap
 
 Route::post('/appversionedit', [App\Http\Controllers\HomeController::class, 'appversionedit'])->name('appversionedit');
 
+Route::get('/imgcompress', 'HomeController@imgcompress')->name('imgcompress');
+
+Route::post('/imagecompressinsert', [App\Http\Controllers\HomeController::class, 'imagecompressinsert'])->name('imagecompressinsert');
 
 
+
+Route::post('/subcategoryfetch', [App\Http\Controllers\HomeController::class, 'subcategoryfetch'])->name('subcategoryfetch');
+Route::get('/subcategory/{catId}/{categoryname}', 'HomeController@subcategory')->name('subcategory');
+Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, 'subcategoryinsert'])->name('subcategoryinsert');
+
+Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
 
