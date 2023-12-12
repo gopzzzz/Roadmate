@@ -618,31 +618,13 @@ public function shopreg_exe_authorised(Request $request){
 
  if($shops->save()){
 
-  $lastid=$shops->id;
+ 
 
-
-
-   $shopcat=new Shop_provide_categories;
-
-    $shopcat->shop_id=$lastid;
-
-    $shopcat->shop_cat_id=$request->type;
-
-    if($shopcat->save()){
-
-
-      $result=0;
+  $result=0;
 
       echo json_encode(array('error' => false, "data" => $result, "message" => "Success"));
 
-       
 
-
-    }else{
-
-      echo json_encode(array('error' => true, "message" => "Error"));
-
-    }
 
 	  
 
@@ -774,31 +756,10 @@ public function shopreg_exe_unauthorised(Request $request){
  
 
  if($shops->save()){
-
-  $lastid=$shops->id;
-
-
-
-   $shopcat=new Shop_provide_categories;
-
-    $shopcat->shop_id=$lastid;
-
-    $shopcat->shop_cat_id=$request->type;
-
-    if($shopcat->save()){
-
-
-      $result=0;
+     
+        $result=0;
 
       echo json_encode(array('error' => false, "data" => $result, "message" => "Success"));
-
-    }else{
-
-      echo json_encode(array('error' => true, "message" => "Error"));
-
-    }
-
-	  
 
     
 
