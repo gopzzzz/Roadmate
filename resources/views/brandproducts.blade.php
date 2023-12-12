@@ -138,13 +138,15 @@
 
 
 
+                
+
 
 
                            @csrf
 
 
 
-                           <div class="modal-dialog" role="document" style="width:80%;">
+                           <div class="modal-dialog modal-lg" role="document" style="width:80%;">
 
 
 
@@ -156,19 +158,14 @@
 
 
 
-                                    <h5 class="modal-title" id="exampleModalLabel">Brand Products</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">PRODUCT : {{ $productTitle }}</h5>
 
 
 
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 
 
 
-                                    <span aria-hidden="true">&times;</span>
-
-
-
-                                    </button>
+                                  
 
 
 
@@ -224,7 +221,6 @@
 
 
 
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
 
 

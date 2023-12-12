@@ -297,7 +297,8 @@
 <i class="fa fa-edit edit_marketproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 
 
-<a href="{{ route('brandproducts',['Id' => $key->id])}}" class="btn btn-success btn-sm brand_products">Brand Products</a>
+<a href="{{ route('brandproducts', ['Id' => $key->id, 'productTitle' => $key->product_title]) }}" class="btn btn-success btn-sm brand_products">Brand Products</a>
+
 
 </td>
 
