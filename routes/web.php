@@ -1151,6 +1151,11 @@ Route::post('/brandproductsedit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@brandproductsedit'
 ])->name('brandproductsedit'); 
+// web.php
+Route::get('/shop_vehicle/{Id}', 'HomeController@shop_vehicle')->name('shop_vehicle');
+
+
+
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');

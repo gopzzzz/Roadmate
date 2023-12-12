@@ -121,42 +121,81 @@
 
                  <!-- Display shop services with pagination -->
 <!-- Display shop services with pagination -->
-<div class="shop-services">
-    <h2>Shop Services</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>Shop</th>
-                <th>Contact Number</th>
-                <th>Vehicles</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php $i = 1; @endphp
-            @foreach($uniqueShops as $shop)
-                <tr>
-                    <td>{{$i}}</td>
-                    <td>{{ $shop->shopname }}</td>
-                    <td>{{ $shop->phone_number }}</td>
-                    
-                  
-<td>
-    <a href="{{ url('/shop_vehicle', ['Id' => $shop->id]) }}" class="btn btn-success btn-sm shop_vehicle">Vehicle</a>
-</td>
+<table  id="example1" class="table table-bordered table-striped">
+
+<thead>
+
+   <tr>
+
+      <th>id</th>
+
+	
+
+      <th>Vehicle Type</th>							  
+
+
+
+<th>Brand</th>
+
+      <th>Model</th>
+
+      
+
+      @if($role==1) <th>Action</th>@endif
+
+   </tr>
+
+</thead>
+
+<tbody id="non-searchshopservice">
+
+   @php 
+
+   $i=1;
+
+   @endphp
+
+   @foreach($veh as $key)
+
+   <tr>
+
+      <td>{{$i}}</td>
 
 
 
 
-                </tr>
-                @php $i++; @endphp
-            @endforeach
-            
-        </tbody>
-    </table>
-</div>
+
+<td>{{$key->veh_type}}</td>
 
 
+
+      <td>{{$key->brand}}</td>
+
+       <td>{{$key->brand_model}}</td>
+
+
+
+       @if($role==1) <td>
+
+        <i class="fa fa-edit editshopserv"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+
+         <i class="fa fa-eye viewshopserv"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+
+  <a href="{{url('shopservicesdelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
+
+      </td>@endif
+
+   </tr>
+
+   @php 
+
+   $i++;
+
+   @endphp
+
+   @endforeach
+
+</tbody>
 <tbody id="searchshopservice">
 
 </tbody>
@@ -169,10 +208,14 @@
 
       
 
-      <th>Shop</th>	
+      <th>Vehicle Type</th>							  
 
-      
-      <th>Contact Number</th>
+
+
+<th>Brand</th>
+
+      <th>Model</th>
+
       @if($role==1)<th>Action</th>@endif
 
    </tr>
@@ -181,30 +224,12 @@
 
 </table>
 
+<div id="shopservice_pagination">
+{!! $shopserv->render() !!}
+</div>
+<div id="shopservice_pagination1">
 
-
-
-    <tbody id="searchshopservice">
-        <!-- Add content for search results if needed -->
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>id</th>
-            <th>Shop</th>
-            <th>Contact Number</th>
-            <th>Vehicle</th>
-            <th>Service</th>
-        </tr>
-    </tfoot>
-</table>
-
-                  <div id="shopservice_pagination">
-                     {!! $shopserv->render() !!}
-                  </div>
-                  <div id="shopservice_pagination1">
-                    
-                  </div>
-
+</div>
 
                      
                               

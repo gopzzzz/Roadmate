@@ -950,24 +950,70 @@ public function franinsert(Request $request){
 		DB::delete('delete from shop_offer_models where id = ?',[$id]);
 		return redirect('shopoffermodels');
 	}
-	public function shopservices(){
-	
-		$shopserv = DB::table('shop_services')
-            ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
-			->leftJoin('vehicle_types', 'shop_services.vehicle_type_id', '=', 'vehicle_types.id')
-			->leftJoin('brand_lists', 'shop_services.vehicle_brand_id', '=', 'brand_lists.id')
-		    ->leftJoin('brand_models', 'shop_services.vehicle_model_id', '=', 'brand_models.id')
-			->leftJoin('shiop_categories', 'shop_services.shop_category', '=', 'shiop_categories.id')
-			->select('shop_services.*', 'shops.shopname','vehicle_types.veh_type','brand_lists.brand','brand_models.brand_model','shiop_categories.category')
-			->orderBy('id','desc')->paginate(12);
-		$shops=Shops::all();
-		$shop_category=Shiop_categories::all();
-		$brand=Brand_lists::all();
-		$vehtype=Vehicle_types::all();
-		$models=Brand_models::all();
-		$role=Auth::user()->user_type;
-		return view('shopservices',compact('shopserv','shop_category','shops','brand','vehtype','models','role'));
-	}
+
+// 	public function shopservices(){
+//     // Fetch unique shops
+//     $uniqueShops = DB::table('shop_services')
+//         ->select('shops.shopname', 'shops.phone_number')
+//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+//         ->groupBy('shops.shopname', 'shops.phone_number')
+//         ->orderBy('shops.shopname')
+//         ->get();
+
+//     // Fetch shop services
+//     $shopserv = DB::table('shop_services')
+//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+//         ->select('shop_services.*', 'shops.shopname', 'shops.phone_number')
+//         ->orderBy('shop_services.id', 'desc')
+//         ->paginate(12);
+
+//     $shops = Shops::all();
+//     $shop_category = Shiop_categories::all();
+//     $brand = Brand_lists::all();
+//     $vehtype = Vehicle_types::all();
+//     $models = Brand_models::all();
+//     $role = Auth::user()->user_type;
+
+//     return view('shopservices', compact('uniqueShops', 'shopserv', 'shop_category', 'shops', 'brand', 'vehtype', 'models', 'role'));
+// }
+
+
+public function shopservices(){
+    $uniqueShops = DB::table('shop_services')
+        ->select('shops.id', 'shops.shopname', 'shops.phone_number')
+        ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+        ->groupBy('shops.id', 'shops.shopname', 'shops.phone_number')
+        ->orderBy('shops.shopname')
+        ->get();
+
+    $shopserv = DB::table('shop_services')
+        ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+        ->select('shop_services.*', 'shops.shopname', 'shops.phone_number')
+        ->orderBy('shop_services.id', 'desc')
+        ->paginate(12);
+
+    $role = Auth::user()->user_type;
+
+    return view('shopservices', compact('uniqueShops', 'shopserv', 'role'));
+}
+
+public function shop_vehicle($Id) {
+    $veh = DB::table('shop_services')
+        ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+        ->leftJoin('brand_models', 'shop_services.vehicle_model_id', '=', 'brand_models.id')
+        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+        ->select('shop_services.*', 'brand_lists.vehicle as veh_type', 'brand_lists.brand', 'brand_models.brand_model')
+        ->orderBy('id', 'DESC')->get();
+
+    $brand = Brand_lists::all();
+    $vehtype = Vehicle_types::all();
+    $models = Brand_models::all();
+    $role = Auth::user()->user_type;
+
+    return view('shop_vehicle', compact('veh', 'role', 'brand', 'vehtype', 'models', 'Id'));
+}
+
+
 	
 	public function shopservicesinsert(Request $request){
 		$shop_serv=new Shop_services;
