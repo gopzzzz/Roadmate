@@ -1,9 +1,10 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 
 
 use App\Executives;
@@ -949,24 +950,70 @@ public function franinsert(Request $request){
 		DB::delete('delete from shop_offer_models where id = ?',[$id]);
 		return redirect('shopoffermodels');
 	}
-	public function shopservices(){
-	
-		$shopserv = DB::table('shop_services')
-            ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
-			->leftJoin('vehicle_types', 'shop_services.vehicle_type_id', '=', 'vehicle_types.id')
-			->leftJoin('brand_lists', 'shop_services.vehicle_brand_id', '=', 'brand_lists.id')
-		    ->leftJoin('brand_models', 'shop_services.vehicle_model_id', '=', 'brand_models.id')
-			->leftJoin('shiop_categories', 'shop_services.shop_category', '=', 'shiop_categories.id')
-			->select('shop_services.*', 'shops.shopname','vehicle_types.veh_type','brand_lists.brand','brand_models.brand_model','shiop_categories.category')
-			->orderBy('id','desc')->paginate(12);
-		$shops=Shops::all();
-		$shop_category=Shiop_categories::all();
-		$brand=Brand_lists::all();
-		$vehtype=Vehicle_types::all();
-		$models=Brand_models::all();
-		$role=Auth::user()->user_type;
-		return view('shopservices',compact('shopserv','shop_category','shops','brand','vehtype','models','role'));
-	}
+
+// 	public function shopservices(){
+//     // Fetch unique shops
+//     $uniqueShops = DB::table('shop_services')
+//         ->select('shops.shopname', 'shops.phone_number')
+//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+//         ->groupBy('shops.shopname', 'shops.phone_number')
+//         ->orderBy('shops.shopname')
+//         ->get();
+
+//     // Fetch shop services
+//     $shopserv = DB::table('shop_services')
+//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+//         ->select('shop_services.*', 'shops.shopname', 'shops.phone_number')
+//         ->orderBy('shop_services.id', 'desc')
+//         ->paginate(12);
+
+//     $shops = Shops::all();
+//     $shop_category = Shiop_categories::all();
+//     $brand = Brand_lists::all();
+//     $vehtype = Vehicle_types::all();
+//     $models = Brand_models::all();
+//     $role = Auth::user()->user_type;
+
+//     return view('shopservices', compact('uniqueShops', 'shopserv', 'shop_category', 'shops', 'brand', 'vehtype', 'models', 'role'));
+// }
+
+
+public function shopservices(){
+    $uniqueShops = DB::table('shop_services')
+        ->select('shops.id', 'shops.shopname', 'shops.phone_number')
+        ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+        ->groupBy('shops.id', 'shops.shopname', 'shops.phone_number')
+        ->orderBy('shops.shopname')
+        ->get();
+
+    $shopserv = DB::table('shop_services')
+        ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+        ->select('shop_services.*', 'shops.shopname', 'shops.phone_number')
+        ->orderBy('shop_services.id', 'desc')
+        ->paginate(12);
+
+    $role = Auth::user()->user_type;
+
+    return view('shopservices', compact('uniqueShops', 'shopserv', 'role'));
+}
+
+public function shop_vehicle($Id) {
+    $veh = DB::table('shop_services')
+        ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
+        ->leftJoin('brand_models', 'shop_services.vehicle_model_id', '=', 'brand_models.id')
+        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+        ->select('shop_services.*', 'brand_lists.vehicle as veh_type', 'brand_lists.brand', 'brand_models.brand_model')
+        ->orderBy('id', 'DESC')->get();
+
+    $brand = Brand_lists::all();
+    $vehtype = Vehicle_types::all();
+    $models = Brand_models::all();
+    $role = Auth::user()->user_type;
+
+    return view('shop_vehicle', compact('veh', 'role', 'brand', 'vehtype', 'models', 'Id'));
+}
+
+
 	
 	public function shopservicesinsert(Request $request){
 		$shop_serv=new Shop_services;
@@ -3569,10 +3616,17 @@ function sendNotification1($msg1,$title)
 			$brandprod->save();
 			return back();
 		}
-		public function imgcompress(){
-			$role=Auth::user()->user_type;
+	
 
-			return view('imgcompress',compact('role'));
+
+		public function imgcompress()
+		{
+			$role = Auth::user()->user_type;
+			
+			$imagePath = public_path('Amith/');
+			$images = File::allFiles($imagePath);
+		
+			return view('imgcompress', compact('role', 'images'));
 		}
 		
 public function imagecompressinsert(Request $request)
@@ -3584,13 +3638,32 @@ public function imagecompressinsert(Request $request)
 				$path[$i] = public_path('Amith/') . "/" . $image_name[$i];
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
+<<<<<<< HEAD
 
 			return back();
 
+=======
+			return back();
+>>>>>>> 69ba08da05114f4599b7f2cfc3fa2e0efa673863
 
 		}
 
-		public function subcategory($catId,$categoryname) {
+		public function deleteImages(Request $request)
+		{
+			$imageNames = $request->input('images', []);
+		
+			foreach ($imageNames as $imageName) {
+				$imagePath = public_path('Amith/') . $imageName;
+		
+				if (File::exists($imagePath)) {
+					File::delete($imagePath);
+				}
+			}
+		
+			return back()->with('success', 'Images deleted successfully');
+		}
+	
+	public function subcategory($catId,$categoryname) {
 			
 			$role = Auth::user()->user_type;
 			$mark = DB::table('tbl_rm_categorys')

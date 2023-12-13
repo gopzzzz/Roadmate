@@ -1151,6 +1151,11 @@ Route::post('/brandproductsedit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@brandproductsedit'
 ])->name('brandproductsedit'); 
+// web.php
+Route::get('/shop_vehicle/{Id}', 'HomeController@shop_vehicle')->name('shop_vehicle');
+
+
+
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');
@@ -1238,6 +1243,7 @@ Route::get('/imgcompress', 'HomeController@imgcompress')->name('imgcompress');
 
 Route::post('/imagecompressinsert', [App\Http\Controllers\HomeController::class, 'imagecompressinsert'])->name('imagecompressinsert');
 
+// Inside your routes/web.php
 
 
 Route::post('/subcategoryfetch', [App\Http\Controllers\HomeController::class, 'subcategoryfetch'])->name('subcategoryfetch');
@@ -1246,3 +1252,6 @@ Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, '
 
 Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
 
+Route::delete('/delete-image/{imageName}', 'HomeController@deleteImage');
+
+Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages');
