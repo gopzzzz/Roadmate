@@ -1,9 +1,10 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 
 
 use App\Executives;
@@ -3605,10 +3606,17 @@ function sendNotification1($msg1,$title)
 			$brandprod->save();
 			return back();
 		}
-		public function imgcompress(){
-			$role=Auth::user()->user_type;
+	
 
-			return view('imgcompress',compact('role'));
+
+		public function imgcompress()
+		{
+			$role = Auth::user()->user_type;
+			
+			$imagePath = public_path('Amith/');
+			$images = File::allFiles($imagePath);
+		
+			return view('imgcompress', compact('role', 'images'));
 		}
 		
 public function imagecompressinsert(Request $request)
@@ -3620,13 +3628,26 @@ public function imagecompressinsert(Request $request)
 				$path[$i] = public_path('Amith/') . "/" . $image_name[$i];
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
-
-			echo "successfull";exit;
-
+			return back();
 
 		}
 
-		public function subcategory($catId,$categoryname) {
+		public function deleteImages(Request $request)
+		{
+			$imageNames = $request->input('images', []);
+		
+			foreach ($imageNames as $imageName) {
+				$imagePath = public_path('Amith/') . $imageName;
+		
+				if (File::exists($imagePath)) {
+					File::delete($imagePath);
+				}
+			}
+		
+			return back()->with('success', 'Images deleted successfully');
+		}
+	
+	public function subcategory($catId,$categoryname) {
 			
 			$role = Auth::user()->user_type;
 			$mark = DB::table('tbl_rm_categorys')
