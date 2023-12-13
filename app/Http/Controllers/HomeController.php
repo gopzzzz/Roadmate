@@ -3638,13 +3638,7 @@ public function imagecompressinsert(Request $request)
 				$path[$i] = public_path('Amith/') . "/" . $image_name[$i];
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
-<<<<<<< HEAD
-
 			return back();
-
-=======
-			return back();
->>>>>>> 69ba08da05114f4599b7f2cfc3fa2e0efa673863
 
 		}
 
