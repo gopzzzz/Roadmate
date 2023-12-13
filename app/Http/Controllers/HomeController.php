@@ -3585,7 +3585,7 @@ public function imagecompressinsert(Request $request)
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
 
-			echo "successfull";exit;
+			return back();
 
 
 		}

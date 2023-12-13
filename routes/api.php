@@ -795,22 +795,15 @@ Shop marketing new feature addon (07-11-2023)
 Route::get('mhomepage','ShopmarketingController@mhomepage');
 Route::post('categoryproductlist','ShopmarketingController@categoryproductlist');
 Route::get('categorylist','ShopmarketingController@categorylist');
+Route::post('subcategorylist','ShopmarketingController@subcategorylist');
 Route::post('productdetails','ShopmarketingController@productdetails');
 Route::post('wishlist','ShopmarketingController@wishlist');
-Route::post('wishlistadd','ShopmarketingController@wishlistadd');
-Route::post('wishlistdelete','ShopmarketingController@wishlistdelete');
-
 Route::post('cart','ShopmarketingController@cart');
-Route::post('cartadd','ShopmarketingController@cartadd');
-Route::post('cartdelete','ShopmarketingController@cartdelete');
-
 Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::get('product','ShopmarketingController@product');
-Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
 
-Route::post('decrementQuantity','ShopmarketingController@decrementQuantity');
 
 Route::post('bulkupdate','ShopmobController@bulkupdate');
 Route::get('bulkdataupload','ShopmobController@bulkdataupload');
