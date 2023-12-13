@@ -950,31 +950,6 @@ public function franinsert(Request $request){
 		return redirect('shopoffermodels');
 	}
 
-// 	public function shopservices(){
-//     // Fetch unique shops
-//     $uniqueShops = DB::table('shop_services')
-//         ->select('shops.shopname', 'shops.phone_number')
-//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
-//         ->groupBy('shops.shopname', 'shops.phone_number')
-//         ->orderBy('shops.shopname')
-//         ->get();
-
-//     // Fetch shop services
-//     $shopserv = DB::table('shop_services')
-//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
-//         ->select('shop_services.*', 'shops.shopname', 'shops.phone_number')
-//         ->orderBy('shop_services.id', 'desc')
-//         ->paginate(12);
-
-//     $shops = Shops::all();
-//     $shop_category = Shiop_categories::all();
-//     $brand = Brand_lists::all();
-//     $vehtype = Vehicle_types::all();
-//     $models = Brand_models::all();
-//     $role = Auth::user()->user_type;
-
-//     return view('shopservices', compact('uniqueShops', 'shopserv', 'shop_category', 'shops', 'brand', 'vehtype', 'models', 'role'));
-// }
 
 
 public function shopservices(){
@@ -1352,14 +1327,29 @@ public function shop_vehicle($Id) {
 		
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-        
+     
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
         ->orderby('tbl_rm_products.id','desc')->get();
 		
-		$mark=DB::table('tbl_rm_categorys')->get();
+		$mark=DB::table('tbl_rm_categorys')
+		->where('cat_id',0)
+		->get();
+		
+
 		$role=Auth::user()->user_type;
 		return view('marketproducts',compact('market','mark','role'));
 	}
+
+	public function getSubcategories($categoryId) {
+		$subcategories = DB::table('tbl_rm_categorys')
+			->where('cat_id', $categoryId)
+			->get();
+	
+		return response()->json(['subcategories' => $subcategories]);
+	}
+	
+	
+	
 
 	public function marketproductinsert(Request $request)
 	{
@@ -1367,9 +1357,9 @@ public function shop_vehicle($Id) {
 	
 		$market->product_title = $request->product_title;
 		$market->discription = $request->discription;
-		$market->original_amount = 0;
-		$market->offer_price = 0;
+		
 		$market->cat_id = $request->category;
+
 		$market->status = 0;
 		$market->save();
 		$prod_id = $market->id;

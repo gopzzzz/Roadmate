@@ -1154,6 +1154,7 @@ Route::post('/brandproductsedit', [
 // web.php
 Route::get('/shop_vehicle/{Id}', 'HomeController@shop_vehicle')->name('shop_vehicle');
 
+Route::get('/get-subcategories/{categoryId}', 'HomeController@getSubcategories');
 
 
 
