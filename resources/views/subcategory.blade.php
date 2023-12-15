@@ -1,18 +1,11 @@
 @extends('layout.mainlayout')
 
-
-
 @section('content')
 
- 
 
 <div class="content-wrapper">
 
-
-
-   <!-- Content Header (Page header) -->
-
-
+  <!-- Content Header (Page header) -->
 
    <section class="content-header">
 
@@ -182,7 +175,7 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">SubCategory Image</label>
-                                       <input type="file" name="subcategoryimage" accept="image/*" required>
+                                       <input type="file" name="subcategoryimage" accept="image/*">
                                     </div>  </div>
 
 
@@ -279,14 +272,7 @@
                            </tr>
                         </tfoot>
                      </table>
-									
-
-
-
-
-
-
-<div class="modal" id="editsubcategory_modal" tabindex="-1" role="dialog">
+	<div class="modal" id="editsubcategory_modal" tabindex="-1" role="dialog">
 
 
 

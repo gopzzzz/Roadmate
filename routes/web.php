@@ -1135,7 +1135,7 @@ Route::post('/brandsedit', [
 ])->name('brandsedit'); 
 
 
-Route::get('/brandproducts/{Id}/{productTitle}', 'HomeController@brandproducts')->name('brandproducts');
+Route::get('/brandproducts/{Id}/{BrandName}', 'HomeController@brandproducts')->name('brandproducts');
 
 Route::post('/brandproductsinsert/{Id}', [
     'middleware' => 'auth',

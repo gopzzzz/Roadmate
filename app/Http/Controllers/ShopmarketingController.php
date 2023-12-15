@@ -435,12 +435,13 @@ public function deliveryaddressadd(){
   $query=new Tbl_deliveryaddres;
   $query->shop_id=$data1->shop_id;
 
-  $query->address=$data1->address;
-  $query->addresssecond=$data1->addresssecond;
+  $query->area=$data1->area;
+  $query->area1=$data1->area1;
+  $query->country=$data1->country;
+
   $query->state	=$data1->state;
   $query->district=$data1->district;
   $query->city=$data1->city;
-  $query->pincode=$data1->pincode;
   $query->phone=$data1->phone;
 
 
