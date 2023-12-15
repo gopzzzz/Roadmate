@@ -553,6 +553,7 @@ catch (Exception $e)
 
  }
 }
+
 public function deliveryaddresslist(){
     
     $postdata = file_get_contents("php://input");                    
@@ -564,15 +565,15 @@ public function deliveryaddresslist(){
     $shopId = $data1->shopid;
     
     try {    
-        $deliveryaddresslist = DB::table('tbl_deliveryaddres')
+        $deliveryaddress = DB::table('tbl_deliveryaddres')
             ->where('shop_id', $shopId)
             ->get();
 
-        if ($deliveryaddresslist == null) {
+        if ($deliveryaddress == null) {
             echo json_encode(array('error' => true, "message" => "Error"));
         } else {                                
             $json_data = 0;
-            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddresslist, "message" => "Success"));
+            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddress, "message" => "Success"));
         }
     } catch (Exception $e) {
         // Handle the exception here

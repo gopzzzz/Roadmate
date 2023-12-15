@@ -281,7 +281,7 @@
                   <!-- <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td> -->
                 
                     <td>{{$key->category_name}}</td>
-                    <td>{{$key->cat_id}}</td>
+                    <td>{{$key->category_name}}</td>
                     <td>{{$key->brand_name}}</td>
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
                     <td>
