@@ -951,31 +951,6 @@ public function franinsert(Request $request){
 		return redirect('shopoffermodels');
 	}
 
-// 	public function shopservices(){
-//     // Fetch unique shops
-//     $uniqueShops = DB::table('shop_services')
-//         ->select('shops.shopname', 'shops.phone_number')
-//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
-//         ->groupBy('shops.shopname', 'shops.phone_number')
-//         ->orderBy('shops.shopname')
-//         ->get();
-
-//     // Fetch shop services
-//     $shopserv = DB::table('shop_services')
-//         ->leftJoin('shops', 'shop_services.shop_id', '=', 'shops.id')
-//         ->select('shop_services.*', 'shops.shopname', 'shops.phone_number')
-//         ->orderBy('shop_services.id', 'desc')
-//         ->paginate(12);
-
-//     $shops = Shops::all();
-//     $shop_category = Shiop_categories::all();
-//     $brand = Brand_lists::all();
-//     $vehtype = Vehicle_types::all();
-//     $models = Brand_models::all();
-//     $role = Auth::user()->user_type;
-
-//     return view('shopservices', compact('uniqueShops', 'shopserv', 'shop_category', 'shops', 'brand', 'vehtype', 'models', 'role'));
-// }
 
 
 public function shopservices(){
@@ -1274,7 +1249,6 @@ public function shop_vehicle($Id) {
 
 	public function shopinsert(Request $request){
 		$shop=new Shops;
-
 		$shop->type=$request->category;
 		$shop->timming=0;
 		$shop->exeid=$request->exename;
@@ -1353,27 +1327,51 @@ public function shop_vehicle($Id) {
 		
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-        
+     
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
         ->orderby('tbl_rm_products.id','desc')->get();
 		
-		$mark=DB::table('tbl_rm_categorys')->get();
+		$mark=DB::table('tbl_rm_categorys')
+		->where('cat_id',0)
+		->get();
+		
+
 		$role=Auth::user()->user_type;
 		return view('marketproducts',compact('market','mark','role'));
 	}
+
+	public function getSubcategories($categoryId) {
+		$subcategories = DB::table('tbl_rm_categorys')
+			->where('cat_id', $categoryId)
+			->get();
+	
+		return response()->json(['subcategories' => $subcategories]);
+	}
+	
+	
+	
 
 	public function marketproductinsert(Request $request)
 	{
 		$market = new Tbl_rm_products;
 	
-		$market->product_title = $request->product_title;
-		$market->discription = $request->discription;
-		$market->original_amount = 0;
-		$market->offer_price = 0;
+		$market->brand_name = $request->brand_name;
+
+		
 		$market->cat_id = $request->category;
+
 		$market->status = 0;
 		$market->save();
-		$prod_id = $market->id;
+	
+		return redirect('marketproducts')->with('success', 'Product added successfully');
+	}
+	
+
+	public function marketproductimageinsert(Request $request)
+	{
+	
+		$prod_id=$request->productid;
+		
 	
 		$request->validate([
 			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -1381,7 +1379,7 @@ public function shop_vehicle($Id) {
 	
 		foreach ($request->file('images') as $image) {
 			$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-			$image->move(public_path('market'), $imageName); // Use public_path()
+			$image->move('market', $imageName);
 	
 			Tbl_productimages::create([
 				'prod_id' => $prod_id,
@@ -1389,33 +1387,9 @@ public function shop_vehicle($Id) {
 			]);
 		}
 	
-		return redirect('marketproducts')->with('success', 'Product added successfully');
+		return redirect()->back()->with('success', 'Images added successfully.');
 	}
 	
-
-
-public function marketproductimageinsert(Request $request)
-{
-    $prod_id = $request->prod_id;
-
-    $request->validate([
-        'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    foreach ($request->file('images') as $image) {
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->move('market', $imageName);
-
-        Tbl_productimages::create([
-            'prod_id' => $prod_id,
-            'images' => $imageName,
-        ]);
-    }
-
-    return redirect()->back()->with('success', 'Images added successfully.');
-}
-
-
 
 	public function marketproductfetch(Request $request){
 		$id=$request->id;
@@ -1424,8 +1398,8 @@ public function marketproductimageinsert(Request $request)
 	}
 
 	public function productimagefetch(Request $request){
-		$id=$request->id;
-		$market1=DB::table('tbl_productimages')->where('prod_id', $id)->get();
+		$id=$request->prod_id;
+		$market1=DB::table('tbl_productimages')->where('prod_id',$id)->get();
 		
 		print_r(json_encode($market1));
 		
@@ -1436,10 +1410,10 @@ public function marketproductimageinsert(Request $request)
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
 
-    $market->product_title = $request->product_title;
-    $market->discription = $request->discription;
-    $market->original_amount = 0;
-    $market->offer_price = 0;
+    $market->brand_name = $request->brand_name;
+  
+    $market->cat_id = $request->subcategory;
+
     $market->cat_id = $request->category;
     $market->status = $request->status;
 
@@ -3447,7 +3421,7 @@ function sendNotification1($msg1,$title)
 			$role=Auth::user()->user_type;
 			$mark=DB::table('tbl_rm_categorys')
 			->orderBy('tbl_rm_categorys.id', 'desc')
-
+            ->where('cat_id',0)
 			->get();
 
 			return view('market_category',compact('mark','role'));
@@ -3571,11 +3545,11 @@ function sendNotification1($msg1,$title)
 			 return redirect('brands');
 		 
 		  }
-		  public function brandproducts($Id,$productTitle)
+		  public function brandproducts($Id,$BrandName)
 		  {
 			  $brandprod = DB::table('tbl_brand_products')
 				  ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
-				  ->where('tbl_brand_products.product_id', $Id)
+				  ->where('tbl_brand_products.brand_id', $Id)
 				  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
 				  ->orderBy('tbl_brand_products.id', 'desc')
 				  ->get();
@@ -3583,15 +3557,17 @@ function sendNotification1($msg1,$title)
 			  $brand = DB::table('tbl_brands')->get();
 			  $role = Auth::user()->user_type;
 		  
-			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','productTitle'));
+			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','BrandName'));
 		  }
 		  
 		  public function brandproductsinsert(Request $request, $Id)
 		  {
 			  $brandprod = new Tbl_brand_products;
-			  $brandprod->product_id = $Id; // Set product_id to $Id
-			  $brandprod->brand_id = $request->brands;
+			  $brandprod->brand_id = $Id;
+			  $brandprod->product_name = $request->product_name;
 			  $brandprod->offer_price = $request->offer_price;
+
+			  $brandprod->description = $request->description;
 			  $brandprod->price = $request->original_amount;
 			  $brandprod->status = 0;
 			  $brandprod->save();
@@ -3609,7 +3585,9 @@ function sendNotification1($msg1,$title)
 		public function brandproductsedit(Request $request){
 			$id=$request->id;
 			$brandprod=Tbl_brand_products::find($id);
-			$brandprod->brand_id = $request->brands;
+			$brandprod->product_name = $request->product_name;
+			$brandprod->description = $request->description;
+
 			$brandprod->offer_price = $request->offer_price;
 			$brandprod->price = $request->original_amount;
 			$brandprod->status = $request->status;
@@ -3699,28 +3677,30 @@ public function imagecompressinsert(Request $request)
 			return back();
 		
 	}
-	
-		public function subcategoryinsert(Request $request)
-		{
-			$mark = new Tbl_rm_categorys;
-			$mark->category_name = $request->subcategory_name;
-			$mark->cat_id = $request->input('catid');
+	public function subcategoryinsert(Request $request)
+	{
+		$mark = new Tbl_rm_categorys;
+		$mark->category_name = $request->subcategory_name;
+		$mark->cat_id = $request->input('catid');
 		
-			if ($files = $request->file('subcategoryimage')) {
-				$name = $files->getClientOriginalName();
-				$files->move('market/', $name);
-				$mark->image = $name;
-				$mark->status = 0;
-				$mark->save();
-				Session::flash('success', 'Subcategory added successfully!');
-			} else {
-				// Display error toast
-				Session::flash('error', 'Error adding subcategory. Please try again.');
-			}
-		
-			return back();
+		if ($request->hasFile('subcategoryimage')) {
+			$files = $request->file('subcategoryimage');
+			$name = $files->getClientOriginalName();
+			$files->move('market/', $name);
+			$mark->image = $name;
+			$mark->status = 0;
+			$mark->save();
+			Session::flash('success', 'Subcategory added successfully!');
+		} else {
+			// If no file is uploaded, save without an image
+			$mark->status = 0;
+			$mark->save();
+			Session::flash('success', 'Subcategory added successfully!');
 		}
-		
+	
+		return back();
+	}
+	
 		 public function subcategoryfetch(Request $request){
 			$id=$request->id;
 			$app = Tbl_rm_categorys::find($id);

@@ -1135,7 +1135,7 @@ Route::post('/brandsedit', [
 ])->name('brandsedit'); 
 
 
-Route::get('/brandproducts/{Id}/{productTitle}', 'HomeController@brandproducts')->name('brandproducts');
+Route::get('/brandproducts/{Id}/{BrandName}', 'HomeController@brandproducts')->name('brandproducts');
 
 Route::post('/brandproductsinsert/{Id}', [
     'middleware' => 'auth',
@@ -1154,6 +1154,7 @@ Route::post('/brandproductsedit', [
 // web.php
 Route::get('/shop_vehicle/{Id}', 'HomeController@shop_vehicle')->name('shop_vehicle');
 
+Route::get('/get-subcategories/{categoryId}', 'HomeController@getSubcategories');
 
 
 

@@ -26,7 +26,7 @@
 
               <li class="breadcrumb-item"><a href="home">Home</a></li>
 
-              <li class="breadcrumb-item active">Market Products</li>
+              <li class="breadcrumb-item active">Market Brands</li>
 
             </ol>
 
@@ -123,37 +123,37 @@
 
 
 
-
                 <div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Main Category</label>
+    <select name="category" id="category" class="form-control">
+        <option value="0">Select Category</option>
+        @foreach($mark as $key)
+            <option value="{{ $key->id }}">{{ $key->category_name }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Sub Category</label>
+    <select name="subcategory" id="subcategory" class="form-control">
+        <option value="0">Select Subcategory</option>
+    </select>
+</div>
 
 
-<label class="exampleModalLabel">Category</label>
+<div class="form-group col-sm-12">
 
 
 
-<select name="category" class="form-control">
-<option value="0">Select Category</option>
-  @foreach($mark as $key)
+<label class="exampleModalLabel">Brand Name</label>
 
-<option value="{{$key->id}}">{{$key->category_name}}</option>
-@endforeach
-</select>
+
+
+<input class="form-control" name="brand_name" placeholder="Enter Product Name" required>
 
 
 </div>
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Product Name</label>
-
-
-
-<input class="form-control" name="product_title" placeholder="Enter Product Name" required>
-
-
-</div>
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
 
 <input type="hidden" name="prod_id">
 
@@ -164,12 +164,12 @@
 <input class="form-control" type="file"  name="images[]" accept="image/*" multiple required>
 
 
-</div>
+</div> -->
 
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Description</label>
                                       <textarea  name="discription" class="form-control" Placeholder="Enter Description" ></textarea>
-                                    </div>
+                                    </div> -->
 
 
 
@@ -238,13 +238,12 @@
 
                     <th>id</th>
 
-                    <th>Image</th>
 
                     <th>Category</th>
+                    <th>subCategory</th>
 
-                    <th>Product name</th>
 
-                    <th>Description</th>
+                    <th>Brand Name</th>
 
                     <!-- <th>Orignial Amount </th>
 
@@ -279,25 +278,18 @@
                   <td>{{$i}}</td>
                     
 
-                  <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td>
+                  <!-- <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td> -->
                 
                     <td>{{$key->category_name}}</td>
-                    <td>{{$key->product_title}}</td>
-                    <td>{{$key->discription}}</td>
-                    <!-- <td>{{$key->original_amount}}</td>
-                    <td>{{$key->offer_price}}</td> -->
-
+                    <td>{{$key->category_name}}</td>
+                    <td>{{$key->brand_name}}</td>
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
-
-
                     <td>
-
-
 
 <i class="fa fa-edit edit_marketproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 
 
-<a href="{{ route('brandproducts', ['Id' => $key->id, 'productTitle' => $key->product_title]) }}" class="btn btn-success btn-sm brand_products">Brand Products</a>
+<a href="{{ route('brandproducts', ['Id' => $key->id, 'BrandName' => $key->brand_name]) }}" class="btn btn-success btn-sm brand_products">Products</a>
 
 
 </td>
@@ -338,13 +330,14 @@ $i++;
 
 <th>id</th>
 
-                    <th>Image</th>
 
                     <th>Category</th>
+                    <th>SubCategory</th>
 
-                    <th>Product name</th>
 
-                    <th>Description</th>
+                    <th>Brand Name</th>
+
+                    <!-- <th>Description</th> -->
 
                     <!-- <th>Orignial Amount </th>
 
@@ -382,7 +375,7 @@ $i++;
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit Product</h5>
+        <h5 class="modal-title">Edit Brand</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -393,7 +386,7 @@ $i++;
       <div class="modal-body row">
 
 
-      <div class="form-group col-sm-6">
+      <div class="form-group col-sm-12">
 <input type="hidden" name="id" id="marketid">
 <div class="form-group col-sm-12">
 
@@ -413,42 +406,24 @@ $i++;
 
 </div>
 <div class="form-group col-sm-12">
+    <label class="exampleModalLabel">SubCategory</label>
+    <select name="subcategory" id="subcategory" class="form-control">
+        <option value="0">Select Subcategory</option>
+    </select>
+</div>
+<div class="form-group col-sm-12">
 
 
 
-<label class="exampleModalLabel">Product Name</label>
+<label class="exampleModalLabel">Brand Name</label>
 
 
 
-<input class="form-control" name="product_title" id="product_title" required>
+<input class="form-control" name="brand_name" id="brand_name" required>
 
 
 </div>
-</div>
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Image</label>
-
-
-
-<input class="form-control" type="file"  name="images[]" accept="image/*" multiple>
-
-
-</div>
-
-
-<div class="form-group col-sm-6">
-                                        <label class="exampleModalLabel">Description</label>
-                                      <textarea  name="discription" class="form-control" id="discription" ></textarea>
-                                    </div>
-
-
-
-
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-12">
 
 <label class="exampleModalLabel">Status</label>
 
@@ -463,11 +438,6 @@ $i++;
 </div>
 
 </div>
-
-
- 
-
-      
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -475,12 +445,7 @@ $i++;
       </form>
     </div>
   </div>
-</div>
-
-         
-
-    
-                  
+</div>                  
 <div class="modal" tabindex="-1" role="dialog" id="imageshowmodal">
 <form action="{{ route('marketproductimageinsert') }}" method="post" enctype="multipart/form-data">
         @csrf
@@ -594,5 +559,68 @@ $i++;
         });
     });
 </script>
+<script>
+    $(document).ready(function () {
+        // When a category is selected
+        $('#category').change(function () {
+            var categoryId = $(this).val();
+
+            // Make an AJAX request to fetch subcategories
+            $.ajax({
+                url: '/getSubcategories/' + categoryId,
+                type: 'GET',
+                success: function (data) {
+                    // Update the subcategory dropdown with fetched data
+                    $('#subcategory').html('<option value="0">Select Subcategory</option>');
+                    $.each(data, function (key, value) {
+                        $('#subcategory').append('<option value="' + value.id + '">' + value.cat_id + '</option>');
+                    });
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+ 
+    $(document).ready(function(){
+        // When the main category is changed
+        $('#category').change(function(){
+            var categoryId = $(this).val();
+            console.log('Selected Category ID:', categoryId);
+
+            // Clear existing subcategories
+            $('#subcategory').empty();
+            $('#subcategory').append('<option value="0">Select Subcategory</option>');
+
+            // Fetch subcategories using AJAX
+            if (categoryId != 0) {
+                $.ajax({
+                    url: '/get-subcategories/' + categoryId,
+                    type: 'GET',
+                    dataType: 'json',  // Explicitly set the expected data type
+                    success: function(data) {
+                        console.log('Subcategories:', data.subcategories);
+
+                        // Populate subcategories based on the response
+                        $.each(data.subcategories, function(index, value) {
+                            $('#subcategory').append('<option value="' + value.id + '">' + value.category_name + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
 
 @endsection

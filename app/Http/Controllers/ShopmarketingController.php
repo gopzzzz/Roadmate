@@ -10,13 +10,14 @@ class ShopmarketingController extends Controller
     try {
         $categorylist = DB::table('tbl_rm_categorys')
             ->where('status', 0)
+            ->where('cat_id',0)
             ->get();
 
-        $productlist = DB::table('tbl_rm_products')
-            ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+        $productlist = DB::table('tbl_brand_products')
+            ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
             ->where('tbl_rm_products.status', 0)
-            ->where('tbl_rm_categorys.status', 0)
-            ->select('tbl_rm_products.*') 
+           // ->where('tbl_rm_categorys.status', 0)
+            ->select('tbl_brand_products.*') 
             ->get();
 
         foreach ($productlist as $product) {
@@ -61,14 +62,36 @@ public function categoryproductlist(){
 
   $data1 = json_decode($json);
 
-  $categoryId=$data1->categoryid;
+  $categoryId=$data1->categoryid; 
   try{	
 
-      $productlist = DB::table('tbl_rm_products')
-          ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-          ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+      $productlist = DB::table('tbl_brand_products')
+          ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+          ->select('tbl_brand_products.*', 'tbl_rm_products.cat_id')
           ->where('tbl_rm_products.cat_id', $categoryId) 
           ->get();
+        $products = [];
+
+foreach ($productlist as $proItem) {
+    $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
+    
+    //echo "<pre>";print_r($imageArray);exit;
+
+    // Check if $imageArray is not null before accessing its properties
+    if ($imageArray) {
+        // Assuming there is a column named 'images' in tbl_productimages table
+        $proItem->images = $imageArray->images;
+    } else {
+        // If no images are found, set it to an empty array or null, depending on your needs
+        $proItem->images = "";
+        // or $cartItem->images = null;
+    }
+
+    // Add the $cartItem to the $cart array
+    $products[] = $proItem;
+}
+
+
         if($productlist == null){
 
                  echo json_encode(array('error' => true, "message" => "Error"));
@@ -79,7 +102,7 @@ public function categoryproductlist(){
 
              $json_data = 0;
 
-            echo json_encode(array('error' => false,"productlist"=>$productlist, "message" => "Success"));
+            echo json_encode(array('error' => false,"productlist"=>$products, "message" => "Success"));
 
                 }
 }
@@ -121,6 +144,7 @@ public function categorylist(){
    
 
     $categorylist=DB::table('tbl_rm_categorys')
+    ->where('cat_id',0)
      ->where('status',0)
      ->get();
 
@@ -241,16 +265,17 @@ public function productdetails(){
 
 
   try{	
-    $productDetails = DB::table('tbl_rm_products')
-    ->select('tbl_rm_products.*')
-    ->where('tbl_rm_products.id', $productId) 
-    ->where('status',0)
+    $productDetails = DB::table('tbl_brand_products')
+     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_brand_products.*','tbl_rm_products.cat_id')
+    ->where('tbl_brand_products.id',$productId) 
+    ->where('tbl_brand_products.status',0)
     ->first(); 
 
 if ($productDetails) {
     $images = DB::table('tbl_productimages')
         ->select('images')
-        ->where('prod_id', $productId)
+        ->where('prod_id',$productDetails->id)
         ->get()
         ->pluck('images')
         ->all();
@@ -306,18 +331,41 @@ public function wishlist(){
 
    
 
-    $wishlist=DB::table('tbl_rm_wishlist')
-    
-    
-   ->where('shop_id',$shopId)
- 
 
 
+$wishlist = DB::table('tbl_rm_wishlists')
+    ->join('tbl_brand_products', 'tbl_rm_wishlists.product_id', '=', 'tbl_brand_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_rm_wishlists.*', 'tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
+    ->where('shop_id', $shopId)
     ->get();
 
+// Initialize $cart outside the loop
+$wish = [];
+
+foreach ($wishlist as $cartItem) {
+    $imageArray = DB::table('tbl_productimages')->where('prod_id', $cartItem->product_id)->first();
+
+    // Check if $imageArray is not null before accessing its properties
+    if ($imageArray) {
+        // Assuming there is a column named 'images' in tbl_productimages table
+        $cartItem->images = $imageArray->images;
+    } else {
+        // If no images are found, set it to an empty array or null, depending on your needs
+        $cartItem->images = [];
+        // or $cartItem->images = null;
+    }
+
+    // Add the $cartItem to the $cart array
+    $wish[] = $cartItem;
+}
+
+
+
+  //  echo "<pre>";print_r($wish);exit;
      
 
-        if($wishlist == null){
+        if($wish == null){
 
                
 
@@ -331,7 +379,7 @@ public function wishlist(){
 
             $json_data = 0;
 
-            echo json_encode(array('error' => false,"wishlist"=>$wishlist, "message" => "Success"));
+            echo json_encode(array('error' => false,"wishlist"=>$wish, "message" => "Success"));
 
                 }
 }
@@ -369,35 +417,39 @@ public function cart(){
    
 
    
-
-    $cart=DB::table('tbl_cart')
-    
-    
-   ->where('shop_id',$shopId)
- 
-
-
+$cartlist = DB::table('tbl_carts')
+    ->join('tbl_brand_products', 'tbl_carts.product_id', '=', 'tbl_brand_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_carts.*', 'tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
+    ->where('shop_id', $shopId)
     ->get();
 
-     
+// Initialize $cart outside the loop
+$cart = [];
 
-        if($cart == null){
+foreach ($cartlist as $cartItem) {
+    $imageArray = DB::table('tbl_productimages')->where('prod_id', $cartItem->product_id)->first();
 
-               
+    // Check if $imageArray is not null before accessing its properties
+    if ($imageArray) {
+        // Assuming there is a column named 'images' in tbl_productimages table
+        $cartItem->images = $imageArray->images;
+    } else {
+        // If no images are found, set it to an empty array or null, depending on your needs
+        $cartItem->images = [];
+        // or $cartItem->images = null;
+    }
 
-          echo json_encode(array('error' => true, "message" => "Error"));
+    // Add the $cartItem to the $cart array
+    $cart[] = $cartItem;
+}
 
-             }
+if (empty($cart)) {
+    echo json_encode(array('error' => true, "message" => "Error"));
+} else {
+    echo json_encode(array('error' => false, "cart" => $cart, "message" => "Success"));
+}
 
-            else{								
-
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false,"cart"=>$cart, "message" => "Success"));
-
-                }
 
     
 
@@ -431,12 +483,13 @@ public function deliveryaddress(){
   $query->shop_id=$data1->shop_id;
 
   $query->area=$data1->area;
-  $query->landmark=$data1->landmark;
-  $query->city=$data1->city;
-  $query->district=$data1->district;
-  $query->state=$data1->state;
+  $query->area1=$data1->area1;
   $query->country=$data1->country;
-  $query->pincode=$data1->pincode;
+
+  $query->state	=$data1->state;
+  $query->district=$data1->district;
+  $query->city=$data1->city;
+  $query->phone=$data1->phone;
 
 
   if($query->save()){
@@ -450,6 +503,8 @@ public function deliveryaddress(){
     echo json_encode(array('error' => true, "message" => "Error"));
 
   }
+
+ 
 
  }
 
@@ -473,14 +528,37 @@ public function deliveryaddress(){
 
    
 
-    $product=DB::table('tbl_rm_products')
-    ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-    ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+    $productlist=DB::table('tbl_brand_products')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_brand_products.*')
      ->get();
+     
+     
+        $products = [];
+
+foreach ($productlist as $proItem) {
+    $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
+    
+    //echo "<pre>";print_r($imageArray);exit;
+
+    // Check if $imageArray is not null before accessing its properties
+    if ($imageArray) {
+        // Assuming there is a column named 'images' in tbl_productimages table
+        $proItem->images = $imageArray->images;
+    } else {
+        // If no images are found, set it to an empty array or null, depending on your needs
+        $proItem->images = "";
+        // or $cartItem->images = null;
+    }
+
+    // Add the $cartItem to the $cart array
+    $products[] = $proItem;
+}
+
 
      
 
-        if($product == null){
+        if($productlist == null){
 
                
 
@@ -494,7 +572,7 @@ public function deliveryaddress(){
 
             $json_data = 0;
 
-            echo json_encode(array('error' => false,"product"=>$product, "message" => "Success"));
+            echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
 
                 }
 
@@ -547,4 +625,31 @@ catch (Exception $e)
 
  }
 }
+public function deliveryaddresslist(){
+    
+    $postdata = file_get_contents("php://input");                    
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $shopId = $data1->shopid;
+    
+    try {    
+        $deliveryaddress = DB::table('tbl_deliveryaddres')
+            ->where('shop_id', $shopId)
+            ->get();
+
+        if ($deliveryaddress == null) {
+            echo json_encode(array('error' => true, "message" => "Error"));
+        } else {                                
+            $json_data = 0;
+            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddress, "message" => "Success"));
+        }
+    } catch (Exception $e) {
+        // Handle the exception here
+        echo json_encode(array('error' => true, "message" => "An error occurred."));
+    }
+}
+
 }

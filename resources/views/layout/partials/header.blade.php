@@ -170,16 +170,11 @@
                                   </a>
                               </li>
                             
-                              <li class="nav-item">
-                                  <a href="{{ url('brands') }}" class="nav-link">
-                                      <i class="far fa-circle nav-icon"></i>
-                                      <p>Brands</p>
-                                  </a>
-                              </li>
+                            
                               <li class="nav-item">
                                   <a href="{{ url('marketproducts') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
-                                      <p>Products</p>
+                                      <p>Brands</p>
                                   </a>
                               </li>
 
@@ -203,10 +198,7 @@
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>Image Drive</p>
                                   </a>
-                              </li>
-
-                           
-
+</li>
                           </ul>
                       </li>
 

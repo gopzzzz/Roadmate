@@ -1269,7 +1269,6 @@ public function bookstatusupdation(){
   }
 
 
-
 }
 
 public function bookstatusupdation_giveaway(){
