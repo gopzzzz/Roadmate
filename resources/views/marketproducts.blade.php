@@ -68,13 +68,13 @@
 
               <div class="card-header">
 
-                <h3 class="card-title">Add Products</h3>
+                <h3 class="card-title">Add Brands</h3>
 
                 <p align="right">
 
                
 
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Products</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Brands</button>
 
               
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -101,7 +101,7 @@
 
 
 
-                <h5 class="modal-title" id="exampleModalLabel">Add Products</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Brands</h5>
 
 
 

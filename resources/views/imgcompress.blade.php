@@ -35,10 +35,61 @@
         font-weight: bold;
         margin-bottom: 10px;
     }
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Style for the modal content */
+    .modal-content {
+        margin: 5% auto; /* 5% from the top and centered */
+        display: block;
+        max-width: 800px;
+    }
+
+    /* Style for the close button */
+    .close {
+        color: #fff;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Style for the image inside the modal */
+    .modal-content img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Style for the close button */
+
+
 </style>
-
-
 <div class="content-wrapper">
+<div class="modal" id="imageModal">
+    <div class="modal-content">
+        <div class="image-buttons">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" src="#" alt="Enlarged Image">
+        </div>
+    </div>
+</div>
+
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -48,7 +99,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="home">Home</a></li>
-                        <li class="breadcrumb-item active">Add Brands</li>
+                        <li class="breadcrumb-item active">Add Images</li>
                     </ol>
                 </div>
             </div>
@@ -72,35 +123,61 @@
                                 <input class="form-control" type="file"  name="image[]" accept="image/*" multiple>
                                 <div class="modal-footer">
                                     <button type="submit" name="submit" class="btn btn-primary">SUBMIT</button>
-                                 </div>
-                              </div>
-                           </div>
-                        </form>
-                     </div>
-                  </div>
-                  <!-- /.card-header -->
-
-                  
-					
-                              </form>
-
-                              
-                            
-                           </div>
+                                </div>
+                            </form>
                         </div>
-                     </div>
-                  </div>
-                  <!-- /.card-body -->
-               </div>
-               <!-- /.card -->
+                        <!-- /.card-header -->
+                        </section>
+                        <div class="card-body">
+                            @if(!empty($images))
+                            <form method="POST" action="{{ url('deleteImages') }}">
+                                    @csrf
+                                    <div class="text-right"> <!-- Align to the right -->
+                                        <button type="submit" class="btn btn-danger">Delete Selected</button>
+                                    </div>
+                                <h4 style="color: red;">STORED IMAGES</h4><br>
+                               
+                                    <div class="row">
+                                        @foreach($images as $image)
+                                            <div class="col-3">
+                                                <div class="image-container">
+                                                    <div class="image-info-box">
+                                                        <p class="image-name">{{ $image->getFilename() }}</p>
+                                                    </div>
+                                                    <img src="{{ asset('Amith/' . $image->getFilename()) }}" class="img-thumbnail" alt="{{ $image->getFilename() }}" style="width: 150px; height: auto;">
+                                                    <div class="image-buttons">
+                                                    <br>
+    <input type="checkbox" name="images[]" value="{{ $image->getFilename() }}"> Delete
+    <button type="button" class="btn btn-success" style="margin-left: 10px;" onclick="openModal('{{ asset('Amith/' . $image->getFilename()) }}')">View</button>
+</div>       </div>
+                                            </div>
+                                        @endforeach
+                                    </div>  
+                                </form>
+                            @else
+                                <p>No images found.</p>
+                            @endif
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
-         </div>
-         <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-   </section>
-   <!-- /.content -->
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+   
+    <!-- /.content -->
 </div>
+<script>
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('imageModal').style.display = 'block';
+        }
 
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+    </script>
 @endsection
