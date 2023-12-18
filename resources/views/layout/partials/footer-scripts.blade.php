@@ -1081,12 +1081,11 @@ $('.selecttype').on('change', function () {
 					console.log(res);
           var obj=JSON.parse(res)
 		//   $('#categoryname').val(obj.cat_id);
-		  $('#categoryname').val(obj.cat_id);
+		  $('#category').val(obj.cat_id);
 		  $('#subcategory').val(obj.cat_id);
 
           $('#brand_name').val(obj.brand_name);
-		  $('#original_amount').val(obj.original_amount);
-		  $('#offer_price').val(obj.offer_price);
+		
 		  $('#status').val(obj.status);
 
           $('#marketid').val(obj.id);
@@ -3059,5 +3058,30 @@ $(window).on('load', function(){
 		}
 		$('#editbrandproduct_modal').modal('show');
 	});
+	$('.subcategoryadd').on('change', function () {
+    var categoryId = $(this).val();
 
+    if (categoryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchsubcategory') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                categoryId: categoryId
+            },
+            success: function (res) {
+                console.log(res);
+                $('#subcategory').empty();
+				
+                var html_each = "<option value='0'>Select subcategory</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.category_name + '</option>';
+                });
+                $('#subcategory').append(html_each);
+				
+            },
+        });
+    }
+});
 </script>

@@ -250,8 +250,14 @@
                               <td>{{$i}}</td>
                               <td>{{$key->category_name}}</td>
                               <td>
-                                 <img src="{{ asset('/market/'.$key->image) }}" alt="" width="200" height="100" />
-                              </td>
+    @if($key->image)
+        <img src="{{ asset('/market/'.$key->image) }}" alt="" width="200" height="100" />
+    @else
+        <!-- Display a placeholder text when there is no image -->
+        No Image
+    @endif
+</td>
+
                               <td>
                                  @if($key->status==0) Active @else Inactive @endif
                               </td>

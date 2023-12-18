@@ -1335,6 +1335,7 @@ public function shop_vehicle($Id) {
 		->where('cat_id',0)
 		->get();
 		
+		
 
 		$role=Auth::user()->user_type;
 		return view('marketproducts',compact('market','mark','role'));
@@ -1365,6 +1366,13 @@ public function shop_vehicle($Id) {
 	
 		return redirect('marketproducts')->with('success', 'Product added successfully');
 	}
+	
+
+
+
+
+
+
 	
 
 	public function marketproductimageinsert(Request $request)
@@ -3420,8 +3428,10 @@ function sendNotification1($msg1,$title)
 		public function market_category(){
 			$role=Auth::user()->user_type;
 			$mark=DB::table('tbl_rm_categorys')
-			->orderBy('tbl_rm_categorys.id', 'desc')
+			->where('status',0)
             ->where('cat_id',0)
+			->orderBy('tbl_rm_categorys.id', 'desc')
+			
 			->get();
 
 			return view('market_category',compact('mark','role'));
@@ -3463,6 +3473,18 @@ function sendNotification1($msg1,$title)
 			$mark->save();
 			
 			return redirect('market_category');
+		}
+		public function fetchsubcategory(Request $request) {
+			$categoryId = $request->categoryId;
+		
+			$categorys = DB::table('tbl_rm_categorys')
+				->where('cat_id', $categoryId)
+				->where('status', 0)
+
+				->select('id', 'category_name')
+				->get();
+		
+			return response()->json($categorys);
 		}
 		public function order_trans($orderId)
 		{
@@ -3571,9 +3593,27 @@ function sendNotification1($msg1,$title)
 			  $brandprod->price = $request->original_amount;
 			  $brandprod->status = 0;
 			  $brandprod->save();
+			  $prod_id = $brandprod->id;
+	
+			  $request->validate([
+				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+			  ]);
+		  
+			  foreach ($request->file('images') as $image) {
+				  $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+				  $image->move(public_path('market'), $imageName); // Use public_path()
+		  
+				  Tbl_productimages::create([
+					  'prod_id' => $prod_id,
+					  'images' => $imageName,
+				  ]);
+			  }
+		  
 			  return back();
-
 		  }
+	  
+			
+
 		  
 		  public function brandproductsfetch(Request $request){
 			$id=$request->id;
@@ -3697,7 +3737,7 @@ public function imagecompressinsert(Request $request)
 			$mark->save();
 			Session::flash('success', 'Subcategory added successfully!');
 		}
-	
+	   
 		return back();
 	}
 	
@@ -3725,6 +3765,19 @@ public function imagecompressinsert(Request $request)
 			
 			return back();
 		
+	}
+	public function marketwallet() {
+			
+		$role = Auth::user()->user_type;
+	
+		$wallet = DB::table('tbl_walletts')
+		->leftJoin('shops', 'tbl_walletts.shop_id', '=', 'shops.id')
+        ->select('tbl_walletts.*', 'shops.shopname')
+
+			->get();
+
+
+		return view('marketwallet', compact('role','wallet'));
 	}
 		
 }

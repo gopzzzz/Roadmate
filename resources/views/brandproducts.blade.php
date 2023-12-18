@@ -175,15 +175,18 @@
 
 </div>
 <div class="form-group col-sm-12">
-
-<label class="exampleModalLabel">Description</label>
-
-
-
-<input class="form-control" name="description" placeholder="Enter Description" required>
-
-
+    <label class="exampleModalLabel">Description</label>
+    <textarea class="form-control" name="description" placeholder="Enter Description" required></textarea>
 </div>
+
+<div class="form-group col-sm-12">
+                    
+                    <label class="exampleModalLabel">Image</label>
+                    <input type="hidden" name="prod_id" id="prod_id">
+
+                    <input class="form-control" type="file" name="images[]" accept="image/*" multiple required>
+                </div>
+              
 </div>
 
 
