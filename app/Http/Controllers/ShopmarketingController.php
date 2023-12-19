@@ -469,7 +469,7 @@ catch (Exception $e)
 
 }
 }
-public function deliveryaddress(){
+public function deliveryaddressadd(){
 
   $postdata = file_get_contents("php://input");					
 
