@@ -804,7 +804,7 @@ Route::post('/editpackfeatures', [
     'uses' => 'HomeController@editpackfeatures'
 ])->name('editfeature');
 
-Route::get('packfeaturesdelete/{id}', [
+Route::get('packfeaturesdelete/{id}', [    
     'middleware' => 'auth',
     'uses' => 'HomeController@packfeaturesdelete'
 ])->name('packfeaturesdelete');
@@ -1256,3 +1256,8 @@ Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'su
 Route::delete('/delete-image/{imageName}', 'HomeController@deleteImage');
 
 Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages');
+Route::get('/get-subcategories/{catId}/{categoryname}', 'HomeController@getSubcategories')->name('getSubcategories');
+
+Route::get('/marketwallet', 'HomeController@marketwallet')->name('marketwallet');
+Route::post('/fetchsubcategory', [App\Http\Controllers\HomeController::class, 'fetchsubcategory'])->name('fetchsubcategory');
+

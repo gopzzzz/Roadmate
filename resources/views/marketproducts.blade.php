@@ -125,7 +125,7 @@
 
                 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Main Category</label>
-    <select name="category" id="category" class="form-control">
+    <select name="category" id="category" class="form-control subcategoryadd">
         <option value="0">Select Category</option>
         @foreach($mark as $key)
             <option value="{{ $key->id }}">{{ $key->category_name }}</option>
@@ -153,23 +153,6 @@
 
 
 </div>
-<!-- <div class="form-group col-sm-6">
-
-<input type="hidden" name="prod_id">
-
-<label class="exampleModalLabel">Image</label>
-
-
-
-<input class="form-control" type="file"  name="images[]" accept="image/*" multiple required>
-
-
-</div> -->
-
-<!-- <div class="form-group col-sm-12">
-                                        <label class="exampleModalLabel">Description</label>
-                                      <textarea  name="discription" class="form-control" Placeholder="Enter Description" ></textarea>
-                                    </div> -->
 
 
 
@@ -337,11 +320,6 @@ $i++;
 
                     <th>Brand Name</th>
 
-                    <!-- <th>Description</th> -->
-
-                    <!-- <th>Orignial Amount </th>
-
-                    <th>Offer Price</th> -->
 
                     <th>Status</th>
 
@@ -386,27 +364,21 @@ $i++;
       <div class="modal-body row">
 
 
-      <div class="form-group col-sm-12">
 <input type="hidden" name="id" id="marketid">
 <div class="form-group col-sm-12">
 
 
-<label class="exampleModalLabel">Category</label>
-
-
-
-<select name="category" class="form-control" id="categoryname" required>
-<option value="0">Select Category</option>
-  @foreach($mark as $key)
-
-<option value="{{$key->id}}">{{$key->category_name}}</option>
-@endforeach
-</select>
-
-
+    <label class="exampleModalLabel">Main Category</label>
+    <select name="category" id="category" class="form-control subcategoryadd">
+        <option value="0">Select Category</option>
+        @foreach($mark as $key)
+            <option value="{{ $key->id }}">{{ $key->category_name }}</option>
+        @endforeach
+    </select>
 </div>
+
 <div class="form-group col-sm-12">
-    <label class="exampleModalLabel">SubCategory</label>
+    <label class="exampleModalLabel">Sub Category</label>
     <select name="subcategory" id="subcategory" class="form-control">
         <option value="0">Select Subcategory</option>
     </select>
@@ -559,67 +531,10 @@ $i++;
         });
     });
 </script>
-<script>
-    $(document).ready(function () {
-        // When a category is selected
-        $('#category').change(function () {
-            var categoryId = $(this).val();
 
-            // Make an AJAX request to fetch subcategories
-            $.ajax({
-                url: '/getSubcategories/' + categoryId,
-                type: 'GET',
-                success: function (data) {
-                    // Update the subcategory dropdown with fetched data
-                    $('#subcategory').html('<option value="0">Select Subcategory</option>');
-                    $.each(data, function (key, value) {
-                        $('#subcategory').append('<option value="' + value.id + '">' + value.cat_id + '</option>');
-                    });
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
-                }
-            });
-        });
-    });
-
-</script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<script>
- 
-    $(document).ready(function(){
-        // When the main category is changed
-        $('#category').change(function(){
-            var categoryId = $(this).val();
-            console.log('Selected Category ID:', categoryId);
 
-            // Clear existing subcategories
-            $('#subcategory').empty();
-            $('#subcategory').append('<option value="0">Select Subcategory</option>');
-
-            // Fetch subcategories using AJAX
-            if (categoryId != 0) {
-                $.ajax({
-                    url: '/get-subcategories/' + categoryId,
-                    type: 'GET',
-                    dataType: 'json',  // Explicitly set the expected data type
-                    success: function(data) {
-                        console.log('Subcategories:', data.subcategories);
-
-                        // Populate subcategories based on the response
-                        $.each(data.subcategories, function(index, value) {
-                            $('#subcategory').append('<option value="' + value.id + '">' + value.category_name + '</option>');
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', error);
-                    }
-                });
-            }
-        });
-    });
-</script>
 
 
 
