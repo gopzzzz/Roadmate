@@ -652,4 +652,75 @@ public function deliveryaddresslist(){
     }
 }
 
+public function placeorder(){
+  
+
+    $postdata = file_get_contents("php://input");					
+
+   $json = str_replace(array("\t","\n"), "", $postdata);
+
+   $data1 = json_decode($json);
+
+   
+
+   $shop_id=$data1->shop_id;
+
+
+
+   foreach($data1->shopoffermodel as $singlelist){	
+
+     $datacheck=DB::table('shop_offer_models')
+
+     ->where('shop_id',$singlelist->shopid)
+
+     ->where('offer_id',$singlelist->offerid)
+
+     ->where('vehicle_typeid',$singlelist->vehicletype)
+
+     ->where('brand_id',$singlelist->brand)
+
+     ->where('model_id',$singlelist->model)
+
+     ->where('fuel_type',$singlelist->fuel_type)
+
+     ->value('id');	
+
+    
+
+     if($datacheck==null){
+
+      $shopoffermodel = new Shop_offer_models();
+
+      $shopoffermodel->shop_id = $singlelist->shopid;
+
+      $shopoffermodel->offer_id = $singlelist->offerid;
+
+      $shopoffermodel->vehicle_typeid = $singlelist->vehicletype;
+
+      $shopoffermodel->brand_id	 = $singlelist->brand;
+
+      $shopoffermodel->model_id = $singlelist->model;
+
+      $shopoffermodel->fuel_type = $singlelist->fuel_type;
+
+      $shopoffermodel->save();
+
+    }	
+
+    
+
+        }
+
+       
+
+        $json_data = 1;     
+
+        echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+
+      
+
+ } 
+
+
+
 }

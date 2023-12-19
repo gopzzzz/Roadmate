@@ -801,6 +801,7 @@ Route::post('wishlist','ShopmarketingController@wishlist');
 Route::post('cart','ShopmarketingController@cart');
 Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
 Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
+Route::post('placeorder','ShopmarketingController@placeorder');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::get('product','ShopmarketingController@product');
