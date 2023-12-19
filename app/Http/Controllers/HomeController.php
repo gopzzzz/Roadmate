@@ -1,12 +1,8 @@
 <?php
- 
 namespace App\Http\Controllers;
- 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
-
-
 use App\Executives;
 use App\tbl_franchises;
 use App\tbl_crms;
@@ -69,11 +65,8 @@ use DB;
 use Hash;
 use Auth;
 use Response;
-
 use Intervention\Image\Facades\Image;
-
 use function PHPSTORM_META\elementType;
-
 class HomeController extends Controller
 {
     /**
@@ -273,12 +266,10 @@ class HomeController extends Controller
 		print_r(json_encode($visit));
 	}
 	
-public function exeinsert(Request $request){
-   
-
-    $exe = new Executives;
-
-    if ($files = $request->file('image')) {
+     public function exeinsert(Request $request)
+    {
+      $exe = new Executives;
+      if ($files = $request->file('image')) {
         $name = $files->getClientOriginalName();
         $files->move('img/', $name);
 
@@ -290,12 +281,10 @@ public function exeinsert(Request $request){
         $exe->district = $request->district;
         $exe->location = $request->location;
         $exe->save();
-
         return redirect('executive');
     }
-}
-
-	public function executivenew(){
+   }
+    public function executivenew(){
 		$exe=Executives::all();
 		
 		return view('executivenew',compact('exe'));
@@ -321,11 +310,7 @@ public function exeinsert(Request $request){
 			$exeedit->image=$name; 
 		
 		}
-			$exeedit->save();
-			
-
-			
-		 
+			$exeedit->save(); 
 		return redirect('executive');
 
 	}
@@ -336,12 +321,8 @@ public function exeinsert(Request $request){
 	}
 
 	public function franchises(){
-
-		 
-
-		$someCondition= DB::table('tbl_franchises')
+        $someCondition= DB::table('tbl_franchises')
 		->leftJoin('tbl_districts', 'tbl_franchises.district_id', '=', 'tbl_districts.id')
-		
 		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
 		//->where('tbl_franchises.type','!=' ,4)
 		->select(
@@ -351,29 +332,27 @@ public function exeinsert(Request $request){
 			'tbl_districts.district_name',
 			'tbl_states.state_name'
 		)
-		->get();
-	
-
-		$fran = DB::table('tbl_franchises')
-    ->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
-    ->leftJoin('tbl_districts', 'tbl_franchises.place_id', '=', 'tbl_districts.id')
-    ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-    ->when($someCondition, function ($query) {
+	   ->get();
+	   $fran = DB::table('tbl_franchises')
+       ->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
+       ->leftJoin('tbl_districts', 'tbl_franchises.place_id', '=', 'tbl_districts.id')
+       ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+       ->when($someCondition, function ($query) {
         return $query->where('tbl_franchises.type', 4);
-    })
-    ->select(
+      })
+       ->select(
         'tbl_franchises.*',
         'tbl_places.place_name as place_name',
         'tbl_places.type as place_type',
         'tbl_districts.district_name',
         'tbl_states.state_name'
     )
-    ->get();
+      ->get();
 		$role=Auth::user()->user_type;
 		$con=DB::table('tbl_countrys')
 			->where('deleted_status',0)
 			->get();
-            $cond=DB::table('tbl_states')
+             $cond=DB::table('tbl_states')
 			->where('deleted_status',0)
 			->get();
 		$dis=DB::table('tbl_districts')
@@ -385,8 +364,7 @@ public function exeinsert(Request $request){
 		->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
 		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
 		->get();
-
-		$type=4;
+        $type=4;
 	
 		return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
 	}
@@ -409,8 +387,7 @@ public function exeinsert(Request $request){
 		->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
 		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
 		->get();
-	
-		if ($type == 4) {
+	    if ($type == 4) {
 			$fran = DB::table('tbl_franchises')
 				->leftJoin('tbl_districts', 'tbl_franchises.district_id', '=', 'tbl_districts.id')
 				->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
@@ -446,9 +423,9 @@ public function exeinsert(Request $request){
 public function franinsert(Request $request){
 		$user = new User;
 		$user->name=$request->franchise_name;
-    $user->email = $request->email;
-    $user->password = Hash::make($request->password);
-    $user->user_type = 3; // You may need to adjust this based on your user type logic.
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->user_type = 3; // You may need to adjust this based on your user type logic.
 
     if($user->save()){
 		$franchis=new tbl_franchises;
@@ -1328,12 +1305,16 @@ public function shop_vehicle($Id) {
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
      
-        ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
+        ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name','tbl_rm_categorys.cat_id')
         ->orderby('tbl_rm_products.id','desc')->get();
 		
 		$mark=DB::table('tbl_rm_categorys')
+		->where('status',0)
+
 		->where('cat_id',0)
 		->get();
+
+		//echo "<pre>";print_r($market);exit;
 		
 		
 
@@ -1341,15 +1322,7 @@ public function shop_vehicle($Id) {
 		return view('marketproducts',compact('market','mark','role'));
 	}
 
-	public function getSubcategories($categoryId) {
-		$subcategories = DB::table('tbl_rm_categorys')
-			->where('cat_id', $categoryId)
-			->get();
-	
-		return response()->json(['subcategories' => $subcategories]);
-	}
-	
-	
+
 	
 
 	public function marketproductinsert(Request $request)
@@ -1359,7 +1332,7 @@ public function shop_vehicle($Id) {
 		$market->brand_name = $request->brand_name;
 
 		
-		$market->cat_id = $request->category;
+		$market->cat_id = $request->subcategory;
 
 		$market->status = 0;
 		$market->save();
@@ -1417,45 +1390,33 @@ public function shop_vehicle($Id) {
 {
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
-
     $market->brand_name = $request->brand_name;
-  
     $market->cat_id = $request->subcategory;
-
     $market->cat_id = $request->category;
     $market->status = $request->status;
-
-    $market->save();
-
+	$market->save();
     // Remove old images related to the product
     Tbl_productimages::where('prod_id', $id)->delete();
-
     // Upload and update images
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $image) {
             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
             $image->move('market', $imageName);
-
             Tbl_productimages::create([
                 'prod_id' => $id,
                 'images' => $imageName,
             ]);
         }
     }
-
     return redirect('marketproducts');
 }
-
-
-	
-	public function customers(Request $request){
-
-		if($request->ajax())
+    public function customers(Request $request)
+	{
+       if($request->ajax())
 		{
 		   $status=$request->status;
 		   $customers=DB::table('user_lists')->orderBy('id', 'DESC')->where('status',$status)->get();
 		   return view('customer_filter',compact('customers'));
-		   
 		}
 		$customers=DB::table('user_lists')->orderBy('id', 'DESC')->get();
 		
@@ -1482,21 +1443,18 @@ public function shop_vehicle($Id) {
 		if($files1=$request->file('image1')){  
 			$name1=$files1->getClientOriginalName();  
 			$files1->move('img',$name1);  
-			
 			$store_list->image_1=$name1; 
 			
 		}  
 		if($files2=$request->file('image2')){  
 			$name2=$files2->getClientOriginalName();  
 			$files2->move('img',$name2);  
-			
 			$store_list->image_2=$name2; 
 			
 		}  
 		if($files3=$request->file('image3')){  
 			$name3=$files3->getClientOriginalName();  
 			$files3->move('img',$name3);  
-			
 			$store_list->image_3=$name3; 
 			
 		}  
@@ -3163,8 +3121,7 @@ function sendNotification1($msg1,$title)
 			$con=DB::table('tbl_countrys')
 			->where('deleted_status',0)
 			->get();
-
-			$cond=DB::table('tbl_states')
+            $cond=DB::table('tbl_states')
 			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
 			->select('tbl_states.*','tbl_countrys.country_name')
 			->get();
@@ -3172,20 +3129,17 @@ function sendNotification1($msg1,$title)
 			return view('state',compact('role','con','cond'));
 		}
 		public function stateinsert(Request $request){
-			
 			$state = new Tbl_states;
 			$state->country_id = $request->country;
 			$state->state_name = $request->state_name;
 			$state->deleted_status = 0;
 			$state->added_id=Auth::user()->id;
 			$state->save();
-		
-			return redirect('state');
+		    return redirect('state');
 		}
 		public function statefetch(Request $request){
 			$id=$request->id;
 			$state=Tbl_states::find($id);
-			
 			print_r(json_encode($state));
 		}
 		public function stateedit(Request $request){
@@ -3223,17 +3177,15 @@ function sendNotification1($msg1,$title)
 			$district->added_id=Auth::user()->id;
 			$district->district_name = $request->district_name;
 			$district->save();
-		
-			return redirect('district');
+		    return redirect('district');
 		}
 		public function fetchStates($countryId)
 		{
 			$states = DB::table('tbl_states') 
-				->where('country_id', $countryId)
-				->where('deleted_status', 0)
-				->get();
-		
-			return response()->json($states);
+			->where('country_id', $countryId)
+			->where('deleted_status', 0)
+			->get();
+		    return response()->json($states);
 		}
 
 		public function fetchplaces(Request $request)
@@ -3241,8 +3193,7 @@ function sendNotification1($msg1,$title)
 			$type = $request->type;
 			$district_id = $request->district_id;
 			$state_id = $request->state_id;
-		
-			if ($type == 4) {
+		    if ($type == 4) {
 				$places = DB::table('tbl_districts')
 					->where('state_id', $state_id)
 					->where('deleted_status', 0)
@@ -3255,15 +3206,13 @@ function sendNotification1($msg1,$title)
 					->where('deleted_status', 0)
 					->get();
 			}
-		
-			return response()->json($places);
+		    return response()->json($places);
 		}
 		
 		
 		public function districtfetch(Request $request){
 			$id=$request->id;
-
-			$district=DB::table('tbl_districts')
+            $district=DB::table('tbl_districts')
 			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
 			->where('tbl_districts.id',$id)
 			->select('tbl_districts.*','tbl_states.country_id')
@@ -3273,13 +3222,10 @@ function sendNotification1($msg1,$title)
 		public function districtedit(Request $request){
 			$id=$request->id;
 			$district=Tbl_districts::find($id);
-
-			$district->state_id=$request->state;
+            $district->state_id=$request->state;
 			$district->district_name=$request->district_name;
-
 			$district->deleted_status=$request->status;
-
-			$district->save();
+            $district->save();
 			return redirect('district');
 		}
 	
@@ -3302,14 +3248,9 @@ function sendNotification1($msg1,$title)
 			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
 			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
 			->get();
-		
-
-
-		
-			return view('place',compact('role','con','cond','dis','plac'));
+		    return view('place',compact('role','con','cond','dis','plac'));
 		}
 		public function placeinsert(Request $request){
-			
 			$place = new Tbl_places;
 			$place->district_id = $request->district;
 			$place->type = $request->type;
@@ -3317,12 +3258,10 @@ function sendNotification1($msg1,$title)
             $place->added_id=Auth::user()->id;
 			$place->place_name = $request->place_name;
 			$place->save();
-		
-			return redirect('place');
+		    return redirect('place');
 		}
 		public function placefetch(Request $request){
 			$id=$request->id;
-			
 			$place = DB::table('tbl_places')
 			->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
 			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
@@ -3330,77 +3269,55 @@ function sendNotification1($msg1,$title)
 			->where('tbl_places.id',$id)
 			->select('tbl_places.*', 'tbl_districts.district_name', 'tbl_states.state_name', 'tbl_countrys.country_name','tbl_states.country_id','tbl_districts.state_id')
 			->first();
-			
 			print_r(json_encode($place));
 		}
 		public function placeedit(Request $request){
 			$id=$request->id;
 			$place=Tbl_places::find($id);
-
-			$place->district_id=$request->district;
-
-			$place->place_name=$request->place_name;
-
-			$place->deleted_status=$request->status;
+            $place->district_id=$request->district;
+            $place->place_name=$request->place_name;
+            $place->deleted_status=$request->status;
 			$place->type=$request->type;
-
-			$place->save();
-
-			
-			return redirect('place');
+            $place->save();
+            return redirect('place');
 		}
 		public function fetchstate(Request $request) {
 			$countryId = $request->countryId;
-		
-			$states = DB::table('tbl_states')
-				->where('country_id', $countryId)
-				->where('deleted_status',0)
-				->select('id', 'state_name')
-				->get();
-		
-			return response()->json($states);
+		    $states = DB::table('tbl_states')
+			->where('country_id', $countryId)
+			->where('deleted_status',0)
+			->select('id', 'state_name')
+			->get();
+		    return response()->json($states);
 		}
-		
-		
 		public function fetchdistrict(Request $request) {
 			$stateId = $request->input('stateId'); 
-		
-			$districts = DB::table('tbl_districts')
-				->where('state_id', $stateId)
-				->where('deleted_status',0)
-
-				->select('id', 'district_name')
-				->get();
-		
-			return response()->json($districts);
+		    $districts = DB::table('tbl_districts')
+			->where('state_id', $stateId)
+			->where('deleted_status',0)
+            ->select('id', 'district_name')
+		    ->get();
+		    return response()->json($districts);
 		}
-
-		public function vouchers(){
+        public function vouchers(){
 			$vouch=DB::table('tbl_coupens')
-			
-            ->leftJoin('shops', 'tbl_coupens.shop_id', '=', 'shops.id')
-        
-        ->select('tbl_coupens.*', 'shops.shopname')
-        
-		->orderBy('tbl_coupens.id', 'desc')
-		->get();
-
-		$vouch1=DB::table('shops')->get();
+			->leftJoin('shops', 'tbl_coupens.shop_id', '=', 'shops.id')
+            ->select('tbl_coupens.*', 'shops.shopname')
+            ->orderBy('tbl_coupens.id', 'desc')
+		    ->get();
+			$vouch1=DB::table('shops')->get();
 			$role=Auth::user()->user_type;
 			return view('vouchers',compact('vouch','vouch1','role'));
 		}
-		
 		public function voucherinsert(Request $request){
 			$vouch=new Tbl_coupens;
-	
-			$vouch->coupencode=$request->coupencode;
+	        $vouch->coupencode=$request->coupencode;
 			$vouch->discount=$request->discount;
 			$vouch->description=$request->description;
 			$vouch->status=$request->status;
 			$vouch->expiry_status=$request->expiry_status;
 			$vouch->expiry_date=$request->expiry_date;
 			$vouch->shop_id=$request->shopname;
-			
 			$vouch->save();
 			return redirect('vouchers');
 		}
@@ -3414,8 +3331,7 @@ function sendNotification1($msg1,$title)
 		public function voucheredit(Request $request){
 			$id=$request->id;
 			$vouch=Tbl_coupens::find($id);
-
-			$vouch->coupencode=$request->coupencode;
+            $vouch->coupencode=$request->coupencode;
 			$vouch->discount=$request->discount;
 			$vouch->description=$request->description;
 			$vouch->status=$request->status;
@@ -3431,10 +3347,8 @@ function sendNotification1($msg1,$title)
 			->where('status',0)
             ->where('cat_id',0)
 			->orderBy('tbl_rm_categorys.id', 'desc')
-			
 			->get();
-
-			return view('market_category',compact('mark','role'));
+            return view('market_category',compact('mark','role'));
 		}	
 		public function marketinsert(Request $request){
 			$mark = new Tbl_rm_categorys;
@@ -3443,10 +3357,8 @@ function sendNotification1($msg1,$title)
 				$name=$files->getClientOriginalName();  
 				$files->move('market/',$name);
 				$mark->image=$name; 
-
-				$mark->cat_id = 0;
- 
-			$mark->status = 0;
+            $mark->cat_id = 0;
+            $mark->status = 0;
 			$mark->save();
 			}
 			return redirect('market_category');
@@ -3459,41 +3371,40 @@ function sendNotification1($msg1,$title)
 		public function marketedit(Request $request){
 			$id=$request->id;
 			$mark=Tbl_rm_categorys::find($id);
-			
-			
-				$mark->category_name=$request->category_name;
+			$mark->category_name=$request->category_name;
 			$mark->status=$request->status;
 			if($files=$request->file('categoryimage')){  
 				$name=$files->getClientOriginalName();  
 				$files->move('market',$name);  
-				
 				$mark->image=$name; 
-				
 			}  
 			$mark->save();
-			
 			return redirect('market_category');
 		}
 		public function fetchsubcategory(Request $request) {
 			$categoryId = $request->categoryId;
-		
-			$categorys = DB::table('tbl_rm_categorys')
-				->where('cat_id', $categoryId)
-				->where('status', 0)
-
-				->select('id', 'category_name')
-				->get();
-		
-			return response()->json($categorys);
+		    $categorys = DB::table('tbl_rm_categorys')
+			->where('cat_id', $categoryId)
+			->where('status', 0)
+            ->select('id', 'category_name')
+		    ->get();
+		    return response()->json($categorys);
+		}
+		public function fetchsubcategoryy(Request $request) {
+			$subcategoryId = $request->subcategoryId;
+		    $categorys = DB::table('tbl_rm_categorys')
+			->where('cat_id', $subcategoryId)
+			->where('status', 0)
+            ->select('id', 'category_name')
+			->get();
+		    return response()->json($categorys);
 		}
 		public function order_trans($orderId)
 		{
-		$role=Auth::user()->user_type;
+	    	$role=Auth::user()->user_type;
 			$mark=DB::table('tbl_rm_products')
-			
 			->get();
 			$markk=DB::table('tbl_order_masters')
-			
 			->get();
 			$order = DB::table('tbl_order_trans')
 			->leftJoin('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
@@ -3511,75 +3422,58 @@ function sendNotification1($msg1,$title)
 				'shops.address' 
 			)
 			->get();
-		
-		
-			return view('order_trans',compact('role','mark','markk','order'));
+		   return view('order_trans',compact('role','mark','markk','order'));
 		}
-
-
-
-		public function order_master(){
+        public function order_master(){
 			$role=Auth::user()->user_type;
 			$order=DB::table('tbl_order_masters')
 			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
 			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-
-			->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
+            ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
 			->get();
 			$mark=DB::table('shops')
-			
 			->get();
-		
-			
-			$orderr=DB::table('tbl_coupens')->get();
-
+            $orderr=DB::table('tbl_coupens')->get();
 			return view('order_master',compact('order','role','orderr','mark'));
 		}
-
-		public function brands()
+        public function brands()
 		{
-			$brand=DB::table('tbl_brands')
+		    $brand=DB::table('tbl_brands')
 			->orderBy('tbl_brands.id', 'desc')
 			->get();
 			 $role=Auth::user()->user_type;
-			  return view('brands',compact('brand','role'));
+			return view('brands',compact('brand','role'));
 		 }
 		 public function brandsinsert(Request $request)
 		 {  
 			$brand= new Tbl_brands;
 			$brand->brand_name=$request->brand_name;
-		   
-			$brand->save();
+		    $brand->save();
 			return redirect('brands');
 		 }
 		 public function brandsfetch(Request $request){
 			 $id=$request->id;
 			 $brand = Tbl_brands::find($id);
 			 print_r(json_encode($brand));
-		
 		 }
 		 public function brandsedit(Request $request){
 			 $id=$request->id;
 			 $brand = Tbl_brands::find($id);
 			 $brand->brand_name=$request->brand_name;
-			
 			 $brand->save();
 			 return redirect('brands');
-		 
-		  }
+		 }
 		  public function brandproducts($Id,$BrandName)
 		  {
 			  $brandprod = DB::table('tbl_brand_products')
-				  ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
-				  ->where('tbl_brand_products.brand_id', $Id)
-				  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
-				  ->orderBy('tbl_brand_products.id', 'desc')
-				  ->get();
-		  
-			  $brand = DB::table('tbl_brands')->get();
+		      ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
+			  ->where('tbl_brand_products.brand_id', $Id)
+			  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
+			  ->orderBy('tbl_brand_products.id', 'desc')
+			  ->get();
+		      $brand = DB::table('tbl_brands')->get();
 			  $role = Auth::user()->user_type;
-		  
-			  return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','BrandName'));
+		      return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','BrandName'));
 		  }
 		  
 		  public function brandproductsinsert(Request $request, $Id)
@@ -3588,68 +3482,51 @@ function sendNotification1($msg1,$title)
 			  $brandprod->brand_id = $Id;
 			  $brandprod->product_name = $request->product_name;
 			  $brandprod->offer_price = $request->offer_price;
-
-			  $brandprod->description = $request->description;
+              $brandprod->description = $request->description;
 			  $brandprod->price = $request->original_amount;
 			  $brandprod->status = 0;
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
-	
-			  $request->validate([
+	          $request->validate([
 				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
 			  ]);
-		  
-			  foreach ($request->file('images') as $image) {
+		      foreach ($request->file('images') as $image) {
 				  $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
 				  $image->move(public_path('market'), $imageName); // Use public_path()
-		  
-				  Tbl_productimages::create([
+		          Tbl_productimages::create([
 					  'prod_id' => $prod_id,
 					  'images' => $imageName,
 				  ]);
 			  }
-		  
-			  return back();
+		      return back();
 		  }
-	  
-			
-
-		  
-		  public function brandproductsfetch(Request $request){
+	       public function brandproductsfetch(Request $request){
 			$id=$request->id;
 			$brandprod = Tbl_brand_products::find($id);
 			print_r(json_encode($brandprod));
-	   
-		}
-		  
-		public function brandproductsedit(Request $request){
+	     }
+		   public function brandproductsedit(Request $request){
 			$id=$request->id;
 			$brandprod=Tbl_brand_products::find($id);
 			$brandprod->product_name = $request->product_name;
 			$brandprod->description = $request->description;
-
-			$brandprod->offer_price = $request->offer_price;
+            $brandprod->offer_price = $request->offer_price;
 			$brandprod->price = $request->original_amount;
 			$brandprod->status = $request->status;
 			$brandprod->save();
 			return back();
 		}
-	
-
-
-		public function imgcompress()
+	      public function imgcompress()
 		{
 			$role = Auth::user()->user_type;
-			
 			$imagePath = public_path('Amith/');
 			$images = File::allFiles($imagePath);
-		
-			return view('imgcompress', compact('role', 'images'));
+		    return view('imgcompress', compact('role', 'images'));
 		}
 		
-public function imagecompressinsert(Request $request)
+          public function imagecompressinsert(Request $request)
 		{
-		$image=$request->image;
+		    $image=$request->image;
 			for($i=0;$i<count($image);$i++){
 				$image[$i] = $request->file('image')[$i];
 				$image_name[$i] =$image[$i]->getClientOriginalName();
@@ -3657,46 +3534,36 @@ public function imagecompressinsert(Request $request)
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
 			return back();
-
-		}
-
-		public function deleteImages(Request $request)
+        }
+          public function deleteImages(Request $request)
 		{
 			$imageNames = $request->input('images', []);
-		
-			foreach ($imageNames as $imageName) {
-				$imagePath = public_path('Amith/') . $imageName;
-		
-				if (File::exists($imagePath)) {
+		    foreach ($imageNames as $imageName) {
+			$imagePath = public_path('Amith/') . $imageName;
+		    if (File::exists($imagePath)) {
 					File::delete($imagePath);
 				}
 			}
 		
 			return back()->with('success', 'Images deleted successfully');
 		}
-	
-	public function subcategory($catId,$categoryname) {
-			
+	      public function subcategory($catId,$categoryname) 
+		{
 			$role = Auth::user()->user_type;
 			$mark = DB::table('tbl_rm_categorys')
-				->get();
-		
-			$markk = DB::table('tbl_rm_categorys')
+			->get();
+		    $markk = DB::table('tbl_rm_categorys')
             ->where('cat_id',$catId)
 			->orderBy('tbl_rm_categorys.id', 'desc')
-
-				->get();
-		
-			return view('subcategory', compact('role', 'mark', 'markk', 'catId','categoryname'));
+			->get();
+		 return view('subcategory', compact('role', 'mark', 'markk', 'catId','categoryname'));
 		}
-		public function app_version() {
-			
+		public function app_version() 
+		{
 			$role = Auth::user()->user_type;
-		
-			$app = DB::table('app_versions')
-				->get();
-		
-			return view('app_version', compact('role','app'));
+		    $app = DB::table('app_versions')
+			->get();
+		    return view('app_version', compact('role','app'));
 		}
 		public function appversionfetch(Request $request){
 			$id=$request->id;
@@ -3706,23 +3573,18 @@ public function imagecompressinsert(Request $request)
 		public function appversionedit(Request $request){
 			$id=$request->id;
 			$app=App_versions::find($id);
-
-			$app->version_code= $request->version_code;
+            $app->version_code= $request->version_code;
 			$app->version_name	= $request->version_name;
 			$app->app_type	= $request->app_type;
-
-			$app->status=$request->status;
-				$app->save();
-			
+            $app->status=$request->status;
+		    $app->save();
 			return back();
-		
-	}
-	public function subcategoryinsert(Request $request)
-	{
+		}
+	   public function subcategoryinsert(Request $request)
+	  {
 		$mark = new Tbl_rm_categorys;
 		$mark->category_name = $request->subcategory_name;
 		$mark->cat_id = $request->input('catid');
-		
 		if ($request->hasFile('subcategoryimage')) {
 			$files = $request->file('subcategoryimage');
 			$name = $files->getClientOriginalName();
@@ -3737,47 +3599,33 @@ public function imagecompressinsert(Request $request)
 			$mark->save();
 			Session::flash('success', 'Subcategory added successfully!');
 		}
-	   
-		return back();
-	}
-	
-		 public function subcategoryfetch(Request $request){
+	   return back();
+	  }
+	  public function subcategoryfetch(Request $request){
 			$id=$request->id;
 			$app = Tbl_rm_categorys::find($id);
-
-			print_r(json_encode($app));
+            print_r(json_encode($app));
 		}
 		public function subcategoryedit(Request $request){
 			$id=$request->id;
 			$markk=Tbl_rm_categorys::find($id);
-
-			$markk->category_name = $request->subcategory_name;
+            $markk->category_name = $request->subcategory_name;
 			$markk->status=$request->status;
-
-		
-			if ($files = $request->file('subcategoryimage')) {  
+            if ($files = $request->file('subcategoryimage')) {  
 				$name = $files->getClientOriginalName();  
 				$files->move('market/', $name);
 				$markk->image = $name; 
 			}
-				
-				$markk->save();
-			
+			$markk->save();
 			return back();
-		
-	}
-	public function marketwallet() {
-			
-		$role = Auth::user()->user_type;
-	
-		$wallet = DB::table('tbl_walletts')
-		->leftJoin('shops', 'tbl_walletts.shop_id', '=', 'shops.id')
-        ->select('tbl_walletts.*', 'shops.shopname')
-
+	    }
+	   public function marketwallet()
+	    {
+		    $role = Auth::user()->user_type;
+            $wallet = DB::table('tbl_walletts')
+		    ->leftJoin('shops', 'tbl_walletts.shop_id', '=', 'shops.id')
+            ->select('tbl_walletts.*', 'shops.shopname')
 			->get();
-
-
-		return view('marketwallet', compact('role','wallet'));
+            return view('marketwallet', compact('role','wallet'));
 	}
-		
 }

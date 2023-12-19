@@ -1260,4 +1260,5 @@ Route::get('/get-subcategories/{catId}/{categoryname}', 'HomeController@getSubca
 
 Route::get('/marketwallet', 'HomeController@marketwallet')->name('marketwallet');
 Route::post('/fetchsubcategory', [App\Http\Controllers\HomeController::class, 'fetchsubcategory'])->name('fetchsubcategory');
+Route::post('/fetchsubcategoryy', [App\Http\Controllers\HomeController::class, 'fetchsubcategoryy'])->name('fetchsubcategoryy');
 
