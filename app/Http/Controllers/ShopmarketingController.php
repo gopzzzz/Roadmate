@@ -5,10 +5,8 @@ use DB;
 use App\Tbl_deliveryaddres;
 use App\shops;
 use App\shop_services;
-
 use App\Tbl_carts;
 use App\Tbl_rm_wishlists;
-
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -55,13 +53,8 @@ class ShopmarketingController extends Controller
         ]);
     }
 }
-
-
-
 public function categoryproductlist(){
-       
   $postdata = file_get_contents("php://input");					
-
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
@@ -88,11 +81,8 @@ public function categoryproductlist(){
 
                 }
 }
-
 catch (Exception $e)
-
 {
-
         
 
     //return Json("Sorry! Please check input parameters and values");
@@ -101,10 +91,6 @@ catch (Exception $e)
 
 }
 }
-
-
-  
-
 public function categorylist(){
     
     
@@ -406,6 +392,7 @@ public function cartadd(){
     $data1 = json_decode($json);
 
     $id=$data1->id;
+   
 
     if(DB::table('tbl_carts')->where('id', $id)->delete()){
 
@@ -493,6 +480,7 @@ catch (Exception $e)
 }
 
  public function deliveryaddressupdate(){
+
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -548,8 +536,4 @@ public function deliveryaddresslist(){
         echo json_encode(array('error' => true, "message" => "An error occurred."));
     }
 }
-
-
-
-
 }
