@@ -28,7 +28,7 @@
 
 
 
-                  <li class="breadcrumb-item active"> Brand Products</li>
+                  <li class="breadcrumb-item active"> Products</li>
 
 
 
@@ -100,7 +100,7 @@
 
 
 
-                     <h3 class="card-title">Brand Products</h3>
+                     <h3 class="card-title">Products</h3>
 
 
 
@@ -182,7 +182,6 @@
 <div class="form-group col-sm-12">
                     
                     <label class="exampleModalLabel">Image</label>
-                    <input type="hidden" name="prod_id" id="prod_id">
 
                     <input class="form-control" type="file" name="images[]" accept="image/*" multiple required>
                 </div>
@@ -254,7 +253,7 @@
                               <th>Images</th>
 
 
-                              <th>Brand Names</th>
+                              <th>Produt Name</th>
                              
                               <th>Offer Price</th>
 
@@ -378,7 +377,7 @@ $i++;
 
                               <th>Images</th>
 
-                              <th>Brand Names</th>
+                              <th>Product Name</th>
                              
 
                              <th>Offer Price</th>
@@ -426,6 +425,7 @@ $i++;
                             <tr>
                                 <td>id</td>
                                 <td>Images</td>
+
                             </tr>
                         </thead>
                         <tbody id="imageshowtbody"></tbody>
@@ -527,16 +527,9 @@ $i++;
 </div>
 
 <div class="form-group col-sm-12">
-
-<label class="exampleModalLabel">Description</label>
-
-
-
-<input class="form-control" name="description" id="description" placeholder="Enter Description" required>
-
-
+    <label class="exampleModalLabel">Description</label>
+    <textarea class="form-control" name="description" id="description"  placeholder="Enter Description" required></textarea>
 </div>
-
 <div class="form-group col-sm-12">
 
 <label class="exampleModalLabel">Status</label>

@@ -799,9 +799,20 @@ Route::post('subcategorylist','ShopmarketingController@subcategorylist');
 Route::post('productdetails','ShopmarketingController@productdetails');
 Route::post('wishlist','ShopmarketingController@wishlist');
 Route::post('cart','ShopmarketingController@cart');
+
+
 Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
 Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
+Route::post('cartadd','ShopmarketingController@cartadd');
+Route::post('cartdelete','ShopmarketingController@cartdelete');
+Route::post('wishlistdelete','ShopmarketingController@wishlistdelete');
+Route::post('wishlistadd','ShopmarketingController@wishlistadd');
+
 Route::post('placeorder','ShopmarketingController@placeorder');
+Route::post('updateqty','ShopmarketingController@updateqty');
+Route::post('orderhistory','ShopmarketingController@orderhistory');
+Route::post('vieworder','ShopmarketingController@vieworder');
+Route::post('updateorder','ShopmarketingController@updateorder');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::get('product','ShopmarketingController@product');

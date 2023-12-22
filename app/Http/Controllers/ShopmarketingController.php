@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use DB;
 use App\Tbl_deliveryaddres;
 use App\shops;
+use App\Tbl_carts;
+use App\Tbl_rm_wishlists;
+use App\Tbl_order_trans;
+use App\Tbl_order_masters;
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -369,7 +373,7 @@ foreach ($wishlist as $cartItem) {
 
                
 
-          echo json_encode(array('error' => true, "message" => "Error"));
+          echo json_encode(array('error' => true,"wishlist"=>$wish, "message" => "Error"));
 
              }
 
@@ -445,7 +449,7 @@ foreach ($cartlist as $cartItem) {
 }
 
 if (empty($cart)) {
-    echo json_encode(array('error' => true, "message" => "Error"));
+    echo json_encode(array('error' => true,"cart" => $cart, "message" => "Error"));
 } else {
     echo json_encode(array('error' => false, "cart" => $cart, "message" => "Success"));
 }
@@ -469,17 +473,13 @@ catch (Exception $e)
 
 }
 }
-public function deliveryaddressadd(){
-
-  $postdata = file_get_contents("php://input");					
-
-  $json = str_replace(array("\t","\n"), "", $postdata);
+public function deliveryaddressadd()
+{
+ $postdata = file_get_contents("php://input");					
+ $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
-
- 
-
-  $query=new Tbl_deliveryaddres;
+ $query=new Tbl_deliveryaddres;
   $query->shop_id=$data1->shop_id;
 
   $query->area=$data1->area;
@@ -510,10 +510,7 @@ public function deliveryaddressadd(){
 
  public function product(){
     
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
+$postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
 
@@ -568,27 +565,17 @@ foreach ($productlist as $proItem) {
 
             else{								
 
-            
-
-            $json_data = 0;
+             $json_data = 0;
 
             echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
 
                 }
-
-    
-
-  
-
 }
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+  //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
@@ -661,56 +648,63 @@ public function placeorder(){
 
    $data1 = json_decode($json);
 
-   
+   $order=new Tbl_order_masters;
+   $order->shop_id=$data1->shop_id;
+   $order->total_amount=$data1->total_amount;
+   $order->discount=$data1->discount;
+   $order->coupen_id=$data1->coupen_id;
+   $order->wallet_redeem_id=$data1->wallet_redeem_id;
+   $order->payment_mode=$data1->payment_mode;
+   $order->total_mrp=$data1->total_mrp;
+   $order->shipping_charge=$data1->shipping_charge;
+   $order->tax_amount=$data1->tax_amount;
+   $order->payment_status=$data1->payment_status;
+   $order->order_status=$data1->order_status;
+   $order->delivery_date=$data1->delivery_date;
+   $order->order_date=$data1->order_date;
+   $order->save();
 
-   $shop_id=$data1->shop_id;
+   $orderid=$order->id;
 
 
 
-   foreach($data1->shopoffermodel as $singlelist){	
+   foreach($data1->orderlist as $singlelist){	
 
-     $datacheck=DB::table('shop_offer_models')
-
-     ->where('shop_id',$singlelist->shopid)
-
-     ->where('offer_id',$singlelist->offerid)
-
-     ->where('vehicle_typeid',$singlelist->vehicletype)
-
-     ->where('brand_id',$singlelist->brand)
-
-     ->where('model_id',$singlelist->model)
-
-     ->where('fuel_type',$singlelist->fuel_type)
-
-     ->value('id');	
 
     
 
-     if($datacheck==null){
+    
 
-      $shopoffermodel = new Shop_offer_models();
+      $trans = new Tbl_order_trans();
 
-      $shopoffermodel->shop_id = $singlelist->shopid;
+      $trans->product_id = $singlelist->product_id;
 
-      $shopoffermodel->offer_id = $singlelist->offerid;
+      $trans->order_id =$orderid;
 
-      $shopoffermodel->vehicle_typeid = $singlelist->vehicletype;
+      $trans->qty = $singlelist->qty;
 
-      $shopoffermodel->brand_id	 = $singlelist->brand;
+      $trans->offer_amount	 = $singlelist->offer_amount;
 
-      $shopoffermodel->model_id = $singlelist->model;
+      $trans->price = $singlelist->price;
 
-      $shopoffermodel->fuel_type = $singlelist->fuel_type;
+      $trans->taxable_amount = $singlelist->taxable_amount;
 
-      $shopoffermodel->save();
+      $trans->save();
 
-    }	
+      $check=DB::table('tbl_carts')->where('shop_id',$data1->shop_id)->where('product_id',$singlelist->product_id)->first();
+      if($check){
+        DB::table('tbl_carts')->where('id',$check->id)->delete();
+      }
+
+
+    	
 
     
 
         }
 
+
+        
        
 
         $json_data = 1;     
@@ -720,6 +714,351 @@ public function placeorder(){
       
 
  } 
+
+ public function cartadd(){
+
+    $postdata = file_get_contents("php://input");					
+  
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+    $data1 = json_decode($json);
+
+
+    $check=DB::table('tbl_carts')->where('product_id',$data1->product_id)->where('shop_id',$data1->shop_id)->first();
+    if($check){
+
+        $cartupdate=Tbl_carts::find($check->id);
+
+        $cartupdate->qty=$check->qty+1;
+       
+       
+        if($cartupdate->save()){
+       
+         $json_data = 1;
+       
+         echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+       
+        }else{
+       
+         $json_data = 1;
+       
+         echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+       
+        }
+
+    }else{
+        $query=new Tbl_carts;
+        $query->product_id=$data1->product_id;
+    
+        $query->shop_id=$data1->shop_id;
+      
+        $query->qty=$data1->qty;
+       
+      
+      
+        if($query->save()){
+      
+          $last=$query->id;
+      
+          echo json_encode(array('error' => false, "data" => $last, "message" => "Success"));
+      
+        }else{
+      
+          echo json_encode(array('error' => true, "message" => "Error"));
+      
+        }
+    }
+  
+   
+  
+
+  
+   }
+
+   public function cartdelete(){
+
+    $postdata = file_get_contents("php://input");					
+  
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+    $data1 = json_decode($json);
+  
+    $id=$data1->id;
+   
+  
+    if(DB::table('tbl_carts')->where('id', $id)->delete()){
+  
+    $json_data = 1;      
+  
+    echo json_encode(array('error' => false, "data" => $json_data,"message" => "success")); 
+  
+    }else{
+  
+    $json_data = 0;      
+  
+    echo json_encode(array('error' => true, "data" => $json_data,"message" => "Error"));
+  
+    }
+  
+  }
+
+  
+public function wishlistadd(){
+
+    $postdata = file_get_contents("php://input");					
+  
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+    $data1 = json_decode($json);
+  
+   
+  
+    $query=new Tbl_rm_wishlists;
+    $query->product_id=$data1->product_id;
+
+    $query->shop_id=$data1->shop_id;
+  
+ 
+   
+  
+  
+    if($query->save()){
+  
+      $last=$query->id;
+  
+      echo json_encode(array('error' => false, "data" => $last, "message" => "Success"));
+  
+    }else{
+  
+      echo json_encode(array('error' => true, "message" => "Error"));
+  
+    }
+  
+   }
+   public function wishlistdelete(){
+
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $shop_id=$data1->shop_id;
+    $product_id=$data1->product_id;
+
+    if(DB::table('tbl_rm_wishlists')->where('shop_id',$shop_id)->where('product_id',$product_id)->delete()){
+
+    $json_data = 1;      
+
+    echo json_encode(array('error' => false, "data" => $json_data,"message" => "success")); 
+
+    }else{
+
+    $json_data = 0;      
+
+    echo json_encode(array('error' => true, "data" => $json_data,"message" => "Error"));
+
+    }
+
+}
+public function updateqty(){
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+ $data1 = json_decode($json);
+
+ $cartid=$data1->cartid;
+ $qty=$data1->qty;
+
+ $cartupdate=Tbl_carts::find($cartid);
+
+ $cartupdate->qty=$qty;
+
+
+ if($cartupdate->save()){
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+
+ }else{
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+
+ }
+
+}
+
+public function orderhistory(){
+
+    
+      
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $shop_id=$data1->shop_id;
+
+
+  try{	
+
+   
+
+   
+
+    $order_list=DB::table('tbl_order_masters')
+    ->where('shop_id',$shop_id)
+   // ->where('status',0)
+    ->get();
+
+     
+
+        if($order_list == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+
+}
+
+public function vieworder(){
+    
+
+    
+      
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $order_id=$data1->order_id;
+
+
+  try{	
+
+   
+
+   
+
+    $order_list=DB::table('tbl_order_trans')
+    ->join('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
+    ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_order_masters.*', 'tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name')
+    ->where('tbl_order_masters.id',$order_id)
+   // ->where('status',0)
+    ->get();
+
+     
+
+        if($order_list == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+
+}
+public function updateorder(){
+
+    
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+ $data1 = json_decode($json);
+
+ $order_id=$data1->order_id;
+ $status=$data1->status;
+
+ $orderstatus=Tbl_order_masters::find($order_id);
+
+ $orderstatus->order_status=$status;
+
+
+ if($orderstatus->save()){
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+
+ }else{
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+
+ }
+
+}
+
+
+
 
 
 

@@ -1081,8 +1081,8 @@ $('.selecttype').on('change', function () {
 					console.log(res);
           var obj=JSON.parse(res)
 		//   $('#categoryname').val(obj.cat_id);
-		  $('#category').val(obj.cat_id);
-		  $('#subcategory').val(obj.cat_id);
+		  $('#category_name').val(obj.cat_id);
+		  $('#subcategory_name').val(obj.cat_id);
 
           $('#brand_name').val(obj.brand_name);
 		
@@ -3084,4 +3084,34 @@ $(window).on('load', function(){
         });
     }
 });
+
+$('#categorylist .categorylist').on('change', function () {
+	//alert();
+    var categoryId = $(this).val();
+
+    if (categoryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchsubcategory') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+				categoryId: categoryId
+            },
+            success: function (res) {
+                console.log(res);
+               
+				$('#subcategory_name').empty();
+                var html_each = "<option value='0'>Select subcategory</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.category_name + '</option>';
+                });
+                
+				$('#subcategory_name').append(html_each);
+            },
+        });
+    }
+});
+
+
 </script>

@@ -213,7 +213,8 @@
 
 
                     <th>Shop</th>
-                   
+                    <th>Wallet Amount</th>
+
 
                     
 
@@ -241,8 +242,9 @@
                   <td>{{$i}}</td>
                     
 
-                
-                    <td>{{$key->shopname}}</td>
+                  <td>{{$key->shopname}}</td>
+
+                    <td>{{$key->wallet_amount}}</td>
                   
        
 
@@ -284,7 +286,8 @@ $i++;
 
 
                     <th>Shop</th>
-                  
+                    <th>Wallet Amount</th>
+
 
 
 

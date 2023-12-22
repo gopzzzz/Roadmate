@@ -5500,5 +5500,32 @@ DB::table('shop_services AS s1')
 
 }
 
+public function cartdelete(){
+
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $id=$data1->id;
+ 
+
+  if(DB::table('tbl_carts')->where('id', $id)->delete()){
+
+  $json_data = 1;      
+
+  echo json_encode(array('error' => false, "data" => $json_data,"message" => "success")); 
+
+  }else{
+
+  $json_data = 0;      
+
+  echo json_encode(array('error' => true, "data" => $json_data,"message" => "Error"));
+
+  }
+
+}
+
 
 }

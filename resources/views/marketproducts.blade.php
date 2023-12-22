@@ -1,7 +1,4 @@
 @extends('layout.mainlayout')
-
-
-
 @section('content')
 
 <div class="content-wrapper">
@@ -15,10 +12,7 @@
         <div class="row mb-2">
 
           <div class="col-sm-6">
-
-          
-
-          </div>
+</div>
 
           <div class="col-sm-6">
 
@@ -37,101 +31,50 @@
       </div><!-- /.container-fluid -->
 
     </section>
-
-  
-
     @if(session('success'))
 
     <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
 
     @endif
-
-
-
-    <!-- Main content -->
+<!-- Main content -->
 
     <section class="content">
 
-      <div class="container-fluid">
+    <div class="container-fluid">
 
-        <div class="row">
+    <div class="row">
 
-          <div class="col-12">
+    <div class="col-12">
+   <!-- /.card -->
+    <div class="card">
 
-           
+    <div class="card-header">
 
-            <!-- /.card -->
+    <h3 class="card-title">Add Brands</h3>
 
-
-
-            <div class="card">
-
-              <div class="card-header">
-
-                <h3 class="card-title">Add Brands</h3>
-
-                <p align="right">
-
-               
-
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Brands</button>
-
-              
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-
-
-                <form method="POST" action="{{url('marketproductinsert')}}" enctype="multipart/form-data">
-
-
-
-                @csrf
-
-
-
-                <div class="modal-dialog" role="document" style="width:80%;">
-
-
-
-                <div class="modal-content">
-
-
-
-                <div class="modal-header">
-
-
-
-                <h5 class="modal-title" id="exampleModalLabel">Add Brands</h5>
-
-
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-
-
-
-                <span aria-hidden="true">&times;</span>
-
-
-
-                </button>
-
-
-
-                </div>
-                <div class="modal-body row">
-
-
-
-
-                <div class="form-group col-sm-6">
+    <p align="right">
+    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Brands</button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form method="POST" action="{{url('marketproductinsert')}}" enctype="multipart/form-data">
+    @csrf
+    <div class="modal-dialog" role="document" style="width:80%;">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Add Brands</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body row">
+    <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Main Category</label>
     <select name="category" id="category" class="form-control subcategoryadd">
-        <option value="0">Select Category</option>
-        @foreach($mark as $key)
-            <option value="{{ $key->id }}">{{ $key->category_name }}</option>
-        @endforeach
+    <option value="0">Select Category</option>
+    @foreach($mark as $key)
+    <option value="{{ $key->id }}">{{ $key->category_name }}</option>
+    @endforeach
     </select>
-</div>
+    </div>
 
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Sub Category</label>
@@ -142,65 +85,21 @@
 
 
 <div class="form-group col-sm-12">
-
-
-
 <label class="exampleModalLabel">Brand Name</label>
-
-
-
 <input class="form-control" name="brand_name" placeholder="Enter Product Name" required>
-
-
 </div>
-
-
-
-
-
 </div>
-
-
-
 <div class="modal-footer">
-
-
-
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-
-
 <button type="submit" name="submit" class="btn btn-primary">Add</button>
-
-
-
 </div>
-
-
-
 </div>
-
-
-
 </div>
-
-
-
 </form>
-
-
-
 </div>
-              
-
-                </p>
-
-               
-
-              </div>
-
-
-              <!-- /.card-header -->
+  </p>
+ </div>
+ <!-- /.card-header -->
 
               <div class="card-body">
               <form>
@@ -212,37 +111,19 @@
                 </form>
 
                 <a href="{{url('exportmarket')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
-
                 <table  class="table table-bordered table-striped" id="example354">
-
-                  <thead>
+                 <thead>
 
                   <tr>
 
                     <th>id</th>
-
-
                     <th>Category</th>
                     <th>subCategory</th>
-
-
                     <th>Brand Name</th>
-
-                    <!-- <th>Orignial Amount </th>
-
-                    <th>Offer Price</th> -->
-
                     <th>Status</th>
-
-                    
-
-<th>Action</th>
-
-
-
-                  </tr>
-
-                  </thead>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
 
                   <tbody id="non-searchshoplist">
 
@@ -263,7 +144,7 @@
 
                   <!-- <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td> -->
                 
-                    <td>{{$key->category_name}}</td>
+                    <td>@php  $cat=$key->cat_id; $catlist=DB::table('tbl_rm_categorys')->where('id',$cat)->first();@endphp @if(!$catlist) @else {{$catlist->category_name}} @endif</td>
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->brand_name}}</td>
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
@@ -307,36 +188,15 @@ $i++;
 
 
 
-<tr>
-
-
-
-<th>id</th>
-
-
+                     <tr>
+                    <th>id</th>
                     <th>Category</th>
                     <th>SubCategory</th>
-
-
                     <th>Brand Name</th>
-
-
                     <th>Status</th>
-
-
-
-<th>Action</th>
-
-
-
-</tr>
-
-
-
+                    <th>Action</th>
+                    </tr>
 </tfoot>
-
-
-
 </table>
 
 <script>
@@ -369,7 +229,7 @@ $i++;
 
 
     <label class="exampleModalLabel">Main Category</label>
-    <select name="category" id="category" class="form-control subcategoryadd">
+    <select name="category" id="category_name" class="form-control categorylist">
         <option value="0">Select Category</option>
         @foreach($mark as $key)
             <option value="{{ $key->id }}">{{ $key->category_name }}</option>
@@ -379,21 +239,16 @@ $i++;
 
 <div class="form-group col-sm-12">
     <label class="exampleModalLabel">Sub Category</label>
-    <select name="subcategory" id="subcategory" class="form-control">
+    <select name="subcategory" id="subcategory_name" class="form-control">
         <option value="0">Select Subcategory</option>
+        @foreach($mark as $key)
+            <option value="{{ $key->id }}">{{ $key->category_name }}</option>
+        @endforeach
     </select>
 </div>
 <div class="form-group col-sm-12">
-
-
-
 <label class="exampleModalLabel">Brand Name</label>
-
-
-
 <input class="form-control" name="brand_name" id="brand_name" required>
-
-
 </div>
 <div class="form-group col-sm-12">
 
@@ -453,70 +308,26 @@ $i++;
         </div>
     </form>
 </div>
-
-
-               <script>
+    <script>
     $('.add-new-images').on('click', function () {
         var prod_id = $(this).data('id');
         $('#new_images_prod_id').val(prod_id);
     });
 </script>
             </div>
-
-
-
-         </div>
-
-
-
-      </div>
-
-
-
-      <!-- /.card-body -->
-
-
-
-   </div>
-
-
-
-   <!-- /.card -->
-
-
-
+ </div>
+  </div>
+   <!-- /.card-body -->
 </div>
-
-
-
+<!-- /.card -->
+</div>
 <!-- /.col -->
-
-
-
 </div>
-
-
-
 <!-- /.row -->
-
-
-
 </div>
-
-
-
 <!-- /.container-fluid -->
-
-
-
 </section>
-
-
-
 <!-- /.content -->
-
-
-
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -533,9 +344,4 @@ $i++;
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-
-
-
-
 @endsection
