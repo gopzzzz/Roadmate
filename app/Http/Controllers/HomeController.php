@@ -1333,7 +1333,7 @@ public function shop_vehicle($Id) {
 	
 		$prod_id=$request->productid;
 		$request->validate([
-			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
 		]);
 	
 		foreach ($request->file('images') as $image) {
@@ -1345,8 +1345,7 @@ public function shop_vehicle($Id) {
 				'images' => $imageName,
 			]);
 		}
-	
-		return redirect()->back()->with('success', 'Images added successfully.');
+	   return redirect()->back()->with('success', 'Images added successfully.');
 	}
 	public function marketproductfetch(Request $request){
 		$id=$request->id;
@@ -1387,23 +1386,9 @@ public function shop_vehicle($Id) {
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
     $market->brand_name = $request->brand_name;
-    $market->cat_id = $request->subcategory;
-    $market->cat_id = $request->category;
+    $market->cat_id =$request->subcategory;
     $market->status = $request->status;
 	$market->save();
-    // Remove old images related to the product
-    Tbl_productimages::where('prod_id', $id)->delete();
-    // Upload and update images
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move('market', $imageName);
-            Tbl_productimages::create([
-                'prod_id' => $id,
-                'images' => $imageName,
-            ]);
-        }
-    }
     return redirect('marketproducts');
 }
     public function customers(Request $request)
@@ -3386,15 +3371,7 @@ function sendNotification1($msg1,$title)
 		    ->get();
 		    return response()->json($categorys);
 		}
-		public function fetchsubcategoryy(Request $request) {
-			$subcategoryId = $request->subcategoryId;
-		    $categorys = DB::table('tbl_rm_categorys')
-			->where('cat_id', $subcategoryId)
-			->where('status', 0)
-            ->select('id', 'category_name')
-			->get();
-		    return response()->json($categorys);
-		}
+		
 		public function order_trans($orderId)
 		{
 	    	$role=Auth::user()->user_type;
@@ -3484,7 +3461,7 @@ function sendNotification1($msg1,$title)
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
 	          $request->validate([
-				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
 			  ]);
 		      foreach ($request->file('images') as $image) {
 				  $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
@@ -3600,8 +3577,14 @@ function sendNotification1($msg1,$title)
 	  public function subcategoryfetch(Request $request){
 			$id=$request->id;
 			$app = Tbl_rm_categorys::find($id);
+			$app=DB::table(' tbl_rm_categorys')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->where('tbl_districts.id',$id)
+			->select('tbl_districts.*','tbl_states.country_id')
+			->first();
             print_r(json_encode($app));
 		}
+
 		public function subcategoryedit(Request $request){
 			$id=$request->id;
 			$markk=Tbl_rm_categorys::find($id);

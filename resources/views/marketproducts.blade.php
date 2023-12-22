@@ -68,7 +68,7 @@
     <div class="modal-body row">
     <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Main Category</label>
-    <select name="category" id="category" class="form-control subcategoryadd">
+    <select name="category" id="category" class="form-control subcategoryadd" required>
     <option value="0">Select Category</option>
     @foreach($mark as $key)
     <option value="{{ $key->id }}">{{ $key->category_name }}</option>
@@ -78,7 +78,7 @@
 
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Sub Category</label>
-    <select name="subcategory" id="subcategory" class="form-control">
+    <select name="subcategory" id="subcategory" class="form-control" required>
         <option value="0">Select Subcategory</option>
     </select>
 </div>
@@ -223,14 +223,10 @@ $i++;
 @csrf
       <div class="modal-body row">
 
-
-<input type="hidden" name="id" id="marketid">
-<div class="form-group col-sm-12">
-
-
+      <div class="form-group col-sm-12">
     <label class="exampleModalLabel">Main Category</label>
-    <select name="category" id="category_name" class="form-control categorylist">
-        <option value="0">Select Category</option>
+    <select name="category" id="category_name" class="form-control categorylist" required>
+        <option value="" disabled selected>Select Category</option>
         @foreach($mark as $key)
             <option value="{{ $key->id }}">{{ $key->category_name }}</option>
         @endforeach
@@ -238,13 +234,10 @@ $i++;
 </div>
 
 <div class="form-group col-sm-12">
-    <label class="exampleModalLabel">Sub Category</label>
-    <select name="subcategory" id="subcategory_name" class="form-control">
-        <option value="0">Select Subcategory</option>
-        @foreach($mark as $key)
-            <option value="{{ $key->id }}">{{ $key->category_name }}</option>
-        @endforeach
-    </select>
+    <label class="exampleModalLabel">SubCategory</label>
+<select name="subcategory" id="subcategory_name" class="form-control" required>
+    <option value="0">Select Subcategory</option>
+</select>
 </div>
 <div class="form-group col-sm-12">
 <label class="exampleModalLabel">Brand Name</label>
@@ -344,4 +337,24 @@ $i++;
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Add this script to your page -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $("form").submit(function(event) {
+            var category = $("#category").val();
+            var subcategory = $("#subcategory").val();
+            
+            // Check if the values are empty or have default values
+            if (category === "0" || subcategory === "0") {
+                alert("Please fill out all required fields.");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+
+
 @endsection

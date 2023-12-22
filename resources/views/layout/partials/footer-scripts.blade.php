@@ -1082,7 +1082,6 @@ $('.selecttype').on('change', function () {
           var obj=JSON.parse(res)
 		//   $('#categoryname').val(obj.cat_id);
 		  $('#category_name').val(obj.cat_id);
-		  $('#subcategory_name').val(obj.cat_id);
 
           $('#brand_name').val(obj.brand_name);
 		
