@@ -813,6 +813,7 @@ Route::post('updateqty','ShopmarketingController@updateqty');
 Route::post('orderhistory','ShopmarketingController@orderhistory');
 Route::post('vieworder','ShopmarketingController@vieworder');
 Route::post('updateorder','ShopmarketingController@updateorder');
+Route::post('shopwallet','ShopmarketingController@shopwallet');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::get('product','ShopmarketingController@product');

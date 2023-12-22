@@ -118,7 +118,7 @@
                 <tr>
                 @foreach($order as $key)
                            <tr>
-                              <td>{{$key->product_title}}</td>
+                              <td>{{$key->product_name}}</td>
                               <td>{{$key->qty}}</td>
                               <td>{{$key->offer_amount}}</td>
                               <td>{{$key->price}}</td>

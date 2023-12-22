@@ -55,13 +55,8 @@ class ShopmarketingController extends Controller
         ]);
     }
 }
-
-
-
 public function categoryproductlist(){
-       
   $postdata = file_get_contents("php://input");					
-
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
@@ -110,11 +105,8 @@ foreach ($productlist as $proItem) {
 
                 }
 }
-
 catch (Exception $e)
-
 {
-
         
 
     //return Json("Sorry! Please check input parameters and values");
@@ -123,10 +115,6 @@ catch (Exception $e)
 
 }
 }
-
-
-  
-
 public function categorylist(){
     
     
@@ -584,6 +572,7 @@ catch (Exception $e)
 
 
  public function deliveryaddressupdate(){
+
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -648,8 +637,21 @@ public function placeorder(){
 
    $data1 = json_decode($json);
 
+   $wallet=DB::table('tbl_wallets')->where('shop_id',$data1->shop_id)->first();
+   if($wallet){
+    $walletamount=$wallet->wallet_amount;
+    if($walletamount>=$data1->wallet_redeem_id){
+
+   $lastrow=DB::table('tbl_order_masters')->orderBy('id', 'DESC')->first();
+   if($lastrow){
+   $order_id=$lastrow->order_id+1;
+   }else{
+    $order_id=1000;
+   }
+
    $order=new Tbl_order_masters;
    $order->shop_id=$data1->shop_id;
+   $order->order_id=$order_id;
    $order->total_amount=$data1->total_amount;
    $order->discount=$data1->discount;
    $order->coupen_id=$data1->coupen_id;
@@ -666,6 +668,27 @@ public function placeorder(){
 
    $orderid=$order->id;
 
+  
+   
+    //echo $walletamount;exit;
+    
+       // echo "hi";exit;
+        $wamount=$walletamount-$data1->wallet_redeem_id;
+        DB::table('tbl_wallets')
+        ->where('id',$wallet->id)  // find your user by their email
+        ->limit(1)  // optional - to ensure only one record is updated.
+        ->update(array('wallet_amount' => $wamount)); 
+
+        DB::table('tbl_wallet_trabsactions')->insertGetId(
+            [
+              'type' => 2,
+              'amount' => $data1->wallet_redeem_id,
+              'shop_id' => $data1->shop_id,
+              'created_at'=>date('Y-m-d H:i:s'),
+              'updated_at'=>date('Y-m-d H:i:s')
+            ]
+          );
+   
 
 
    foreach($data1->orderlist as $singlelist){	
@@ -702,14 +725,25 @@ public function placeorder(){
     
 
         }
+        $json_data = 1;     
 
+        echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+    }else{
+        $json_data = 0;     
+
+        echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
+    }
+ 
+    }else{
+        $json_data = 0;     
+
+        echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
+    }
 
         
        
 
-        $json_data = 1;     
-
-        echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+     
 
       
 
@@ -1055,6 +1089,71 @@ public function updateorder(){
 
  }
 
+}
+public function shopwallet(){
+    
+
+    
+      
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $shop_id=$data1->shop_id;
+
+
+  try{	
+
+   
+
+   
+
+    $wallet=DB::table('tbl_wallets')
+    ->where('shop_id',$shop_id)
+   // ->where('status',0)
+    ->first();
+
+     
+
+        if($wallet == null){
+
+
+
+               
+
+          echo json_encode(array('error' => true, "wallet"=>$wallet,"message" => "Error"));
+
+             }
+
+            else{								
+
+            
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false,"wallet"=>$wallet, "message" => "Success"));
+
+                }
+
+    
+
+  
+
+}
+
+catch (Exception $e)
+
+{
+
+        
+
+    //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
 }
 
 

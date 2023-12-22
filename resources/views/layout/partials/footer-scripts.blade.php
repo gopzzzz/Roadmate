@@ -2762,47 +2762,92 @@ $('document').ready(function() {
 </script>
 
 <script>
-    $('#example1').on('click', '.image_show', function () {
-        console.log('Button clicked');
-        var prod_id = $(this).data('id');
-		//alert(prod_id);
-        console.log('prod_id:', prod_id);
+    $(document).ready(function () {
+        $('#example1').on('click', '.image_show', function () {
+            var prod_id = $(this).data('id');
 
-        if (prod_id) {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "{{ route('productimagefetch') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    prod_id: prod_id
-                },
-                success: function (res) {
-                    $('#imageshowtbody').empty();
-                    console.log(res);
-                    var i = 1;
+            if (prod_id) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{ route('productimagefetch') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        prod_id: prod_id
+                    },
+                    success: function (res) {
+                        $('#imageshowtbody').empty();
+                        var i = 1;
 
-                    $.each(res, function (key, value) {
-                        var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
-                        img.css({
-                            width: '100px', // Set the width to your desired size
-                            height: 'auto', // Set the height to 'auto' to maintain the aspect ratio
+                        $.each(res, function (key, value) {
+                            var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
+                            img.css({
+                                width: '100px',
+                                height: 'auto',
+                            });
+
+                            var row = $('<tr>');
+                            var cell1 = $('<td>').text(i);
+                            var cell2 = $('<td>').append(img);
+
+                            // Delete button and hidden input for image ID
+                            var cell3 = $('<td>');
+                            var deleteBtn = $('<button>').addClass('btn btn-danger btn-sm delete-image').data('image-id', value.id).text('Delete');
+                            var hiddenInput = $('<input>').attr({
+                                type: 'hidden',
+                                name: 'image_ids[]',
+                                value: value.id,
+                            });
+
+                            cell3.append(deleteBtn, hiddenInput);
+                            row.append(cell1, cell2, cell3);
+
+                            $('#imageshowtbody').append(row);
+                            i++;
                         });
-                        var row = $('<tr>');
-                        var cell1 = $('<td>').text(i);
-                        var cell3 = $('<td>').append(img);
-                        row.append(cell1);
-                        row.append(cell3);
 
-                        $('#imageshowtbody').append(row);
-                        i++;
-                    });
-					$('#prod_id').val(prod_id);
-                    $('#exampleModalimageadd').modal('show');
-                },
-            });
-        }
+                        // Add a click event handler for delete buttons
+                        $('#exampleModalimageadd').on('click', '.delete-image', function () {
+                            var imageId = $(this).data('image-id');
+                            var row = $(this).closest('tr');
+
+                            // Show a confirmation dialog before deleting
+                            if (confirm("Are you sure you want to delete this image?")) {
+                                // Send AJAX request to delete image
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    url: "{{ route('marketproductimagedelete') }}",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        image_id: imageId
+                                    },
+                                    success: function (response) {
+                                        // Remove the row from the table after successful deletion
+                                        if (response.success) {
+                                            row.remove();
+                                        } else {
+                                            alert("Failed to delete image. Please try again.");
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("Error deleting image. Please try again.");
+                                    }
+                                });
+                            }
+                        });
+						$('#prod_id').val(prod_id);
+
+                        // Show the modal after setting up the content
+                        $('#exampleModalimageadd').modal('show');
+                    },
+                });
+            }
+        });
     });
+
+
+
  $('#search').on('click', function() {
             var customer_search = $('#customer_search').val();
 					

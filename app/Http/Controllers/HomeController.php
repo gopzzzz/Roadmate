@@ -415,7 +415,6 @@ class HomeController extends Controller
 				)
 				->get();
 		}
-	
 	return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
 		
 	}
@@ -438,13 +437,10 @@ public function franinsert(Request $request){
 			}else{
 				$franchis->place_id=$request->place_id;
 			}
-			
 			$franchis->area=$request->area;
 			$franchis->pincode=$request->pincode;
 			$franchis->phone_number=$request->phone_number;
 			$franchis->user_id=$user->id;
-			
-			
 			$franchis->save();
 	}
 		
@@ -466,8 +462,7 @@ public function franinsert(Request $request){
 	public function franedit(Request $request){
 		$id=$request->id;
 		$franchis=tbl_franchises::find($id);
-
-		$franchis->franchise_name=$request->franchise_name;
+        $franchis->franchise_name=$request->franchise_name;
 		$franchis->place_id=$request->place_idd;
 		$franchis->area=$request->area;
 		$franchis->pincode=$request->pincode;
@@ -1298,9 +1293,7 @@ public function shop_vehicle($Id) {
 		$shop->save();
 		return redirect('shops');
 	}
-
-
-	public function marketproducts(){
+    public function marketproducts(){
 		
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
@@ -1321,11 +1314,7 @@ public function shop_vehicle($Id) {
 		$role=Auth::user()->user_type;
 		return view('marketproducts',compact('market','mark','role'));
 	}
-
-
-	
-
-	public function marketproductinsert(Request $request)
+   public function marketproductinsert(Request $request)
 	{
 		$market = new Tbl_rm_products;
 	
@@ -1339,23 +1328,12 @@ public function shop_vehicle($Id) {
 	
 		return redirect('marketproducts')->with('success', 'Product added successfully');
 	}
-	
-
-
-
-
-
-
-	
-
-	public function marketproductimageinsert(Request $request)
+    public function marketproductimageinsert(Request $request)
 	{
 	
 		$prod_id=$request->productid;
-		
-	
 		$request->validate([
-			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+			'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
 		]);
 	
 		foreach ($request->file('images') as $image) {
@@ -1370,8 +1348,6 @@ public function shop_vehicle($Id) {
 	
 		return redirect()->back()->with('success', 'Images added successfully.');
 	}
-	
-
 	public function marketproductfetch(Request $request){
 		$id=$request->id;
 		$market=tbl_rm_products::find($id);
@@ -1381,11 +1357,31 @@ public function shop_vehicle($Id) {
 	public function productimagefetch(Request $request){
 		$id=$request->prod_id;
 		$market1=DB::table('tbl_productimages')->where('prod_id',$id)->get();
-		
 		print_r(json_encode($market1));
 		
 	}
-
+	public function marketproductimagedelete(Request $request)
+	{
+		$imageId = $request->image_id;
+	
+		// Fetch the image details
+		$image = Tbl_productimages::find($imageId);
+	
+		if (!$image) {
+			return response()->json(['success' => false, 'message' => 'Image not found.']);
+		}
+	
+		// Delete the image file
+		$imagePath = public_path('market/' . $image->images);
+		if (file_exists($imagePath)) {
+			unlink($imagePath);
+		}
+	
+		// Delete the image record from the database
+		$image->delete();
+	
+		return response()->json(['success' => true, 'message' => 'Image deleted successfully.']);
+	}
 	public function marketproductedit(Request $request)
 {
     $id = $request->id;
@@ -3421,7 +3417,7 @@ function sendNotification1($msg1,$title)
 			->get();
 			$order = DB::table('tbl_order_trans')
 			->leftJoin('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
-			->leftJoin('tbl_rm_products', 'tbl_order_trans.product_id', '=', 'tbl_rm_products.id')
+			->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 			->where('tbl_order_trans.order_id',$orderId)
 			->select(
@@ -3430,7 +3426,7 @@ function sendNotification1($msg1,$title)
 				'tbl_order_masters.total_amount',
 				'tbl_order_masters.total_mrp',
 				'tbl_order_masters.shipping_charge',
-				'tbl_rm_products.product_title',
+				'tbl_brand_products.product_name',
 				'shops.shopname',
 				'shops.address' 
 			)
@@ -3501,7 +3497,7 @@ function sendNotification1($msg1,$title)
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
 	          $request->validate([
-				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
 			  ]);
 		      foreach ($request->file('images') as $image) {
 

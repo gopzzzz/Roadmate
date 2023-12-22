@@ -6,49 +6,17 @@
    <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-
-
-            <div class="col-sm-6">
-
-
-
-            </div>
-
-
-
-            <div class="col-sm-6">
-
-
-
-               <ol class="breadcrumb float-sm-right">
-
-
-
-                  <li class="breadcrumb-item"><a href="home">Home</a></li>
-
-
-
-                  <li class="breadcrumb-item active"> Products</li>
-
-
-
-               </ol>
-
-
-
-            </div>
-
-
-
-         </div>
-
-
-
-      </div>
-
-
-
-      <!-- /.container-fluid -->
+<div class="col-sm-6">
+ </div>
+ <div class="col-sm-6">
+ <ol class="breadcrumb float-sm-right">
+<li class="breadcrumb-item"><a href="home">Home</a></li>
+ <li class="breadcrumb-item active">Products</li>
+ </ol>
+  </div>
+ </div>
+</div>
+<!-- /.container-fluid -->
 
 
 
@@ -73,13 +41,7 @@
 
 
    <section class="content">
-
-
-
-      <div class="container-fluid">
-
-
-
+     <div class="container-fluid">
          <div class="row">
 
 
@@ -187,20 +149,8 @@
                 </div>
               
 </div>
-
-
-                                
-
-
-
-                                 <div class="modal-footer">
-
-
-
-
-
-
-                                    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+    <div class="modal-footer">
+       <button type="submit" name="submit" class="btn btn-primary">Submit</button>
 
 
 
@@ -229,10 +179,7 @@
 
 
                   <!-- /.card-header -->
-
-
-
-                  <div class="card-body">
+ <div class="card-body">
 
 
 
@@ -318,22 +265,9 @@ $i=1;
    <td>{{$key->description}}</td>
 
    <td>@if($key->status==0) Active @else Inactive @endif</td>
-  
-
-
-
   <td>
-
-
-
-      <i class="fa fa-edit edit_brandproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-
-     
-
-
-
-
-   </td>
+   <i class="fa fa-edit edit_brandproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+  </td>
 
 
 
@@ -395,14 +329,8 @@ $i++;
                               @endif
 
                            </tr>
-
-
-
-                        </tfoot>
-
-
-
-                     </table>
+   </tfoot>
+ </table>
 <div class="modal fade" id="exampleModalimageadd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <form action="{{ route('marketproductimageinsert') }}" method="post" enctype="multipart/form-data">
         @csrf
@@ -425,6 +353,7 @@ $i++;
                             <tr>
                                 <td>id</td>
                                 <td>Images</td>
+                                <td>Action</td> 
 
                             </tr>
                         </thead>

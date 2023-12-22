@@ -101,6 +101,9 @@ use App\Shop_offer_models;
 use App\Executives;
 
 
+use App\Tbl_wallets;
+
+
 
 use App\Shop_provide_categories;
 
@@ -618,6 +621,11 @@ public function shopreg_exe_authorised(Request $request){
 
  if($shops->save()){
 
+   $wallet=new Tbl_wallets;
+   $wallet->shop_id=$shops->id;
+   $wallet->wallet_amount=0;
+   $wallet->save();
+
  
 
   $result=0;
@@ -756,6 +764,11 @@ public function shopreg_exe_unauthorised(Request $request){
  
 
  if($shops->save()){
+
+   $wallet=new Tbl_wallets;
+   $wallet->shop_id=$shops->id;
+   $wallet->wallet_amount=0;
+   $wallet->save();
      
         $result=0;
 
