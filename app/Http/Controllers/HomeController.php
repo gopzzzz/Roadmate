@@ -3577,11 +3577,8 @@ function sendNotification1($msg1,$title)
 	  public function subcategoryfetch(Request $request){
 			$id=$request->id;
 			$app = Tbl_rm_categorys::find($id);
-			$app=DB::table(' tbl_rm_categorys')
-			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-			->where('tbl_districts.id',$id)
-			->select('tbl_districts.*','tbl_states.country_id')
-			->first();
+			
+
             print_r(json_encode($app));
 		}
 
