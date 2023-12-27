@@ -204,7 +204,12 @@
                                       <p>Image Drive</p>
                                   </a>
                               </li>
-
+                              <li class="nav-item">
+                                  <a href="{{ url('hsn') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>HSN</p>
+                                  </a>
+                              </li>
                            
 
                           </ul>

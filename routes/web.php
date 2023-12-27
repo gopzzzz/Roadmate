@@ -102,10 +102,8 @@ Route::post('/franinsert', [
     'uses' => 'HomeController@franinsert'
 ])->name('franinsert');
 
-Route::post('/franfetch', [
-    'middleware' => 'auth',
-    'uses' => 'HomeController@franfetch'
-])->name('franfetch');
+Route::post('/franfetch', 'HomeController@franfetch')->name('franfetch')->middleware('auth');
+
 
 Route::post('/franchasefilter', [
     'middleware' => 'auth',
@@ -1156,7 +1154,22 @@ Route::get('/shop_vehicle/{Id}', 'HomeController@shop_vehicle')->name('shop_vehi
 
 Route::get('/get-subcategories/{categoryId}', 'HomeController@getSubcategories');
 
+Route::get('/hsn', 'HomeController@hsn')->name('hsn');
 
+Route::post('/hsninsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsninsert'
+])->name('hsninsert');
+
+Route::post('hsnfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsnfetch'
+])->name('hsnfetch');
+
+Route::post('/hsnedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsnedit'
+])->name('hsnedit'); 
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');
