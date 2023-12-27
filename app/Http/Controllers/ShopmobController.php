@@ -3012,6 +3012,8 @@ public function mystorelist_shop(){
       ->leftJoin('shops', 'store_lists.user_id', '=', 'shops.id')
 
     ->where('store_lists.sale_satus',0)
+    
+    ->limit(5)
 
    // ->where('user_type',1)
 
@@ -3052,6 +3054,8 @@ public function mystorelist_shop(){
       ->where('store_lists.store_prod_category',$scat)
 
     ->where('store_lists.sale_satus',0)
+    
+     ->limit(5)
 
     //->where('user_type',1)
 
@@ -3136,6 +3140,8 @@ public function mystorelist_shop_new(){
     ->where('store_lists.user_id',$shop_id)
 
     ->where('store_lists.user_type',2)
+    
+     ->limit(5)
 
     ->orderBy('store_lists.id', 'DESC')
 
@@ -3214,6 +3220,8 @@ public function mystorelist_shopdata(){
     ->where('user_type',2)
 
     ->orderBy('store_lists.id', 'DESC')
+    
+     ->limit(5)
 
 		  ->select('store_lists.*','store_product_categories.cat_name','shops.shopname','shops.phone_number')
 
@@ -3250,6 +3258,8 @@ public function mystorelist_shopdata(){
       ->where('user_type',2)
 
 	  ->where('store_lists.sale_satus',0)
+	  
+	   ->limit(5)
 
       ->orderBy('store_lists.id', 'DESC')
 

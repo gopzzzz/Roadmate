@@ -814,9 +814,12 @@ Route::post('orderhistory','ShopmarketingController@orderhistory');
 Route::post('vieworder','ShopmarketingController@vieworder');
 Route::post('updateorder','ShopmarketingController@updateorder');
 Route::post('shopwallet','ShopmarketingController@shopwallet');
+Route::post('brandfilter','ShopmarketingController@brandfilter');
+Route::post('brand_list','ShopmarketingController@brand_list');
+Route::post('searchproduct','ShopmarketingController@searchproduct');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
-Route::get('product','ShopmarketingController@product');
+Route::post('product','ShopmarketingController@product');
 
 
 Route::post('bulkupdate','ShopmobController@bulkupdate');

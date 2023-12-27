@@ -8,6 +8,7 @@ use App\Tbl_carts;
 use App\Tbl_rm_wishlists;
 use App\Tbl_order_trans;
 use App\Tbl_order_masters;
+use App\Tbl_wallet_transactions;
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -60,6 +61,10 @@ public function categoryproductlist(){
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
+  
+      $index=$data1->index;
+    $offset=($index*20);
+    $limit=20;
 
   $categoryId=$data1->categoryid; 
   try{	
@@ -67,7 +72,10 @@ public function categoryproductlist(){
       $productlist = DB::table('tbl_brand_products')
           ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
           ->select('tbl_brand_products.*', 'tbl_rm_products.cat_id')
-          ->where('tbl_rm_products.cat_id', $categoryId) 
+          ->where('tbl_rm_products.cat_id', $categoryId)
+          ->where('tbl_brand_products.status',0)
+            ->offset($offset) 
+      ->limit($limit) 
           ->get();
         $products = [];
 
@@ -344,7 +352,7 @@ foreach ($wishlist as $cartItem) {
         $cartItem->images = $imageArray->images;
     } else {
         // If no images are found, set it to an empty array or null, depending on your needs
-        $cartItem->images = [];
+        $cartItem->images = "";
         // or $cartItem->images = null;
     }
 
@@ -428,7 +436,7 @@ foreach ($cartlist as $cartItem) {
         $cartItem->images = $imageArray->images;
     } else {
         // If no images are found, set it to an empty array or null, depending on your needs
-        $cartItem->images = [];
+        $cartItem->images = "";
         // or $cartItem->images = null;
     }
 
@@ -504,6 +512,10 @@ $postdata = file_get_contents("php://input");
 
   $data1 = json_decode($json);
 
+  $index=$data1->index;
+  $offset=($index*20);
+  $limit=20;
+
   
 
 
@@ -516,6 +528,9 @@ $postdata = file_get_contents("php://input");
     $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_brand_products.*')
+    
+  ->offset($offset) 
+  ->limit($limit) 
      ->get();
      
      
@@ -570,6 +585,200 @@ catch (Exception $e)
 }
 }
 
+public function brandfilter(){
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $brand_id=$data1->brand_id;
+  
+   $index=$data1->index;
+    $offset=($index*20);
+    $limit=20;
+  
+
+  
+
+
+  try{	
+
+   
+
+   
+
+    $productlist=DB::table('tbl_brand_products')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_brand_products.*')
+    ->where('tbl_brand_products.brand_id',$brand_id)
+    ->where('tbl_brand_products.status',0)
+      ->offset($offset) 
+      ->limit($limit) 
+     ->get();
+     
+     
+        $products = [];
+
+foreach ($productlist as $proItem) {
+    $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
+    
+    //echo "<pre>";print_r($imageArray);exit;
+
+    // Check if $imageArray is not null before accessing its properties
+    if ($imageArray) {
+        // Assuming there is a column named 'images' in tbl_productimages table
+        $proItem->images = $imageArray->images;
+    } else {
+        // If no images are found, set it to an empty array or null, depending on your needs
+        $proItem->images = "";
+        // or $cartItem->images = null;
+    }
+
+    // Add the $cartItem to the $cart array
+    $products[] = $proItem;
+}
+
+
+     
+
+        if($productlist == null){
+
+               
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+             $json_data = 0;
+
+            echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+
+                }
+}
+
+catch (Exception $e)
+
+{
+  //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+}
+public function searchproduct(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+    $data1 = json_decode($json);
+  
+    $search=$data1->productname;
+    $index=$data1->index;
+    $offset=($index*20);
+    $limit=20;
+  
+    
+  
+  
+    try{	
+  
+     
+  
+     
+  
+      $productlist=DB::table('tbl_brand_products')
+      ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+      ->select('tbl_brand_products.*')
+      ->orWhere('tbl_brand_products.product_name', 'like', "%{$search}%")
+      ->offset($offset) 
+      ->limit($limit) 
+      ->where('tbl_brand_products.status',0)
+       ->get();
+       
+       
+          $products = [];
+  
+  foreach ($productlist as $proItem) {
+      $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
+      
+      //echo "<pre>";print_r($imageArray);exit;
+  
+      // Check if $imageArray is not null before accessing its properties
+      if ($imageArray) {
+          // Assuming there is a column named 'images' in tbl_productimages table
+          $proItem->images = $imageArray->images;
+      } else {
+          // If no images are found, set it to an empty array or null, depending on your needs
+          $proItem->images = "";
+          // or $cartItem->images = null;
+      }
+  
+      // Add the $cartItem to the $cart array
+      $products[] = $proItem;
+  }
+  
+  
+       
+  
+          if($productlist == null){
+  
+                 
+  
+            echo json_encode(array('error' => true, "message" => "Error"));
+  
+               }
+  
+              else{								
+  
+               $json_data = 0;
+  
+              echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+  
+                  }
+  }
+  
+  catch (Exception $e)
+  
+  {
+    //return Json("Sorry! Please check input parameters and values");
+  
+          echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+  
+  }
+}
+public function brand_list(){
+    
+    
+    $postdata = file_get_contents("php://input");                    
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $subcat_id=$data1->subcat_id;
+
+    // $shopId = $data1->shopid;
+    
+    try {    
+        $brandlist = DB::table('tbl_rm_products')
+            ->where('cat_id', $subcat_id)
+            ->get();
+
+        if ($brandlist == null) {
+            echo json_encode(array('error' => true, "message" => "Error"));
+        } else {                                
+            $json_data = 0;
+            echo json_encode(array('error' => false, "brandlist" => $brandlist, "message" => "Success"));
+        }
+    } catch (Exception $e) {
+        // Handle the exception here
+        echo json_encode(array('error' => true, "message" => "An error occurred."));
+    }
+}
+
 
  public function deliveryaddressupdate(){
 
@@ -582,7 +791,7 @@ catch (Exception $e)
  $deliveryid=$data1->deliveryid;
  $shop_id=$data1->shop_id;
 
- $deliveryaddressupdate=shops::find($shop_id);
+ $deliveryaddressupdate=Shops::find($shop_id);
 
  $deliveryaddressupdate->delivery_id=$deliveryid;
 
@@ -679,15 +888,20 @@ public function placeorder(){
         ->limit(1)  // optional - to ensure only one record is updated.
         ->update(array('wallet_amount' => $wamount)); 
 
-        DB::table('tbl_wallet_trabsactions')->insertGetId(
-            [
-              'type' => 2,
-              'amount' => $data1->wallet_redeem_id,
-              'shop_id' => $data1->shop_id,
-              'created_at'=>date('Y-m-d H:i:s'),
-              'updated_at'=>date('Y-m-d H:i:s')
-            ]
-          );
+        // DB::table('tbl_wallet_trabsactions')->insertGetId(
+        //     [
+        //       'type' => 2,
+        //       'amount' => $data1->wallet_redeem_id,
+        //       'shop_id' => $data1->shop_id,
+        //       'created_at'=>date('Y-m-d H:i:s'),
+        //       'updated_at'=>date('Y-m-d H:i:s')
+        //     ]
+        //   );
+
+        $his=new Tbl_wallet_transactions;
+        $his->type=2;
+        $his->shop_id=$data1->wallet_redeem_id;
+        $his->save();
    
 
 
@@ -1010,14 +1224,37 @@ public function vieworder(){
 
    
 
-    $order_list=DB::table('tbl_order_trans')
+    $products=DB::table('tbl_order_trans')
     ->join('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
     ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_order_masters.*', 'tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name')
+    ->select('tbl_order_masters.*','tbl_brand_products.id as pro_id','tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name')
     ->where('tbl_order_masters.id',$order_id)
    // ->where('status',0)
     ->get();
+
+     
+    $order_list = [];
+
+    foreach ($products as $proItem) {
+        $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->pro_id)->first();
+        
+        //echo "<pre>";print_r($imageArray);exit;
+    
+        // Check if $imageArray is not null before accessing its properties
+        if ($imageArray) {
+            // Assuming there is a column named 'images' in tbl_productimages table
+            $proItem->images = $imageArray->images;
+        } else {
+            // If no images are found, set it to an empty array or null, depending on your needs
+            $proItem->images = "";
+            // or $cartItem->images = null;
+        }
+    
+        // Add the $cartItem to the $cart array
+        $order_list[] = $proItem;
+    }
+
 
      
 
@@ -1068,7 +1305,7 @@ public function updateorder(){
  $data1 = json_decode($json);
 
  $order_id=$data1->order_id;
- $status=$data1->status;
+ $status=4;
 
  $orderstatus=Tbl_order_masters::find($order_id);
 
