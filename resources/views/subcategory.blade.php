@@ -333,7 +333,7 @@
 				  <input type="hidden" name="id" id="subcatid">
 
 
-				  <div class="form-group col-sm-6">
+				  <div class="form-group col-sm-12">
 
 				  <label class="exampleModalLabel">SubCategory Name</label>
 
@@ -341,7 +341,7 @@
 
 				  <input type="text" class="form-control" name="subcategory_name" id="subcategory_name" required>
 				  </div>
-				  <div class="form-group col-sm-6">
+				  <div class="form-group col-sm-12">
 				  <label class="exampleModalLabel">SubCategory Image</label>
 													<input type="file" name="subcategoryimage" accept="image/*" id="subcategoryimage">
 												</div>

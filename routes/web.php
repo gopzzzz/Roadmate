@@ -101,10 +101,8 @@ Route::post('/franinsert', [
     'uses' => 'HomeController@franinsert'
 ])->name('franinsert');
 
-Route::post('/franfetch', [
-    'middleware' => 'auth',
-    'uses' => 'HomeController@franfetch'
-])->name('franfetch');
+Route::post('/franfetch', 'HomeController@franfetch')->name('franfetch')->middleware('auth');
+
 
 Route::post('/franchasefilter', [
     'middleware' => 'auth',
@@ -1155,7 +1153,22 @@ Route::get('/shop_vehicle/{Id}', 'HomeController@shop_vehicle')->name('shop_vehi
 
 Route::get('/get-subcategories/{categoryId}', 'HomeController@getSubcategories');
 
+Route::get('/hsn', 'HomeController@hsn')->name('hsn');
 
+Route::post('/hsninsert', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsninsert'
+])->name('hsninsert');
+
+Route::post('hsnfetch', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsnfetch'
+])->name('hsnfetch');
+
+Route::post('/hsnedit', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsnedit'
+])->name('hsnedit'); 
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');
@@ -1250,9 +1263,7 @@ Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, '
 Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
 Route::delete('/delete-image/{imageName}', 'HomeController@deleteImage');
 Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages');
-Route::get('/get-subcategories/{catId}/{categoryname}', 'HomeController@getSubcategories')->name('getSubcategories');
 Route::get('/marketwallet', 'HomeController@marketwallet')->name('marketwallet');
 Route::post('/fetchsubcategory', [App\Http\Controllers\HomeController::class, 'fetchsubcategory'])->name('fetchsubcategory');
-Route::post('/fetchsubcategoryy', [App\Http\Controllers\HomeController::class, 'fetchsubcategoryy'])->name('fetchsubcategoryy');
 Route::post('/marketproductimagedelete', [App\Http\Controllers\HomeController::class, 'marketproductimagedelete'])->name('marketproductimagedelete');
 

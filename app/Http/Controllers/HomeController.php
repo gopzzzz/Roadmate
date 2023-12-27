@@ -3,8 +3,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+
+
 use App\Executives;
-use App\tbl_franchises;
+use App\Tbl_franchises;
 use App\tbl_crms;
 use App\Booktimemasters;
 use App\Banner;
@@ -61,6 +64,8 @@ use App\Tbl_order_trans;
 use App\Tbl_productimages;
 use App\Tbl_brands;
 use App\Tbl_brand_products;
+use App\Tbl_franchase_details;
+use App\Tbl_hsncodes;
 use DB;
 use Hash;
 use Auth;
@@ -320,54 +325,44 @@ class HomeController extends Controller
 		return redirect('executive');
 	}
 
-	public function franchises(){
-        $someCondition= DB::table('tbl_franchises')
-		->leftJoin('tbl_districts', 'tbl_franchises.district_id', '=', 'tbl_districts.id')
-		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-		//->where('tbl_franchises.type','!=' ,4)
-		->select(
-			'tbl_franchises.*',
-			'tbl_districts.district_name as place_name',
-			'tbl_franchises.type as place_type',
-			'tbl_districts.district_name',
-			'tbl_states.state_name'
-		)
-	   ->get();
-	   $fran = DB::table('tbl_franchises')
-       ->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
-       ->leftJoin('tbl_districts', 'tbl_franchises.place_id', '=', 'tbl_districts.id')
-       ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-       ->when($someCondition, function ($query) {
-        return $query->where('tbl_franchises.type', 4);
-      })
-       ->select(
-        'tbl_franchises.*',
-        'tbl_places.place_name as place_name',
-        'tbl_places.type as place_type',
-        'tbl_districts.district_name',
-        'tbl_states.state_name'
-    )
-      ->get();
-		$role=Auth::user()->user_type;
-		$con=DB::table('tbl_countrys')
-			->where('deleted_status',0)
-			->get();
-             $cond=DB::table('tbl_states')
-			->where('deleted_status',0)
-			->get();
-		$dis=DB::table('tbl_districts')
-		->where('deleted_status',0)
-		->get();
-		$plac = DB::table('tbl_places')
-		->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
-		->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-		->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
-		->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name','tbl_states.state_name','tbl_districts.district_name')
-		->get();
-        $type=4;
+	public function franchises() {
+		$franchiseDetails = Tbl_franchase_details::select('franchise_id', 'type', 'place_id', 'district_id')->get();
 	
-		return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
+		$fran = Tbl_franchase_details::leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+			->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
+			->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->select(
+				'tbl_franchase_details.*',
+				'tbl_franchises.franchise_name',
+				'tbl_franchises.phone_number',
+				'tbl_franchises.area',
+				'tbl_franchises.pincode',
+				'tbl_places.place_name',
+				'tbl_places.type as place_type',
+				'tbl_states.state_name',
+				'tbl_districts.district_name'
+			)
+			->when($franchiseDetails, function ($query) use ($franchiseDetails) {
+				return $query->whereIn('tbl_franchase_details.type', $franchiseDetails->pluck('type')->toArray());
+			})
+			->get();
+	
+		$role = Auth::user()->user_type;
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
+		$plac = Tbl_places::leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
+			->get();
+	
+		$type = 4;
+	
+		return view('franchises', compact('fran', 'role', 'con', 'cond', 'dis', 'plac', 'type', 'franchiseDetails'));
 	}
+	
 	public function franchasefilter(Request $request)
 	{
 		$type = $request->type;
@@ -418,60 +413,108 @@ class HomeController extends Controller
 	return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
 		
 	}
-
-public function franinsert(Request $request){
+	public function franinsert(Request $request) {
 		$user = new User;
-		$user->name=$request->franchise_name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->user_type = 3; // You may need to adjust this based on your user type logic.
-
-    if($user->save()){
-		$franchis=new tbl_franchises;
-		$franchis->id=$request->id;
-
-			$franchis->franchise_name=$request->franchise_name;
-			$franchis->type=$request->type;
-			if($request->type==4){
-				$franchis->district=$request->district;
-			}else{
-				$franchis->place_id=$request->place_id;
+		$user->name = $request->franchise_name;
+		$user->email = $request->email;
+		$user->password = Hash::make($request->password);
+		$user->user_type = 3;
+	
+		if ($user->save()) {
+			// Create franchise details
+			$type = $request->type;
+	
+			for ($i = 0; $i < count($type); $i++) {
+				$franchise = new Tbl_franchises;
+				$franchise->franchise_name = $request->franchise_name;
+				$franchise->area = $request->area;
+				$franchise->pincode = $request->pincode;
+				$franchise->phone_number = $request->phone_number;
+				$franchise->user_id = $user->id;
+	
+				if ($franchise->save()) {
+					$franchiseDetails = new Tbl_franchase_details;
+					$franchiseDetails->franchise_id = $franchise->id;
+					$franchiseDetails->type = $request->type[$i];
+	
+					if ($request->type[$i] == 4) {
+						$franchiseDetails->district_id = $request->district[$i];
+						$franchiseDetails->place_id = null; // or set to a default value
+					} else {
+						$franchiseDetails->district_id = null; // or set to a default value
+						$franchiseDetails->place_id = $request->place_id[$i];
+					}
+	
+					$franchiseDetails->save();
+				}
 			}
-			$franchis->area=$request->area;
-			$franchis->pincode=$request->pincode;
-			$franchis->phone_number=$request->phone_number;
-			$franchis->user_id=$user->id;
-			$franchis->save();
+	
+			return redirect('franchises')->with('success', 'Franchise and details added successfully');
+		}
+	
+		return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create user, franchise, or franchise detail.']);
 	}
-		
-    // return redirect('franchises');
-		return redirect('franchises');
-	}
+	
 
-	public function franfetch(Request $request){
-		$id=$request->id;
-		$franchis=DB::table('tbl_franchises')
-		->leftJoin('tbl_places', 'tbl_franchises.place_id', '=', 'tbl_places.id')
-		->where('tbl_franchises.id',$id)
-		->select('tbl_franchises.*','tbl_places.place_name')
-		->first();
-		print_r(json_encode($franchis));
-	}
+ public function franfetch(Request $request)
+    {
+        $id = $request->id;
+
+        $franchiseDetails = Tbl_franchase_details::select(
+            'tbl_franchase_details.*',
+            'tbl_franchises.franchise_name',
+            'tbl_franchises.phone_number',
+            'tbl_franchises.area',
+            'tbl_franchises.pincode',
+            'tbl_places.place_name',
+            'tbl_places.type as place_type',
+            'tbl_states.state_name',
+            'tbl_districts.district_name'
+        )
+        ->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+        ->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
+        ->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
+        ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+        ->where('tbl_franchises.id', $id)
+        ->first();
+
+        return response()->json($franchiseDetails);
+    }
 
 	
+	
 	public function franedit(Request $request){
-		$id=$request->id;
-		$franchis=tbl_franchises::find($id);
-        $franchis->franchise_name=$request->franchise_name;
-		$franchis->place_id=$request->place_idd;
-		$franchis->area=$request->area;
-		$franchis->pincode=$request->pincode;
-		$franchis->phone_number=$request->phone_number;
-		// $franchis->email=$request->email;
-		$franchis->save();
-		return redirect('franchises');
+		$id = $request->id;
+		$franchise = Tbl_franchises::find($id);
+	
+		if (!$franchise) {
+			return redirect()->back()->withErrors(['error' => 'Franchise not found']);
+		}
+	
+		$franchise->franchise_name = $request->franchise_name;
+		$franchise->place_id = $request->place_idd;
+		$franchise->area = $request->area;
+		$franchise->pincode = $request->pincode;
+		$franchise->phone_number = $request->phone_number;
+	
+		if ($franchise->save()) {
+			$franchiseDetails = Tbl_franchase_details::where('franchise_id', $id)->first();
+	
+			if ($franchiseDetails) {
+				$franchiseDetails->type = $request->type;
+				$franchiseDetails->district_id = $request->district_id;
+				$franchiseDetails->save();
+			} else {
+				// If franchiseDetails doesn't exist, you may create a new one here
+			}
+	
+			return redirect('franchises')->with('success', 'Franchise details updated successfully');
+		}
+	
+		return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 	}
-
+	
+	
 	
 	public function crm(){
 		$cr = tbl_crms::with('user')->get();
@@ -1345,15 +1388,18 @@ public function shop_vehicle($Id) {
 				'images' => $imageName,
 			]);
 		}
-	
-		return redirect()->back()->with('success', 'Images added successfully.');
+	   return redirect()->back()->with('success', 'Images added successfully.');
 	}
 	public function marketproductfetch(Request $request){
-		$id=$request->id;
-		$market=tbl_rm_products::find($id);
-		print_r(json_encode($market));
-	}
-
+		$id = $request->id;
+		$market=DB::table('tbl_rm_products')
+		->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+		->where('tbl_rm_products.id',$id)
+		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id')
+		->first();
+		
+			print_r(json_encode($market));
+		}
 	public function productimagefetch(Request $request){
 		$id=$request->prod_id;
 		$market1=DB::table('tbl_productimages')->where('prod_id',$id)->get();
@@ -1386,24 +1432,14 @@ public function shop_vehicle($Id) {
 {
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
-    $market->brand_name = $request->brand_name;
-    $market->cat_id = $request->subcategory;
-    $market->cat_id = $request->category;
-    $market->status = $request->status;
+	
+	$market->brand_name = $request->brand_name;
+
+		
+	$market->cat_id = $request->subcategory;
+
+	$market->status = $request->status;
 	$market->save();
-    // Remove old images related to the product
-    Tbl_productimages::where('prod_id', $id)->delete();
-    // Upload and update images
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move('market', $imageName);
-            Tbl_productimages::create([
-                'prod_id' => $id,
-                'images' => $imageName,
-            ]);
-        }
-    }
     return redirect('marketproducts');
 }
     public function customers(Request $request)
@@ -3397,17 +3433,9 @@ function sendNotification1($msg1,$title)
 			->where('status', 0)
             ->select('id', 'category_name')
 		    ->get();
-		    return response()->json($categorys);
+			 return response()->json($categorys);
 		}
-		public function fetchsubcategoryy(Request $request) {
-			$subcategoryId = $request->subcategoryId;
-		    $categorys = DB::table('tbl_rm_categorys')
-			->where('cat_id', $subcategoryId)
-			->where('status', 0)
-            ->select('id', 'category_name')
-			->get();
-		    return response()->json($categorys);
-		}
+		
 		public function order_trans($orderId)
 		{
 	    	$role=Auth::user()->user_type;
@@ -3633,8 +3661,11 @@ function sendNotification1($msg1,$title)
 	  public function subcategoryfetch(Request $request){
 			$id=$request->id;
 			$app = Tbl_rm_categorys::find($id);
+			
+
             print_r(json_encode($app));
 		}
+
 		public function subcategoryedit(Request $request){
 			$id=$request->id;
 			$markk=Tbl_rm_categorys::find($id);
@@ -3668,5 +3699,44 @@ function sendNotification1($msg1,$title)
             ->select('tbl_walletts.*', 'shops.shopname')
 			->get();
             return view('marketwallet', compact('role','wallet'));
+	}
+
+	public function hsn(){
+		
+		$hs=DB::table('tbl_hsncodes')->orderBy('id', 'DESC')->get();
+		$role=Auth::user()->user_type;
+
+		return view('hsn',compact('hs','role'));
+	}
+
+	public function hsninsert(Request $request){
+		$hs=new Tbl_hsncodes;
+	
+		$hs->hsncode=$request->hsncode;
+		$hs->tax=$request->tax;
+		$hs->cgst=$request->cgst;
+		$hs->igst=$request->igst;
+		$hs->save();
+
+		return redirect('hsn')->with('success', 'Added successfully');	
+	
+}
+
+public function hsnfetch(Request $request){
+	$id=$request->id;
+	$hs=Tbl_hsncodes::find($id);
+	print_r(json_encode($hs));
+}
+		
+public function hsnedit(Request $request){
+		$id=$request->id;
+		$hs=Tbl_hsncodes::find($id);
+		$hs->hsncode=$request->hsncode;
+		$hs->tax=$request->tax;
+		$hs->cgst=$request->cgst;
+		$hs->igst=$request->igst;
+		$hs->save();
+		
+		return redirect('hsn')->with('success', 'Edited successfully');
 	}
 }

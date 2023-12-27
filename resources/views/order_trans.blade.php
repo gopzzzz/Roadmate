@@ -1,10 +1,5 @@
 @extends('layout.mainlayout')
-
-
-
 @section('content')
-
- 
 <div class="content-wrapper">
 <head>
     <style>
@@ -74,6 +69,11 @@
             <table>
             @foreach($order as $key)
             @endforeach
+            <tr>
+                    <th>Order ID</th>
+                    <td>{{$key->order_id}}</td>
+                </tr>
+                
                 <tr>
                     <th>Shop Name</th>
                     <td>{{$key->shopname}}</td>
@@ -113,6 +113,8 @@
                               <th>Offer Amount</th>
                               <th>Price</th>
                               <th>Taxable Amount</th>
+                              <th>Total Amount</th>
+
                 </tr>
                 <!-- Loop through your invoice items and populate the first table rows -->
                 <tr>
@@ -123,6 +125,8 @@
                               <td>{{$key->offer_amount}}</td>
                               <td>{{$key->price}}</td>
                               <td>{{$key->taxable_amount}}</td>
+                              <td>{{ $key->qty * $key->offer_amount }}</td>
+
                            </tr>
                            @endforeach
                 </tr>
