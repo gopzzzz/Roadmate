@@ -1348,11 +1348,15 @@ public function shop_vehicle($Id) {
 	   return redirect()->back()->with('success', 'Images added successfully.');
 	}
 	public function marketproductfetch(Request $request){
-		$id=$request->id;
-		$market=tbl_rm_products::find($id);
-		print_r(json_encode($market));
-	}
-
+		$id = $request->id;
+		$market=DB::table('tbl_rm_products')
+		->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+		->where('tbl_rm_products.id',$id)
+		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id')
+		->first();
+		
+			print_r(json_encode($market));
+		}
 	public function productimagefetch(Request $request){
 		$id=$request->prod_id;
 		$market1=DB::table('tbl_productimages')->where('prod_id',$id)->get();
@@ -1385,9 +1389,13 @@ public function shop_vehicle($Id) {
 {
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
-    $market->brand_name = $request->brand_name;
-    $market->cat_id =$request->subcategory;
-    $market->status = $request->status;
+	
+	$market->brand_name = $request->brand_name;
+
+		
+	$market->cat_id = $request->subcategory;
+
+	$market->status = $request->status;
 	$market->save();
     return redirect('marketproducts');
 }
@@ -3369,7 +3377,7 @@ function sendNotification1($msg1,$title)
 			->where('status', 0)
             ->select('id', 'category_name')
 		    ->get();
-		    return response()->json($categorys);
+			 return response()->json($categorys);
 		}
 		
 		public function order_trans($orderId)
