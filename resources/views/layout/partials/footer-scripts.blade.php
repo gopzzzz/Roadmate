@@ -1,5 +1,7 @@
   <!-- SCRIPTS -->
   <!-- JQuery -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="{{asset('admin/plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
@@ -34,7 +36,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('admin/dist/js/demo.js')}}"></script>
 
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 
 
@@ -46,6 +48,7 @@
 <script src="{{asset('admin/plugins/datatables/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('admin/plugins/datatables/buttons.print.min.js')}}"></script>
 <script src="{{asset('admin/plugins/datatables/buttons.html5.min.js')}}"></script>
+
 <!-- AdminLTE App -->
 
 <script>
@@ -864,36 +867,39 @@ $('.selecttype').on('change', function () {
         });
     }
     $('#editexecutive_modal').modal('show');
-});
+}); 
 
-	$('.edit_fran').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
+$('.edit_fran').click(function(){
+        var id = $(this).data('id');
 
-					url: "{{ route('franfetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          $('#franchise_name').val(obj.franchise_name);
-		 // $('#image').val(obj.image);
-        //   $('#email').val(obj.email);
-          $('#phone_number').val(obj.phone_number);
-          $('#place_id').val(obj.place_id);
-           $('#placevalue').val(obj.place_name);
-          $('#area').val(obj.area);
-		  $('#pincode').val(obj.pincode);
-          $('#id').val(obj.id);
-         
-					},
-					});	
-		}
-		$('#editfranchises_modal').modal('show');
-	});
+        if (id) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('franfetch') }}",
+                data: { "_token": "{{ csrf_token() }}", id: id },
+                dataType: "json", // Ensure this line is present
+                success: function (res) {
+                    console.log(res);
+
+                    $('#franchise_name').val(res.franchise_name);
+                    $('#phone_number').val(res.phone_number);
+                    $('#place_id').val(res.place_id);
+                    $('#placevalue').val(res.place_name);
+                    $('#area').val(res.area);
+                    $('#pincode').val(res.pincode);
+                    $('#id').val(res.id);
+
+                    // Additional fields from Tbl_franchase_details
+                    $('#type').val(res.type);
+                    $('#district_id').val(res.district_id);
+                },
+               
+            });
+        }
+        $('#editfranchises_modal').modal('show');
+    });
+
+
 
 
 	$('#clickme').on('click',function(){
@@ -3162,5 +3168,34 @@ $('#category_name').on('change', function () {
         });
     }
 });
+
+
+
+
+	$('.edit_hsn').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('hsnfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          
+          $('#hsncode').val(obj.hsncode);
+		  $('#tax').val(obj.tax);
+		  $('#cgst').val(obj.cgst);
+		  $('#igst').val(obj.igst);
+          $('#hsn_id').val(obj.id);
+         
+					},
+					});	
+		}
+		$('#edithsn_modal').modal('show');
+	});
 
 </script>
