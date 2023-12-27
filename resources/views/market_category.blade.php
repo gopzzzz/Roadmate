@@ -178,7 +178,7 @@
 
 
 
-                                    <div class="form-group col-sm-6">
+                                    <div class="form-group col-sm-12">
 
 
 
@@ -192,7 +192,7 @@
 
                                     </div>
 									<div class="modal-body row">
-													<div class="form-group col-sm-6">
+													<div class="form-group col-sm-12">
 														<label class="exampleModalLabel">Category Image</label>
 														<input type="file" name="categoryimage" accept="image/*" required>
 													</div>
@@ -376,7 +376,7 @@
 				  <input type="hidden" name="id" id="marketid">
 
 
-				  <div class="form-group col-sm-6">
+				  <div class="form-group col-sm-12">
 
 				  <label class="exampleModalLabel">Category Name</label>
 

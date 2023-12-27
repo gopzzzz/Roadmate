@@ -1,18 +1,11 @@
 @extends('layout.mainlayout')
 
-
-
 @section('content')
 
- 
 
 <div class="content-wrapper">
 
-
-
-   <!-- Content Header (Page header) -->
-
-
+  <!-- Content Header (Page header) -->
 
    <section class="content-header">
 
@@ -182,7 +175,7 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                        <label class="exampleModalLabel">SubCategory Image</label>
-                                       <input type="file" name="subcategoryimage" accept="image/*" required>
+                                       <input type="file" name="subcategoryimage" accept="image/*">
                                     </div>  </div>
 
 
@@ -257,8 +250,14 @@
                               <td>{{$i}}</td>
                               <td>{{$key->category_name}}</td>
                               <td>
-                                 <img src="{{ asset('/market/'.$key->image) }}" alt="" width="200" height="100" />
-                              </td>
+    @if($key->image)
+        <img src="{{ asset('/market/'.$key->image) }}" alt="" width="200" height="100" />
+    @else
+        <!-- Display a placeholder text when there is no image -->
+        No Image
+    @endif
+</td>
+
                               <td>
                                  @if($key->status==0) Active @else Inactive @endif
                               </td>
@@ -279,14 +278,7 @@
                            </tr>
                         </tfoot>
                      </table>
-									
-
-
-
-
-
-
-<div class="modal" id="editsubcategory_modal" tabindex="-1" role="dialog">
+	<div class="modal" id="editsubcategory_modal" tabindex="-1" role="dialog">
 
 
 
@@ -341,7 +333,7 @@
 				  <input type="hidden" name="id" id="subcatid">
 
 
-				  <div class="form-group col-sm-6">
+				  <div class="form-group col-sm-12">
 
 				  <label class="exampleModalLabel">SubCategory Name</label>
 
@@ -349,7 +341,7 @@
 
 				  <input type="text" class="form-control" name="subcategory_name" id="subcategory_name" required>
 				  </div>
-				  <div class="form-group col-sm-6">
+				  <div class="form-group col-sm-12">
 				  <label class="exampleModalLabel">SubCategory Image</label>
 													<input type="file" name="subcategoryimage" accept="image/*" id="subcategoryimage">
 												</div>

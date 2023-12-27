@@ -5,10 +5,8 @@ use DB;
 use App\Tbl_deliveryaddres;
 use App\shops;
 use App\shop_services;
-
 use App\Tbl_carts;
 use App\Tbl_rm_wishlists;
-
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -55,13 +53,8 @@ class ShopmarketingController extends Controller
         ]);
     }
 }
-
-
-
 public function categoryproductlist(){
-       
   $postdata = file_get_contents("php://input");					
-
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
@@ -88,11 +81,8 @@ public function categoryproductlist(){
 
                 }
 }
-
 catch (Exception $e)
-
 {
-
         
 
     //return Json("Sorry! Please check input parameters and values");
@@ -101,10 +91,6 @@ catch (Exception $e)
 
 }
 }
-
-
-  
-
 public function categorylist(){
     
     
@@ -406,6 +392,7 @@ public function cartadd(){
     $data1 = json_decode($json);
 
     $id=$data1->id;
+   
 
     if(DB::table('tbl_carts')->where('id', $id)->delete()){
 
@@ -422,25 +409,22 @@ public function cartadd(){
     }
 
 }
-public function deliveryaddressadd(){
-
-  $postdata = file_get_contents("php://input");					
-
-  $json = str_replace(array("\t","\n"), "", $postdata);
+public function deliveryaddressadd()
+{
+ $postdata = file_get_contents("php://input");					
+ $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
-
- 
-
-  $query=new Tbl_deliveryaddres;
+ $query=new Tbl_deliveryaddres;
   $query->shop_id=$data1->shop_id;
 
-  $query->address=$data1->address;
-  $query->addresssecond=$data1->addresssecond;
+  $query->area=$data1->area;
+  $query->area1=$data1->area1;
+  $query->country=$data1->country;
+
   $query->state	=$data1->state;
   $query->district=$data1->district;
   $query->city=$data1->city;
-  $query->pincode=$data1->pincode;
   $query->phone=$data1->phone;
 
 
@@ -461,62 +445,34 @@ public function deliveryaddressadd(){
 
  public function product(){
     
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
+$postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
-
-  
-
-
-  try{	
-
-   
-
-   
-
-    $product=DB::table('tbl_rm_products')
+try{	
+  $product=DB::table('tbl_rm_products')
     ->join('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
     ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name')
      ->get();
-
-     
-
         if($product == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
+echo json_encode(array('error' => true, "message" => "Error"));
 
              }
 
             else{								
 
-            
-
-            $json_data = 0;
+             $json_data = 0;
 
             echo json_encode(array('error' => false,"product"=>$product, "message" => "Success"));
 
                 }
-
-    
-
-  
-
 }
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+  //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
@@ -524,6 +480,7 @@ catch (Exception $e)
 }
 
  public function deliveryaddressupdate(){
+
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -552,6 +509,7 @@ catch (Exception $e)
 
  }
 }
+
 public function deliveryaddresslist(){
     
     $postdata = file_get_contents("php://input");                    
@@ -563,23 +521,19 @@ public function deliveryaddresslist(){
     $shopId = $data1->shopid;
     
     try {    
-        $deliveryaddresslist = DB::table('tbl_deliveryaddres')
+        $deliveryaddress = DB::table('tbl_deliveryaddres')
             ->where('shop_id', $shopId)
             ->get();
 
-        if ($deliveryaddresslist == null) {
+        if ($deliveryaddress == null) {
             echo json_encode(array('error' => true, "message" => "Error"));
         } else {                                
             $json_data = 0;
-            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddresslist, "message" => "Success"));
+            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddress, "message" => "Success"));
         }
     } catch (Exception $e) {
         // Handle the exception here
         echo json_encode(array('error' => true, "message" => "An error occurred."));
     }
 }
-
-
-
-
 }

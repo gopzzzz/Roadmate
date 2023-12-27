@@ -170,16 +170,11 @@
                                   </a>
                               </li>
                             
-                              <li class="nav-item">
-                                  <a href="{{ url('brands') }}" class="nav-link">
-                                      <i class="far fa-circle nav-icon"></i>
-                                      <p>Brands</p>
-                                  </a>
-                              </li>
+                            
                               <li class="nav-item">
                                   <a href="{{ url('marketproducts') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
-                                      <p>Products</p>
+                                      <p>Brands</p>
                                   </a>
                               </li>
 
@@ -196,6 +191,12 @@
                                   <a href="{{ url('order_master') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>orders</p>
+                                  </a>
+                              </li>
+                              <li class="nav-item">
+                                  <a href="{{ url('marketwallet') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Wallets</p>
                                   </a>
                               </li>
                               <li class="nav-item">

@@ -357,22 +357,13 @@
 <div class="form-group col-sm-6">
 
 
-
 <label class="exampleModalLabel">IGST</label>
-
 
 
 <input class="form-control" name="igst" id="igst" required>
 
 
 </div>
-
-
-
-
-
-
-
 
 
 </div>

@@ -1,6 +1,5 @@
 <?php 
- 
-use Illuminate\Support\Facades\Route;
+ use Illuminate\Support\Facades\Route;
  
 /*
 |--------------------------------------------------------------------------
@@ -802,7 +801,7 @@ Route::post('/editpackfeatures', [
     'uses' => 'HomeController@editpackfeatures'
 ])->name('editfeature');
 
-Route::get('packfeaturesdelete/{id}', [
+Route::get('packfeaturesdelete/{id}', [    
     'middleware' => 'auth',
     'uses' => 'HomeController@packfeaturesdelete'
 ])->name('packfeaturesdelete');
@@ -1133,7 +1132,7 @@ Route::post('/brandsedit', [
 ])->name('brandsedit'); 
 
 
-Route::get('/brandproducts/{Id}/{productTitle}', 'HomeController@brandproducts')->name('brandproducts');
+Route::get('/brandproducts/{Id}/{BrandName}', 'HomeController@brandproducts')->name('brandproducts');
 
 Route::post('/brandproductsinsert/{Id}', [
     'middleware' => 'auth',
@@ -1258,14 +1257,15 @@ Route::get('/imgcompress', 'HomeController@imgcompress')->name('imgcompress');
 Route::post('/imagecompressinsert', [App\Http\Controllers\HomeController::class, 'imagecompressinsert'])->name('imagecompressinsert');
 
 // Inside your routes/web.php
-
-
 Route::post('/subcategoryfetch', [App\Http\Controllers\HomeController::class, 'subcategoryfetch'])->name('subcategoryfetch');
 Route::get('/subcategory/{catId}/{categoryname}', 'HomeController@subcategory')->name('subcategory');
 Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, 'subcategoryinsert'])->name('subcategoryinsert');
-
 Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
-
 Route::delete('/delete-image/{imageName}', 'HomeController@deleteImage');
-
 Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages');
+Route::get('/get-subcategories/{catId}/{categoryname}', 'HomeController@getSubcategories')->name('getSubcategories');
+Route::get('/marketwallet', 'HomeController@marketwallet')->name('marketwallet');
+Route::post('/fetchsubcategory', [App\Http\Controllers\HomeController::class, 'fetchsubcategory'])->name('fetchsubcategory');
+Route::post('/fetchsubcategoryy', [App\Http\Controllers\HomeController::class, 'fetchsubcategoryy'])->name('fetchsubcategoryy');
+Route::post('/marketproductimagedelete', [App\Http\Controllers\HomeController::class, 'marketproductimagedelete'])->name('marketproductimagedelete');
+

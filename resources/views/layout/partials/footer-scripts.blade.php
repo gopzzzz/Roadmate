@@ -1086,14 +1086,11 @@ $('.edit_fran').click(function(){
 					success: function (res) {
 					console.log(res);
           var obj=JSON.parse(res)
-          $('#image').val(obj.name);
 		//   $('#categoryname').val(obj.cat_id);
-		  $('#categoryname').val(obj.cat_id);
+		  $('#category_name').val(obj.cat_id);
 
-          $('#product_title').val(obj.product_title);
-		  $('#discription').val(obj.discription);
-		  $('#original_amount').val(obj.original_amount);
-		  $('#offer_price').val(obj.offer_price);
+          $('#brand_name').val(obj.brand_name);
+		
 		  $('#status').val(obj.status);
 
           $('#marketid').val(obj.id);
@@ -2770,46 +2767,92 @@ $('document').ready(function() {
 </script>
 
 <script>
-    $('#example354').on('click', '.image_show', function () {
-        console.log('Button clicked');
-        var prod_id = $(this).data('id');
-        console.log('prod_id:', prod_id);
+    $(document).ready(function () {
+        $('#example1').on('click', '.image_show', function () {
+            var prod_id = $(this).data('id');
 
-        if (prod_id) {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "{{ route('productimagefetch') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    id: prod_id
-                },
-                success: function (res) {
-                    $('#imageshowtbody').empty();
-                    console.log(res);
-                    var i = 1;
+            if (prod_id) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{ route('productimagefetch') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        prod_id: prod_id
+                    },
+                    success: function (res) {
+                        $('#imageshowtbody').empty();
+                        var i = 1;
 
-                    $.each(res, function (key, value) {
-                        var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
-                        img.css({
-                            width: '100px', // Set the width to your desired size
-                            height: 'auto', // Set the height to 'auto' to maintain the aspect ratio
+                        $.each(res, function (key, value) {
+                            var img = $('<img>').attr('src', "{{ asset('market/') }}/" + value.images).attr('alt', 'Image');
+                            img.css({
+                                width: '100px',
+                                height: 'auto',
+                            });
+
+                            var row = $('<tr>');
+                            var cell1 = $('<td>').text(i);
+                            var cell2 = $('<td>').append(img);
+
+                            // Delete button and hidden input for image ID
+                            var cell3 = $('<td>');
+                            var deleteBtn = $('<button>').addClass('btn btn-danger btn-sm delete-image').data('image-id', value.id).text('Delete');
+                            var hiddenInput = $('<input>').attr({
+                                type: 'hidden',
+                                name: 'image_ids[]',
+                                value: value.id,
+                            });
+
+                            cell3.append(deleteBtn, hiddenInput);
+                            row.append(cell1, cell2, cell3);
+
+                            $('#imageshowtbody').append(row);
+                            i++;
                         });
-                        var row = $('<tr>');
-                        var cell1 = $('<td>').text(i);
-                        var cell3 = $('<td>').append(img);
-                        row.append(cell1);
-                        row.append(cell3);
 
-                        $('#imageshowtbody').append(row);
-                        i++;
-                    });
-					$('#prod_id').val(prod_id);
-                    $('#imageshowmodal').modal('show');
-                },
-            });
-        }
+                        // Add a click event handler for delete buttons
+                        $('#exampleModalimageadd').on('click', '.delete-image', function () {
+                            var imageId = $(this).data('image-id');
+                            var row = $(this).closest('tr');
+
+                            // Show a confirmation dialog before deleting
+                            if (confirm("Are you sure you want to delete this image?")) {
+                                // Send AJAX request to delete image
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    url: "{{ route('marketproductimagedelete') }}",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        image_id: imageId
+                                    },
+                                    success: function (response) {
+                                        // Remove the row from the table after successful deletion
+                                        if (response.success) {
+                                            row.remove();
+                                        } else {
+                                            alert("Failed to delete image. Please try again.");
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("Error deleting image. Please try again.");
+                                    }
+                                });
+                            }
+                        });
+						$('#prod_id').val(prod_id);
+
+                        // Show the modal after setting up the content
+                        $('#exampleModalimageadd').modal('show');
+                    },
+                });
+            }
+        });
     });
+
+
+
  $('#search').on('click', function() {
             var customer_search = $('#customer_search').val();
 					
@@ -3053,6 +3096,9 @@ $(window).on('load', function(){
          
 		  $('#brandproductid').val(obj.id);
           $('#brands_id').val(obj.brand_id);
+		  $('#product_name').val(obj.product_name);
+          $('#description').val(obj.description);
+
 		  $('#offer_price').val(obj.offer_price);
 		  $('#original_amount').val(obj.price);
 		  $('#status').val(obj.status);
@@ -3062,6 +3108,61 @@ $(window).on('load', function(){
 		}
 		$('#editbrandproduct_modal').modal('show');
 	});
+	$('.subcategoryadd').on('change', function () {
+    var categoryId = $(this).val();
+
+    if (categoryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchsubcategory') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                categoryId: categoryId
+            },
+            success: function (res) {
+                console.log(res);
+                $('#subcategory').empty();
+				
+                var html_each = "<option value='0'>Select subcategory</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.category_name + '</option>';
+                });
+                $('#subcategory').append(html_each);
+				
+            },
+        });
+    }
+});
+
+$('#categorylist .categorylist').on('change', function () {
+	//alert();
+    var categoryId = $(this).val();
+
+    if (categoryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchsubcategory') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+				categoryId: categoryId
+            },
+            success: function (res) {
+                console.log(res);
+               
+				$('#subcategory_name').empty();
+                var html_each = "<option value='0'>Select subcategory</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.category_name + '</option>';
+                });
+                
+				$('#subcategory_name').append(html_each);
+            },
+        });
+    }
+});
+
 
 
 
