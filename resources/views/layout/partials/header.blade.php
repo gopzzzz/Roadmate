@@ -784,7 +784,7 @@
                               <li class="nav-item">
                                   <a href="{{ url('marketproducts') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
-                                      <p>Products</p>
+                                      <p>Brands</p>
                                   </a>
                               </li>
 

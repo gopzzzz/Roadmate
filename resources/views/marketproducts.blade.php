@@ -102,16 +102,9 @@
  <!-- /.card-header -->
 
               <div class="card-body">
-              <form>
-                   <div class="col-md-4">
-                      <div class="form-group">
-                        <input type="text" name="search_shop" class="form-control" id="search_shop" placeholder="Search" value="">
-                      </div>
-                    </div>
-                </form>
+             
 
-                <a href="{{url('exportmarket')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
-                <table  class="table table-bordered table-striped" id="example354">
+                <table  class="table table-bordered table-striped" id="example1">
                  <thead>
 
                   <tr>
@@ -221,24 +214,24 @@ $i++;
       <form method="POST" action="{{url('marketproductedit')}}" enctype="multipart/form-data" name="exeedit">
 
 @csrf
-      <div class="modal-body row">
+<div class="modal-body row">
+            <div class="form-group col-sm-12">
+                <label class="exampleModalLabel">Main Category</label>
+                <select name="category" id="category_name" class="form-control categorylist" required>
+                    <option value="" disabled selected>Select Category</option>
+                    @foreach($mark as $key)
+                        <option value="{{ $key->id }}">{{ $key->category_name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-      <div class="form-group col-sm-12">
-    <label class="exampleModalLabel">Main Category</label>
-    <select name="category" id="category_name" class="form-control categorylist" required>
-        <option value="" disabled selected>Select Category</option>
-        @foreach($mark as $key)
-            <option value="{{ $key->id }}">{{ $key->category_name }}</option>
-        @endforeach
-    </select>
-</div>
+            <div class="form-group col-sm-12">
+                <label class="exampleModalLabel">SubCategory</label>
+                <select name="subcategory" id="subcategory_name" class="form-control" required>
+                    <option value="" disabled selected>Select Subcategory</option>
+                </select>
+            </div>
 
-<div class="form-group col-sm-12">
-    <label class="exampleModalLabel">SubCategory</label>
-<select name="subcategory" id="subcategory_name" class="form-control" required>
-    <option value="0">Select Subcategory</option>
-</select>
-</div>
 <div class="form-group col-sm-12">
 <label class="exampleModalLabel">Brand Name</label>
 <input class="form-control" name="brand_name" id="brand_name" required>
@@ -339,12 +332,14 @@ $i++;
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!-- Add this script to your page -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
     $(document).ready(function() {
         $("form").submit(function(event) {
             var category = $("#category").val();
             var subcategory = $("#subcategory").val();
+          
             
             // Check if the values are empty or have default values
             if (category === "0" || subcategory === "0") {
@@ -354,7 +349,4 @@ $i++;
         });
     });
 </script>
-
-
-
 @endsection

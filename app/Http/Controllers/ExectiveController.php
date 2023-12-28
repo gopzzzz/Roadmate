@@ -101,6 +101,9 @@ use App\Shop_offer_models;
 use App\Executives;
 
 
+use App\Tbl_wallets;
+
+
 
 use App\Shop_provide_categories;
 
@@ -618,31 +621,18 @@ public function shopreg_exe_authorised(Request $request){
 
  if($shops->save()){
 
-  $lastid=$shops->id;
+   $wallet=new Tbl_wallets;
+   $wallet->shop_id=$shops->id;
+   $wallet->wallet_amount=0;
+   $wallet->save();
 
+ 
 
-
-   $shopcat=new Shop_provide_categories;
-
-    $shopcat->shop_id=$lastid;
-
-    $shopcat->shop_cat_id=$request->type;
-
-    if($shopcat->save()){
-
-
-      $result=0;
+  $result=0;
 
       echo json_encode(array('error' => false, "data" => $result, "message" => "Success"));
 
-       
 
-
-    }else{
-
-      echo json_encode(array('error' => true, "message" => "Error"));
-
-    }
 
 	  
 
@@ -775,30 +765,14 @@ public function shopreg_exe_unauthorised(Request $request){
 
  if($shops->save()){
 
-  $lastid=$shops->id;
-
-
-
-   $shopcat=new Shop_provide_categories;
-
-    $shopcat->shop_id=$lastid;
-
-    $shopcat->shop_cat_id=$request->type;
-
-    if($shopcat->save()){
-
-
-      $result=0;
+   $wallet=new Tbl_wallets;
+   $wallet->shop_id=$shops->id;
+   $wallet->wallet_amount=0;
+   $wallet->save();
+     
+        $result=0;
 
       echo json_encode(array('error' => false, "data" => $result, "message" => "Success"));
-
-    }else{
-
-      echo json_encode(array('error' => true, "message" => "Error"));
-
-    }
-
-	  
 
     
 

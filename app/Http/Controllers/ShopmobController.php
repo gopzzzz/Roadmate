@@ -3012,6 +3012,8 @@ public function mystorelist_shop(){
       ->leftJoin('shops', 'store_lists.user_id', '=', 'shops.id')
 
     ->where('store_lists.sale_satus',0)
+    
+    ->limit(5)
 
    // ->where('user_type',1)
 
@@ -3052,6 +3054,8 @@ public function mystorelist_shop(){
       ->where('store_lists.store_prod_category',$scat)
 
     ->where('store_lists.sale_satus',0)
+    
+     ->limit(5)
 
     //->where('user_type',1)
 
@@ -3136,6 +3140,8 @@ public function mystorelist_shop_new(){
     ->where('store_lists.user_id',$shop_id)
 
     ->where('store_lists.user_type',2)
+    
+     ->limit(5)
 
     ->orderBy('store_lists.id', 'DESC')
 
@@ -3214,6 +3220,8 @@ public function mystorelist_shopdata(){
     ->where('user_type',2)
 
     ->orderBy('store_lists.id', 'DESC')
+    
+     ->limit(5)
 
 		  ->select('store_lists.*','store_product_categories.cat_name','shops.shopname','shops.phone_number')
 
@@ -3250,6 +3258,8 @@ public function mystorelist_shopdata(){
       ->where('user_type',2)
 
 	  ->where('store_lists.sale_satus',0)
+	  
+	   ->limit(5)
 
       ->orderBy('store_lists.id', 'DESC')
 
@@ -5499,4 +5509,33 @@ DB::table('shop_services AS s1')
 
 
 }
+
+public function cartdelete(){
+
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $id=$data1->id;
+ 
+
+  if(DB::table('tbl_carts')->where('id', $id)->delete()){
+
+  $json_data = 1;      
+
+  echo json_encode(array('error' => false, "data" => $json_data,"message" => "success")); 
+
+  }else{
+
+  $json_data = 0;      
+
+  echo json_encode(array('error' => true, "data" => $json_data,"message" => "Error"));
+
+  }
+
+}
+
+
 }

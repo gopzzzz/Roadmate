@@ -2114,6 +2114,8 @@ catch (Exception $e)
       ->leftJoin('shops', 'store_lists.user_id', '=', 'shops.id')
 
     ->where('store_lists.sale_satus',0)
+    
+    ->limit(5)
 
    // ->where('user_type',1)
 
@@ -2154,6 +2156,8 @@ catch (Exception $e)
       ->where('store_lists.store_prod_category',$scat)
 
     ->where('store_lists.sale_satus',0)
+    
+      ->limit(5)
 
     //->where('user_type',1)
 
@@ -2290,6 +2294,8 @@ catch (Exception $e)
     ->where('store_lists.user_id',$uid)
 
 	->where('store_lists.sale_satus',0)
+	
+	  ->limit(5)
 
     ->select('store_lists.*','store_product_categories.cat_name','user_lists.name','user_lists.phnum')
 
@@ -2352,6 +2358,8 @@ catch (Exception $e)
     ->leftJoin('user_lists', 'store_lists.user_id', '=', 'user_lists.id')
 
     ->leftJoin('shops', 'store_lists.user_id', '=', 'shops.id')
+    
+      ->limit(5)
 
     ->where('store_lists.id',$product)
 
@@ -2619,6 +2627,8 @@ catch (Exception $e)
     //->leftJoin('store_product_categories', 'store_lists.store_prod_category', '=', 'store_product_categories.id')
 
     ->where('id',$store)
+    
+      ->limit(5)
 
      ->get();
 

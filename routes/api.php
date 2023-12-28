@@ -795,22 +795,32 @@ Shop marketing new feature addon (07-11-2023)
 Route::get('mhomepage','ShopmarketingController@mhomepage');
 Route::post('categoryproductlist','ShopmarketingController@categoryproductlist');
 Route::get('categorylist','ShopmarketingController@categorylist');
+Route::post('subcategorylist','ShopmarketingController@subcategorylist');
 Route::post('productdetails','ShopmarketingController@productdetails');
 Route::post('wishlist','ShopmarketingController@wishlist');
-Route::post('wishlistadd','ShopmarketingController@wishlistadd');
-Route::post('wishlistdelete','ShopmarketingController@wishlistdelete');
-
 Route::post('cart','ShopmarketingController@cart');
-Route::post('cartadd','ShopmarketingController@cartadd');
-Route::post('cartdelete','ShopmarketingController@cartdelete');
+
 
 Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
+Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
+Route::post('cartadd','ShopmarketingController@cartadd');
+Route::post('cartdelete','ShopmarketingController@cartdelete');
+Route::post('wishlistdelete','ShopmarketingController@wishlistdelete');
+Route::post('wishlistadd','ShopmarketingController@wishlistadd');
+
+Route::post('placeorder','ShopmarketingController@placeorder');
+Route::post('updateqty','ShopmarketingController@updateqty');
+Route::post('orderhistory','ShopmarketingController@orderhistory');
+Route::post('vieworder','ShopmarketingController@vieworder');
+Route::post('updateorder','ShopmarketingController@updateorder');
+Route::post('shopwallet','ShopmarketingController@shopwallet');
+Route::post('brandfilter','ShopmarketingController@brandfilter');
+Route::post('brand_list','ShopmarketingController@brand_list');
+Route::post('searchproduct','ShopmarketingController@searchproduct');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
-Route::get('product','ShopmarketingController@product');
-Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
+Route::post('product','ShopmarketingController@product');
 
-Route::post('decrementQuantity','ShopmarketingController@decrementQuantity');
 
 Route::post('bulkupdate','ShopmobController@bulkupdate');
 Route::get('bulkdataupload','ShopmobController@bulkdataupload');

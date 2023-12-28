@@ -1263,9 +1263,7 @@ Route::post('/subcategoryinsert', [App\Http\Controllers\HomeController::class, '
 Route::post('/subcategoryedit', [App\Http\Controllers\HomeController::class, 'subcategoryedit'])->name('subcategoryedit');
 Route::delete('/delete-image/{imageName}', 'HomeController@deleteImage');
 Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages');
-Route::get('/get-subcategories/{catId}/{categoryname}', 'HomeController@getSubcategories')->name('getSubcategories');
 Route::get('/marketwallet', 'HomeController@marketwallet')->name('marketwallet');
 Route::post('/fetchsubcategory', [App\Http\Controllers\HomeController::class, 'fetchsubcategory'])->name('fetchsubcategory');
-Route::post('/fetchsubcategoryy', [App\Http\Controllers\HomeController::class, 'fetchsubcategoryy'])->name('fetchsubcategoryy');
 Route::post('/marketproductimagedelete', [App\Http\Controllers\HomeController::class, 'marketproductimagedelete'])->name('marketproductimagedelete');
 

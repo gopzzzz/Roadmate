@@ -1391,11 +1391,15 @@ public function shop_vehicle($Id) {
 	   return redirect()->back()->with('success', 'Images added successfully.');
 	}
 	public function marketproductfetch(Request $request){
-		$id=$request->id;
-		$market=tbl_rm_products::find($id);
-		print_r(json_encode($market));
-	}
-
+		$id = $request->id;
+		$market=DB::table('tbl_rm_products')
+		->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
+		->where('tbl_rm_products.id',$id)
+		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id')
+		->first();
+		
+			print_r(json_encode($market));
+		}
 	public function productimagefetch(Request $request){
 		$id=$request->prod_id;
 		$market1=DB::table('tbl_productimages')->where('prod_id',$id)->get();
@@ -1428,9 +1432,13 @@ public function shop_vehicle($Id) {
 {
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
-    $market->brand_name = $request->brand_name;
-    $market->cat_id =$request->subcategory;
-    $market->status = $request->status;
+	
+	$market->brand_name = $request->brand_name;
+
+		
+	$market->cat_id = $request->subcategory;
+
+	$market->status = $request->status;
 	$market->save();
     return redirect('marketproducts');
 }
@@ -3381,6 +3389,10 @@ function sendNotification1($msg1,$title)
 				$name=$files->getClientOriginalName();  
 				$files->move('market/',$name);
 				$mark->image=$name; 
+
+				
+
+				
             $mark->cat_id = 0;
             $mark->status = 0;
 			$mark->save();
@@ -3397,10 +3409,19 @@ function sendNotification1($msg1,$title)
 			$mark=Tbl_rm_categorys::find($id);
 			$mark->category_name=$request->category_name;
 			$mark->status=$request->status;
-			if($files=$request->file('categoryimage')){  
-				$name=$files->getClientOriginalName();  
-				$files->move('market',$name);  
-				$mark->image=$name; 
+			if($files=$request->file('categoryimage')){ 
+				
+				
+				//$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+				//$image->move(public_path('market'), $imageName); // Use public_path()
+
+				$image = $request->file('categoryimage');
+		  $image_name =$image->getClientOriginalName();
+		  $path = public_path('market/') . "/" . $image_name;
+		  Image::make($image->getRealPath())->resize(300, 300)->save($path);
+
+	
+				$mark->image=$image_name; 
 			}  
 			$mark->save();
 			return redirect('market_category');
@@ -3412,7 +3433,7 @@ function sendNotification1($msg1,$title)
 			->where('status', 0)
             ->select('id', 'category_name')
 		    ->get();
-		    return response()->json($categorys);
+			 return response()->json($categorys);
 		}
 		
 		public function order_trans($orderId)
@@ -3507,12 +3528,26 @@ function sendNotification1($msg1,$title)
 				  'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
 			  ]);
 		      foreach ($request->file('images') as $image) {
-				  $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-				  $image->move(public_path('market'), $imageName); // Use public_path()
+
+				
+				 // $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+				 // $image->move(public_path('market'), $imageName); // Use public_path()
+
+			//$image = $request->file('images');
+			$image_name =$image->getClientOriginalName();
+			$path = public_path('market/') . "/" . $image_name;
+			Image::make($image->getRealPath())->resize(300, 300)->save($path);
+
+		//	$files = $request->file('subcategoryimage');
+		//	$name = $files->getClientOriginalName();
+			//$files->move('market/', $name);
+			//$mark->image = $image_name;
 		          Tbl_productimages::create([
 					  'prod_id' => $prod_id,
-					  'images' => $imageName,
+					  'images' => $image_name,
 				  ]);
+
+
 			  }
 		      return back();
 		  }
@@ -3601,11 +3636,17 @@ function sendNotification1($msg1,$title)
 		$mark = new Tbl_rm_categorys;
 		$mark->category_name = $request->subcategory_name;
 		$mark->cat_id = $request->input('catid');
-		if ($request->hasFile('subcategoryimage')) {
-			$files = $request->file('subcategoryimage');
-			$name = $files->getClientOriginalName();
-			$files->move('market/', $name);
-			$mark->image = $name;
+		if ($request->hasFile('subcategoryimage')) 
+		{
+			$image = $request->file('subcategoryimage');
+			$image_name =$image->getClientOriginalName();
+			$path = public_path('market/') . "/" . $image_name;
+			Image::make($image->getRealPath())->resize(300, 300)->save($path);
+
+		//	$files = $request->file('subcategoryimage');
+		//	$name = $files->getClientOriginalName();
+			//$files->move('market/', $name);
+			$mark->image = $image_name;
 			$mark->status = 0;
 			$mark->save();
 			Session::flash('success', 'Subcategory added successfully!');
@@ -3631,9 +3672,21 @@ function sendNotification1($msg1,$title)
             $markk->category_name = $request->subcategory_name;
 			$markk->status=$request->status;
             if ($files = $request->file('subcategoryimage')) {  
-				$name = $files->getClientOriginalName();  
-				$files->move('market/', $name);
-				$markk->image = $name; 
+				// $name = $files->getClientOriginalName();  
+				// $files->move('market/', $name);
+				// $markk->image = $name; 
+
+					
+				//$imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+				//$image->move(public_path('market'), $imageName); // Use public_path()
+
+				$image = $request->file('subcategoryimage');
+		  $image_name =$image->getClientOriginalName();
+		  $path = public_path('market/') . "/" . $image_name;
+		  Image::make($image->getRealPath())->resize(300, 300)->save($path);
+
+	
+				$markk->image=$image_name; 
 			}
 			$markk->save();
 			return back();

@@ -1088,6 +1088,7 @@ $('.edit_fran').click(function(){
           var obj=JSON.parse(res)
 		//   $('#categoryname').val(obj.cat_id);
 		  $('#category_name').val(obj.cat_id);
+		  $('#subcategory_name').val(obj.cat_id);
 
           $('#brand_name').val(obj.brand_name);
 		
@@ -3135,8 +3136,7 @@ $(window).on('load', function(){
     }
 });
 
-$('#categorylist .categorylist').on('change', function () {
-	//alert();
+$('#category_name').on('change', function () {
     var categoryId = $(this).val();
 
     if (categoryId) {
@@ -3146,19 +3146,25 @@ $('#categorylist .categorylist').on('change', function () {
             url: "{{ route('fetchsubcategory') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
-				categoryId: categoryId
+                categoryId: categoryId
             },
             success: function (res) {
                 console.log(res);
-               
-				$('#subcategory_name').empty();
-                var html_each = "<option value='0'>Select subcategory</option>";
+
+                // Clear existing options
+                $('#subcategory_name').empty();
+
+                // Add default option
+                $('#subcategory_name').append('<option value="" disabled selected>Select Subcategory</option>');
+
+                // Add options from the response
                 $.each(res, function (key, value) {
-                    html_each += '<option value=' + value.id + '>' + value.category_name + '</option>';
+                    $('#subcategory_name').append('<option value=' + value.id + '>' + value.category_name + '</option>');
                 });
-                
-				$('#subcategory_name').append(html_each);
             },
+            error: function (error) {
+                console.log(error);
+            }
         });
     }
 });
