@@ -204,14 +204,19 @@
 
 
 </div>
-
+</div>
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">FRANCHISE DETAILS</h5>
-
+    <button type="button" class="btn btn-success btn-sm" id="addFranchise">+</button>
+    <button type="button" class="btn btn-danger btn-sm" id="removeFranchise">-</button>
 </div>
-<div class="modal-body row">
-
-<div class="form-group col-sm-6">
+<div class="modal-body row" id="franchiseDetailsContainer">
+    <!-- Initial FRANCHISE DETAILS section -->
+    <div class="franchise-details-section">
+        <ul class="list-group col-sm-12">
+            <li class="list-group-item">
+                <div class="form-row">
+                <div class="form-group col-sm-6">
 
 
 
@@ -244,8 +249,8 @@
 <div class="form-group col-sm-6" >
 
 <label class="exampleModalLabel">Type</label>
+<select name="type[]" class="form-control selecttype" id="type" required>
 
-<select name="type" class="form-control selecttype" id="type" required>
 <option value="0">Select Type</option>
 <option value="1">Panchayath</option>
 <option value="2">Muncipality</option>
@@ -263,9 +268,9 @@
 
 <label class="exampleModalLabel">District</label>
 
+<select name="district_id[]" class="form-control districtadd" id="district">
 
 
-<select name="district" class="form-control districtadd" id="district">
                     <option value="0">Select District</option>
                 </select>
 
@@ -281,41 +286,26 @@
 <label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
 
 
+<select name="place_id[]" id="place_id" class="form-control"></select>
 
-<select name="place_id" id="place_id" class="form-control ">
 
-
-</select>
 
 
 </div>
-
-
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
-</div>
-
 <div class="modal-footer">
     <button type="submit" name="submit" class="btn btn-primary ml-auto">Add</button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
 
-
-
-
-
-
-</div>
-
-
-
-</div>
-
-
-
 </form>
 
 
-
+</div>
 </div>
               
 
@@ -371,47 +361,36 @@
                   </tr>
 
                   </thead>
-
                   <tbody>
-    @php
-    $i = 1;
-    @endphp
+    @php $i = 1; @endphp
 
     @foreach($fran as $key)
-    <tr>
-        <td>{{ $i }}</td>
-        <td>{{ $key->franchise_name }}</td>
-        <td>{{ $key->phone_number }}</td>
-        <td>{{ $key->area }}</td>
-        <td>{{ $key->pincode }}</td>
-        <td>{{ $key->state_name}}</td>
-        <td>{{ $key->district_name }}</td>
-        
-        <td>
-        @if($key->type!=4)
-          {{ $key->place_name }}
-        @else
-        {{ $key->district_name }}</td>
-
-      
-      @endif</td>
-       
-
-        @if($role == 1)
-        <td>
-            <i class="fa fa-edit edit_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-            <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-        </td>
-        @endif
-
-        
-
-    </tr>
-    @php
-    $i++;
-    @endphp
+        <tr>
+            <td>{{ $i++ }}</td>
+            <td>{{ $key->franchise_name }}</td>
+            <td>{{ $key->phone_number }}</td>
+            <td>{{ $key->area }}</td>
+            <td>{{ $key->pincode }}</td>
+            <td>{{ $key->state_name }}</td>
+            <td>{{ $key->district_name }}</td>
+            <td>
+                @if($key->place_type != 4)
+                    {{ $key->place_name }}
+                @else
+                    {{ $key->district->district_name }}
+                @endif
+            </td>
+            @if($role == 1)
+                <td>
+                    <i class="fa fa-edit edit_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+                    <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+                </td>
+            @endif
+        </tr>
     @endforeach
 </tbody>
+
+
                   <tfoot>
 
                   <tr>
@@ -450,7 +429,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="{{url('franedit')}}" enctype="multipart/form-data" name="franedit">
+      
+      <form method="POST" action="{{ url('franedit') }}" enctype="multipart/form-data" name="franedit">
+
 
 @csrf
       <div class="modal-body row" id="countrylist">
@@ -825,6 +806,52 @@
     });
 </script>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Add the script at the end of your HTML file, after jQuery inclusion -->
+<script>
+    $(document).ready(function () {
+        var franchiseDetailsCounter = 1;
+
+        function updateFranchiseDetailsIds(section, index) {
+            section.find('select[name^="country"], select[name^="states"], select[name^="district"], select[name^="place_id"]').each(function () {
+                var nameAttr = $(this).attr('name');
+                $(this).attr('name', nameAttr.replace(/\d+/g, index));
+            });
+        }
+
+        function toggleFranchiseDetailsSections() {
+            $("#franchiseDetailsContainer .franchise-details-section").each(function (index) {
+                $(this).toggle(index < franchiseDetailsCounter);
+                updateFranchiseDetailsIds($(this), index + 1);
+            });
+        }
+
+        function addFranchiseDetailsSection() {
+            var newSection = $("#franchiseDetailsContainer .franchise-details-section:first").clone();
+            franchiseDetailsCounter++;
+            newSection.appendTo("#franchiseDetailsContainer");
+            toggleFranchiseDetailsSections();
+        }
+
+        function removeFranchiseDetailsSection() {
+            if (franchiseDetailsCounter > 1) {
+                $("#franchiseDetailsContainer .franchise-details-section:last").remove();
+                franchiseDetailsCounter--;
+                toggleFranchiseDetailsSections();
+            }
+        }
+
+        $("#addFranchise").on("click", function () {
+            addFranchiseDetailsSection();
+        });
+
+        $("#removeFranchise").on("click", function () {
+            removeFranchiseDetailsSection();
+        });
+
+        toggleFranchiseDetailsSections();
+    });
+</script>
   @endsection
 
 
