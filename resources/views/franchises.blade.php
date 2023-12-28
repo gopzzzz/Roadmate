@@ -175,7 +175,6 @@
 <div class="form-group col-sm-6">
 
 
-
 <label class="exampleModalLabel">Pincode</label>
 
 
