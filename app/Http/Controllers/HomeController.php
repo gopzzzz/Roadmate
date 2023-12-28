@@ -3467,6 +3467,7 @@ function sendNotification1($msg1,$title)
 			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
 			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
             ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
+			->orderBy('tbl_order_masters.id', 'DESC')
 			->get();
 			$mark=DB::table('shops')
 			->get();

@@ -4553,9 +4553,9 @@ public function shoplistnew(){
    $data1 = json_decode($json);
    
  
-
   $imageservice=Shiop_categories::where('id',$data1->shop_cat_id)->first();
 
+   
 
 
    $sc= new Tbl_shop_offers;
@@ -4660,30 +4660,7 @@ public function shoplistnew(){
        
      
 			
-// 			$list = Brand_models::query()
-// 				        ->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
-// 				        ->where('brand_lists.vehicle',$data1->vehicle_typeid)
-//                         ->select('brand_lists.vehicle as vehicle_type','brand_models.id AS model_id','brand_models.brand AS brand_id')
 
-// 			            ->get();
-			            
-// $data=[];
-// foreach($list as $listnew) {
-   
-//      $data[] = [
-//     'shop_id' => $data1->shop_id,
-//     'offer_id' => $sc->id,
-//     'vehicle_typeid' => $listnew->vehicle_type,
-//     'brand_id' => $listnew->brand_id,
-//     'model_id' => $listnew->model_id,
-//     'fuel_type' =>0,
-//     'created_at' => now(),
-//     'updated_at' => now(),
-//   ];
-
-// }
-// Shop_offer_models::insert($data);
-			
 			
 		
     
