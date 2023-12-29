@@ -879,21 +879,23 @@ $('.edit_fran').click(function(){
                 data: { "_token": "{{ csrf_token() }}", id: id },
                 dataType: "json", // Ensure this line is present
                 success: function (res) {
-                    console.log(res);
+    console.log(res);
 
-                    $('#franchise_name').val(res.franchise_name);
-                    $('#phone_number').val(res.phone_number);
-                    $('#place_id').val(res.place_id);
-                    $('#placevalue').val(res.place_name);
-                    $('#area').val(res.area);
-                    $('#pincode').val(res.pincode);
-                    $('#id').val(res.id);
+    $('#franchise_name').val(res.franchise_name);
+    $('#phone_number').val(res.phone_number);
+    $('#placevalue').val(res.place_name);
+    $('#area').val(res.area);
+    $('#pincode').val(res.pincode);
+    $('#id').val(res.id);
 
-                    // Additional fields from Tbl_franchase_details
-                    $('#type').val(res.type);
-                    $('#district_id').val(res.district_id);
-                },
-               
+    // Additional fields from Tbl_franchase_details
+    $('#type').val(res.type);
+    $('#district_name').val(res.district_id); // Assuming you have a dropdown with id 'district_name'
+    $('#place_idd').val(res.place_id); // Assuming you have a dropdown with id 'place_idd'
+
+    // Trigger change event to update the dynamic dropdowns (if any)
+    $('#type').change();
+},
             });
         }
         $('#editfranchises_modal').modal('show');
