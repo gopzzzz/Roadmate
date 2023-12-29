@@ -3461,18 +3461,49 @@ function sendNotification1($msg1,$title)
 			->get();
 		   return view('order_trans',compact('role','mark','markk','order'));
 		}
-        public function order_master(){
-			$role=Auth::user()->user_type;
-			$order=DB::table('tbl_order_masters')
-			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-            ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
-			->get();
-			$mark=DB::table('shops')
-			->get();
-            $orderr=DB::table('tbl_coupens')->get();
-			return view('order_master',compact('order','role','orderr','mark'));
+		public function order_master(){
+			
+			$role = Auth::user()->user_type;
+			$order = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode')
+				->get();
+			
+			$mark = DB::table('shops')->get();
+			$orderr = DB::table('tbl_coupens')->get();
+			
+
+			return view('order_master', compact('order', 'role', 'orderr', 'mark'));
+
 		}
+		public function order_masterfetch(Request $request){
+			
+			$id=$request->id;
+			
+			$order1 = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
+				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+				->where('tbl_order_masters.id',$id)
+				->select(
+					'tbl_order_masters.*',
+					'shops.shopname',
+					'shops.address',
+					'tbl_coupens.coupencode',
+					'tbl_order_trans.product_id',
+					'tbl_order_trans.qty',
+					'tbl_order_trans.offer_amount',
+					'tbl_brand_products.product_name',
+					'tbl_rm_products.brand_name'
+				)
+				->get();
+				print_r(json_encode($order1));
+
+		}
+		
         public function brands()
 		{
 		    $brand=DB::table('tbl_brands')
