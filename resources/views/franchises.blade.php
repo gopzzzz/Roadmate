@@ -16,9 +16,6 @@
         <div class="row mb-2">
 
           <div class="col-sm-6">
-
-          
-
           </div>
 
           <div class="col-sm-6">
@@ -62,10 +59,7 @@
            
 
             <!-- /.card -->
-
-
-
-            <div class="card">
+  <div class="card">
 
               <div class="card-header">
 
@@ -79,17 +73,8 @@
 
               
  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-
-
 <form method="POST" action="{{url('franinsert')}}" enctype="multipart/form-data">
-
-
-
 @csrf
-
-
-
 <div class="modal-dialog modal-lg" role="document">
 
 
@@ -444,7 +429,7 @@
 </div>
 <div class="form-group col-sm-6 editplaceTree" style="display:none;">
     <label class="exampleModalLabel">District</label>
-    <select name="district" id="district_name" class="form-control ">
+    <select name="district_id[]" id="district_name" class="form-control">
         <option value="0">Select District</option>
         @foreach($dis as $district)
             <option value="{{ $district->id }}">{{ $district->district_name }}</option>
@@ -456,7 +441,7 @@
 
 <label class="exampleModalLabel">Type</label>
 
-<select name="type" id="type" class="form-control selecttype"  required>
+<select name="type[]" id="type" class="form-control selecttype"  required>
 <option value="0">Select Type</option>
 	<option value="1">Panchayath</option>
 
@@ -474,21 +459,9 @@
 
 
 <div class="form-group col-sm-12 editplaceTree" style="display:none;">
-
-
-
-<label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
-
-
-
-<select name="place_id" id="place_idd" class="form-control">
-
-
-</select>
-
-
+    <label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
+    <select name="place_id[]" id="place_idd" class="form-control"></select>
 </div>
-
 
 
 
@@ -756,24 +729,11 @@
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<!-- Add the script at the end of your HTML file, after jQuery inclusion -->
+
+
 <script>
     $(document).ready(function () {
         var franchiseDetailsCounter = 1;
-
-        function updateFranchiseDetailsIds(section, index) {
-            section.find('select[name^="country"], select[name^="states"], select[name^="district"], select[name^="place_id"]').each(function () {
-                var nameAttr = $(this).attr('name');
-                $(this).attr('name', nameAttr.replace(/\d+/g, index));
-            });
-        }
-
-        function toggleFranchiseDetailsSections() {
-            $("#franchiseDetailsContainer .franchise-details-section").each(function (index) {
-                $(this).toggle(index < franchiseDetailsCounter);
-                updateFranchiseDetailsIds($(this), index + 1);
-            });
-        }
 
         function addFranchiseDetailsSection() {
           
@@ -783,8 +743,23 @@
             if (franchiseDetailsCounter > 1) {
                 $("#franchiseDetailsContainer .franchise-details-section:last").remove();
                 franchiseDetailsCounter--;
-                toggleFranchiseDetailsSections();
             }
+        }
+
+        function togglePlaceRow(selectType) {
+            var selectedType = selectType.val();
+            var placeRow = selectType.closest('.franchise-details-section').find('.form-row #typediv');
+            if (selectedType === "4") {
+                placeRow.hide();
+            } else {
+                placeRow.show();
+            }
+        }
+
+        function initializeNewSection(newSection) {
+            newSection.find('.selecttype').on('change', function () {
+                togglePlaceRow($(this));
+            });
         }
 
         $("#addFranchise").on("click", function () {
@@ -795,9 +770,11 @@
             removeFranchiseDetailsSection();
         });
 
-        toggleFranchiseDetailsSections();
+        togglePlaceRow($("#franchiseDetailsContainer .franchise-details-section:first .selecttype"));
+        initializeNewSection($("#franchiseDetailsContainer .franchise-details-section:first"));
     });
 </script>
+
   @endsection
 
 

@@ -1,68 +1,81 @@
 @extends('layout.mainlayout')
-
-
-
 @section('content')
 
- 
+<head>
+    <style>
+        /* Define your CSS styles for the invoice here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+        .invoice {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .invoice-header {
+            background-color: #e4cf23;
+            color: #e90f0e;
+            padding: 10px;
+            text-align: center;
+        }
+        .invoice-title {
+            font-size: 40px;
+            text-transform: uppercase;
+        }
+        .invoice-details {
+            margin: 20px;
+        }
+        .invoice-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-details th, .invoice-details td {
+            padding: 10px;
+            text-align: left;
+        }
+        .invoice-details th {
+            background-color: #f2f2f2;
+        }
+        .invoice-table {
+            margin: 20px;
+        }
+        .invoice-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-table th, .invoice-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .invoice-total {
+            text-align: right;
+            margin: 20px;
+        }
+        .invoice-total p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
 
 <div class="content-wrapper">
-
-
-
-   <!-- Content Header (Page header) -->
-
-
-
-   <section class="content-header">
-
-
-
-      <div class="container-fluid">
-
-
-
-         <div class="row mb-2">
-
-
-
-            <div class="col-sm-6">
-
-
-
-            </div>
-
-
-
-            <div class="col-sm-6">
-
-
-
-               <ol class="breadcrumb float-sm-right">
-
-
-
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-
-
-
-                  <li class="breadcrumb-item active">Orders</li>
-
-
-
-               </ol>
-
-
-
-            </div>
-
-
-
-         </div>
-
-
-
-      </div>
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+   <div class="container-fluid">
+  <div class="row mb-2">
+     <div class="col-sm-6">
+ </div>
+ <div class="col-sm-6">
+   <ol class="breadcrumb float-sm-right">
+ <li class="breadcrumb-item"><a href="#">Home</a></li>
+ <li class="breadcrumb-item active">Orders</li>
+</ol>
+</div>
+</div>
+ </div>
 
 
 
@@ -417,26 +430,11 @@
 
                   <!-- /.card-header -->
                   <div class="card-body">
-
-
-
 <table id="example1" class="table table-bordered table-striped">
-
-
-
    <thead>
-
-
-
-      <tr>
-
-
-
-         <th>id</th>
-
-
-
-         <th>Shop Name</th>
+    <tr>
+   <th>id</th>
+   <th>Shop Name</th>
          <th>Total Amount</th>
          <th>Discount</th>
          <th>Coupen Code</th>
@@ -450,69 +448,31 @@
          <th>Delivery Date</th>
          <th>Order Date</th>
          <th></th>
-
-
-         @if($role==1)
-
-
-         @endif
-
-      </tr>
-
-
-
+   @if($role==1)
+  @endif
+</tr>
    </thead>
-
-
-
-   <tbody>
-
-
-
-      @php 
-
-
-
-      $i=1;
-
-
-
-      @endphp
-
-
-
-      @foreach($order as $key)
-
-
-
-      <tr>
-
-
-
-         <td>{{$i}}</td>
-
-
-
-         <td>{{$key->shopname}}</td>
+ <tbody>
+  @php 
+ $i=1;
+@endphp
+@foreach($order as $key)
+ <tr>
+     <td>{{$i}}</td>
+     <td>{{$key->shopname}}</td>
          <td>{{$key->total_amount}}</td>
-       
-         <td>{{$key->discount}}</td>
+        <td>{{$key->discount}}</td>
          <td>{{$key->coupencode}}</td>
          <td>{{$key->wallet_redeem_id}}</td>
          <td>
-
 @if($key->payment_mode==0) Cash on Delivery @else Online @endif
-
-
- </td>         <td>{{$key->total_mrp}}</td>
+</td>         <td>{{$key->total_mrp}}</td>
          <td>{{$key->shipping_charge}}</td>
          <td>{{$key->tax_amount}}</td>
          <td>
 
 @if($key->payment_status==0) Unpaid @else Paid @endif
-
-
- </td>         
+</td>         
  <td>
     @if ($key->order_status == 1)
         Pending
@@ -528,68 +488,49 @@
     @endif
 </td>         <td>{{$key->delivery_date}}</td>
          <td>{{$key->order_date}}</td>
-         <td style="width: 50px;">
-         <!-- <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a> -->
-
-         <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
-
+         <td>
+    <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
+        <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}">↓</span>
+    </div>
 </td>
 
 
-         @if($role==1) 
-
-
-
-            <!-- <i class="fa fa-edit edit_order"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i> -->
-
-           
-
-           <!-- <a href="{{url('orderdelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_order text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a> -->
-
-
-
-         @endif
-
-
-
-      </tr>
-
-
-
-      @php 
-
-
-
-      $i++;
-
-
-
-      @endphp
-
-
-
-      @endforeach
-
-
-
-   </tbody>
-
-
-
-   <tfoot>
-
-
-
-      <tr>
-
-
-
-         <th>id</th>
 
 
 
 
-         <th>Shop Name</th>
+
+<style>
+  .additional-data-container {
+        display: inline-block;
+        margin-left: 5px;
+        border: 2px solid #008080; /* Border color for the rectangle (teal) */
+        padding: 5px; /* Adjust padding as needed */
+        border-radius: 8px; /* Adjust border-radius for rounded corners */
+        background-color: #008080; /* Background color for the rectangle (teal) */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    }
+
+    .additional-data-arrow {
+        font-size: 20px; /* Adjust the font size as needed */
+        color: #ffffff; /* Change the color to white or another contrasting color */
+    }
+</style>
+<td style="width: 50px;">
+  <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
+</td>
+  @if($role==1) 
+  @endif
+ </tr>
+  @php 
+   $i++;
+  @endphp
+ @endforeach
+</tbody>
+  <tfoot>
+  <tr>
+ <th>id</th>
+<th>Shop Name</th>
          <th>Total Amount</th>
          <th>Discount</th>
          <th>Coupen Code</th>
@@ -603,45 +544,16 @@
          <th>Delivery Date</th>
          <th>Order Date</th>
          <th></th>
-
-         @if($role==1)
-
-
-         @endif
-
-      </tr>
-
-
-
-   </tfoot>
-
-
-
+ @if($role==1)
+ @endif
+ </tr>
+</tfoot>
 </table>
-
-
-
-                  <!-- /.card-body -->
-
-
-
-               </div>
-
-
-
-               <!-- /.card -->
-
-
-
-            </div>
-
-
-
-            <!-- /.col -->
-
-
-
-         </div>
+<!-- /.card-body -->
+ </div>  <!-- /.card -->
+</div>
+ <!-- /.col -->
+</div>
 
 
 
@@ -654,9 +566,68 @@
 
 
       <!-- /.container-fluid -->
+      <div id="tableContainer" style="display: none;">
+   <div class="invoice">
+      <div class="invoice-header">
+         <div class="invoice-title">Product Details</div>
+      </div>
+      <input type="hidden" name="order_id" value="order_id">
+      <div class="invoice-details">
+         <table>
+            <tr>
+               <th>Shop Name</th>
+               <td id="shopName"></td>
+            </tr>
+            <tr>
+            <th>MRP</th>
+            <td id="mrp"></td>
+
+            </tr>
+         </table>
+      </div>
+      <div class="invoice-details">
+         <div class="card-body">
+            <div class="invoice-table">
+               <div class="invoice-header">
+                  <div class="invoice-title"></div>
+               </div>
+               <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                     <tr>
+                        <th>Brand Name</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                      
+                        <th>Offer Price</th>
+                        @if($role==1)
+                           <!-- Add header content for role 1 if needed -->
+                        @endif
+                     </tr>
+                  </thead>
+                  <tbody id="productDetailsBody">
+                     <!-- Product details will be appended here -->
+                  </tbody>
+                  <tfoot>
+                     <tr>
+                        <th>Brand Name</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        
+                        <th>Offer Price</th>
+                        @if($role==1)
+                           <!-- Add footer content for role 1 if needed -->
+                        @endif
+                     </tr>
+                  </tfoot>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 
 
-
+   
    </section>
 
 
@@ -667,6 +638,56 @@
 
 </div>
 
+
+<!-- ... Your existing HTML code ... -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+function toggleTable(event, orderId) {
+   event.stopPropagation();
+
+   if (orderId) {
+      $.ajax({
+         type: "POST",
+         url: "{{ route('order_masterfetch') }}",
+         data: {
+            "_token": "{{ csrf_token() }}",
+            id: orderId
+         },
+         success: function (res) {
+            console.log(res);
+            var orderDetails = JSON.parse(res);
+
+            // Update HTML content
+            $('#shopName').text(orderDetails[0].shopname);
+            $('#mrp').text(orderDetails[0].total_mrp);
+            // Clear existing product details
+            $('#productDetailsBody').empty();
+
+            // Append details for each product
+            orderDetails.forEach(function (product) {
+               $('#productDetailsBody').append(`
+                  <tr>
+                     <td>${product.brand_name}</td>
+                     <td>${product.product_name}</td>
+                     <td>${product.qty}</td>
+                     <td>${product.offer_amount}</td>
+                     <!-- Add more columns as needed -->
+                  </tr>
+               `);
+            });
+
+            // Toggle display using jQuery
+            $('#tableContainer').toggle();
+         },
+         error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+         }
+      });
+   }
+}
+</script>
+<!-- ... Your existing HTML code ... -->
 
 
 @endsection

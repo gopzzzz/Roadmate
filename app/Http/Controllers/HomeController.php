@@ -462,39 +462,47 @@ class HomeController extends Controller
 
         return response()->json($franchiseDetails);
     }
+	public function franedit(Request $request)
+{
+    $id = $request->id;
+    $franchise = Tbl_franchises::find($id);
 
+    if (!$franchise) {
+        return redirect()->back()->withErrors(['error' => 'Franchise not found']);
+    }
+
+    $franchise->franchise_name = $request->franchise_name;
+    $franchise->area = $request->area;
+    $franchise->pincode = $request->pincode;
+    $franchise->phone_number = $request->phone_number;
+	if ($franchise->save()) {
+		$franchiseDetails = Tbl_franchase_details::where('franchise_id', $id)->first();
 	
+		// Use the first type element, assuming there's only one type associated with a franchise
+		$franchiseDetails->type = $request->type ? $request->type[0] : null;
 	
-	public function franedit(Request $request){
-		$id = $request->id;
-		$franchise = Tbl_franchises::find($id);
-	
-		if (!$franchise) {
-			return redirect()->back()->withErrors(['error' => 'Franchise not found']);
+		if ($request->type && $request->type[0] == 4) {
+			$franchiseDetails->district_id = $request->district_id ? $request->district_id[0] : null;
+			// Do not set place_id to null when type is 4
+			// $franchiseDetails->place_id = $request->place_id ? $request->place_id[0] : null;
+		} else {
+			$franchiseDetails->district_id = null; // or set to a default value
+			$franchiseDetails->place_id = $request->place_id ? $request->place_id[0] : null;
 		}
 	
-		$franchise->franchise_name = $request->franchise_name;
-		$franchise->place_id = $request->place_idd;
-		$franchise->area = $request->area;
-		$franchise->pincode = $request->pincode;
-		$franchise->phone_number = $request->phone_number;
+		// Ensure place_id is set to null if the type is not 4
+		if ($franchiseDetails->type != 4) {
+			$franchiseDetails->place_id = $request->place_id ? $request->place_id[0] : null;
+		}
 	
-		if ($franchise->save()) {
-			$franchiseDetails = Tbl_franchase_details::where('franchise_id', $id)->first();
-	
-			if ($franchiseDetails) {
-				$franchiseDetails->type = $request->type;
-				$franchiseDetails->district_id = $request->district_id;
-				$franchiseDetails->save();
-			} else {
-				// If franchiseDetails doesn't exist, you may create a new one here
-			}
-	
+		if ($franchiseDetails->save()) {
 			return redirect('franchises')->with('success', 'Franchise details updated successfully');
 		}
-	
-		return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 	}
+	
+    return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
+}
+
 	
 	
 	
@@ -3475,6 +3483,34 @@ function sendNotification1($msg1,$title)
             $orderr=DB::table('tbl_coupens')->get();
 			return view('order_master',compact('order','role','orderr','mark'));
 		}
+
+		public function order_masterfetch(Request $request){
+			
+			$id=$request->id;
+			
+			$order1 = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
+				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+				->where('tbl_order_masters.id',$id)
+				->select(
+					'tbl_order_masters.*',
+					'shops.shopname',
+					'shops.address',
+					'tbl_coupens.coupencode',
+					'tbl_order_trans.product_id',
+					'tbl_order_trans.qty',
+					'tbl_order_trans.offer_amount',
+					'tbl_brand_products.product_name',
+					'tbl_rm_products.brand_name'
+				)
+				->get();
+				print_r(json_encode($order1));
+
+		}
+		
         public function brands()
 		{
 		    $brand=DB::table('tbl_brands')
