@@ -9,7 +9,7 @@
             background-color: #f2f2f2;
         }
         .invoice {
-            width: 80%;
+            width: 50%;
             margin: 0 auto;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -28,7 +28,7 @@
             margin: 20px;
         }
         .invoice-details table {
-            width: 100%;
+            width: 50%;
             border-collapse: collapse;
         }
         .invoice-details th, .invoice-details td {
@@ -518,14 +518,55 @@
 </style>
 <td style="width: 50px;">
   <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
+
 </td>
+<tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
+    <td colspan="16">
+      <div class="order-details-container">
+        <div id="tableContainer{{ $key->id }}" style="display: none;">
+          <input type="hidden" name="order_id" value="{{ $key->id }}">
+          <div class="invoice-details">
+            <div class="card-body">
+              <div class="invoice-table">
+                <div class="invoice-header">
+                  <div class="invoice-title"></div>
+                </div>
+                <table id="example1{{ $key->id }}" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <!-- Add your header content here -->
+                      @if($role==1)
+                        <!-- Add header content for role 1 if needed -->
+                      @endif
+                    </tr>
+                  </thead>
+                  <tbody id="productDetailsBody{{ $key->id }}">
+                    <!-- Product details will be appended here -->
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <!-- Add your footer content here -->
+                      @if($role==1)
+                        <!-- Add footer content for role 1 if needed -->
+                      @endif
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+@endforeach
   @if($role==1) 
   @endif
  </tr>
   @php 
    $i++;
   @endphp
- @endforeach
+
 </tbody>
   <tfoot>
   <tr>
@@ -566,66 +607,7 @@
 
 
       <!-- /.container-fluid -->
-      <div id="tableContainer" style="display: none;">
-   <div class="invoice">
-      <div class="invoice-header">
-         <div class="invoice-title">Product Details</div>
-      </div>
-      <input type="hidden" name="order_id" value="order_id">
-      <div class="invoice-details">
-         <table>
-            <tr>
-               <th>Shop Name</th>
-               <td id="shopName"></td>
-            </tr>
-            <tr>
-            <th>MRP</th>
-            <td id="mrp"></td>
-
-            </tr>
-         </table>
-      </div>
-      <div class="invoice-details">
-         <div class="card-body">
-            <div class="invoice-table">
-               <div class="invoice-header">
-                  <div class="invoice-title"></div>
-               </div>
-               <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                     <tr>
-                        <th>Brand Name</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                      
-                        <th>Offer Price</th>
-                        @if($role==1)
-                           <!-- Add header content for role 1 if needed -->
-                        @endif
-                     </tr>
-                  </thead>
-                  <tbody id="productDetailsBody">
-                     <!-- Product details will be appended here -->
-                  </tbody>
-                  <tfoot>
-                     <tr>
-                        <th>Brand Name</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        
-                        <th>Offer Price</th>
-                        @if($role==1)
-                           <!-- Add footer content for role 1 if needed -->
-                        @endif
-                     </tr>
-                  </tfoot>
-               </table>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-
+     
 
    
    </section>
@@ -640,51 +622,52 @@
 
 
 <!-- ... Your existing HTML code ... -->
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 function toggleTable(event, orderId) {
-   event.stopPropagation();
+  event.stopPropagation();
 
-   if (orderId) {
-      $.ajax({
-         type: "POST",
-         url: "{{ route('order_masterfetch') }}",
-         data: {
-            "_token": "{{ csrf_token() }}",
-            id: orderId
-         },
-         success: function (res) {
-            console.log(res);
-            var orderDetails = JSON.parse(res);
+  // Toggle display of the order details row
+  $('#orderDetailsRow' + orderId).toggle();
 
-            // Update HTML content
-            $('#shopName').text(orderDetails[0].shopname);
-            $('#mrp').text(orderDetails[0].total_mrp);
-            // Clear existing product details
-            $('#productDetailsBody').empty();
+  if (orderId) {
+    $.ajax({
+      type: "POST",
+      url: "{{ route('order_masterfetch') }}",
+      data: {
+        "_token": "{{ csrf_token() }}",
+        id: orderId
+      },
+      success: function (res) {
+        console.log(res);
+        var orderDetails = JSON.parse(res);
 
-            // Append details for each product
-            orderDetails.forEach(function (product) {
-               $('#productDetailsBody').append(`
-                  <tr>
-                     <td>${product.brand_name}</td>
-                     <td>${product.product_name}</td>
-                     <td>${product.qty}</td>
-                     <td>${product.offer_amount}</td>
-                     <!-- Add more columns as needed -->
-                  </tr>
-               `);
-            });
+        // Update HTML content
+        $('#shopName').text(orderDetails[0].shopname);
 
-            // Toggle display using jQuery
-            $('#tableContainer').toggle();
-         },
-         error: function (xhr, status, error) {
-            console.error(xhr.responseText);
-         }
-      });
-   }
+        // Clear existing product details
+        $('#productDetailsBody' + orderId).empty();
+
+        // Append details for each product
+        orderDetails.forEach(function (product) {
+          $('#productDetailsBody' + orderId).append(`
+            <tr>
+              <td>${product.brand_name}</td>
+              <td>${product.product_name}</td>
+              <td>${product.qty}</td>
+              <td>${product.offer_amount}</td>
+              <!-- Add more columns as needed -->
+            </tr>
+          `);
+        });
+
+        // Toggle display of the order details container
+        $('#tableContainer' + orderId).toggle();
+      },
+      error: function (xhr, status, error) {
+        console.error(xhr.responseText);
+      }
+    });
+  }
 }
 </script>
 <!-- ... Your existing HTML code ... -->
