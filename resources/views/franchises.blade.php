@@ -206,96 +206,56 @@
 </div>
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">FRANCHISE DETAILS</h5>
-    <button type="button" class="btn btn-success btn-sm" id="addFranchise">+</button>
-    <button type="button" class="btn btn-danger btn-sm" id="removeFranchise">-</button>
+   
 </div>
+
 <div class="modal-body row" id="franchiseDetailsContainer">
-    <!-- Initial FRANCHISE DETAILS section -->
-    <div class="franchise-details-section">
-        <ul class="list-group col-sm-12">
-            <li class="list-group-item">
-                <div class="form-row">
-                <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Country</label>
-
-
-
-<select name="country" class="form-control statefetchadd" id="country">
-                    <option value="0">Select country</option>
-                    @foreach($con as $country)
-                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
-                    @endforeach
-                </select>
-
-
+   <div class="franchise-details-section">
+      <div class="row">
+         <div class="form-group col-sm-6">
+            <label class="exampleModalLabel">Country</label>
+            <select name="country" class="form-control statefetchadd" id="country">
+               <option value="0">Select country</option>
+               @foreach($con as $country)
+               <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+               @endforeach
+            </select>
+         </div>
+         <div class="form-group col-sm-6" >
+            <label class="exampleModalLabel">States</label>
+            <select name="states" class="form-control districtfetchadd" id="state">
+               <option value="0">Select state</option>
+            </select>
+         </div>
+         <div class="form-group col-sm-6" >
+            <label class="exampleModalLabel">Type</label>
+            <select name="type[]" class="form-control selecttype" id="type" required>
+               <option value="0">Select Type</option>
+               <option value="1">Panchayath</option>
+               <option value="2">Muncipality</option>
+               <option value="3">Coperation</option>
+               <option value="4">District</option>
+            </select>
+         </div>
+         <div class="form-group col-sm-6">
+            <label class="exampleModalLabel">District</label>
+            <select name="district_id[]" class="form-control districtadd" id="district">
+               <option value="0">Select District</option>
+            </select>
+         </div>
+         <div class="form-group col-sm-12" id="typediv">
+            <label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
+            <select name="place_id[]" id="place_id" class="form-control">
+               <option value="0">Select District</option>
+            </select>
+         </div>
+      </div>
+      <!-- </li>
+         </ul> -->
+      <button type="button" class="btn btn-danger btn-sm" id="removeFranchise">Remove</button>
+   </div>
 </div>
-<div class="form-group col-sm-6" >
-
-<label class="exampleModalLabel">States</label>
-
-
-
-<select name="states" class="form-control districtfetchadd" id="state">
-                    <option value="0">Select state</option>
-                </select>
-
-
-</div>
-
-<div class="form-group col-sm-6" >
-
-<label class="exampleModalLabel">Type</label>
-<select name="type[]" class="form-control selecttype" id="type" required>
-
-<option value="0">Select Type</option>
-<option value="1">Panchayath</option>
-<option value="2">Muncipality</option>
-<option value="3">Coperation</option>
-<option value="4">District</option>
-
-</select>
-
-</div>	
-
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-<select name="district_id[]" class="form-control districtadd" id="district">
-
-
-                    <option value="0">Select District</option>
-                </select>
-
-
-</div>
-
-		
-
-<div class="form-group col-sm-6" id="typediv">
-
-
-
-<label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
-
-
-<select name="place_id[]" id="place_id" class="form-control"></select>
-
-
-
-
-</div>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
+<button type="button" class="btn btn-success btn-sm" id="addFranchise">+ Add Franchase</button>
 <div class="modal-footer">
     <button type="submit" name="submit" class="btn btn-primary ml-auto">Add</button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -315,10 +275,11 @@
               </div>
 
               <!-- /.card-header -->
-              <form method="POST" action="{{url('franchasefilter')}}" >
+              <!-- <form method="POST" action="{{url('franchasefilter')}}" >
                @csrf
               <div style="display: flex; gap: 10px; align-items: center;">
   <br> <br>   <select class="form-control" name="type" style="width: 15%;">
+  <option>select</option>
         <option value="1" {{ $type== '1' ? 'selected' : '' }}>Panchayath</option>
         <option value="2" {{ $type== '2' ? 'selected' : '' }}>Municipality</option>
         <option value="3" {{ $type== '3' ? 'selected' : '' }}>Corporation</option>
@@ -326,7 +287,7 @@
     </select>
     <button type="submit" class="btn btn-sm btn-success" style="width: 5%;">FILTER</button>
 </div>
-</form>
+</form> -->
 
                               
               <div class="card-body">
@@ -346,11 +307,9 @@
                     
                     <th>Area Name</th>
                     <th>Pincode</th>
-                    <th>State</th>
-                    <th>District</th>
-                  
+                    
 
-                    <th>Place</th>
+                 
                    
                     @if($role==1)
 
@@ -370,15 +329,7 @@
             <td>{{ $key->phone_number }}</td>
             <td>{{ $key->area }}</td>
             <td>{{ $key->pincode }}</td>
-            <td>{{ $key->state_name }}</td>
-            <td>{{ $key->district_name }}</td>
-            <td>
-                @if($key->place_type != 4)
-                    {{ $key->place_name }}
-                @else
-                    {{ $key->district->district_name }}
-                @endif
-            </td>
+          
             @if($role == 1)
                 <td>
                     <i class="fa fa-edit edit_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
@@ -403,10 +354,9 @@
                    
                     <th>Area Name</th>
                     <th>Pincode</th>
-                    <th>State</th>
-                    <th>District</th>
+                  
                    
-                    <th>Place</th>
+                   
                   
                     <!-- <th></th>  -->
                     @if($role==1)
@@ -826,10 +776,7 @@
         }
 
         function addFranchiseDetailsSection() {
-            var newSection = $("#franchiseDetailsContainer .franchise-details-section:first").clone();
-            franchiseDetailsCounter++;
-            newSection.appendTo("#franchiseDetailsContainer");
-            toggleFranchiseDetailsSections();
+          
         }
 
         function removeFranchiseDetailsSection() {

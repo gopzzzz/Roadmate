@@ -328,25 +328,7 @@ class HomeController extends Controller
 	public function franchises() {
 		$franchiseDetails = Tbl_franchase_details::select('franchise_id', 'type', 'place_id', 'district_id')->get();
 	
-		$fran = Tbl_franchase_details::leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
-			->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
-			->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
-			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-			->select(
-				'tbl_franchase_details.*',
-				'tbl_franchises.franchise_name',
-				'tbl_franchises.phone_number',
-				'tbl_franchises.area',
-				'tbl_franchises.pincode',
-				'tbl_places.place_name',
-				'tbl_places.type as place_type',
-				'tbl_states.state_name',
-				'tbl_districts.district_name'
-			)
-			->when($franchiseDetails, function ($query) use ($franchiseDetails) {
-				return $query->whereIn('tbl_franchase_details.type', $franchiseDetails->pluck('type')->toArray());
-			})
-			->get();
+		$fran = DB::table('tbl_franchises')->get();
 	
 		$role = Auth::user()->user_type;
 		$con = Tbl_countrys::where('deleted_status', 0)->get();
@@ -358,9 +340,9 @@ class HomeController extends Controller
 			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
 			->get();
 	
-		$type = 4;
+		$type = "";
 	
-		return view('franchises', compact('fran', 'role', 'con', 'cond', 'dis', 'plac', 'type', 'franchiseDetails'));
+		return view('franchises', compact('fran','role', 'con', 'cond', 'dis', 'plac', 'type', 'franchiseDetails'));
 	}
 	
 	public function franchasefilter(Request $request)
@@ -1395,10 +1377,29 @@ public function shop_vehicle($Id) {
 		$market=DB::table('tbl_rm_products')
 		->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
 		->where('tbl_rm_products.id',$id)
-		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id')
+		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id as maincat_id')
 		->first();
+
+	
+
+		// $subcat_id=
 		
-			print_r(json_encode($market));
+		
+		 print_r(json_encode($market));
+		}
+		public function getmarketsubcatlist(Request $request){
+			$subcatlist=DB::table('tbl_rm_categorys')->where('cat_id',$request->cid)->get();
+
+			if($subcatlist){
+		 	
+				$namelist='';
+								foreach($subcatlist as $key => $single){
+		
+				$namelist.='<option value="'.$single->id.'">'.$single->category_name.'</option>';
+								}
+						
+				}
+				return Response($namelist);
 		}
 	public function productimagefetch(Request $request){
 		$id=$request->prod_id;

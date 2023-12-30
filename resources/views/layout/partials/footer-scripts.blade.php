@@ -1074,9 +1074,28 @@ $('.edit_fran').click(function(){
 	});
 
 	$('.edit_marketproduct').click(function(){
+		var cid=$(this).data('cid');
 		var id=$(this).data('id');
 	
-		if(id){
+		if(cid){
+			$.ajax({
+					type: "POST",
+
+					url: "{{ route('getmarketsubcatlist') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					cid: cid },
+					success: function (res) {
+					console.log(res);
+					if (res) {
+                        $('#subcategory_name').show();
+                        $('#subcategory_name').html(res);
+                    } else {
+                        $('#subcategory_name').html("");
+                    }
+         
+					},
+					});	
+				}
       $.ajax({
 					type: "POST",
 
@@ -1086,9 +1105,9 @@ $('.edit_fran').click(function(){
 					success: function (res) {
 					console.log(res);
           var obj=JSON.parse(res)
-		//   $('#categoryname').val(obj.cat_id);
-		  $('#category_name').val(obj.cat_id);
-		  $('#subcategory_name').val(obj.cat_id);
+		  $('#marketproid').val(id);
+		  $('#category_name').val(obj.maincat_id);
+		
 
           $('#brand_name').val(obj.brand_name);
 		
@@ -1098,7 +1117,7 @@ $('.edit_fran').click(function(){
          
 					},
 					});	
-		}
+		
 		$('#editmarketproduct_modal').modal('show');
 	});
 
