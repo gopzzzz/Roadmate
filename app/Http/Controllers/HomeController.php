@@ -341,6 +341,10 @@ class HomeController extends Controller
 			->get();
 	
 		$type = "";
+		
+		
+		
+		
 	
 		return view('franchises', compact('fran','role', 'con', 'cond', 'dis', 'plac', 'type', 'franchiseDetails'));
 	}
@@ -406,7 +410,7 @@ class HomeController extends Controller
 			// Create franchise details
 			$type = $request->type;
 	
-			for ($i = 0; $i < count($type); $i++) {
+			
 				$franchise = new Tbl_franchises;
 				$franchise->franchise_name = $request->franchise_name;
 				$franchise->area = $request->area;
@@ -415,6 +419,7 @@ class HomeController extends Controller
 				$franchise->user_id = $user->id;
 	
 				if ($franchise->save()) {
+					for ($i = 0; $i < count($type); $i++) {
 					$franchiseDetails = new Tbl_franchase_details;
 					$franchiseDetails->franchise_id = $franchise->id;
 					$franchiseDetails->type = $request->type[$i];
@@ -429,7 +434,8 @@ class HomeController extends Controller
 	
 					$franchiseDetails->save();
 				}
-			}
+				}
+			
 	
 			return redirect('franchises')->with('success', 'Franchise and details added successfully');
 		}
