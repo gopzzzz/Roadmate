@@ -502,9 +502,16 @@
   <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
 
 </td>
-<td>
+<!-- <td>
     <i class="fa fa-edit editstatus" aria-hidden="true" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"></i>
+</td> -->
+
+<td>
+    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
+        Update Status
+    </button>
 </td>
+
 <div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                            <div class="modal-content">
@@ -520,9 +527,11 @@
                                  @csrf
                                  <div class="modal-body row">
                                  <input type="hidden" name="id" id="stat_id" value="">
-                                 <div class="form-group col-sm-6">
+                                 <div class="form-group col-sm-12">
         <label class="exampleModalLabel">Order Status</label>
-        <select name="order_status" id="order_status" class="form-control">
+        <select name="order_status" id="order_status" class="form-control"required>
+        
+
             <option value="0">Pending</option>
             <option value="1">Confirmed</option>
             <option value="2">Shipped</option>

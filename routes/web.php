@@ -1240,6 +1240,7 @@ Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
 Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
 
+Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
 
 Route::post('/statusedit/{id}', 'HomeController@statusedit')->name('statusedit');
 

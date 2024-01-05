@@ -3199,6 +3199,7 @@ $('#category_name').on('change', function () {
 		}
 		$('#edithsn_modal').modal('show');
 	});
+
 	$(document).on('click', '.editstatus', function () {
         var id = $(this).data('id');
         console.log('Clicked on editstatus with id:', id);
@@ -3217,7 +3218,7 @@ $('#category_name').on('change', function () {
         // Fetch current status via AJAX
         $.ajax({
             type: "POST",
-            url: "{{ route('order_masterfetch') }}",
+            url: "{{ route('orderfetch') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "id": id

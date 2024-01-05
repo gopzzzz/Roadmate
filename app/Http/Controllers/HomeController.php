@@ -3512,6 +3512,21 @@ function sendNotification1($msg1,$title)
 
 		}
 
+		public function orderfetch(Request $request){
+			$id = $request->id;
+			$order = Tbl_order_masters::find($id);
+		
+			if ($order) {
+				// Convert the model instance to an array
+				$orderArray = $order->toArray();
+				// Return the order details as JSON response
+				return response()->json($orderArray);
+			} else {
+				// Handle the case when order details are not found
+				return response()->json(['error' => 'Order details not found'], 404);
+			}
+		}
+		
 		public function statusedit(Request $request, $id)
 {
     \Log::info('Received ID for statusedit: ' . $id);
