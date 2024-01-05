@@ -502,58 +502,46 @@
   <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
 
 </td>
-<td>
-    <button class="btn btn-sm btn-primary edit_update-status" data-id="{{$key->id}}">
-        Update Status
-    </button>
-</td>
-<!-- <td>
-            <i class="fa fa-edit edit_update-status" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}">
-        
-            </i>
-          
-</td> -->
+<td><i class="fa fa-edit editstatus"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i></td>
 
+<div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title">Update Order Status</h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <form method="POST" action="{{url('statusedit')}}" enctype="multipart/form-data">
+                                 @csrf
+                                 <div class="modal-body row">
+                                <input type="hidden" id="stat_id" name="id">
+                                <div class="form-group col-sm-6">
 
-<div class="modal" id="updateStatus_modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Update order Status</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form method="POST" action="{{url('updatestatusedit')}}" enctype="multipart/form-data" name="updedit">
-    @csrf
-    <div class="modal-body row">
-        <input type="hidden" name="ord_id" id="ord_id">
-       
-        <div class="form-group col-sm-6">
-            <label class="exampleModalLabel">Order Status</label>
-            <select name="order_status" id="order_status" class="form-control" required>
-                <option value="0">Pending</option>
-                <option value="1">Confirmed</option>
-                <option value="2">Shipped</option>
-                <option value="3">Delivered</option>
-                <option value="4">Return</option>
-                <option value="5">Cash received</option>
-            </select>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    </div>
-</form>
+                                           <label class="exampleModalLabel">Order Status</label>
 
-    </div>
-  </div>
-</div>
+                                                    <select name="order_status" id="order_status" class="form-control">
 
+                                                     <option value="0">Pending</option>
+                                                     <option value="1">Confirmed</option>
+                                                     <option value="2">Shipped</option>
+                                                     <option value="3">Delivered</option>
+                                                     <option value="4">Return</option>
+                                                     <option value="5">Cash Received</option>
+                                                   </select>
 
-
-
+                                    </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                   <button type="submit" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                 </div>
+                             </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
 
 <tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
     <td colspan="16">

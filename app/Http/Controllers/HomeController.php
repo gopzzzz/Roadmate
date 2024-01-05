@@ -3512,22 +3512,29 @@ function sendNotification1($msg1,$title)
 
 		}
 
-
-
-		public function updatestatusedit(Request $request)
-		{
+		public function statusedit(Request $request){
 			$id = $request->id;
-			
-			
 		
-			$order1 = Tbl_order_masters::find($id);
-			
-			$order1->order_status = $request->order_status;
-			$order1->save();
+			// Find the order by ID
+			$order = Tbl_order_masters::find($id);
 		
-			return redirect('order1');
+			// Check if the order exists
+			if ($order) {
+				// Update the order status
+				$order->order_status = $request->order_status;
+		
+				// Save the changes
+				$order->save();
+		
+				return redirect('order_master');
+			} else {
+				// Handle the case where the order is not found
+				// You can redirect with an error message or perform other actions.
+				return redirect('order_master')->with('error', 'Order not found');
+			}
 		}
 		
+	
 
 
         public function brands()

@@ -1238,17 +1238,10 @@ Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'markete
 Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
 
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
-// Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
-// Change this to GET
 Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
+Route::post('/statusedit', [App\Http\Controllers\HomeController::class, 'statusedit'])->name('statusedit');
 
 
-// Route::post('/updatestatusedit', [
-//     'middleware' => 'auth',
-//     'uses' => 'HomeController@updatestatusedit'
-// ])->name('updatestatusedit'); 
-Route::post('/updatestatusedit', [App\Http\Controllers\HomeController::class, 'updatestatusedit'])->name('updatestatusedit');
-// Route::post('/updatestatusedit/{id}', 'HomeController@updatestatusedit')->name('updatestatusedit');
 
 Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompress');
 

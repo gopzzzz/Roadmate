@@ -3200,7 +3200,8 @@ $('#category_name').on('change', function () {
 		$('#edithsn_modal').modal('show');
 	});
 
-	$('.edit_update-status').click(function(){
+	
+	$('.editstatus').click(function(){
 		var id=$(this).data('id');
 	
 		if(id){
@@ -3213,13 +3214,15 @@ $('#category_name').on('change', function () {
 					success: function (res) {
 					console.log(res);
           var obj=JSON.parse(res)
-          $('#ord_id').val(obj.id);
+         
+		  $('#stat_id').val(obj.id);
           $('#order_status').val(obj.order_status);
+
          
 					},
 					});	
 		}
-		$('#updateStatus_modal').modal('show');
+		$('#editstatusmodal').modal('show');
 	});
-
+	
 </script>
