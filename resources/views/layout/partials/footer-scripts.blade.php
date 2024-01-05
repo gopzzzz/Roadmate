@@ -3200,4 +3200,26 @@ $('#category_name').on('change', function () {
 		$('#edithsn_modal').modal('show');
 	});
 
+	$('.edit_update-status').click(function(){
+		var id=$(this).data('id');
+	
+		if(id){
+      $.ajax({
+					type: "POST",
+
+					url: "{{ route('order_masterfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#ord_id').val(obj.id);
+          $('#order_status').val(obj.order_status);
+         
+					},
+					});	
+		}
+		$('#updateStatus_modal').modal('show');
+	});
+
 </script>

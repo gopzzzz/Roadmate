@@ -1348,7 +1348,7 @@ public function shop_vehicle($Id) {
 		
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-     
+		
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name','tbl_rm_categorys.cat_id')
         ->orderby('tbl_rm_products.id','desc')->get();
 		
@@ -3511,7 +3511,25 @@ function sendNotification1($msg1,$title)
 				print_r(json_encode($order1));
 
 		}
+
+
+
+		public function updatestatusedit(Request $request)
+		{
+			$id = $request->id;
+			
+			
 		
+			$order1 = Tbl_order_masters::find($id);
+			
+			$order1->order_status = $request->order_status;
+			$order1->save();
+		
+			return redirect('order1');
+		}
+		
+
+
         public function brands()
 		{
 		    $brand=DB::table('tbl_brands')
