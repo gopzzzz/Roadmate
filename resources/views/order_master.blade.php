@@ -502,8 +502,9 @@
   <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
 
 </td>
-<td><i class="fa fa-edit editstatus"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i></td>
-
+<td>
+    <i class="fa fa-edit editstatus" aria-hidden="true" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"></i>
+</td>
 <div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                            <div class="modal-content">
@@ -513,25 +514,23 @@
                                  <span aria-hidden="true">&times;</span>
                                  </button>
                               </div>
-                              <form method="POST" action="{{url('statusedit')}}" enctype="multipart/form-data">
+                              <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__']) }}" enctype="multipart/form-data">
+
+                              
                                  @csrf
                                  <div class="modal-body row">
-                                <input type="hidden" id="stat_id" name="id">
-                                <div class="form-group col-sm-6">
-
-                                           <label class="exampleModalLabel">Order Status</label>
-
-                                                    <select name="order_status" id="order_status" class="form-control">
-
-                                                     <option value="0">Pending</option>
-                                                     <option value="1">Confirmed</option>
-                                                     <option value="2">Shipped</option>
-                                                     <option value="3">Delivered</option>
-                                                     <option value="4">Return</option>
-                                                     <option value="5">Cash Received</option>
-                                                   </select>
-
-                                    </div>
+                                 <input type="hidden" name="id" id="stat_id" value="">
+                                 <div class="form-group col-sm-6">
+        <label class="exampleModalLabel">Order Status</label>
+        <select name="order_status" id="order_status" class="form-control">
+            <option value="0">Pending</option>
+            <option value="1">Confirmed</option>
+            <option value="2">Shipped</option>
+            <option value="3">Delivered</option>
+            <option value="4">Return</option>
+            <option value="5">Cash Received</option>
+        </select>
+    </div>
                                     </div>
                                     <div class="modal-footer">
                                    <button type="submit" class="btn btn-primary">Save changes</button>

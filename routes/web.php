@@ -1239,8 +1239,9 @@ Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_
 
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
 Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
-Route::post('/statusedit', [App\Http\Controllers\HomeController::class, 'statusedit'])->name('statusedit');
 
+
+Route::post('/statusedit/{id}', 'HomeController@statusedit')->name('statusedit');
 
 
 Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompress');

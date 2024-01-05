@@ -3199,30 +3199,48 @@ $('#category_name').on('change', function () {
 		}
 		$('#edithsn_modal').modal('show');
 	});
+	$(document).on('click', '.editstatus', function () {
+        var id = $(this).data('id');
+        console.log('Clicked on editstatus with id:', id);
 
-	
-	$('.editstatus').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
+        // Update the form action dynamically
+        var form = $('#statusEditForm');
+        var url = "{{ route('statusedit', ['id' => '__id__']) }}";
+        form.attr('action', url.replace('__id__', id));
 
-					url: "{{ route('order_masterfetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-         
-		  $('#stat_id').val(obj.id);
-          $('#order_status').val(obj.order_status);
+        // Remove any existing hidden input for 'id'
+        form.find('input[name="id"]').remove();
 
-         
-					},
-					});	
-		}
-		$('#editstatusmodal').modal('show');
-	});
+        // Add a hidden input for the 'id' parameter
+        form.append('<input type="hidden" name="id" value="' + id + '">');
+
+        // Fetch current status via AJAX
+        $.ajax({
+            type: "POST",
+            url: "{{ route('order_masterfetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "id": id
+            },
+            success: function (res) {
+                console.log('AJAX Response:', res);
+
+                // Check if the order details are found
+                if (res.id) {
+                    // Update the modal with the current status
+                    $('#stat_id').val(res.id);
+                    $('#order_status').val(res.order_status);
+                    $('#editstatusmodal').modal('show');
+                    console.log('Modal shown');
+                } else {
+                    console.error('Order details not found');
+                    // Handle the case when order details are not found
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+        });
+    });
 	
 </script>
