@@ -1336,7 +1336,7 @@ public function shop_vehicle($Id) {
 		
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-     
+		
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name','tbl_rm_categorys.cat_id')
         ->orderby('tbl_rm_products.id','desc')->get();
 		
@@ -3516,7 +3516,43 @@ function sendNotification1($msg1,$title)
 				print_r(json_encode($order1));
 
 		}
+
+		public function orderfetch(Request $request){
+			$id = $request->id;
+			$order = Tbl_order_masters::find($id);
 		
+			if ($order) {
+				// Convert the model instance to an array
+				$orderArray = $order->toArray();
+				// Return the order details as JSON response
+				return response()->json($orderArray);
+			} else {
+				// Handle the case when order details are not found
+				return response()->json(['error' => 'Order details not found'], 404);
+			}
+		}
+		
+		public function statusedit(Request $request, $id)
+{
+    \Log::info('Received ID for statusedit: ' . $id);
+
+    // Find the order by ID
+    $order = Tbl_order_masters::find($id);
+
+    // Check if the order exists
+    if ($order) {
+        // Update the order status
+        $order->order_status = $request->order_status;
+        $order->save();
+
+        // Redirect to the appropriate page
+        return redirect('order_master')->with('success', 'Order status updated successfully.');
+    } else {
+        // If the order is not found, redirect with an error message
+        return redirect('order_master')->with('error', 'Order not found.');
+    }
+}
+
         public function brands()
 		{
 		    $brand=DB::table('tbl_brands')
