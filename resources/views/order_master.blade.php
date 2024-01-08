@@ -335,29 +335,7 @@
 
 </div>
 
-<div class="form-group col-sm-6">
 
-
-<label class="exampleModalLabel">Order Status</label>
-
-
-
-<select name="orderstat" class="form-control">
-
-<option value="0">Select Order Status</option>
-
-
-<option value="1">Pending</option>
-<option value="2">Confirmed</option>
-<option value="3">Shipped</option>
-<option value="4">Delivered</option>
-<option value="5">Return</option>
-
-
-</select>
-
-
-</div>
 
 
 <div class="form-group col-sm-6">
@@ -458,7 +436,7 @@
 @endphp
 @foreach($order as $key)
  <tr>
-     <td>{{$i}}</td>
+     <td>{{$i++}}</td>
      <td>{{$key->shopname}}</td>
          <td>{{$key->total_amount}}</td>
         <td>{{$key->discount}}</td>
@@ -474,16 +452,19 @@
 @if($key->payment_status==0) Unpaid @else Paid @endif
 </td>         
  <td>
-    @if ($key->order_status == 1)
+    @if ($key->order_status == 0)
         Pending
-    @elseif ($key->order_status == 2)
+    @elseif ($key->order_status == 1)
         Confirmed
-    @elseif ($key->order_status == 3)
+    @elseif ($key->order_status == 2)
        Shipped
-        @elseif ($key->order_status == 4)
+        @elseif ($key->order_status == 3)
        Delivered
-        @elseif ($key->order_status == 5)
+        @elseif ($key->order_status == 4)
         Return
+        @elseif ($key->order_status == 5)
+       Cash Received
+        
     @else
     @endif
 </td>         <td>{{$key->delivery_date}}</td>
@@ -491,6 +472,7 @@
          <td>
     <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
         <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}">↓</span>
+        
     </div>
 </td>
 
@@ -520,6 +502,55 @@
   <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
 
 </td>
+<!-- <td>
+    <i class="fa fa-edit editstatus" aria-hidden="true" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"></i>
+</td> -->
+
+<td>
+    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
+        Update Status
+    </button>
+</td>
+
+<div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title">Update Order Status</h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__']) }}" enctype="multipart/form-data">
+
+                              
+                                 @csrf
+                                 <div class="modal-body row">
+                                 <input type="hidden" name="id" id="stat_id" value="">
+                                 <div class="form-group col-sm-12">
+        <label class="exampleModalLabel">Order Status</label>
+        <select name="order_status" id="order_status" class="form-control"required>
+        
+
+            <option value="0">Pending</option>
+            <option value="1">Confirmed</option>
+            <option value="2">Shipped</option>
+            <option value="3">Delivered</option>
+            <option value="4">Return</option>
+            <option value="5">Cash Received</option>
+        </select>
+    </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                   <button type="submit" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                 </div>
+                             </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
 <tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
     <td colspan="16">
       <div class="order-details-container">
@@ -648,6 +679,15 @@ function toggleTable(event, orderId) {
         $('#productDetailsBody' + orderId).empty();
 
         // Append details for each product
+        $('#productDetailsBody' + orderId).append(`
+          <tr>
+            <th>Brand Name</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <!-- Add more headings as needed -->
+          </tr>
+        `);
         orderDetails.forEach(function (product) {
           $('#productDetailsBody' + orderId).append(`
             <tr>

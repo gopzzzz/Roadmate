@@ -328,25 +328,7 @@ class HomeController extends Controller
 	public function franchises() {
 		$franchiseDetails = Tbl_franchase_details::select('franchise_id', 'type', 'place_id', 'district_id')->get();
 	
-		$fran = Tbl_franchase_details::leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
-			->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
-			->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
-			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
-			->select(
-				'tbl_franchase_details.*',
-				'tbl_franchises.franchise_name',
-				'tbl_franchises.phone_number',
-				'tbl_franchises.area',
-				'tbl_franchises.pincode',
-				'tbl_places.place_name',
-				'tbl_places.type as place_type',
-				'tbl_states.state_name',
-				'tbl_districts.district_name'
-			)
-			->when($franchiseDetails, function ($query) use ($franchiseDetails) {
-				return $query->whereIn('tbl_franchase_details.type', $franchiseDetails->pluck('type')->toArray());
-			})
-			->get();
+		$fran = DB::table('tbl_franchises')->get();
 	
 		$role = Auth::user()->user_type;
 		$con = Tbl_countrys::where('deleted_status', 0)->get();
@@ -358,9 +340,13 @@ class HomeController extends Controller
 			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
 			->get();
 	
-		$type = 4;
+		$type = "";
+		
+		
+		
+		
 	
-		return view('franchises', compact('fran', 'role', 'con', 'cond', 'dis', 'plac', 'type', 'franchiseDetails'));
+		return view('franchises', compact('fran','role', 'con', 'cond', 'dis', 'plac', 'type', 'franchiseDetails'));
 	}
 	
 	public function franchasefilter(Request $request)
@@ -424,7 +410,7 @@ class HomeController extends Controller
 			// Create franchise details
 			$type = $request->type;
 	
-			for ($i = 0; $i < count($type); $i++) {
+			
 				$franchise = new Tbl_franchises;
 				$franchise->franchise_name = $request->franchise_name;
 				$franchise->area = $request->area;
@@ -433,6 +419,7 @@ class HomeController extends Controller
 				$franchise->user_id = $user->id;
 	
 				if ($franchise->save()) {
+					for ($i = 0; $i < count($type); $i++) {
 					$franchiseDetails = new Tbl_franchase_details;
 					$franchiseDetails->franchise_id = $franchise->id;
 					$franchiseDetails->type = $request->type[$i];
@@ -447,7 +434,8 @@ class HomeController extends Controller
 	
 					$franchiseDetails->save();
 				}
-			}
+				}
+			
 	
 			return redirect('franchises')->with('success', 'Franchise and details added successfully');
 		}
@@ -1348,7 +1336,7 @@ public function shop_vehicle($Id) {
 		
 		$market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-     
+		
         ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name','tbl_rm_categorys.cat_id')
         ->orderby('tbl_rm_products.id','desc')->get();
 		
@@ -1403,10 +1391,29 @@ public function shop_vehicle($Id) {
 		$market=DB::table('tbl_rm_products')
 		->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
 		->where('tbl_rm_products.id',$id)
-		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id')
+		->select('tbl_rm_products.*','tbl_rm_categorys.cat_id as maincat_id')
 		->first();
+
+	
+
+		// $subcat_id=
 		
-			print_r(json_encode($market));
+		
+		 print_r(json_encode($market));
+		}
+		public function getmarketsubcatlist(Request $request){
+			$subcatlist=DB::table('tbl_rm_categorys')->where('cat_id',$request->cid)->get();
+
+			if($subcatlist){
+		 	
+				$namelist='';
+								foreach($subcatlist as $key => $single){
+		
+				$namelist.='<option value="'.$single->id.'">'.$single->category_name.'</option>';
+								}
+						
+				}
+				return Response($namelist);
 		}
 	public function productimagefetch(Request $request){
 		$id=$request->prod_id;
@@ -3469,22 +3476,20 @@ function sendNotification1($msg1,$title)
 			->get();
 		   return view('order_trans',compact('role','mark','markk','order'));
 		}
-		public function order_master(){
-			
-			$role = Auth::user()->user_type;
-			$order = DB::table('tbl_order_masters')
-				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode')
-				->get();
-			
-			$mark = DB::table('shops')->get();
-			$orderr = DB::table('tbl_coupens')->get();
-			
-
-			return view('order_master', compact('order', 'role', 'orderr', 'mark'));
-
+        public function order_master(){
+			$role=Auth::user()->user_type;
+			$order=DB::table('tbl_order_masters')
+			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+            ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
+			->orderBy('tbl_order_masters.id', 'DESC')
+			->get();
+			$mark=DB::table('shops')
+			->get();
+            $orderr=DB::table('tbl_coupens')->get();
+			return view('order_master',compact('order','role','orderr','mark'));
 		}
+
 		public function order_masterfetch(Request $request){
 			
 			$id=$request->id;
@@ -3511,7 +3516,43 @@ function sendNotification1($msg1,$title)
 				print_r(json_encode($order1));
 
 		}
+
+		public function orderfetch(Request $request){
+			$id = $request->id;
+			$order = Tbl_order_masters::find($id);
 		
+			if ($order) {
+				// Convert the model instance to an array
+				$orderArray = $order->toArray();
+				// Return the order details as JSON response
+				return response()->json($orderArray);
+			} else {
+				// Handle the case when order details are not found
+				return response()->json(['error' => 'Order details not found'], 404);
+			}
+		}
+		
+		public function statusedit(Request $request, $id)
+{
+    \Log::info('Received ID for statusedit: ' . $id);
+
+    // Find the order by ID
+    $order = Tbl_order_masters::find($id);
+
+    // Check if the order exists
+    if ($order) {
+        // Update the order status
+        $order->order_status = $request->order_status;
+        $order->save();
+
+        // Redirect to the appropriate page
+        return redirect('order_master')->with('success', 'Order status updated successfully.');
+    } else {
+        // If the order is not found, redirect with an error message
+        return redirect('order_master')->with('error', 'Order not found.');
+    }
+}
+
         public function brands()
 		{
 		    $brand=DB::table('tbl_brands')

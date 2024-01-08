@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Tbl_deliveryaddres;
-use App\shops;
+use App\Shops;
 use App\Tbl_carts;
 use App\Tbl_rm_wishlists;
 use App\Tbl_order_trans;

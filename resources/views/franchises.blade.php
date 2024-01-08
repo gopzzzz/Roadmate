@@ -191,97 +191,56 @@
 </div>
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">FRANCHISE DETAILS</h5>
-    <button type="button" class="btn btn-success btn-sm" id="addFranchise">+</button>
-    <button type="button" class="btn btn-danger btn-sm" id="removeFranchise">-</button>
+   
 </div>
+
 <div class="modal-body row" id="franchiseDetailsContainer">
-    <!-- Initial FRANCHISE DETAILS section -->
-    
-    <div class="franchise-details-section">
-        <ul class="list-group col-sm-12">
-            <li class="list-group-item">
-                <div class="form-row">
-                <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Country</label>
-
-
-
-<select name="country" class="form-control statefetchadd" id="country">
-                    <option value="0">Select country</option>
-                    @foreach($con as $country)
-                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
-                    @endforeach
-                </select>
-
-
+   <div id="franchise-details-section_1">
+      <div class="row">
+         <div class="form-group col-sm-6">
+            <label class="exampleModalLabel">Country</label>
+            <select name="country" class="form-control statefetchadd" data-order="1" id="country_1">
+               <option value="0">Select country</option>
+               @foreach($con as $country)
+               <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+               @endforeach
+            </select>
+         </div>
+         <div class="form-group col-sm-6" >
+            <label class="exampleModalLabel">States</label>
+            <select name="states" class="form-control districtfetchadd" data-order="1" id="state_1">
+               <option value="0">Select state</option>
+            </select>
+         </div>
+         <div class="form-group col-sm-6" >
+            <label class="exampleModalLabel">Type</label>
+            <select name="type[]" class="form-control selecttype" data-order="1" id="type_1" required>
+               <option value="0">Select Type</option>
+               <option value="1">Panchayath</option>
+               <option value="2">Muncipality</option>
+               <option value="3">Coperation</option>
+               <option value="4">District</option>
+            </select>
+         </div>
+         <div class="form-group col-sm-6">
+            <label class="exampleModalLabel">District</label>
+            <select name="district_id[]" class="form-control districtadd" data-order="1" id="district_1">
+               <option value="0">Select District</option>
+            </select>
+         </div>
+         <div class="form-group col-sm-12" id="typediv_1">
+            <label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
+            <select name="place_id[]" id="place_id_1" class="form-control" data-order="1">
+               <option value="0">Select District</option>
+            </select>
+         </div>
+      </div>
+      
+      <hr>
+   </div>
 </div>
-<div class="form-group col-sm-6" >
-
-<label class="exampleModalLabel">States</label>
-
-
-
-<select name="states" class="form-control districtfetchadd" id="state">
-                    <option value="0">Select state</option>
-                </select>
-
-
-</div>
-
-<div class="form-group col-sm-6" >
-
-<label class="exampleModalLabel">Type</label>
-<select name="type[]" class="form-control selecttype" id="type" required>
-
-<option value="0">Select Type</option>
-<option value="1">Panchayath</option>
-<option value="2">Muncipality</option>
-<option value="3">Coperation</option>
-<option value="4">District</option>
-
-</select>
-
-</div>	
-
-
-<div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-<select name="district_id[]" class="form-control districtadd" id="district">
-
-
-                    <option value="0">Select District</option>
-                </select>
-
-
-</div>
-
-		
-
-<div class="form-group col-sm-6" id="typediv">
-
-
-
-<label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
-
-
-<select name="place_id[]" id="place_id" class="form-control"></select>
-
-
-
-
-</div>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
+<button type="button" class="btn btn-success btn-sm" id="addFranchise" >+ Add Franchase</button>
+<input type="hidden" value="1" id="storeId">
 <div class="modal-footer">
     <button type="submit" name="submit" class="btn btn-primary ml-auto">Add</button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -301,10 +260,11 @@
               </div>
 
               <!-- /.card-header -->
-              <form method="POST" action="{{url('franchasefilter')}}" >
+              <!-- <form method="POST" action="{{url('franchasefilter')}}" >
                @csrf
               <div style="display: flex; gap: 10px; align-items: center;">
   <br> <br>   <select class="form-control" name="type" style="width: 15%;">
+  <option>select</option>
         <option value="1" {{ $type== '1' ? 'selected' : '' }}>Panchayath</option>
         <option value="2" {{ $type== '2' ? 'selected' : '' }}>Municipality</option>
         <option value="3" {{ $type== '3' ? 'selected' : '' }}>Corporation</option>
@@ -312,7 +272,7 @@
     </select>
     <button type="submit" class="btn btn-sm btn-success" style="width: 5%;">FILTER</button>
 </div>
-</form>
+</form> -->
 
                               
               <div class="card-body">
@@ -332,11 +292,9 @@
                     
                     <th>Area Name</th>
                     <th>Pincode</th>
-                    <th>State</th>
-                    <th>District</th>
-                  
+                    
 
-                    <th>Place</th>
+                 
                    
                     @if($role==1)
 
@@ -356,15 +314,7 @@
             <td>{{ $key->phone_number }}</td>
             <td>{{ $key->area }}</td>
             <td>{{ $key->pincode }}</td>
-            <td>{{ $key->state_name }}</td>
-            <td>{{ $key->district_name }}</td>
-            <td>
-                @if($key->place_type != 4)
-                    {{ $key->place_name }}
-                @else
-                    {{ $key->district->district_name }}
-                @endif
-            </td>
+          
             @if($role == 1)
                 <td>
                     <i class="fa fa-edit edit_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
@@ -389,10 +339,9 @@
                    
                     <th>Area Name</th>
                     <th>Pincode</th>
-                    <th>State</th>
-                    <th>District</th>
+                  
                    
-                    <th>Place</th>
+                   
                   
                     <!-- <th></th>  -->
                     @if($role==1)
@@ -784,63 +733,80 @@
 
 <script>
     $(document).ready(function () {
-        var franchiseDetailsCounter = 1;
+     
 
-        function addFranchiseDetailsSection() {
-            var originalSection = $("#franchiseDetailsContainer .franchise-details-section:first");
-
-            // Clone the original section
-            var newSection = originalSection.clone();
-
-            // Update IDs and names to make them unique
-            newSection.find('[id]').each(function () {
-                var idAttr = $(this).attr('id');
-                $(this).attr('id', idAttr + franchiseDetailsCounter);
-            });
-
-            newSection.find('[name]').each(function () {
-                var nameAttr = $(this).attr('name');
-                $(this).attr('name', nameAttr.replace(/\[\d+\]/g, '[' + franchiseDetailsCounter + ']'));
-            });
-
-            newSection.appendTo("#franchiseDetailsContainer");
-            franchiseDetailsCounter++;
-            initializeNewSection(newSection);
-        }
-
-        function removeFranchiseDetailsSection() {
-            if (franchiseDetailsCounter > 1) {
-                $("#franchiseDetailsContainer .franchise-details-section:last").remove();
-                franchiseDetailsCounter--;
-            }
-        }
-
-        function togglePlaceRow(selectType) {
-            var selectedType = selectType.val();
-            var placeRow = selectType.closest('.franchise-details-section').find('.form-row #typediv');
-            if (selectedType === "4") {
-                placeRow.hide();
-            } else {
-                placeRow.show();
-            }
-        }
-
-        function initializeNewSection(newSection) {
-            newSection.find('.selecttype').on('change', function () {
-                togglePlaceRow($(this));
-            });
-        }
-
+      
         $("#addFranchise").on("click", function () {
-            addFranchiseDetailsSection();
+            
+          var id=$('#storeId').val();
+         // alert(id);
+          var increment_id=parseInt(id)+parseInt(1);
+          
+        
+          var html= '<div id="franchise-details-section_'+increment_id+'">';
+          html+= '<div class="row">';
+          html+= '<div class="form-group col-sm-6">';
+          html+= ' <label class="exampleModalLabel">Country</label>';
+          html+= '<select name="country" class="form-control statefetchadd" data-order="'+increment_id+'" id="country_'+increment_id+'">';
+          html+= '<option value="0">Select country</option>'
+          @foreach ($con as $value)
+        html += '<option value="{{ $value->id }}">{{ $value->country_name }}</option>';
+    @endforeach
+          html+= '</select>';
+          html+= ' </div>';
+          html+= '<div class="form-group col-sm-6" >';
+          html+= ' <label class="exampleModalLabel">States</label>';
+          html+= '<select name="states" class="form-control districtfetchadd" data-order="'+increment_id+'" id="state_'+increment_id+'">';
+          html+= '<option value="0">Select state</option>';
+          html+= '</select>';
+          html+= '</div>';
+          html+= ' <div class="form-group col-sm-6" >';
+          html+= ' <label class="exampleModalLabel">Type</label>';
+          html+= '<select name="type[]" class="form-control selecttype" data-order="'+increment_id+'" id="type_'+increment_id+'" required>';
+          html+= ' <option value="0">Select Type</option>';
+          html+= '<option value="1">Panchayath</option>';
+          html+= '<option value="2">Muncipality</option>';
+          html+= '<option value="3">Coperation</option>';
+          html+= '<option value="4">District</option>';
+          html+= ' </select>';
+          html+= ' </div>';
+          html+= '<div class="form-group col-sm-6">';
+          html+= '<label class="exampleModalLabel">District</label>';
+          html+= '<select name="district_id[]" class="form-control districtadd" data-order="'+increment_id+'" id="district_'+increment_id+'">';
+          html+= '<option value="0">Select District</option>';
+          html+= ' </select>';
+          html+= '</div>';
+         html+= '<div class="form-group col-sm-12" id="typediv_'+increment_id+'">';
+         html+= '<label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>';
+         html+= '<select name="place_id[]" id="place_id_'+increment_id+'" data-order="'+increment_id+'" class="form-control">';
+         html+= ' <option value="0">Select District</option>';
+         html+= '</select>';
+         html+= ' </div>';
+         html+= '</div>';
+      
+         html+= '<button type="button" class="btn btn-danger btn-sm removebutton" id="removeFranchise_'+increment_id+'" data-order="'+increment_id+'">Remove</button>';
+         html+= '</div>';
+         html+= '</div>';
+
+         $('#franchiseDetailsContainer').append(html);
+       
+        // $('#addFranchise').data('row',increment_id);
+         $("#storeId").val(increment_id);
         });
 
-        $("#removeFranchise").on("click", function () {
-            removeFranchiseDetailsSection();
+        $("#franchiseDetailsContainer").on("click",'.removebutton',function () {
+          var id=$(this).data('order');
+          var minusid=$("#storeId").val();
+          var increment_id=parseInt(minusid)-parseInt(1);
+          $("#storeId").val(increment_id);
+         // alert(id);
+          $('#franchise-details-section_'+id).remove();
+          
+           
         });
 
-        togglePlaceRow($("#franchiseDetailsContainer .franchise-details-section:first .selecttype"));
-        initializeNewSection($("#franchiseDetailsContainer .franchise-details-section:first"));
+        // togglePlaceRow($("#franchiseDetailsContainer .franchise-details-section:first .selecttype"));
+        // initializeNewSection($("#franchiseDetailsContainer .franchise-details-section:first"));
     });
 </script>
 

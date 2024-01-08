@@ -174,12 +174,12 @@
 
 
 
-                                 <div class="modal-body row">
+                                 <div class="modal-body row " id="franchiseDetailsContainer">
 
 
                                  <div class="form-group col-sm-12">
     <label class="exampleModalLabel">Country</label>
-    <select name="country" class="form-control statefetchadd" id="country">
+    <select name="country" class="form-control statefetchadd" data-order="1" id="country">
         <option value="0">Select country</option>
         @foreach($con as $country)
             <option value="{{$country->id}}">{{$country->country_name}}</option>
@@ -189,7 +189,7 @@
 
 <div class="form-group col-sm-12">
     <label class="exampleModalLabel">State</label>
-    <select name="state" class="form-control" id="state">
+    <select name="state" class="form-control" data-order="1" id="state_1">
         <option value="0">Select state</option>
     </select>
 </div>

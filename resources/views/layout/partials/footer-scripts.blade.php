@@ -480,8 +480,10 @@ $('.edit_district').click(function(){
 	
 
 
-$('.statefetchadd').on('change', function () {
+$('#franchiseDetailsContainer').on('change','.statefetchadd', function () {
     var countryId = $(this).val();
+	var id=$(this).data('order');
+	//alert(id);
 
     if (countryId) {
         $.ajax({
@@ -496,11 +498,11 @@ $('.statefetchadd').on('change', function () {
                 console.log(res);
                 $('#state').empty();
 				
-                var html_each = "<option value='0'>Select state</option>";
+                var html_each = "";
                 $.each(res, function (key, value) {
                     html_each += '<option value=' + value.id + '>' + value.state_name + '</option>';
                 });
-                $('#state').append(html_each);
+                $('#state_'+id).append(html_each);
 				
             },
         });
@@ -536,15 +538,18 @@ $('#countrylist .countrylist').on('change', function () {
 });
 
 
-$('.selecttype').on('change', function () {
-    var type = $(this).val();
-    var district_id = $('#district').val();
-    var state_id = $('#state').val(); 
+$('#franchiseDetailsContainer').on('change','.selecttype', function () {
+	var type = $(this).val();
+	var id=$(this).data('order'); 
+    var district_id = $('#district_'+id).val();
+    var state_id = $('#state_'+id).val();
+	
+	//alert(id);
 
 	if(type==4){
-		$('#typediv').hide();
+		$('#typediv_'+id).hide();
 	}else{
-		$('#typediv').show();
+		$('#typediv_'+id).show();
 	}
 
     if (district_id && type ) {
@@ -560,27 +565,30 @@ $('.selecttype').on('change', function () {
             },
             success: function (res) {
                 console.log(res);
-                $('#place_id').empty();
+                $('#place_id_'+id).empty();
                 var html_each = "<option value='0'>Select Places</option>";
                 $.each(res, function (key, value) {
                     html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
                 });
-                $('#place_id').append(html_each);
+                $('#place_id_'+id).append(html_each);
             },
         });
     }
 });
 
-$('.districtadd').on('change', function () {
-    var type =$('#type').val();
+$('#franchiseDetailsContainer').on('change','.districtadd', function () {
+	var id=$(this).data('order');
+    var type =$('#type_'+id).val();
+	//alert(type);
 	
 	if(type==4){
-		$('#typediv').hide();
+		$('#typediv_'+id).hide();
 	}else{
-		$('#typediv').show();
+		$('#typediv_'+id).show();
 	}
     var district_id = $(this).val();
-    var state_id = $('#state').val(); 
+    var state_id = $('#state_'+id).val(); 
+	//alert(state_id);
 
     if (district_id && type ) {
         $.ajax({
@@ -595,50 +603,52 @@ $('.districtadd').on('change', function () {
             },
             success: function (res) {
                 console.log(res);
-                $('#place_id').empty();
+                $('#place_id_'+id).empty();
                 var html_each = "<option value='0'>Select Places</option>";
                 $.each(res, function (key, value) {
                     html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
                 });
-                $('#place_id').append(html_each);
+                $('#place_id_'+id).append(html_each);
             },
         });
     }
 });
 
 
-$('.selecttype').on('change', function () {
-    var type = $(this).val();
-    var district_id = $('#district').val();
-    var state_id = $('#state').val(); // Assuming you have an element with id 'state' for state selection
+// $('#franchiseDetailsContainer').on('change','.selecttype', function () {
+//     var type = $(this).val();
+//     var district_id = $('#district').val();
+//     var state_id = $('#state').val(); // Assuming you have an element with id 'state' for state selection
+// 	var id=$(this).data('order');
 
-    if (district_id && type) {
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "{{ route('fetchplaces') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                type: type,
-                district_id: district_id,
-                state_id: state_id
-            },
-            success: function (res) {
-                console.log(res);
-                $('#place_id').empty();
+//     if (district_id && type) {
+//         $.ajax({
+//             type: "POST",
+//             dataType: "json",
+//             url: "{{ route('fetchplaces') }}",
+//             data: {
+//                 "_token": "{{ csrf_token() }}",
+//                 type: type,
+//                 district_id: district_id,
+//                 state_id: state_id
+//             },
+//             success: function (res) {
+//                 console.log(res);
+//                 $('#place_id_'+id).empty();
 
-                var html_each = "<option value='0'>Select Places</option>";
-                $.each(res, function (key, value) {
-                    html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
-                });
-                $('#place_id').append(html_each);
-            },
-        });
-    }
-});
+//                 var html_each = "<option value='0'>Select Places</option>";
+//                 $.each(res, function (key, value) {
+//                     html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
+//                 });
+//                 $('#place_id_'+id).append(html_each);
+//             },
+//         });
+//     }
+// });
 
-    $('.districtfetchadd').on('change', function () {
+    $('#franchiseDetailsContainer').on('change','.districtfetchadd', function () {
         var stateId = $(this).val();
+		var id=$(this).data('order');
 
         if (stateId) {
             $.ajax({
@@ -653,7 +663,35 @@ $('.selecttype').on('change', function () {
                     console.log(res);
                     $('#district').empty();
 					$('#district_name').empty();
-                    var html_each = "<option value='0'>Select district</option>";
+                    var html_each = "";
+                    $.each(res, function (key, value) {
+                        html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
+                    });
+                    $('#district_'+id).append(html_each);
+					$('#district_name').append(html_each);
+                },
+            });
+        }
+    });
+
+	$('.districtfetchadd').on('change', function () {
+        var stateId = $(this).val();
+		//var id=$(this).data('order');
+
+        if (stateId) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{{ route('fetchdistrict') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    stateId: stateId 
+                },
+                success: function (res) {
+                    console.log(res);
+                    $('#district').empty();
+					$('#district_name').empty();
+                    var html_each = "";
                     $.each(res, function (key, value) {
                         html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
                     });
@@ -1076,9 +1114,28 @@ $('.edit_fran').click(function(){
 	});
 
 	$('.edit_marketproduct').click(function(){
+		var cid=$(this).data('cid');
 		var id=$(this).data('id');
 	
-		if(id){
+		if(cid){
+			$.ajax({
+					type: "POST",
+
+					url: "{{ route('getmarketsubcatlist') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					cid: cid },
+					success: function (res) {
+					console.log(res);
+					if (res) {
+                        $('#subcategory_name').show();
+                        $('#subcategory_name').html(res);
+                    } else {
+                        $('#subcategory_name').html("");
+                    }
+         
+					},
+					});	
+				}
       $.ajax({
 					type: "POST",
 
@@ -1088,9 +1145,9 @@ $('.edit_fran').click(function(){
 					success: function (res) {
 					console.log(res);
           var obj=JSON.parse(res)
-		//   $('#categoryname').val(obj.cat_id);
-		  $('#category_name').val(obj.cat_id);
-		  $('#subcategory_name').val(obj.cat_id);
+		  $('#marketproid').val(id);
+		  $('#category_name').val(obj.maincat_id);
+		
 
           $('#brand_name').val(obj.brand_name);
 		
@@ -1100,7 +1157,7 @@ $('.edit_fran').click(function(){
          
 					},
 					});	
-		}
+		
 		$('#editmarketproduct_modal').modal('show');
 	});
 
@@ -3200,4 +3257,48 @@ $('#category_name').on('change', function () {
 		$('#edithsn_modal').modal('show');
 	});
 
+	$(document).on('click', '.editstatus', function () {
+        var id = $(this).data('id');
+        console.log('Clicked on editstatus with id:', id);
+
+        // Update the form action dynamically
+        var form = $('#statusEditForm');
+        var url = "{{ route('statusedit', ['id' => '__id__']) }}";
+        form.attr('action', url.replace('__id__', id));
+
+        // Remove any existing hidden input for 'id'
+        form.find('input[name="id"]').remove();
+
+        // Add a hidden input for the 'id' parameter
+        form.append('<input type="hidden" name="id" value="' + id + '">');
+
+        // Fetch current status via AJAX
+        $.ajax({
+            type: "POST",
+            url: "{{ route('orderfetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "id": id
+            },
+            success: function (res) {
+                console.log('AJAX Response:', res);
+
+                // Check if the order details are found
+                if (res.id) {
+                    // Update the modal with the current status
+                    $('#stat_id').val(res.id);
+                    $('#order_status').val(res.order_status);
+                    $('#editstatusmodal').modal('show');
+                    console.log('Modal shown');
+                } else {
+                    console.error('Order details not found');
+                    // Handle the case when order details are not found
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+        });
+    });
+	
 </script>
