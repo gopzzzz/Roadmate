@@ -289,7 +289,7 @@
 
                                      <td>
 
-@if($key->status==0) Active @else Inactive @endif
+@if($key->app_status==0) Active @else Inactive @endif
 
 <td> <i class="fa fa-edit edit_appversion" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 </td>

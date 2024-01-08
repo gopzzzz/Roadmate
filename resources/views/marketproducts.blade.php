@@ -137,13 +137,13 @@
 
                   <!-- <td><button type="button" class="btn btn-sm btn-success image_show" data-id="{{$key->id}}" ><i class="fa fa-eye"></i> Images</button></td> -->
                 
-                    <td>@php  $cat=$key->cat_id; $catlist=DB::table('tbl_rm_categorys')->where('id',$cat)->first();@endphp @if(!$catlist) @else {{$catlist->category_name}} @endif</td>
+                    <td>@php  $cat=$key->cat_id; $catlist=DB::table('tbl_rm_categorys')->where('id',$cat)->first();@endphp @if(!$catlist) @else{{$catlist->category_name}}@endif</td>
                     <td>{{$key->category_name}}</td>
                     <td>{{$key->brand_name}}</td>
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
                     <td>
 
-<i class="fa fa-edit edit_marketproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+<i class="fa fa-edit edit_marketproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}" data-cid="@if(!$catlist) @else{{$catlist->id}}@endif"></i>
 
 
 <a href="{{ route('brandproducts', ['Id' => $key->id, 'BrandName' => $key->brand_name]) }}" class="btn btn-success btn-sm brand_products">Products</a>
@@ -214,6 +214,7 @@ $i++;
 
 @csrf
 <div class="modal-body row">
+  <input type="hidden" id="marketproid" name="id">
             <div class="form-group col-sm-12">
                 <label class="exampleModalLabel">Main Category</label>
                 <select name="category" id="category_name" class="form-control categorylist" required>
@@ -341,10 +342,10 @@ $i++;
           
             
             // Check if the values are empty or have default values
-            if (category === "0" || subcategory === "0") {
-                alert("Please fill out all required fields.");
-                event.preventDefault(); // Prevent form submission
-            }
+            // if (category === "0" || subcategory === "0") {
+            //     alert("Please fill out all required fields.");
+            //     event.preventDefault(); // Prevent form submission
+            // }
         });
     });
 </script>
