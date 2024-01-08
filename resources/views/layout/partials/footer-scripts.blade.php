@@ -3200,11 +3200,12 @@ $('#category_name').on('change', function () {
 		$('#edithsn_modal').modal('show');
 	});
 
+
 	$(document).on('click', '.editstatus', function () {
         var id = $(this).data('id');
         console.log('Clicked on editstatus with id:', id);
 
-        // Update the form action dynamically
+       
         var form = $('#statusEditForm');
         var url = "{{ route('statusedit', ['id' => '__id__']) }}";
         form.attr('action', url.replace('__id__', id));
