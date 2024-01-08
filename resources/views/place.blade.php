@@ -175,10 +175,10 @@
 
                                  <div class="container">
         @csrf
-        <div class="modal-body row">
+        <div class="modal-body row" id="franchiseDetailsContainer">
             <div class="form-group col-sm-12">
                 <label for="country">Country</label>
-                <select name="country" class="form-control statefetchadd" id="country">
+                <select name="country" class="form-control statefetchadd" data-order="1"  id="country">
                     <option value="0">Select country</option>
                     @foreach($con as $country)
                         <option value="{{ $country->id }}">{{ $country->country_name }}</option>
@@ -188,14 +188,14 @@
 
             <div class="form-group col-sm-12">
                 <label for="state">State</label>
-                <select name="state" class="form-control districtfetchadd" id="state">
+                <select name="state" class="form-control districtfetchadd" data-order="1" id="state_1">
                     <option value="0">Select state</option>
                 </select>
             </div>
 
             <div class="form-group col-sm-12">
                 <label for="district">District</label>
-                <select name="district" class="form-control" id="district">
+                <select name="district" class="form-control" data-order="1" id="district_1">
                     <option value="0">Select district</option>
                 </select>
             </div>         
