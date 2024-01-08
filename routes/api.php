@@ -797,7 +797,7 @@ Route::post('categoryproductlist','ShopmarketingController@categoryproductlist')
 Route::get('categorylist','ShopmarketingController@categorylist');
 Route::post('subcategorylist','ShopmarketingController@subcategorylist');
 Route::post('productdetails','ShopmarketingController@productdetails');
-Route::post('wishlist','ShopmarketingController@wishlist');
+Route::post('wishlist','ShopmarketingController@wishlist');      
 Route::post('cart','ShopmarketingController@cart');
 
 
