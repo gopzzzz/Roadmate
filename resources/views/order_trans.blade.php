@@ -79,10 +79,18 @@
                     <td>{{$key->shopname}}</td>
                 </tr>
                 
-                <tr>
+                <!-- <tr>
                 <th>Shop Address</th>
                 <td>{{$key->address}}</td>
-                </tr>
+                </tr> -->
+                <tr>
+    <th>Shop Address</th>
+    <td colspan="6">
+        {{ $key->area }}, {{ $key->area1 }}, {{ $key->city }}, {{ $key->district }}, {{ $key->state }}, {{ $key->country }}
+    </td>
+</tr>
+
+                
                 <tr>
                 <th>Total MRP</th>
                 <td>{{$key->total_mrp}}</td>

@@ -3462,6 +3462,8 @@ function sendNotification1($msg1,$title)
 			->leftJoin('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
 			->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id') 
+
 			->where('tbl_order_trans.order_id',$orderId)
 			->select(
 				'tbl_order_trans.*',
@@ -3471,7 +3473,14 @@ function sendNotification1($msg1,$title)
 				'tbl_order_masters.shipping_charge',
 				'tbl_brand_products.product_name',
 				'shops.shopname',
-				'shops.address' 
+				'shops.address' ,
+				'tbl_deliveryaddres.area',
+				'tbl_deliveryaddres.area1',
+				'tbl_deliveryaddres.city',
+				'tbl_deliveryaddres.district',
+				'tbl_deliveryaddres.state',
+				'tbl_deliveryaddres.country'
+
 			)
 			->get();
 		   return view('order_trans',compact('role','mark','markk','order'));
