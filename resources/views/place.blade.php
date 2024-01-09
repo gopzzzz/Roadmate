@@ -723,6 +723,35 @@
             }
         });
     });
+
+    $('.districtfetchadd').on('change', function () {
+        var stateId = $(this).val();
+		//var id=$(this).data('order');
+
+        if (stateId) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{{ route('fetchdistrict') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    stateId: stateId 
+                },
+                success: function (res) {
+                    console.log(res);
+                    $('#district').empty();
+					$('#district_name').empty();
+                    var html_each = "";
+                    $.each(res, function (key, value) {
+                        html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
+                    });
+                    $('#district').append(html_each);
+					$('#district_name').append(html_each);
+                },
+            });
+        }
+    });
+
 </script>
 
 @endsection

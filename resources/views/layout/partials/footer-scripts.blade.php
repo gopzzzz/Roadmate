@@ -509,6 +509,35 @@ $('#franchiseDetailsContainer').on('change','.statefetchadd', function () {
     }
 });
 
+$('#franchiseDetailsContaineradd').on('change','.statefetchadd', function () {
+    var countryId = $(this).val();
+	var id=$(this).data('order');
+	//alert(id);
+
+    if (countryId) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchstate') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                countryId: countryId
+            },
+            success: function (res) {
+                console.log(res);
+                $('#state').empty();
+				
+                var html_each = "";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.state_name + '</option>';
+                });
+                $('#state_'+id).append(html_each);
+				
+            },
+        });
+    }
+});
+
 $('#countrylist .countrylist').on('change', function () {
 	//alert();
     var countryId = $(this).val();
@@ -576,6 +605,141 @@ $('#franchiseDetailsContainer').on('change','.selecttype', function () {
     }
 });
 
+$('#franchiseDetailsContaineradd').on('change','.selecttype', function () {
+	
+	var type = $(this).val();
+	var id=$(this).data('order'); 
+    var district_id = $('#district_'+id).val();
+    var state_id = $('#state_'+id).val();
+	
+	//alert(0);
+
+	if(type==4){
+		$('#typediv_'+id).hide();
+	}else{
+		$('#typediv_'+id).show();
+	}
+
+    if (district_id && type ) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchplaces') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                type: type,
+                district_id: district_id,
+                state_id: state_id
+            },
+            success: function (res) {
+                console.log(res);
+                $('#place_id_'+id).empty();
+                var html_each = "<option value='0'>Select Places</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
+                });
+                $('#place_id_'+id).append(html_each);
+            },
+        });
+    }
+});
+
+$('.get_franchise').on('click',function(){
+  var id=$(this).data('id');
+  $('#franchase_modal').empty();
+  $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('getfranchisedetails') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id,
+            },
+            success: function (res) {
+                console.log(res);
+               
+                var html_each = "";
+                $.each(res, function (key, value) {
+              
+
+					html_each +='<div class="col-sm-4">';
+					html_each +='<div class="card">';
+					
+				
+					html_each +='<ul class="list-group">';
+					html_each +='<li class="list-group-item"><strong>Country:</strong> '+value.country_name+'</li>';
+					html_each +='<li class="list-group-item"><strong>State:</strong> '+value.state_name+'</li>';
+					html_each +='<li class="list-group-item"><strong>District:</strong> '+value.district_name+'</li>';
+					html_each += '<li class="list-group-item"><strong>Type:</strong> ' + 
+    (value.type == 1 ? 'Panchayath' : 
+    (value.type == 2 ? 'Municipality' : 
+    (value.type == 3 ? 'Corporation' : ''))) + 
+    '</li>';
+	
+					html_each +='<li class="list-group-item"><strong>Place:</strong> '+value.place_name+'</li>';
+					html_each += '<a href="{{ URL::asset('/deletefranchise/') }}/'+value.id +'" class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure you want to delete this franchise?\')"><strong>Delete Franchise</strong></a>';
+
+					html_each +='</ul>';
+					
+					html_each +='</div>';
+					html_each +='</div>';
+
+				
+
+                });
+                $('#franchase_modal').append(html_each);
+            },
+        });
+
+
+		$.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('getfranchisedetailsdistrict') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id,
+            },
+            success: function (res) {
+                console.log(res);
+               
+                var html_each = "";
+                $.each(res, function (key, value) {
+              
+
+					html_each +='<div class="col-sm-4">';
+					html_each +='<div class="card">';
+					
+				
+					html_each +='<ul class="list-group">';
+					html_each +='<li class="list-group-item"><strong>Country:</strong> '+value.country_name+'</li>';
+					html_each +='<li class="list-group-item"><strong>State:</strong> '+value.state_name+'</li>';
+					html_each +='<li class="list-group-item"><strong>Type:</strong> District</li>';
+					html_each +='<li class="list-group-item"><strong>District:</strong> '+value.district_name+'</li>';
+					
+					html_each += '<a href="{{ URL::asset('/deletefranchise/') }}/'+value.id +'" class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure you want to delete this franchise?\')"><strong>Delete Franchise</strong></a>';
+
+					html_each +='</ul>';
+					
+					html_each +='</div>';
+					html_each +='</div>';
+
+				
+
+                });
+                $('#franchase_modal').append(html_each);
+            },
+        });
+
+		$('#franchasedetailmodal').modal('show');
+});
+
+$('.addonfranchise').on('click',function(){
+	var id=$(this).data('id');
+	$('#franchise_id').val(id);
+ $('#addonfranchise_modal').modal('show');
+});
+
 $('#franchiseDetailsContainer').on('change','.districtadd', function () {
 	var id=$(this).data('order');
     var type =$('#type_'+id).val();
@@ -613,7 +777,44 @@ $('#franchiseDetailsContainer').on('change','.districtadd', function () {
         });
     }
 });
+$('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
+	//alert();
+	var id=$(this).data('order');
+    var type =$('#type_'+id).val();
+	//alert(type);
+	
+	if(type==4){
+		$('#typediv_'+id).hide();
+	}else{
+		$('#typediv_'+id).show();
+	}
+    var district_id = $(this).val();
+    var state_id = $('#state_'+id).val(); 
+	//alert(state_id);
 
+    if (district_id && type ) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('fetchplaces') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                type: type,
+                district_id: district_id,
+                state_id: state_id
+            },
+            success: function (res) {
+                console.log(res);
+                $('#place_id_'+id).empty();
+                var html_each = "<option value='0'>Select Places</option>";
+                $.each(res, function (key, value) {
+                    html_each += '<option value=' + value.id + '>' + value.place_name + '</option>';
+                });
+                $('#place_id_'+id).append(html_each);
+            },
+        });
+    }
+});
 
 // $('#franchiseDetailsContainer').on('change','.selecttype', function () {
 //     var type = $(this).val();
@@ -661,14 +862,42 @@ $('#franchiseDetailsContainer').on('change','.districtadd', function () {
                 },
                 success: function (res) {
                     console.log(res);
-                    $('#district').empty();
-					$('#district_name').empty();
+                    $('#district_'+id).empty();
+					//$('#district_name_'+id).empty();
                     var html_each = "";
                     $.each(res, function (key, value) {
                         html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
                     });
                     $('#district_'+id).append(html_each);
-					$('#district_name').append(html_each);
+				//	$('#district_name_'+id).append(html_each);
+                },
+            });
+        }
+    });
+
+	$('#franchiseDetailsContaineradd').on('change','.districtfetchadd', function () {
+        var stateId = $(this).val();
+		var id=$(this).data('order');
+
+        if (stateId) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{{ route('fetchdistrict') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    stateId: stateId 
+                },
+                success: function (res) {
+                    console.log(res);
+                    $('#district_'+id).empty();
+					//$('#district_name_'+id).empty();
+                    var html_each = "";
+                    $.each(res, function (key, value) {
+                        html_each += '<option value=' + value.id + '>' + value.district_name + '</option>';
+                    });
+                    $('#district_'+id).append(html_each);
+				//	$('#district_name_'+id).append(html_each);
                 },
             });
         }
@@ -907,6 +1136,7 @@ $('#franchiseDetailsContainer').on('change','.districtadd', function () {
     $('#editexecutive_modal').modal('show');
 }); 
 
+
 $('.edit_fran').click(function(){
         var id = $(this).data('id');
 
@@ -921,7 +1151,7 @@ $('.edit_fran').click(function(){
 
     $('#franchise_name').val(res.franchise_name);
     $('#phone_number').val(res.phone_number);
-    $('#placevalue').val(res.place_name);
+     $('#email').val(res.email);
     $('#area').val(res.area);
     $('#pincode').val(res.pincode);
     $('#id').val(res.id);
