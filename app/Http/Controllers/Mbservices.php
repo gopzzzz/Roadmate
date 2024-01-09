@@ -2475,22 +2475,11 @@ catch (Exception $e)
     $lattitude=$data1->lat;
 
    $longitude=$data1->long;
-
-
-
-
-
     $shoplistnew=DB::table('shops')
-
-   
-
-    ->where('id',$shop)
+ ->where('id',$shop)
 
     ->select(DB::raw('shops.*,ROUND(cast(6371 * acos ( cos ( radians('.$lattitude.') ) * cos( radians( `lattitude` ) ) * cos( radians( `logitude` ) - radians('.$longitude.') ) + sin ( radians('.$lattitude.') ) * sin( radians( `lattitude` ) ) ) as decimal(8,2)) , 2) AS distance'))
-
-        
-
-     ->get();
+  ->get();
 
 
 

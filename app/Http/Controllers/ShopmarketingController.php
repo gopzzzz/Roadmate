@@ -62,9 +62,7 @@ public function categoryproductlist(){
 
   $data1 = json_decode($json);
   
-      $index=$data1->index;
-    $offset=($index*20);
-    $limit=20;
+    
 
   $categoryId=$data1->categoryid; 
   try{	
@@ -74,8 +72,8 @@ public function categoryproductlist(){
           ->select('tbl_brand_products.*', 'tbl_rm_products.cat_id')
           ->where('tbl_rm_products.cat_id', $categoryId)
           ->where('tbl_brand_products.status',0)
-            ->offset($offset) 
-      ->limit($limit) 
+          
+      
           ->get();
         $products = [];
 
@@ -597,18 +595,9 @@ public function brandfilter(){
    $index=$data1->index;
     $offset=($index*20);
     $limit=20;
-  
-
-  
-
-
   try{	
 
-   
-
-   
-
-    $productlist=DB::table('tbl_brand_products')
+  $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_brand_products.*')
     ->where('tbl_brand_products.brand_id',$brand_id)
@@ -638,10 +627,6 @@ foreach ($productlist as $proItem) {
     // Add the $cartItem to the $cart array
     $products[] = $proItem;
 }
-
-
-     
-
         if($productlist == null){
 
                
@@ -679,16 +664,8 @@ public function searchproduct(){
     $index=$data1->index;
     $offset=($index*20);
     $limit=20;
-  
-    
-  
-  
     try{	
-  
-     
-  
-     
-  
+
       $productlist=DB::table('tbl_brand_products')
       ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
       ->select('tbl_brand_products.*')
@@ -720,8 +697,6 @@ public function searchproduct(){
       $products[] = $proItem;
   }
   
-  
-       
   
           if($productlist == null){
   
@@ -907,10 +882,6 @@ public function placeorder(){
 
    foreach($data1->orderlist as $singlelist){	
 
-
-    
-
-    
 
       $trans = new Tbl_order_trans();
 
@@ -1141,9 +1112,7 @@ public function updateqty(){
 }
 
 public function orderhistory(){
-
-    
-      
+     
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -1155,20 +1124,12 @@ public function orderhistory(){
 
   try{	
 
-   
-
-   
-
     $order_list=DB::table('tbl_order_masters')
     ->where('shop_id',$shop_id)
    // ->where('status',0)
     ->get();
 
-     
-
         if($order_list == null){
-
-               
 
           echo json_encode(array('error' => true, "message" => "Error"));
 
@@ -1176,25 +1137,17 @@ public function orderhistory(){
 
             else{								
 
-            
-
             $json_data = 0;
 
             echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
 
                 }
-
-    
-
-  
-
 }
 
 catch (Exception $e)
 
 {
 
-        
 
     //return Json("Sorry! Please check input parameters and values");
 
