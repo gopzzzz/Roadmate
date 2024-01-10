@@ -1201,8 +1201,8 @@ Route::get('/product_order', 'HomeController@product_order')->name('product_orde
 
 Route::post('/updateOrderStatus', [App\Http\Controllers\HomeController::class, 'updateOrderStatus'])->name('updateOrderStatus');
 
-// Route::post('/insertIntoPlaceOrders', [App\Http\Controllers\HomeController::class, 'insertIntoPlaceOrders'])->name('insertIntoPlaceOrders');
-Route::post('/insertIntoPlaceOrders', 'HomeController@insertIntoPlaceOrders')->name('insertIntoPlaceOrders');
+
+
 
 
 
