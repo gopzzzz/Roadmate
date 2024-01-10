@@ -174,7 +174,7 @@ class HomeController extends Controller
 				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
 				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
 				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
-				->where('booktimemasters.place_id',$fan->district_id)
+				->where('shops.place_id',$fran->district_id)
 				->orderBy('booktimemasters.id', 'desc')
 				->get();
 			}else{
@@ -185,9 +185,9 @@ class HomeController extends Controller
 				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
 				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
 				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
-				->leftJoin('tbl_places', 'booktimemasters.place_id', '=', 'tbl_places.id')
+				
 				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
-				->where('booktimemasters.place_id',$fan->place_id)
+				->where('shops.place_id',$fran->place_id)
 				->orderBy('booktimemasters.id', 'desc')
 				->get();
 			}
@@ -329,7 +329,7 @@ class HomeController extends Controller
 	public function franchises() {
 		$franchiseDetails = Tbl_franchase_details::select('franchise_id', 'type', 'place_id', 'district_id')->get();
 	
-		$fran = DB::table('tbl_franchises')->get();
+		$fran = DB::table('tbl_franchises')->orderBy('id', 'DESC')->get();
 	
 		$role = Auth::user()->user_type;
 		$con = Tbl_countrys::where('deleted_status', 0)->get();
@@ -427,9 +427,9 @@ class HomeController extends Controller
 	
 					if ($request->type[$i] == 4) {
 						$franchiseDetails->district_id = $request->district[$i];
-						$franchiseDetails->place_id = null; // or set to a default value
+						// $franchiseDetails->place_id = null; // or set to a default value
 					} else {
-						$franchiseDetails->district_id = null; // or set to a default value
+						// $franchiseDetails->district_id = null; // or set to a default value
 						$franchiseDetails->place_id = $request->place_id[$i];
 					}
 	
@@ -443,34 +443,47 @@ class HomeController extends Controller
 	
 		return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create user, franchise, or franchise detail.']);
 	}
+
+	public function deletefranchise($id){
+		DB::table('tbl_franchase_details')->where('id',$id)->delete();
+		return redirect('franchises')->with('success', 'Franchise deleted successfully');
+	}
+
+	public function franchiseaddon(Request $request){
+		$franchiseDetails = new Tbl_franchase_details;
+					$franchiseDetails->franchise_id = $request->fran_id;
+					$franchiseDetails->type = $request->type;
+	
+					if ($request->type == 4) {
+						$franchiseDetails->district_id = $request->district;
+						$franchiseDetails->place_id = null; // or set to a default value
+					} else {
+						$franchiseDetails->district_id = null; // or set to a default value
+						$franchiseDetails->place_id = $request->place_id;
+					}
+	
+					$franchiseDetails->save();
+					return redirect('franchises')->with('success', 'Franchise and details added successfully');
+
+	}
 	
 
  public function franfetch(Request $request)
     {
         $id = $request->id;
 
-        $franchiseDetails = Tbl_franchase_details::select(
-            'tbl_franchase_details.*',
-            'tbl_franchises.franchise_name',
-            'tbl_franchises.phone_number',
-            'tbl_franchises.area',
-            'tbl_franchises.pincode',
-            'tbl_places.place_name',
-            'tbl_places.type as place_type',
-            'tbl_states.state_name',
-            'tbl_districts.district_name'
-        )
-        ->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
-        ->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
-        ->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
-        ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+        $franchiseDetails = DB::table('tbl_franchises')
+       
+        ->leftJoin('users', 'tbl_franchises.user_id', '=', 'users.id')
         ->where('tbl_franchises.id', $id)
+		->select('tbl_franchises.*','users.email')
         ->first();
 
         return response()->json($franchiseDetails);
     }
 	public function franedit(Request $request)
 {
+	
     $id = $request->id;
     $franchise = Tbl_franchises::find($id);
 
@@ -482,30 +495,10 @@ class HomeController extends Controller
     $franchise->area = $request->area;
     $franchise->pincode = $request->pincode;
     $franchise->phone_number = $request->phone_number;
-	if ($franchise->save()) {
-		$franchiseDetails = Tbl_franchase_details::where('franchise_id', $id)->first();
+	$franchise->save();
+    
 	
-		// Use the first type element, assuming there's only one type associated with a franchise
-		$franchiseDetails->type = $request->type ? $request->type[0] : null;
-	
-		if ($request->type && $request->type[0] == 4) {
-			$franchiseDetails->district_id = $request->district_id ? $request->district_id[0] : null;
-			// Do not set place_id to null when type is 4
-			// $franchiseDetails->place_id = $request->place_id ? $request->place_id[0] : null;
-		} else {
-			$franchiseDetails->district_id = null; // or set to a default value
-			$franchiseDetails->place_id = $request->place_id ? $request->place_id[0] : null;
-		}
-	
-		// Ensure place_id is set to null if the type is not 4
-		if ($franchiseDetails->type != 4) {
-			$franchiseDetails->place_id = $request->place_id ? $request->place_id[0] : null;
-		}
-	
-		if ($franchiseDetails->save()) {
-			return redirect('franchises')->with('success', 'Franchise details updated successfully');
-		}
-	}
+
 	
     return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 }
@@ -3256,6 +3249,42 @@ function sendNotification1($msg1,$title)
 			}
 		    return response()->json($places);
 		}
+
+		public function getfranchisedetails(Request $request){
+              $id=$request->id;
+
+			  $fran = DB::table('tbl_franchase_details')
+			  ->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
+			  ->leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			  ->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			  ->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			  ->select('tbl_franchase_details.*', 'tbl_places.place_name', 'tbl_districts.district_name', 'tbl_states.state_name', 'tbl_countrys.country_name')
+			  ->where('franchise_id', $id)
+			  ->where('tbl_franchase_details.type', '!=', 4)
+			  ->get();
+		  
+			 
+			
+			  return response()->json($fran);
+		}
+	
+		public function getfranchisedetailsdistrict(Request $request){
+			$id=$request->id;
+
+			$fran=DB::table('tbl_franchase_details')
+			//->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
+			//->leftJoin('tbl_places', 'tbl_franchase_details.place_id', '=', 'tbl_places.id')
+			->leftJoin('tbl_districts', 'tbl_franchase_details.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_franchase_details.*','tbl_districts.district_name','tbl_states.state_name','tbl_countrys.country_name')
+			->where('franchise_id',$id)
+			->where('tbl_franchase_details.type',4)
+			->get();
+		   
+		  
+			return response()->json($fran);
+		}
 		
 		
 		public function districtfetch(Request $request){
@@ -3463,6 +3492,8 @@ function sendNotification1($msg1,$title)
 			->leftJoin('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
 			->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id') 
+
 			->where('tbl_order_trans.order_id',$orderId)
 			->select(
 				'tbl_order_trans.*',
@@ -3472,7 +3503,14 @@ function sendNotification1($msg1,$title)
 				'tbl_order_masters.shipping_charge',
 				'tbl_brand_products.product_name',
 				'shops.shopname',
-				'shops.address' 
+				'shops.address' ,
+				'tbl_deliveryaddres.area',
+				'tbl_deliveryaddres.area1',
+				'tbl_deliveryaddres.city',
+				'tbl_deliveryaddres.district',
+				'tbl_deliveryaddres.state',
+				'tbl_deliveryaddres.country'
+
 			)
 			->get();
 		   return view('order_trans',compact('role','mark','markk','order'));

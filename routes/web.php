@@ -101,6 +101,20 @@ Route::post('/franinsert', [
     'uses' => 'HomeController@franinsert'
 ])->name('franinsert');
 
+Route::post('/franchiseaddon', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@franchiseaddon'
+])->name('franchiseaddon');
+
+Route::post('/getfranchisedetails', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@getfranchisedetails'
+])->name('getfranchisedetails');
+Route::post('/getfranchisedetailsdistrict', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@getfranchisedetailsdistrict'
+])->name('getfranchisedetailsdistrict');
+
 Route::post('/franfetch', 'HomeController@franfetch')->name('franfetch')->middleware('auth');
 
 
@@ -493,6 +507,13 @@ Route::get('/shopreviews', [
     'middleware' => 'auth',
     'uses' => 'HomeController@shopreviews'
 ])->name('shopreviews');
+
+Route::get('/deletefranchise/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@deletefranchise'
+])->name('deletefranchise');
+
+
 
 Route::post('/shopreviewsfetch', [
     'middleware' => 'auth',
