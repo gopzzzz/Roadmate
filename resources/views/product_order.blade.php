@@ -246,7 +246,7 @@ $i++;
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<script>
+<!-- <script>
     function changeOrderStatus(productId) {
         var confirmation = confirm("Are you sure you want to change the order status?");
         if (confirmation) {
@@ -267,6 +267,60 @@ $i++;
             });
         }
     }
+</script> -->
+
+
+
+<script>
+    function changeOrderStatus(productId) {
+        var confirmation = confirm("Are you sure you want to change the order status?");
+        if (confirmation) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('updateOrderStatus') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    productId: productId
+                },
+                success: function(response) {
+                    alert("Order status changed successfully!");
+
+                    // Check if data should be inserted into tbl_placeorders
+                    if (response.success) {
+                        insertIntoPlaceOrders(productId);
+                    }
+
+                    location.reload(); // Reload the page after the order status is changed
+                },
+                error: function(error) {
+                    console.error("Error updating order status:", error);
+                }
+            });
+        }
+    }
+
+    function insertIntoPlaceOrders(productId) {
+        // You can add additional data fields as needed
+        var data = {
+            "_token": "{{ csrf_token() }}",
+            productId: productId
+            // Add other fields as needed
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('insertIntoPlaceOrders') }}", // Change to the actual route for inserting into tbl_placeorders
+            data: data,
+            success: function(response) {
+                console.log(response); // Check the response in the console
+                alert("Data inserted into tbl_placeorders successfully!");
+            },
+            error: function(error) {
+                console.error("Error inserting data into tbl_placeorders:", error);
+            }
+        });
+    }
 </script>
+
 
 @endsection

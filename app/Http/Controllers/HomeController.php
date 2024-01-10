@@ -3626,6 +3626,28 @@ public function updateOrderStatus(Request $request)
 }
 
 
+public function insertIntoPlaceOrders(Request $request)
+{
+	$productId = $request->input('productId');
+
+	// Retrieve orders with order_status = 1 from tbl_order_trans
+	$ordersToInsert = Tbl_order_trans::where('product_id', $productId)
+		->where('order_status', 1)
+		->get();
+
+	foreach ($ordersToInsert as $order) {
+		// Insert into tbl_placeorders
+		Tbl_placeorders::create([
+			'product_id' => $order->product_id,
+			'qty' => $order->qty,
+			'price' => $order->price
+			// Add other fields as needed
+		]);
+	}
+
+	return response()->json(['success' => true]);
+}
+
 
         public function brands()
 		{
