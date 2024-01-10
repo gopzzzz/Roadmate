@@ -185,13 +185,29 @@
                                   </a>
                               </li>
 
-                              
-
+                              <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-briefcase"></i>
+                              <p>
+                                  Market Orders
+                                  <i class="right fas fa-angle-left"></i>
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
                               <li class="nav-item">
                                   <a href="{{ url('order_master') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
-                                      <p>orders</p>
+                                      <p>Orders</p>
                                   </a>
+                              </li>
+
+                              <li class="nav-item">
+                                  <a href="{{ url('product_order') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Product Orders</p>
+                                  </a>
+                              </li>
+                              </ul>
                               </li>
                               <li class="nav-item">
                                   <a href="{{ url('marketwallet') }}" class="nav-link">

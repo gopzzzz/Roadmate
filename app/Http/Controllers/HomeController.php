@@ -66,6 +66,7 @@ use App\Tbl_brands;
 use App\Tbl_brand_products;
 use App\Tbl_franchase_details;
 use App\Tbl_hsncodes;
+use App\Tbl_placeorders;
 use DB;
 use Hash;
 use Auth;
@@ -3552,6 +3553,41 @@ function sendNotification1($msg1,$title)
         return redirect('order_master')->with('error', 'Order not found.');
     }
 }
+
+
+public function product_order()
+{
+	$orders = DB::table('tbl_order_trans')
+	->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+	->where('order_status', 0)
+	->select(
+		'tbl_order_trans.*',
+		'tbl_brand_products.product_name'
+		)	->get();
+	
+	 $role=Auth::user()->user_type;
+	return view('product_order',compact('orders','role'));
+ }
+
+
+
+public function updateOrderStatus(Request $request)
+{
+    $productId = $request->input('productId');
+    \Log::info("Update Order Status called with productId: " . $productId);
+
+    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+
+    foreach ($ordersToUpdate as $order) {
+        $order->order_status = ($order->order_status == 0);
+        $order->save();
+
+    }
+
+    return response()->json(['success' => true]);
+}
+
+
 
         public function brands()
 		{

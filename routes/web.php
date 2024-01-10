@@ -1175,6 +1175,16 @@ Route::post('/hsnedit', [
     'uses' => 'HomeController@hsnedit'
 ])->name('hsnedit'); 
 
+Route::get('/product_order', 'HomeController@product_order')->name('product_order');
+
+
+Route::post('/updateOrderStatus', [App\Http\Controllers\HomeController::class, 'updateOrderStatus'])->name('updateOrderStatus');
+
+
+
+
+
+
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');
 Route::post('/customertypeinsert', [App\Http\Controllers\HomeController::class, 'customertypeinsert'])->name('customertypeinsert');
 Route::post('/customertypefetch', [App\Http\Controllers\HomeController::class, 'customertypefetch'])->name('customertypefetch');
