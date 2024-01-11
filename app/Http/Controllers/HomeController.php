@@ -3609,6 +3609,53 @@ public function product_order()
 
 
 
+// public function updateOrderStatus(Request $request)
+// {
+//     $productId = $request->input('productId');
+//     \Log::info("Update Order Status called with productId: " . $productId);
+
+//     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+
+//     foreach ($ordersToUpdate as $order) {
+//         $order->order_status = ($order->order_status == 0);
+//         $order->save();
+
+//     }
+
+//     return response()->json(['success' => true]);
+// }
+
+// public function updateOrderStatus(Request $request)
+// {
+//     $productId = $request->input('productId');
+//     \Log::info("Update Order Status called with productId: " . $productId);
+
+//     // Update order status for orders with order_status = 0
+//     $affectedRows = Tbl_order_trans::where('product_id', $productId)
+//         ->where('order_status', 0)
+//         ->update(['order_status' => 1]);
+
+//     if ($affectedRows > 0) {
+//         // Insert data into tbl_placeorders for orders with order_status = 1
+//         $ordersToInsert = Tbl_order_trans::where('product_id', $productId)
+//             ->where('order_status', 1)
+//             ->get();
+
+//         foreach ($ordersToInsert as $order) {
+//             $placeOrder = new Tbl_placeorders;
+//             $placeOrder->product_id = $order->product_id;
+//             $placeOrder->qty = $order->qty; // Assuming qty is a column in Tbl_order_trans
+//             $placeOrder->price = $order->price; // Assuming price is a column in Tbl_order_trans
+//             $placeOrder->save();
+//         }
+
+//         return response()->json(['success' => true]);
+//     }
+
+//     return response()->json(['success' => false, 'message' => 'No orders with order_status = 0 found.']);
+// }
+
+
 public function updateOrderStatus(Request $request)
 {
     $productId = $request->input('productId');
@@ -3617,13 +3664,69 @@ public function updateOrderStatus(Request $request)
     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
 
     foreach ($ordersToUpdate as $order) {
-        $order->order_status = ($order->order_status == 0);
+        $order->order_status = !$order->order_status;
         $order->save();
 
+        if ($order->order_status == 1) {
+            $placeOrder = $this->insertPlaceOrder($order);
+        }
     }
 
-    return response()->json(['success' => true]);
+    return response()->json([
+        'success' => true,
+        'message' => 'Order status updated successfully',
+        'inserted_data' => isset($placeOrder) ? $placeOrder : null,
+    ]);
 }
+
+ public function insertPlaceOrder($order)
+ {
+	 try {
+		 \DB::beginTransaction();
+ 
+		 $placeOrder = Tbl_placeorders::create([
+			 'product_id' => $order->product_id,
+			 'qty' => $order->qty,
+			 'price' => $order->price,
+			 'created_at' => now(),
+			 'updated_at' => now(),
+		 ]);
+ 
+		 \DB::commit();
+ 
+		 \Log::info("Inserted into tbl_placeorders: " . json_encode($placeOrder));
+ 
+		 return $placeOrder;
+	 } catch (\Exception $e) {
+		 \DB::rollBack();
+ 
+		 \Log::error("Error inserting into tbl_placeorders: " . $e->getMessage());
+ 
+		 return null;
+	 }
+ }
+ 
+
+
+
+
+
+
+
+
+public function order_history()
+{
+	$orders = DB::table('tbl_placeorders')
+	->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+	->select(
+		'tbl_placeorders.*',
+		'tbl_brand_products.product_name'
+		)
+	->get();
+	 $role=Auth::user()->user_type;
+	return view('order_history',compact('orders','role'));
+ }
+
 
 
 

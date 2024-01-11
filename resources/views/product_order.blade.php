@@ -3,65 +3,9 @@
 
 <head>
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        /* Define your CSS styles for the invoice here */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
-        .invoice {
-            width: 50%;
-            margin: 0 auto;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .invoice-header {
-            background-color: #e4cf23;
-            color: #e90f0e;
-            padding: 10px;
-            text-align: center;
-        }
-        .invoice-title {
-            font-size: 40px;
-            text-transform: uppercase;
-        }
-        .invoice-details {
-            margin: 20px;
-        }
-        .invoice-details table {
-            width: 50%;
-            border-collapse: collapse;
-        }
-        .invoice-details th, .invoice-details td {
-            padding: 10px;
-            text-align: left;
-        }
-        .invoice-details th {
-            background-color: #f2f2f2;
-        }
-        .invoice-table {
-            margin: 20px;
-        }
-        .invoice-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .invoice-table th, .invoice-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        .invoice-total {
-            text-align: right;
-            margin: 20px;
-        }
-        .invoice-total p {
-            font-size: 18px;
-            font-weight: bold;
-        }
-    </style>
+<!-- <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+    
 </head>
 
 <div class="content-wrapper">
@@ -243,8 +187,8 @@ $i++;
 
 
 </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 
 <script>
     function changeOrderStatus(productId) {
@@ -258,15 +202,22 @@ $i++;
                     productId: productId
                 },
                 success: function(response) {
-                    alert("Order status changed successfully!");
-                    location.reload(); // Reload the page after the order status is changed
+                    if (response.success) {
+                        alert(response.message);
+                        if (response.inserted_data) {
+                            alert("Inserted Data: " + JSON.stringify(response.inserted_data));
+                        }
+                        location.reload();
+                    } else {
+                        alert("Error: " + response.message);
+                    }
                 },
-                error: function(error) {
+                error: function(xhr, status, error) {
                     console.error("Error updating order status:", error);
+                    alert("Error updating order status. Please check the console for details.");
                 }
             });
         }
     }
 </script>
-
 @endsection
