@@ -24,7 +24,7 @@
 
 						</li>
 
-						<li class="breadcrumb-item active">Add Giveaway Package</li>
+						<li class="breadcrumb-item active">Add Giveaway Shops</li>
 
 					</ol>
 
@@ -210,7 +210,7 @@
 
                                        
                                      
-
+								
 										
 
 									</tr>@php $i++; @endphp @endforeach</tbody>

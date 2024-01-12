@@ -46,7 +46,7 @@
                                 
                                   <input type="hidden" value="1" name="package_id" id="id"> 
 								  
-                                    <div class="form-group col-sm-6">
+                                    <div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Package</label>
                                         <select name="packag" class="form-control">
                                         <option value="0">select package</option>
@@ -55,7 +55,7 @@
                                         @endforeach
                                         </select>
                                     </div>
-									<div class="form-group col-sm-6">
+									<div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Details</label>
                                       <textarea  name="desc" class="form-control" Placeholder="Enter Details" ></textarea>
                                     </div>
@@ -126,7 +126,7 @@
                               
                                  <div class="modal-body row">
                                 <input type="hidden" id="id" name="id">
-								 <div class="form-group col-sm-6">
+								 <div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Package</label>
                                         <select name="packag" class="form-control" id="pack">
                                         <option value="0">select package</option>
@@ -135,7 +135,7 @@
                                         @endforeach
                                         </select>
                                     </div>
-									<div class="form-group col-sm-6">
+									<div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Details</label>
                                       <textarea  name="desc" class="form-control" Placeholder="Enter Details" id="det"></textarea>
                                     </div>
@@ -161,7 +161,7 @@
                                  @csrf
                                  <div class="modal-body row">
                                 <input type="hidden" id="edit_id" name="id">
-								 <div class="form-group col-sm-6">
+								 <div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Package</label>
                                         <select name="packag" class="form-control" id="pack1">
                                         <option value="0">select package</option>
@@ -170,7 +170,7 @@
                                         @endforeach
                                         </select>
                                     </div>
-									<div class="form-group col-sm-6">
+									<div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Details</label>
                                       <textarea  name="desc" class="form-control" Placeholder="Enter Details" id="det1"></textarea>
                                     </div>

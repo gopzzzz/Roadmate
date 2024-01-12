@@ -148,71 +148,7 @@
 
 
 
-                                 <div class="modal-header">
-
-
-
-                                    <h5 class="modal-title" id="exampleModalLabel">Category</h5>
-
-
-
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-
-
-
-                                    <span aria-hidden="true">&times;</span>
-
-
-
-                                    </button>
-
-
-
-                                 </div>
-
-
-
-                                 <div class="modal-body row">
-
-
-
-                                    <div class="form-group col-sm-6">
-
-
-
-                                       <label class="exampleModalLabel">Category</label>
-
-
-
-                                       <input type="text"  class="form-control" name="category_name" placeholder="Enter Category Name" required>
-
-
-
-                                    </div>
-									<div class="modal-body row">
-													<div class="form-group col-sm-6">
-														<label class="exampleModalLabel">Category Image</label>
-														<input type="file" name="categoryimage" accept="image/*" required>
-													</div>
-
-
-                                 </div>
-
-
-
-                                 <div class="modal-footer">
-
-
-
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-
-
-                                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
-
-
-
-                                 </div>
+                                
 
 
 

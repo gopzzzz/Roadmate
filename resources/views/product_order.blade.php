@@ -180,7 +180,6 @@
                         Place Order
                     </button>
                 </td>
-                    
 </tr>
 
 
@@ -245,9 +244,8 @@ $i++;
 </div>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 <script>
-    function changeOrderStatus(productId) {
+    function changeOrderStatus(productId, qty, price) {
         var confirmation = confirm("Are you sure you want to change the order status?");
         if (confirmation) {
             $.ajax({
@@ -255,11 +253,17 @@ $i++;
                 url: "{{ route('updateOrderStatus') }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
-                    productId: productId
+                    productId: productId,
+                    qty: qty,
+                    price: price
                 },
                 success: function(response) {
-                    alert("Order status changed successfully!");
-                    location.reload(); // Reload the page after the order status is changed
+                    if (response.success) {
+                        alert("Order status changed successfully!");
+                        location.reload(); // Reload the page after the order status is changed
+                    } else {
+                        console.error("Error updating order status:", response.message);
+                    }
                 },
                 error: function(error) {
                     console.error("Error updating order status:", error);
@@ -268,5 +272,6 @@ $i++;
         }
     }
 </script>
+
 
 @endsection

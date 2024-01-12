@@ -193,17 +193,16 @@
               <!-- /.card-header -->
 
               <div class="card-body">
-              <form>
+              <!-- <form>
                    <div class="col-md-4">
                       <div class="form-group">
                         <input type="text" name="search_shop" class="form-control" id="search_shop" placeholder="Search" value="">
                       </div>
                     </div>
-                </form>
+                </form> -->
 
-                <a href="{{url('exportmarket')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
 
-                <table  class="table table-bordered table-striped" id="example354">
+                <table  class="table table-bordered table-striped" id="example1">
 
                   <thead>
 

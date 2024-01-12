@@ -58,7 +58,7 @@
 
                   <div class="card-header">
 
-                     <h3 class="card-title">Services</h3>
+                     <h3 class="card-title">Shop Services</h3>
 
                      <p align="right">
 
@@ -111,19 +111,19 @@
                   <!-- /.card-header -->
 
                   <div class="card-body">
-                     <form>
+                     <!-- <form>
                      <div class="col-md-4">
                         <div class="form-group">
                            <input type="text" name="search_shop_service" class="form-control" id="search_shop_service" placeholder="Search" value="">
                         </div>
                      </div>
-                  </form>
+                  </form> -->
 
                  <!-- Display shop services with pagination -->
 <!-- Display shop services with pagination -->
 <div class="shop-services">
-    <h2>Shop Services</h2>
-    <table class="table table-bordered table-striped">
+    <h2></h2>
+    <table class="table table-bordered table-striped" id="example1">
         <thead>
             <tr>
                 <th>id</th>
@@ -165,15 +165,17 @@
 
    <tr>
 
-      <th>id</th>
+      <!-- <th>id</th>
 
       
 
       <th>Shop</th>	
 
       
-      <th>Contact Number</th>
-      @if($role==1)<th>Action</th>@endif
+      <th>Contact Number</th> -->
+      @if($role==1)
+      <!-- <th>Action</th> -->
+      @endif
 
    </tr>
 
@@ -189,17 +191,17 @@
     </tbody>
     <tfoot>
         <tr>
-            <th>id</th>
+            <!-- <th>id</th>
             <th>Shop</th>
             <th>Contact Number</th>
             <th>Vehicle</th>
-            <th>Service</th>
+            <th>Service</th> -->
         </tr>
     </tfoot>
 </table>
 
-                  <div id="shopservice_pagination">
-                     {!! $shopserv->render() !!}
+                  <!-- <div id="shopservice_pagination">
+                     {!! $shopserv->render() !!} -->
                   </div>
                   <div id="shopservice_pagination1">
                     

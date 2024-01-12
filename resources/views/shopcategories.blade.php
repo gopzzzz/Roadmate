@@ -126,7 +126,7 @@
 
 
 
-                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12">
 
 
                 <label class="exampleModalLabel">Category</label>
@@ -138,7 +138,7 @@
 
                 </div>
 
-                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12">
 
 
 <label class="exampleModalLabel">Percentage</label>
@@ -150,7 +150,7 @@
 
 </div>
 
-                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12">
 
 
 

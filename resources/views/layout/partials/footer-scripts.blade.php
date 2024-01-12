@@ -335,7 +335,7 @@ $(document).on('click', '.edit_country', function () {
           $('#version_code').val(obj.version_code);
           $('#app_type').val(obj.app_type);
 
-		  $('#status').val(obj.status);
+		  $('#app_status').val(obj.status);
          
 					},
 					});	

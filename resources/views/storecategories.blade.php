@@ -126,7 +126,7 @@
 
 
 
-                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12">
 
 
                 <label class="exampleModalLabel">Category</label>
@@ -266,7 +266,7 @@
               @csrf
                     <div class="modal-body row">
 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-12">
 
                       <input type="hidden" name="id" id="categoryid">
                      
@@ -303,7 +303,7 @@
                     
                     <div class="modal-body row">
 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-12">
 
                       <input type="hidden" name="id" id="categoryviewid">
                      

@@ -22,7 +22,7 @@
 
                   <li class="breadcrumb-item"><a href="home">Home</a></li>
 
-                  <li class="breadcrumb-item active">My Store Queries</li>
+                  <li class="breadcrumb-item active">Store Query Answers</li>
 
                </ol>
 

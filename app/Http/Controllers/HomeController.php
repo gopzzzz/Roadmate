@@ -3522,7 +3522,7 @@ function sendNotification1($msg1,$title)
 			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
             ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
 			->orderBy('tbl_order_masters.id', 'DESC')
-			->get();
+			->paginate(10);
 			$mark=DB::table('shops')
 			->get();
             $orderr=DB::table('tbl_coupens')->get();
@@ -3608,25 +3608,62 @@ public function product_order()
  }
 
 
+ public function updateOrderStatus(Request $request)
+ {
+	 $productId = $request->input('productId');
+	 $qty = $request->input('qty');
+	 $price = $request->input('price');
+ 
+	 \Log::info("Update Order Status called with productId: " . $productId);
+ 
+	 $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+ 
+	 foreach ($ordersToUpdate as $order) {
+		 // Toggle order_status between 0 and 1
+		 $order->order_status = ($order->order_status == 0) ? 1 : 0;
+		 $order->save();
+ 
+		 // Check if the current order has been updated to status 1
+		 if ($order->order_status == 1) {
+			 // Insert data into tbl_placeorders
+			 $placeOrder = new Tbl_placeorders;
+			 $placeOrder->product_id = $productId; // Use the passed productId
+			 $placeOrder->qty = $qty; // Use the passed quantity
+			 $placeOrder->amount = $price; // Use the passed price
+			 $placeOrder->order_date = $order->order_date; // Assuming 'order_date' is a column in tbl_order_trans
+			 $placeOrder->save();
+		 }
+	 }
+ 
+	 return response()->json(['success' => true]);
+ }
+ 
+ 
+ 
+ 
 
-public function updateOrderStatus(Request $request)
-{
-    $productId = $request->input('productId');
-    \Log::info("Update Order Status called with productId: " . $productId);
 
-    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+// public function insertIntoPlaceOrders(Request $request)
+// {
+// 	$productId = $request->input('productId');
 
-    foreach ($ordersToUpdate as $order) {
-        $order->order_status = ($order->order_status == 0);
-        $order->save();
+// 	// Retrieve orders with order_status = 1 from tbl_order_trans
+// 	$ordersToInsert = Tbl_order_trans::where('product_id', $productId)
+// 		->where('order_status', 1)
+// 		->get();
 
-    }
+// 	foreach ($ordersToInsert as $order) {
+// 		// Insert into tbl_placeorders
+// 		Tbl_placeorders::create([
+// 			'product_id' => $order->product_id,
+// 			'qty' => $order->qty,
+// 			'price' => $order->price
+// 			// Add other fields as needed
+// 		]);
+// 	}
 
-    return response()->json(['success' => true]);
-}
-
-
-
+// 	return response()->json(['success' => true]);
+// }
 
 
         public function brands()
@@ -3783,7 +3820,7 @@ public function updateOrderStatus(Request $request)
             $app->version_code= $request->version_code;
 			$app->version_name	= $request->version_name;
 			$app->app_type	= $request->app_type;
-            $app->status=$request->status;
+            $app->app_status=$request->status;
 		    $app->save();
 			return back();
 		}
