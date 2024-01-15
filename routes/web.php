@@ -147,6 +147,12 @@ Route::post('/crmedit', [
     'uses' => 'HomeController@crmedit'
 ])->name('crmedit');
 
+
+Route::get('deleteCrm/{crmId}', 'HomeController@deleteCrm')->name('deleteCrm');
+
+
+
+
 Route::post('/addedshop', [
     'middleware' => 'auth',
     'uses' => 'HomeController@addedshop'

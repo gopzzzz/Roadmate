@@ -20,7 +20,7 @@
 @if(session('success'))
 <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
 @endif
-<!-- Main content -->
+<!-- Main content --> 
 <section class="content">
    <div class="container-fluid">
    <div class="row">

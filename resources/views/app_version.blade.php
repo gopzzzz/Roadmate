@@ -396,18 +396,11 @@
 
 <label class="exampleModalLabel">Status</label>
 
-<select name="status" id="status" class="form-control"  required>
-
-<option value="0">Active</option>
-
-
-
-<option value="1">In Active</option>
-
-
-
-
+<select name="status" id="status" class="form-control" required>
+    <option value="0">Active</option>
+    <option value="1">In Active</option>
 </select>
+
 
 </div>
 

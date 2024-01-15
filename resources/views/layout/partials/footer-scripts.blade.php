@@ -327,17 +327,15 @@ $(document).on('click', '.edit_country', function () {
 					data: {  "_token": "{{ csrf_token() }}",
 					id: id },
 					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          //$('#image').val(obj.name);
-		  $('#appid').val(obj.id);
-          $('#version_name').val(obj.version_name);
-          $('#version_code').val(obj.version_code);
-          $('#app_type').val(obj.app_type);
+    console.log(res);
+    var obj = JSON.parse(res);
+    $('#appid').val(obj.id);
+    $('#version_name').val(obj.version_name);
+    $('#version_code').val(obj.version_code);
+    $('#app_type').val(obj.app_type);
+    $('#status').val(obj.app_status);
+},
 
-		  $('#status').val(obj.status);
-         
-					},
 					});	
 		}
 		$('#editappversion_modal').modal('show');
@@ -3391,6 +3389,7 @@ $(window).on('load', function(){
 
 		  $('#offer_price').val(obj.offer_price);
 		  $('#original_amount').val(obj.price);
+		  $('#hsncode1').val(obj.hsncode);
 		  $('#status').val(obj.status);
          
 					},

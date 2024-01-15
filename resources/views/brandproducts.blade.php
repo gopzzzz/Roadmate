@@ -141,14 +141,33 @@
     <textarea class="form-control" name="description" placeholder="Enter Description" required></textarea>
 </div>
 
-<div class="form-group col-sm-12">
+<div class="form-group col-sm-6">
                     
                     <label class="exampleModalLabel">Image</label>
 
                     <input class="form-control" type="file" name="images[]" accept="image/*" multiple required>
                 </div>
               
+
+                <div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">HSN Code</label>
+
+
+
+<select name="hsncode" id="hsncode" class="form-control">
+
+<option value="0">Select HSN Code</option>
+@foreach($hsn as $hsncode)
+            <option value="{{ $hsncode->id }}">{{ $hsncode->hsncode }} ( {{ $hsncode->tax }} %)</option>
+        @endforeach
+</select>
+
+
 </div>
+                                 </div>
     <div class="modal-footer">
        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
 
@@ -207,7 +226,7 @@
                              <th>Original Amount</th>
                              <th>Description</th>
 
-
+                             <th>HSN Code</th>
                              <th>Status</th>
 
                               @if($role==1)
@@ -263,7 +282,7 @@ $i=1;
    <td>{{$key->offer_price}}</td>
    <td>{{$key->price}}</td>
    <td>{{$key->description}}</td>
-
+   <td>{{ $key->hsncode }} ({{ $key->tax }}%)</td>
    <td>@if($key->status==0) Active @else Inactive @endif</td>
   <td>
    <i class="fa fa-edit edit_brandproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
@@ -319,7 +338,7 @@ $i++;
                              <th>Original Amount</th>
                              <th>Description</th>
 
-
+                             <th>HSN Code</th>
                              <th>Status</th>
 
                               @if($role==1)
@@ -369,7 +388,7 @@ $i++;
 
 
 
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-lg" role="document">
 
 
 
@@ -427,9 +446,9 @@ $i++;
 
 </div>
 
-</div>
 
-<div class="form-group col-sm-12">
+
+<div class="form-group col-sm-6">
 
 
 
@@ -442,7 +461,7 @@ $i++;
 
 </div>
 
-<div class="form-group col-sm-12">
+<div class="form-group col-sm-6">
 
 
 
@@ -459,7 +478,24 @@ $i++;
     <label class="exampleModalLabel">Description</label>
     <textarea class="form-control" name="description" id="description"  placeholder="Enter Description" required></textarea>
 </div>
-<div class="form-group col-sm-12">
+
+
+<div class="form-group col-sm-6">
+
+<label class="exampleModalLabel">HSN Code</label>
+
+<select name="hsncode" id="hsncode1" class="form-control">
+
+<option value="0">Select HSN Code</option>
+@foreach($hsn as $hsncode)
+            <option value="{{ $hsncode->id }}">{{ $hsncode->hsncode }} ( {{ $hsncode->tax }} %)</option>
+        @endforeach
+</select>
+
+</div>
+
+
+<div class="form-group col-sm-6">
 
 <label class="exampleModalLabel">Status</label>
 
@@ -471,6 +507,7 @@ $i++;
 
 </select>
 
+</div>
 </div>
                                              <div class="modal-footer">
 
