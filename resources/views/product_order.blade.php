@@ -124,7 +124,6 @@
                         Place Order
                     </button>
                 </td>
-                    
 </tr>
 
 
@@ -191,7 +190,7 @@ $i++;
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 
 <script>
-    function changeOrderStatus(productId) {
+    function changeOrderStatus(productId, qty, price) {
         var confirmation = confirm("Are you sure you want to change the order status?");
         if (confirmation) {
             $.ajax({
@@ -199,7 +198,9 @@ $i++;
                 url: "{{ route('updateOrderStatus') }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
-                    productId: productId
+                    productId: productId,
+                    qty: qty,
+                    price: price
                 },
                 success: function(response) {
                     if (response.success) {

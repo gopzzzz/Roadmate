@@ -68,7 +68,7 @@
 
               <div class="card-header">
 
-                <h3 class="card-title">Stores</h3>
+                <h3 class="card-title">Add Stores</h3>
 
                 <p align="right">
 
@@ -161,7 +161,7 @@
 
               <div class="card-body">
 
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example354" class="table table-bordered table-striped">
 
                   <thead>
 

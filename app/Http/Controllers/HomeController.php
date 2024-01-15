@@ -3567,7 +3567,7 @@ function sendNotification1($msg1,$title)
 			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
             ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
 			->orderBy('tbl_order_masters.id', 'DESC')
-			->get();
+			->paginate(10);
 			$mark=DB::table('shops')
 			->get();
             $orderr=DB::table('tbl_coupens')->get();
@@ -3617,26 +3617,41 @@ function sendNotification1($msg1,$title)
 		}
 		
 		public function statusedit(Request $request, $id)
-{
-    \Log::info('Received ID for statusedit: ' . $id);
-
-    // Find the order by ID
-    $order = Tbl_order_masters::find($id);
-
-    // Check if the order exists
-    if ($order) {
-        // Update the order status
-        $order->order_status = $request->order_status;
-        $order->save();
-
-        // Redirect to the appropriate page
-        return redirect('order_master')->with('success', 'Order status updated successfully.');
-    } else {
-        // If the order is not found, redirect with an error message
-        return redirect('order_master')->with('error', 'Order not found.');
-    }
-}
-
+		{
+			\Log::info('Received ID for statusedit: ' . $id);
+		
+			// Retrieve total_amount from the request
+			$total_amount = $request->input('total_amount');
+		
+			\Log::info('Received total_amount for statusedit: ' . $total_amount);
+		
+			// Ensure total_amount is a valid number
+			if (!is_numeric($total_amount)) {
+				\Log::error('Invalid total_amount received: ' . $total_amount);
+				return redirect('order_master')->with('error', 'Invalid total_amount received.');
+			}
+		
+			// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
+			$percentage = ($total_amount * 10) / 100;
+			\Log::info('Calculated Percentage: ' . $percentage);
+		
+			// Find the order by ID
+			$order = Tbl_order_masters::find($id);
+		
+			// Check if the order exists
+			if ($order) {
+				// Update the order status
+				$order->order_status = $request->order_status;
+				$order->save();
+		
+				// Redirect to the appropriate page
+				return redirect('order_master')->with('success', 'Order status updated successfully.');
+			} else {
+				// If the order is not found, redirect with an error message
+				return redirect('order_master')->with('error', 'Order not found.');
+			}
+		}
+		
 
 public function product_order()
 {
@@ -3707,77 +3722,86 @@ public function product_order()
 
 
 
-public function updateOrderStatus(Request $request)
-{
-    $productId = $request->input('productId');
-    \Log::info("Update Order Status called with productId: " . $productId);
+// public function updateOrderStatus(Request $request)
+// {
+//     $productId = $request->input('productId');
+//     \Log::info("Update Order Status called with productId: " . $productId);
 
-    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+//     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
 
-    foreach ($ordersToUpdate as $order) {
-        $order->order_status = !$order->order_status;
-        $order->save();
+//     foreach ($ordersToUpdate as $order) {
+//         $order->order_status = !$order->order_status;
+//         $order->save();
 
-        if ($order->order_status == 1) {
-            $placeOrder = $this->insertPlaceOrder($order);
-        }
-    }
+//         if ($order->order_status == 1) {
+//             $placeOrder = $this->insertPlaceOrder($order);
+//         }
+//     }
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Order status updated successfully',
-        'inserted_data' => isset($placeOrder) ? $placeOrder : null,
-    ]);
-}
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'Order status updated successfully',
+//         'inserted_data' => isset($placeOrder) ? $placeOrder : null,
+//     ]);
+// }
 
- public function insertPlaceOrder($order)
+ 
+ public function updateOrderStatus(Request $request)
  {
-	 try {
-		 \DB::beginTransaction();
+	 $productId = $request->input('productId');
+	 $qty = $request->input('qty');
+	 $price = $request->input('price');
  
-		 $placeOrder = Tbl_placeorders::create([
-			 'product_id' => $order->product_id,
-			 'qty' => $order->qty,
-			 'price' => $order->price,
-			 'created_at' => now(),
-			 'updated_at' => now(),
-		 ]);
+	 \Log::info("Update Order Status called with productId: " . $productId);
  
-		 \DB::commit();
+	 $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
  
-		 \Log::info("Inserted into tbl_placeorders: " . json_encode($placeOrder));
+	 foreach ($ordersToUpdate as $order) {
+	
+		 $order->order_status = ($order->order_status == 0) ? 1 : 0;
+		 $order->save();
  
-		 return $placeOrder;
-	 } catch (\Exception $e) {
-		 \DB::rollBack();
- 
-		 \Log::error("Error inserting into tbl_placeorders: " . $e->getMessage());
- 
-		 return null;
+		
+		 if ($order->order_status == 1) {
+			
+			 $placeOrder = new Tbl_placeorders;
+			 $placeOrder->product_id = $productId;
+			 $placeOrder->qty = $qty;
+			 $placeOrder->amount = $price;
+			 $placeOrder->order_date = $order->order_date;
+			 $placeOrder->save();
+		 }
 	 }
+ 
+	 return response()->json(['success' => true]);
  }
+ 
+ 
+ 
  
 
 
+// public function insertIntoPlaceOrders(Request $request)
+// {
+// 	$productId = $request->input('productId');
 
+// 	// Retrieve orders with order_status = 1 from tbl_order_trans
+// 	$ordersToInsert = Tbl_order_trans::where('product_id', $productId)
+// 		->where('order_status', 1)
+// 		->get();
 
+// 	foreach ($ordersToInsert as $order) {
+// 		// Insert into tbl_placeorders
+// 		Tbl_placeorders::create([
+// 			'product_id' => $order->product_id,
+// 			'qty' => $order->qty,
+// 			'price' => $order->price
+// 			// Add other fields as needed
+// 		]);
+// 	}
 
-public function order_history()
-{
-	$orders = DB::table('tbl_placeorders')
-	->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-	->select(
-		'tbl_placeorders.*',
-		'tbl_brand_products.product_name'
-		)
-	->get();
-	 $role=Auth::user()->user_type;
-	return view('order_history',compact('orders','role'));
- }
-
-
-
-
+// 	return response()->json(['success' => true]);
+// }
 
 
         public function brands()

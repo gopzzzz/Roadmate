@@ -420,7 +420,7 @@ $(document).ready(function() {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit CRMS</h5>
+        <h5 class="modal-title">Edit Staff</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -492,7 +492,8 @@ $(document).ready(function() {
 </div>
  
       
-      <div class="modal-footer">
+
+    <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
