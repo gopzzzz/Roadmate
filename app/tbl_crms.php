@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tbl_crms extends Model
+class Tbl_crms extends Model
 {
     public function user()
     {

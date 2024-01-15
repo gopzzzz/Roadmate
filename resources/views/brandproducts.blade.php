@@ -437,7 +437,7 @@ $i++;
 
 
 
-<input class="form-control" name="original_amount" id="original_amount" placeholder="Enter original amount" required>
+<input class="form-control" name="original_amount" id="original_amount" placeholder="Enter original amount" readonly>
 
 
 </div>
@@ -450,7 +450,7 @@ $i++;
 
 
 
-<input class="form-control" name="offer_price" id="offer_price" placeholder="Enter offer price" required>
+<input class="form-control" name="offer_price" id="offer_price" placeholder="Enter offer price" readonly>
 
 
 </div>

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Executives;
 use App\Tbl_franchises;
-use App\tbl_crms;
+use App\Tbl_crms;
 use App\Booktimemasters;
 use App\Banner;
 use App\User;
@@ -509,7 +509,7 @@ class HomeController extends Controller
 	
 	
 	public function crm(){
-		$cr = tbl_crms::with('user')->get();
+		$cr = Tbl_crms::with('user')->get();
 		
 		$crr = DB::table('tbl_crms')
         ->leftJoin('users', 'tbl_crms.user_id', '=', 'users.id')
@@ -534,7 +534,7 @@ class HomeController extends Controller
     $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
 
     if($user->save()){
-		$cr=new tbl_crms;
+		$cr=new Tbl_crms;
 		
 			$cr->crm_name=$request->crm_name;
 			//  $cr->place_id=$request->place_id;
@@ -558,7 +558,7 @@ class HomeController extends Controller
 	}
 	public function crmedit(Request $request){
 		$id=$request->id;
-		$cr=tbl_crms::find($id);
+		$cr=Tbl_crms::find($id);
 		$cr->crm_name=$request->crm_name;
 		$cr->address=$request->address;
 		$cr->dob=$request->dob;
