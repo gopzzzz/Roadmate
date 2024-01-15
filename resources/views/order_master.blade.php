@@ -271,17 +271,17 @@
         
     </div>
 </td>    
-
-<td>
-    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
-        Update Status
-    </button>
-</td>
 <td style="width: 50px;">
   <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
     <button type="submit" class="btn btn-success btn-sm">Bill</button>
   </form>
 </td>
+<td>
+    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
+        Update Status
+    </button>
+</td>
+
 
 <div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
@@ -292,7 +292,7 @@
                                  <span aria-hidden="true">&times;</span>
                                  </button>
                               </div>
-                              <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__'],['total_amount' => '__total_amount_']) }}" enctype="multipart/form-data">
+                              <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__'],['total_amount' => '__id__']) }}" enctype="multipart/form-data">
                 @csrf
                                  <div class="modal-body row">
                                  <input type="hidden" name="id" id="stat_id" value="">
