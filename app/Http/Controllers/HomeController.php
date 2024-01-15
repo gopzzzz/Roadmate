@@ -1224,30 +1224,58 @@ public function shop_vehicle($Id) {
 	public function vshops(){
 		$shop_categories=Shiop_categories::all();
 		$exe=Executives::all();
-		
-		$shops = DB::table('shops')
+
+		$role=Auth::user()->user_type;
+
+		if($role==3){
+			$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',0)
 			->paginate(12);
-			$role=Auth::user()->user_type;
+		}else{
+			$shops = DB::table('shops')
+            ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+			->select('shops.*', 'shiop_categories.category','executives.name')
+			->orderBy('shops.id','DESC')
+			->where('shops.authorised_status',0)
+			->paginate(12);
+		}
+		
+		
+			
 		
 		return view('shops',compact('shops','shop_categories','exe','role'));	
 	}
 	public function ashops(){
 		$shop_categories=Shiop_categories::all();
 		$exe=Executives::all();
-		
-		$shops = DB::table('shops')
+		$role=Auth::user()->user_type;
+
+		if($role==3){
+			$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',1)
 			->paginate(12);
-			$role=Auth::user()->user_type;
+		
+		}else{
+			$shops = DB::table('shops')
+            ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+			->select('shops.*', 'shiop_categories.category','executives.name')
+			->orderBy('shops.id','DESC')
+			->where('shops.authorised_status',1)
+			->paginate(12);
+		
+		}
+		
+	
 		
 		return view('shops',compact('shops','shop_categories','exe','role'));	
 	}

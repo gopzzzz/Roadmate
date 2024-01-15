@@ -426,6 +426,7 @@
          <th>Delivery Date</th>
          <th>Order Date</th>
          <th></th>
+         <th></th>
    @if($role==1)
   @endif
 </tr>
@@ -469,12 +470,12 @@
     @endif
 </td>         <td>{{$key->delivery_date}}</td>
          <td>{{$key->order_date}}</td>
-         <td>
+         <!-- <td>
     <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
         <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}">↓</span>
         
     </div>
-</td>
+</td> -->
 
 
 
@@ -499,18 +500,19 @@
     }
 </style>
 <td style="width: 50px;">
-  <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Bill</a>
-
+  <a href="{{ route('order_trans', ['orderId' => $key->id]) }}" class="btn btn-success btn-sm order_trans">Invoice</a>
+  
 </td>
 <!-- <td>
     <i class="fa fa-edit editstatus" aria-hidden="true" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"></i>
 </td> -->
 
-<td>
-    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
-        Update Status
+<td> 
+<button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
+        Update 
     </button>
-</td>
+   
+ </td> 
 
 <div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
@@ -615,6 +617,7 @@
          <th>Order Status</th>
          <th>Delivery Date</th>
          <th>Order Date</th>
+         <th></th>
          <th></th>
  @if($role==1)
  @endif
