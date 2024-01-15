@@ -374,12 +374,15 @@ $(document).ready(function() {
     </td>
 
         @if($role == 1)
-        <td>
-            <i class="fa fa-edit edit_crm" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-            <!-- <i class="fa fa-eye view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i> -->
-            <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+          <td>
+              <i class="fa fa-edit edit_crm" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+              <!-- <i class="fa fa-trash delete_crm" aria-hidden="true" data-id="{{ $key->id }}" data-url="{{ route('deleteCrm', ['crmId' => $key->id]) }}"></i> -->
+              <a href="{{url('deleteCrm')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
 
-        </td>
+
+              <i class="fa fa-view view_fran" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
+
+          </td>
         @endif
 
     </tr>

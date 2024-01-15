@@ -429,9 +429,9 @@ class HomeController extends Controller
 	
 					if ($request->type[$i] == 4) {
 						$franchiseDetails->district_id = $request->district[$i];
-						// $franchiseDetails->place_id = null; // or set to a default value
+						
 					} else {
-						// $franchiseDetails->district_id = null; // or set to a default value
+						
 						$franchiseDetails->place_id = $request->place_id[$i];
 					}
 	
@@ -523,6 +523,7 @@ class HomeController extends Controller
 		$role=Auth::user()->user_type;
 		return view('crm',compact('cr','crr','role'));
 	}
+
 	public function crminsert(Request $request) {
 		
 	
@@ -569,6 +570,31 @@ class HomeController extends Controller
 		return redirect('crm');
 	}
 
+	public function deleteCrm($crmId) {
+		// Get CRM record
+		$crm = tbl_crms::find($crmId);
+	
+		if (!$crm) {
+			return redirect()->back()->with('error', 'Staff entry not found.');
+		}
+	
+		// Get user associated with CRM
+		$user = User::find($crm->user_id);
+	
+		if ($user) {
+			// Delete CRM record
+			$crm->delete();
+	
+			// Delete user
+			$user->delete();
+	
+			return redirect()->back()->with('success', 'Staff deleted successfully.');
+		}
+	
+		return redirect()->back()->with('error', 'User not found.');
+	}
+	
+	
 
 	//superadmin
 	public function superadmin(){
@@ -1183,11 +1209,20 @@ public function shop_vehicle($Id) {
 		DB::delete('delete from shiop_categories where id = ?',[$id]);
 		return redirect('shop_categories');
 	}
-
+	
 	public function shops(){
 		$shop_categories=Shiop_categories::all();
 		$exe=Executives::all();
-		
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
+		$plac = Tbl_places::leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
+			->get();
+	
+		$type = "";
 		$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
@@ -1196,7 +1231,7 @@ public function shop_vehicle($Id) {
 			->paginate(12);
 			$role=Auth::user()->user_type;
 		
-		return view('shops',compact('shops','shop_categories','exe','role'));
+		return view('shops',compact('shops','shop_categories','exe','con', 'cond', 'dis', 'plac', 'type','role'));
 	}
 	public function exportshop()
 	{
@@ -1255,43 +1290,53 @@ public function shop_vehicle($Id) {
 	}
 
 	public function shopinsert(Request $request){
-		$shop=new Shops;
-		$shop->type=$request->category;
-		$shop->timming=0;
-		$shop->exeid=$request->exename;
-		$shop->agrimentverification_status=$request->verif_status;
-		$shop->pay_status=$request->pay_status;
-		$shop->shop_oc_status=$request->oc_status;
-		$shop->trans_id=$request->trans_id;
-		$shop->open_time=$request->open;
-		$shop->close_time=$request->close;
-		$shop->shopname=$request->shopname;
-		$shop->address=$request->address;
-		$shop->phone_number=$request->phone1;
-		$shop->phone_number2=$request->phone2;
-		$shop->pincode=$request->pincode;
-		$shop->description=$request->desc;
-		$shop->lattitude=$request->latitude;
-		$shop->logitude=$request->longitude;
-		$shop->authorised_status=$request->autherised;
-		$shop->delivery_id=0;
-		$shop->status=1;
-		if($files=$request->file('image')){  
-			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
-			
-			$shop->image=$name; 
-			
-		}  
-		if($shop->save()){
-			$shopcat = new shop_provide_categories;
-			$shopcat->shop_id=$shop->id;
-			$shopcat->shop_cat_id=$request->category;
-			$shopcat->save();
-			return redirect('shops');
+		$shop = new Shops;
+		$shop->type = $request->category;
+		$shop->timming = 0;
+		$shop->exeid = $request->exename;
+		$shop->agrimentverification_status = $request->verif_status;
+		$shop->pay_status = $request->pay_status;
+		$shop->shop_oc_status = $request->oc_status;
+		$shop->trans_id = $request->trans_id;
+		$shop->open_time = $request->open;
+		$shop->close_time = $request->close;
+		$shop->shopname = $request->shopname;
+		$shop->address = $request->address;
+		$shop->phone_number = $request->phone1;
+		$shop->phone_number2 = $request->phone2;
+		$shop->pincode = $request->pincode;
+		$shop->description = $request->desc;
+		$shop->lattitude = $request->latitude;
+		$shop->logitude = $request->longitude;
+		$shop->authorised_status = $request->autherised;
+	
+		// Get the last selected place_id
+		$placeIds = $request->input('place_id');
+    	$lastPlaceId = end($placeIds);
+
+    	$shop->place_id = $lastPlaceId;
+
+	
+	
+		$shop->delivery_id = 0;
+		$shop->status = 1;
+	
+		if ($files = $request->file('image')) {
+			$name = $files->getClientOriginalName();
+			$files->move('img/', $name);
+			$shop->image = $name;
 		}
-		
+	
+		if ($shop->save()) {
+			$shopcat = new shop_provide_categories;
+			$shopcat->shop_id = $shop->id;
+			$shopcat->shop_cat_id = $request->category;
+			$shopcat->save();
+			return redirect('shops')->with('success', 'Shop added successfully!');
+		}
 	}
+	
+
 	public function shopfetch(Request $request){
 		$id=$request->id;
 		$shop=Shops::find($id);
@@ -3499,11 +3544,12 @@ function sendNotification1($msg1,$title)
 			->where('tbl_order_trans.order_id',$orderId)
 			->select(
 				'tbl_order_trans.*',
+				
 				'tbl_order_masters.discount',
 				'tbl_order_masters.total_amount',
 				'tbl_order_masters.total_mrp',
 				'tbl_order_masters.shipping_charge',
-				'tbl_order_masters.order_id', 
+				'tbl_order_masters.order_id',
 
 				'tbl_brand_products.product_name',
 				'shops.shopname',
@@ -3644,6 +3690,55 @@ public function product_order()
  }
 
 
+
+// public function updateOrderStatus(Request $request)
+// {
+//     $productId = $request->input('productId');
+//     \Log::info("Update Order Status called with productId: " . $productId);
+
+//     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+
+//     foreach ($ordersToUpdate as $order) {
+//         $order->order_status = ($order->order_status == 0);
+//         $order->save();
+
+//     }
+
+//     return response()->json(['success' => true]);
+// }
+
+
+
+
+
+
+
+
+
+// public function updateOrderStatus(Request $request)
+// {
+//     $productId = $request->input('productId');
+//     \Log::info("Update Order Status called with productId: " . $productId);
+
+//     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+
+//     foreach ($ordersToUpdate as $order) {
+//         $order->order_status = !$order->order_status;
+//         $order->save();
+
+//         if ($order->order_status == 1) {
+//             $placeOrder = $this->insertPlaceOrder($order);
+//         }
+//     }
+
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'Order status updated successfully',
+//         'inserted_data' => isset($placeOrder) ? $placeOrder : null,
+//     ]);
+// }
+
+ 
  public function updateOrderStatus(Request $request)
  {
 	 $productId = $request->input('productId');
@@ -3655,18 +3750,18 @@ public function product_order()
 	 $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
  
 	 foreach ($ordersToUpdate as $order) {
-		 // Toggle order_status between 0 and 1
+	
 		 $order->order_status = ($order->order_status == 0) ? 1 : 0;
 		 $order->save();
  
-		 // Check if the current order has been updated to status 1
+		
 		 if ($order->order_status == 1) {
-			 // Insert data into tbl_placeorders
+			
 			 $placeOrder = new Tbl_placeorders;
-			 $placeOrder->product_id = $productId; // Use the passed productId
-			 $placeOrder->qty = $qty; // Use the passed quantity
-			 $placeOrder->amount = $price; // Use the passed price
-			 $placeOrder->order_date = $order->order_date; // Assuming 'order_date' is a column in tbl_order_trans
+			 $placeOrder->product_id = $productId;
+			 $placeOrder->qty = $qty;
+			 $placeOrder->amount = $price;
+			 $placeOrder->order_date = $order->order_date;
 			 $placeOrder->save();
 		 }
 	 }
@@ -3733,13 +3828,15 @@ public function product_order()
 		  {
 			  $brandprod = DB::table('tbl_brand_products')
 		      ->leftJoin('tbl_brands', 'tbl_brand_products.brand_id', '=', 'tbl_brands.id')
+			  ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 			  ->where('tbl_brand_products.brand_id', $Id)
-			  ->select('tbl_brand_products.*', 'tbl_brands.brand_name')
+			  ->select('tbl_brand_products.*', 'tbl_brands.brand_name','tbl_hsncodes.hsncode','tbl_hsncodes.tax')
 			  ->orderBy('tbl_brand_products.id', 'desc')
 			  ->get();
 		      $brand = DB::table('tbl_brands')->get();
+			  $hsn = DB::table('tbl_hsncodes')->get();
 			  $role = Auth::user()->user_type;
-		      return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','BrandName'));
+		      return view('brandproducts', compact('brandprod', 'brand', 'role', 'Id','BrandName','hsn'));
 		  }
 		  
 		  public function brandproductsinsert(Request $request, $Id)
@@ -3750,6 +3847,7 @@ public function product_order()
 			  $brandprod->offer_price = $request->offer_price;
               $brandprod->description = $request->description;
 			  $brandprod->price = $request->original_amount;
+			  $brandprod->hsncode = $request->hsncode;
 			  $brandprod->status = 0;
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
@@ -3778,8 +3876,10 @@ public function product_order()
 
 
 			  }
-		      return back();
+		      return back()->with('success', 'Product Added successfully!');;
 		  }
+
+
 	       public function brandproductsfetch(Request $request){
 			$id=$request->id;
 			$brandprod = Tbl_brand_products::find($id);
@@ -3792,9 +3892,10 @@ public function product_order()
 			$brandprod->description = $request->description;
             $brandprod->offer_price = $request->offer_price;
 			$brandprod->price = $request->original_amount;
+			$brandprod->hsncode = $request->hsncode;
 			$brandprod->status = $request->status;
 			$brandprod->save();
-			return back();
+			return back()->with('success', 'Product Edited successfully!');;
 		}
 	      public function imgcompress()
 		{
@@ -3856,7 +3957,7 @@ public function product_order()
             $app->version_code= $request->version_code;
 			$app->version_name	= $request->version_name;
 			$app->app_type	= $request->app_type;
-            $app->status=$request->status;
+            $app->app_status = $request->status;
 		    $app->save();
 			return back();
 		}
