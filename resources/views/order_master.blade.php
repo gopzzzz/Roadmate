@@ -231,7 +231,7 @@
 @foreach($order as $key)
  <tr>
      <td>{{$i++}}</td>
-     <td>{{$key->id}}</td>
+     <td>{{$key->order_id}}</td>
 
      <td>{{$key->shopname}}</td>
          <td>{{$key->total_amount}}</td>

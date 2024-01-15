@@ -3503,6 +3503,8 @@ function sendNotification1($msg1,$title)
 				'tbl_order_masters.total_amount',
 				'tbl_order_masters.total_mrp',
 				'tbl_order_masters.shipping_charge',
+				'tbl_order_masters.order_id', 
+
 				'tbl_brand_products.product_name',
 				'shops.shopname',
 				'shops.address' ,
