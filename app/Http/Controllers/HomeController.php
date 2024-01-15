@@ -3572,26 +3572,41 @@ function sendNotification1($msg1,$title)
 		}
 		
 		public function statusedit(Request $request, $id)
-{
-    \Log::info('Received ID for statusedit: ' . $id);
-
-    // Find the order by ID
-    $order = Tbl_order_masters::find($id);
-
-    // Check if the order exists
-    if ($order) {
-        // Update the order status
-        $order->order_status = $request->order_status;
-        $order->save();
-
-        // Redirect to the appropriate page
-        return redirect('order_master')->with('success', 'Order status updated successfully.');
-    } else {
-        // If the order is not found, redirect with an error message
-        return redirect('order_master')->with('error', 'Order not found.');
-    }
-}
-
+		{
+			\Log::info('Received ID for statusedit: ' . $id);
+		
+			// Retrieve total_amount from the request
+			$total_amount = $request->input('total_amount');
+		
+			\Log::info('Received total_amount for statusedit: ' . $total_amount);
+		
+			// Ensure total_amount is a valid number
+			if (!is_numeric($total_amount)) {
+				\Log::error('Invalid total_amount received: ' . $total_amount);
+				return redirect('order_master')->with('error', 'Invalid total_amount received.');
+			}
+		
+			// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
+			$percentage = ($total_amount * 10) / 100;
+			\Log::info('Calculated Percentage: ' . $percentage);
+		
+			// Find the order by ID
+			$order = Tbl_order_masters::find($id);
+		
+			// Check if the order exists
+			if ($order) {
+				// Update the order status
+				$order->order_status = $request->order_status;
+				$order->save();
+		
+				// Redirect to the appropriate page
+				return redirect('order_master')->with('success', 'Order status updated successfully.');
+			} else {
+				// If the order is not found, redirect with an error message
+				return redirect('order_master')->with('error', 'Order not found.');
+			}
+		}
+		
 
 public function product_order()
 {

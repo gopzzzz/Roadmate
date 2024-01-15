@@ -292,10 +292,14 @@
                                  <span aria-hidden="true">&times;</span>
                                  </button>
                               </div>
-                              <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__']) }}" enctype="multipart/form-data">
+                              <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__'],['total_amount' => '__total_amount_']) }}" enctype="multipart/form-data">
                 @csrf
                                  <div class="modal-body row">
                                  <input type="hidden" name="id" id="stat_id" value="">
+                                 <input type="hidden" name="total_amount" id="total_amount" value="">
+                         
+
+
                                  <div class="form-group col-sm-12">
         <label class="exampleModalLabel">Order Status</label>
         <select name="order_status" id="order_status" class="form-control"required>

@@ -3487,49 +3487,46 @@ $('#category_name').on('change', function () {
 		$('#edithsn_modal').modal('show');
 	});
 
-
 	$(document).on('click', '.editstatus', function () {
-        var id = $(this).data('id');
-        console.log('Clicked on editstatus with id:', id);
+    var id = $(this).data('id');
+    console.log('Clicked on editstatus with id:', id);
 
-       
-        var form = $('#statusEditForm');
-        var url = "{{ route('statusedit', ['id' => '__id__']) }}";
-        form.attr('action', url.replace('__id__', id));
+    // Set the form action dynamically
+    var form = $('#statusEditForm');
+    var url = "{{ route('statusedit', '__id__') }}";
+    url = url.replace('__id__', id);
+    form.attr('action', url);
 
-        // Remove any existing hidden input for 'id'
-        form.find('input[name="id"]').remove();
+    // Update the hidden inputs with the current values
+    $('#stat_id').val(id);
 
-        // Add a hidden input for the 'id' parameter
-        form.append('<input type="hidden" name="id" value="' + id + '">');
+    // Fetch current status via AJAX
+    $.ajax({
+        type: "POST",
+        url: "{{ route('orderfetch') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            "id": id
+        },
+        success: function (res) {
+            console.log('AJAX Response:', res);
 
-        // Fetch current status via AJAX
-        $.ajax({
-            type: "POST",
-            url: "{{ route('orderfetch') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "id": id
-            },
-            success: function (res) {
-                console.log('AJAX Response:', res);
+            // Check if the order details are found
+            if (res.id) {
+                // Update the modal with the current status
+                $('#order_status').val(res.order_status);
+                $('#total_amount').val(res.total_amount);
 
-                // Check if the order details are found
-                if (res.id) {
-                    // Update the modal with the current status
-                    $('#stat_id').val(res.id);
-                    $('#order_status').val(res.order_status);
-                    $('#editstatusmodal').modal('show');
-                    console.log('Modal shown');
-                } else {
-                    console.error('Order details not found');
-                    // Handle the case when order details are not found
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', error);
+                $('#editstatusmodal').modal('show');
+                console.log('Modal shown');
+            } else {
+                console.error('Order details not found');
+                // Handle the case when order details are not found
             }
-        });
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
     });
-	
+});
 </script>
