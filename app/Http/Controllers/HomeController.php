@@ -3820,7 +3820,7 @@ public function product_order()
             $app->version_code= $request->version_code;
 			$app->version_name	= $request->version_name;
 			$app->app_type	= $request->app_type;
-            $app->app_status=$request->status;
+            $app->status=$request->status;
 		    $app->save();
 			return back();
 		}
