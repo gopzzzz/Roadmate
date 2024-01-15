@@ -70,6 +70,7 @@
             @foreach($order as $key)
             @endforeach
             <tr>
+                
                     <th>Order ID</th>
                     <td>{{$key->order_id}}</td>
                 </tr>

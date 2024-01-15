@@ -3543,10 +3543,12 @@ function sendNotification1($msg1,$title)
 			->where('tbl_order_trans.order_id',$orderId)
 			->select(
 				'tbl_order_trans.*',
+				
 				'tbl_order_masters.discount',
 				'tbl_order_masters.total_amount',
 				'tbl_order_masters.total_mrp',
 				'tbl_order_masters.shipping_charge',
+				
 				'tbl_brand_products.product_name',
 				'shops.shopname',
 				'shops.address' ,
@@ -3711,35 +3713,6 @@ public function product_order()
 
 
 
-// public function updateOrderStatus(Request $request)
-// {
-//     $productId = $request->input('productId');
-//     \Log::info("Update Order Status called with productId: " . $productId);
-
-//     // Update order status for orders with order_status = 0
-//     $affectedRows = Tbl_order_trans::where('product_id', $productId)
-//         ->where('order_status', 0)
-//         ->update(['order_status' => 1]);
-
-//     if ($affectedRows > 0) {
-//         // Insert data into tbl_placeorders for orders with order_status = 1
-//         $ordersToInsert = Tbl_order_trans::where('product_id', $productId)
-//             ->where('order_status', 1)
-//             ->get();
-
-//         foreach ($ordersToInsert as $order) {
-//             $placeOrder = new Tbl_placeorders;
-//             $placeOrder->product_id = $order->product_id;
-//             $placeOrder->qty = $order->qty; // Assuming qty is a column in Tbl_order_trans
-//             $placeOrder->price = $order->price; // Assuming price is a column in Tbl_order_trans
-//             $placeOrder->save();
-//         }
-
-//         return response()->json(['success' => true]);
-//     }
-
-//     return response()->json(['success' => false, 'message' => 'No orders with order_status = 0 found.']);
-// }
 
 
 
