@@ -67,6 +67,7 @@ use App\Tbl_brand_products;
 use App\Tbl_franchase_details;
 use App\Tbl_hsncodes;
 use App\Tbl_placeorders;
+use App\Tbl_wallets;
 use DB;
 use Hash;
 use Auth;
@@ -3615,7 +3616,7 @@ function sendNotification1($msg1,$title)
 				return response()->json(['error' => 'Order details not found'], 404);
 			}
 		}
-		
+
 		public function statusedit(Request $request, $id)
 		{
 			\Log::info('Received ID for statusedit: ' . $id);
@@ -3631,10 +3632,6 @@ function sendNotification1($msg1,$title)
 				return redirect('order_master')->with('error', 'Invalid total_amount received.');
 			}
 		
-			// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
-			$percentage = ($total_amount * 10) / 100;
-			\Log::info('Calculated Percentage: ' . $percentage);
-		
 			// Find the order by ID
 			$order = Tbl_order_masters::find($id);
 		
@@ -3642,6 +3639,30 @@ function sendNotification1($msg1,$title)
 			if ($order) {
 				// Update the order status
 				$order->order_status = $request->order_status;
+		
+				// Check if the order status is "Cash Received" (assuming '5' is the code for 'Cash Received')
+				if ($request->order_status == '5') {
+					// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
+					$percentage = ($total_amount * 10) / 100;
+					\Log::info('Calculated Percentage: ' . $percentage);
+		
+					// Update the wallet_amount in tbl_wallets table based on shop_id
+					$shop_id = $order->shop_id;
+		
+					// Find the corresponding wallet record
+					$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+		
+					if ($wallet) {
+						// Update the wallet_amount
+						$wallet->wallet_amount += $percentage;
+						$wallet->save();
+						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+					} else {
+						\Log::error('Wallet not found for shop_id: ' . $shop_id);
+					}
+				}
+		
+				// Save the order
 				$order->save();
 		
 				// Redirect to the appropriate page
@@ -3651,6 +3672,7 @@ function sendNotification1($msg1,$title)
 				return redirect('order_master')->with('error', 'Order not found.');
 			}
 		}
+		
 		
 
 public function product_order()
@@ -4031,9 +4053,9 @@ public function product_order()
 	   public function marketwallet()
 	    {
 		    $role = Auth::user()->user_type;
-            $wallet = DB::table('tbl_walletts')
-		    ->leftJoin('shops', 'tbl_walletts.shop_id', '=', 'shops.id')
-            ->select('tbl_walletts.*', 'shops.shopname')
+            $wallet = DB::table('tbl_wallets')
+		    ->leftJoin('shops', 'tbl_wallets.shop_id', '=', 'shops.id')
+            ->select('tbl_wallets.*', 'shops.shopname')
 			->get();
             return view('marketwallet', compact('role','wallet'));
 	}
