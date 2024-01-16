@@ -3,6 +3,17 @@
 <head>
   <!-- Add these lines in your HTML layout -->
  <style>
+        .print-button {
+            background: linear-gradient(45deg, #007bff, #00ff00); /* Use a gradient background with a mix of two colors */
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            float: right; /* Align the button to the right */
+        }
+        
         /* Define your CSS styles for the invoice here */
         body {
             font-family: Arial, sans-serif;
@@ -60,20 +71,22 @@
         }
     </style>
     <style>
-  .additional-data-container {
-        display: inline-block;
-        margin-left: 5px;
-        border: 2px solid #008080; /* Border color for the rectangle (teal) */
-        padding: 5px; /* Adjust padding as needed */
-        border-radius: 8px; /* Adjust border-radius for rounded corners */
-        background-color: #008080; /* Background color for the rectangle (teal) */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
-    }
+.additional-data-container {
+    display: inline-block;
+    margin-left: 5px;
+    border: 2px solid #008080; /* Border color for the rectangle (teal) */
+    padding: 5px; /* Adjust padding as needed */
+    border-radius: 8px; /* Adjust border-radius for rounded corners */
+    background: linear-gradient(45deg, #001f3f, #008080); /* Gradient background from deep blue to light blue */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+}
 
-    .additional-data-arrow {
-        font-size: 20px; /* Adjust the font size as needed */
-        color: #ffffff; /* Change the color to white or another contrasting color */
-    }
+.additional-data-arrow {
+    font-size: 20px; /* Adjust the font size as needed */
+    color: #ffffff; /* Change the color to white or another contrasting color */
+}
+
+
 </style>
 </head>
 <div class="content-wrapper">
@@ -197,14 +210,15 @@
                 </td>
                 <td style="width: 50px;">
                     <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
-                        <button type="submit" class="btn btn-success btn-sm">Bill</button>
+                        <button type="submit" class="print-button">Bill</button>
                     </form>
                 </td>
                 <td>
-                    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
-                        Update Status
-                    </button>
-                </td>
+                <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
+    style="background: linear-gradient(45deg, #3498db, #001f3f); color: #fff;">
+    Update Status
+</button>
+ </td>
             </tr>
 
             <tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
