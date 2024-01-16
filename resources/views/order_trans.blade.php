@@ -119,7 +119,7 @@
                 <th>Product Name</th>
                               <th>Quantity</th>
                               <th>Offer Amount</th>
-                              <th>Price</th>
+                              <th>MRP</th>
                               <th>Taxable Amount</th>
                               <th>Total Amount</th>
 

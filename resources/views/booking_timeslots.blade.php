@@ -28,7 +28,7 @@
 
               <li class="breadcrumb-item"><a href="home">Home</a></li>
 
-              <li class="breadcrumb-item active">Add Executive</li>
+              <li class="breadcrumb-item active">Add Booking Timeslot</li>
 
             </ol>
 
@@ -297,7 +297,8 @@
 
                   @endphp
 
-                  @foreach($timslot as $key)
+                  @foreach($timslot as $Itemkey)
+                    @foreach($Itemkey as $key)
 
                   <tr>
 
@@ -359,6 +360,8 @@
 
                   @endforeach
 
+                  @endforeach
+
                   </tbody>
                   <tbody id="searchtimeslot">
                   </tbody>
@@ -371,6 +374,8 @@
 
                     <th>Customer</th>
                     <th>Contact Number</th>
+                    <th>Brand/Model </th>
+                    <th>Book Type</th>
 
                     <th>Shop Category</th>
 

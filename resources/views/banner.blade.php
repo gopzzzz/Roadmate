@@ -28,9 +28,9 @@
 						<div class="card-header">
 							<h3 class="card-title">Add Banner</h3>
 
-							<form method="POST" action="{{url('imagecompress')}}" enctype="multipart/form-data">@csrf
+							<!-- <form method="POST" action="{{url('imagecompress')}}" enctype="multipart/form-data">@csrf
 									<input type="file" name="image[]" multiple>	<button type="submit" name="submit" class="btn btn-primary">Add</button>
-</form>
+</form> -->
 							<p align="right">
 								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Banner</button>
 								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -45,7 +45,7 @@
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
 													</button>
 												</div>
-												<div class="form-group col-sm-6">
+												<div class="form-group col-sm-12">
 													<label class="exampleModalLabel">Banner Type</label>
 													<select name="type" class="form-control">
 													    <option value="0">Select Type</option>
@@ -56,7 +56,7 @@
 													</select>
 												</div>
 												<div class="modal-body row">
-													<div class="form-group col-sm-6">
+													<div class="form-group col-sm-12">
 														<label class="exampleModalLabel">Image</label>
 														<input type="file" name="bannerimage" accept="image/*" required>
 													</div>
@@ -106,6 +106,7 @@
 								</tfoot>
 							</table>
 							
+				
 							<div class="modal" id="editbanner_modal" tabindex="-1" role="dialog">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
@@ -116,7 +117,7 @@
 										</div>
 										<form method="POST" action="{{url('banneredit')}}" enctype="multipart/form-data">@csrf
 											<div class="modal-body row">
-											<div class="form-group col-sm-6">
+											<div class="form-group col-sm-12">
 													<label class="exampleModalLabel">Banner Type</label>
 													<select name="type1" class="form-control" id="bannertype">
 													    <option value="0">Select Type</option>
@@ -126,7 +127,7 @@
 														<option value="4">Store</option>
 													</select>
 												</div>
-												<div class="form-group col-sm-6">
+												<div class="form-group col-sm-12">
 													<input type="hidden" name="id" id="bannerid">
 													<label class="exampleModalLabel">Image</label>
 													<input type="file" name="bannerimage" accept="image/*" id="bannerimage" required>

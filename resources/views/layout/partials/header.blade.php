@@ -207,6 +207,12 @@
                                       <p>Product Orders</p>
                                   </a>
                               </li>
+                              <li class="nav-item">
+                                  <a href="{{ url('order_history') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Order History</p>
+                                  </a>
+                              </li>
                               </ul>
                               </li>
                               <li class="nav-item">
@@ -688,12 +694,12 @@
                           </a>
                           <ul class="nav nav-treeview">
                            
-                              <li class="nav-item">
+                              <!-- <li class="nav-item">
                                   <a href="{{ url('vshops') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>Visited Shops</p>
                                   </a>
-                              </li>
+                              </li> -->
 
                               <li class="nav-item">
                                   <a href="{{ url('ashops') }}" class="nav-link">

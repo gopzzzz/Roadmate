@@ -229,7 +229,7 @@
                                     </select>
                                  </div>
                               </div>
-                            </div>
+                            </div>          
                          </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">create </button>

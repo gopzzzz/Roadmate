@@ -164,37 +164,52 @@ class HomeController extends Controller
 		$role=Auth::user()->user_type;
 
 		if($role==3){
-			$fran=DB::table('tbl_franchises')->where('user_id',$userid)->first();
-			if($fran->type==4){
-				$timslot = DB::table('booktimemasters')
-				->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
-				->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
-				->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
-				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
-				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
-				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
-				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
-				->where('shops.place_id',$fran->district_id)
-				->orderBy('booktimemasters.id', 'desc')
-				->get();
-			}else{
-				$timslot = DB::table('booktimemasters')
-				->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
-				->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
-				->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
-				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
-				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
-				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+			$fran=DB::table('tbl_franchase_details')
+			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+			->where('tbl_franchises.user_id',$userid)
+			->select('tbl_franchase_details.*')
+			->get();
+
+			//echo "<pre>";print_r($fran);exit;
+			$timslot=array();
+			foreach($fran as $singleFranchise){
+				if($singleFranchise->type==4){
+					
+
+					$timslot[] = DB::table('booktimemasters')
+					->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+					->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+					->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+					->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
+					->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
+					->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
+					->orderBy('booktimemasters.id', 'desc')
+					->where('tbl_places.district_id',$singleFranchise->district_id)
+					->get();
+				}else{
+					$timslot[] = DB::table('booktimemasters')
+					->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+					->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+					->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+					->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
+					->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
+					->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+					->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
+					->orderBy('booktimemasters.id', 'desc')
+					->where('shops.place_id',$singleFranchise->place_id)
+					->get();
+
+					//echo "<pre>";print_r($timslot);exit;
 				
-				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
-				->where('shops.place_id',$fran->place_id)
-				->orderBy('booktimemasters.id', 'desc')
-				->get();
+				}
 			}
+			
 			
 
 		}else{
-			$timslot = DB::table('booktimemasters')
+			$timslot[]= DB::table('booktimemasters')
             ->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
 			->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
 			->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
@@ -206,6 +221,8 @@ class HomeController extends Controller
 			->get();
 
 		}
+
+		//echo "<pre>";print_r($timslot);exit;
 		
 	
 			
@@ -1254,23 +1271,49 @@ public function shop_vehicle($Id) {
 		$shop_categories=Shiop_categories::all();
 		$exe=Executives::all();
 		$role=Auth::user()->user_type;
+		$userid=Auth::user()->id;
+
+		
+			$shops=array();
 
 		if($role==3){
-			$shops = DB::table('shops')
-            ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
-			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
-			->select('shops.*', 'shiop_categories.category','executives.name')
-			->orderBy('shops.id','DESC')
-			->where('shops.authorised_status',1)
-			->paginate(12);
+			$fran=DB::table('tbl_franchase_details')
+			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+			->where('tbl_franchises.user_id',$userid)
+			->select('tbl_franchase_details.*')
+			->get();
+			foreach($fran as $singleFranlist){
+				if($singleFranlist->type==4){
+					$shops[] = DB::table('shops')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+					->select('shops.*', 'shiop_categories.category','executives.name')
+					->orderBy('shops.id','DESC')
+					->where('shops.authorised_status',1)
+					->where('tbl_places.district_id',$singleFranlist->district_id)
+					->paginate(12);
+				}else{
+					$shops[] = DB::table('shops')
+					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+					->select('shops.*', 'shiop_categories.category','executives.name')
+					->orderBy('shops.id','DESC')
+					->where('shops.authorised_status',1)
+					->paginate(12);
+				}
+
+			}
+			
 		
 		}else{
-			$shops = DB::table('shops')
+			$shops[] = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',1)
+			->where('shops.place_id',$singleFranlist->place_id)
 			->paginate(12);
 		
 		}
@@ -3550,7 +3593,7 @@ function sendNotification1($msg1,$title)
 			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
             ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
 			->orderBy('tbl_order_masters.id', 'DESC')
-			->get();
+			->paginate(10);
 			$mark=DB::table('shops')
 			->get();
             $orderr=DB::table('tbl_coupens')->get();
@@ -3636,25 +3679,62 @@ public function product_order()
  }
 
 
+ public function updateOrderStatus(Request $request)
+ {
+	 $productId = $request->input('productId');
+	 $qty = $request->input('qty');
+	 $price = $request->input('price');
+ 
+	 \Log::info("Update Order Status called with productId: " . $productId);
+ 
+	 $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+ 
+	 foreach ($ordersToUpdate as $order) {
+		 // Toggle order_status between 0 and 1
+		 $order->order_status = ($order->order_status == 0) ? 1 : 0;
+		 $order->save();
+ 
+		 // Check if the current order has been updated to status 1
+		 if ($order->order_status == 1) {
+			 // Insert data into tbl_placeorders
+			 $placeOrder = new Tbl_placeorders;
+			 $placeOrder->product_id = $productId; // Use the passed productId
+			 $placeOrder->qty = $qty; // Use the passed quantity
+			 $placeOrder->amount = $price; // Use the passed price
+			 $placeOrder->order_date = $order->order_date; // Assuming 'order_date' is a column in tbl_order_trans
+			 $placeOrder->save();
+		 }
+	 }
+ 
+	 return response()->json(['success' => true]);
+ }
+ 
+ 
+ 
+ 
 
-public function updateOrderStatus(Request $request)
-{
-    $productId = $request->input('productId');
-    \Log::info("Update Order Status called with productId: " . $productId);
 
-    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+// public function insertIntoPlaceOrders(Request $request)
+// {
+// 	$productId = $request->input('productId');
 
-    foreach ($ordersToUpdate as $order) {
-        $order->order_status = ($order->order_status == 0);
-        $order->save();
+// 	// Retrieve orders with order_status = 1 from tbl_order_trans
+// 	$ordersToInsert = Tbl_order_trans::where('product_id', $productId)
+// 		->where('order_status', 1)
+// 		->get();
 
-    }
+// 	foreach ($ordersToInsert as $order) {
+// 		// Insert into tbl_placeorders
+// 		Tbl_placeorders::create([
+// 			'product_id' => $order->product_id,
+// 			'qty' => $order->qty,
+// 			'price' => $order->price
+// 			// Add other fields as needed
+// 		]);
+// 	}
 
-    return response()->json(['success' => true]);
-}
-
-
-
+// 	return response()->json(['success' => true]);
+// }
 
 
         public function brands()

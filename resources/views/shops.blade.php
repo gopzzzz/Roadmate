@@ -364,7 +364,7 @@
 
 
                 </div>
-              
+                         
 
 
                
@@ -384,7 +384,7 @@
 
                 <a href="{{url('exportshop')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
 
-                <table  class="table table-bordered table-striped" id="example354">
+                <table  class="table table-bordered table-striped" id="example1">
 
                   <thead>
 
@@ -423,7 +423,8 @@
 
                   @endphp
 
-                  @foreach($shops as $key)
+                  @foreach($shops as $itemkey)
+                    @foreach($itemkey as $key)
 
                   <tr>
 
@@ -463,6 +464,8 @@
 
                   @endforeach
 
+                  @endforeach
+
                   </tbody>
                   <tbody id="searchshoplist">
                   </tbody>
@@ -499,12 +502,7 @@
 
                 </table>
 
-                <div class="clearfix" id="shop_pagination">
-                  
-                {!! $shops->render( "pagination::bootstrap-4") !!}
-                    
-
-</div>
+          
 				
 				<div class="modal" id="viewshop_modal" tabindex="-1" role="dialog" >
                 <div class="modal-dialog" role="document">

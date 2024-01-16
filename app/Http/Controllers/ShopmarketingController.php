@@ -62,7 +62,10 @@ public function categoryproductlist(){
 
   $data1 = json_decode($json);
   
-    
+  $index=$data1->index;
+  $offset=($index*20);
+  $limit=20;
+
 
   $categoryId=$data1->categoryid; 
   try{	
@@ -73,7 +76,8 @@ public function categoryproductlist(){
           ->where('tbl_rm_products.cat_id', $categoryId)
           ->where('tbl_brand_products.status',0)
           
-      
+          ->offset($offset) 
+          ->limit($limit) 
           ->get();
         $products = [];
 
@@ -513,8 +517,7 @@ $postdata = file_get_contents("php://input");
   $index=$data1->index;
   $offset=($index*20);
   $limit=20;
-
-  
+ 
 
 
   try{	
