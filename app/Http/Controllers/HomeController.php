@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 use App\Executives;
 use App\Tbl_franchises;
@@ -68,7 +69,6 @@ use App\Tbl_franchase_details;
 use App\Tbl_hsncodes;
 use App\Tbl_placeorders;
 use App\Tbl_wallets;
-use App\Tbl_wallet_transactions;
 use DB;
 use Hash;
 use Auth;
@@ -402,7 +402,34 @@ class HomeController extends Controller
 	return view('franchises',compact('fran','role','con','cond','dis','plac','type'));
 		
 	}
+	
 	public function franinsert(Request $request) {
+		
+
+		$rules = [
+			'franchise_name' => 'required',
+			'email' => [
+				'required',
+				'email',
+				Rule::unique('users')->ignore($request->id),
+			],
+			'password' => 'required|min:6',
+			'type.*' => 'required',
+			// Add other validation rules as needed
+		];
+	
+		// Validation messages
+		$messages = [
+			'email.unique' => 'The email has already been taken.',
+		];
+	
+		$validator = Validator::make($request->all(), $rules, $messages);
+	
+		if ($validator->fails()) {
+			return redirect()->back()->withErrors($validator)->withInput()->with('validationError', 'Email already exists.');
+
+		}
+
 		$user = new User;
 		$user->name = $request->franchise_name;
 		$user->email = $request->email;
@@ -509,7 +536,7 @@ class HomeController extends Controller
 	
 	
 	public function crm(){
-		$cr = Tbl_crms::with('user')->get();
+		$cr = tbl_crms::with('user')->get();
 		
 		$crr = DB::table('tbl_crms')
         ->leftJoin('users', 'tbl_crms.user_id', '=', 'users.id')
@@ -535,7 +562,7 @@ class HomeController extends Controller
     $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
 
     if($user->save()){
-		$cr=new Tbl_crms;
+		$cr=new tbl_crms;
 		
 			$cr->crm_name=$request->crm_name;
 			//  $cr->place_id=$request->place_id;
@@ -559,7 +586,7 @@ class HomeController extends Controller
 	}
 	public function crmedit(Request $request){
 		$id=$request->id;
-		$cr=Tbl_crms::find($id);
+		$cr=tbl_crms::find($id);
 		$cr->crm_name=$request->crm_name;
 		$cr->address=$request->address;
 		$cr->dob=$request->dob;
@@ -3544,7 +3571,7 @@ function sendNotification1($msg1,$title)
 			->where('tbl_order_trans.order_id',$orderId)
 			->select(
 				'tbl_order_trans.*',
-				
+				'tbl_order_masters.order_id',
 				'tbl_order_masters.discount',
 				'tbl_order_masters.total_amount',
 				'tbl_order_masters.total_mrp',
@@ -3564,19 +3591,24 @@ function sendNotification1($msg1,$title)
 			->get();
 		   return view('order_trans',compact('role','mark','markk','order'));
 		}
-        public function order_master(){
-			$role=Auth::user()->user_type;
-			$order=DB::table('tbl_order_masters')
-			->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-			->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-            ->select('tbl_order_masters.*','shops.shopname','shops.address','tbl_coupens.coupencode')
-			->orderBy('tbl_order_masters.id', 'DESC')
-			->paginate(10);
-			$mark=DB::table('shops')
-			->get();
-            $orderr=DB::table('tbl_coupens')->get();
-			return view('order_master',compact('order','role','orderr','mark'));
+		public function order_master() {
+			$role = Auth::user()->user_type;
+		
+			$order = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode')
+				->orderBy('tbl_order_masters.order_status', 'ASC') 
+				->orderBy('tbl_order_masters.id', 'DESC')
+				
+				->paginate(10);
+		
+			$mark = DB::table('shops')->get();
+			$orderr = DB::table('tbl_coupens')->get();
+		
+			return view('order_master', compact('order', 'role', 'orderr', 'mark'));
 		}
+		
 
 		public function order_masterfetch(Request $request){
 			
@@ -3619,60 +3651,70 @@ function sendNotification1($msg1,$title)
 				return response()->json(['error' => 'Order details not found'], 404);
 			}
 		}
+		public function orderstatus() {
+			$order = Tbl_order_masters::orderBy('order_status')->get();
+		
+			return view('order_master', compact('order'));
+		}
+		
 
-
-public function statusedit(Request $request, $id)
-{
-    \Log::info('Received ID for statusedit: ' . $id);
-
-    $total_amount = $request->input('total_amount');
-
-    \Log::info('Received total_amount for statusedit: ' . $total_amount);
-
-    if (!is_numeric($total_amount)) {
-        \Log::error('Invalid total_amount received: ' . $total_amount);
-        return redirect('order_master')->with('error', 'Invalid total_amount received.');
-    }
-
-    $order = Tbl_order_masters::find($id);
-
-    if ($order) {
-        $order->order_status = $request->order_status;
-
-        if ($request->order_status == '5') {
-            $percentage = ($total_amount * 10) / 100;
-            \Log::info('Calculated Percentage: ' . $percentage);
-
-            $shop_id = $order->shop_id;
-
-            $wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
-
-            if ($wallet) {
-                $wallet->wallet_amount += $percentage;
-                $wallet->save();
-                \Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
-
-                // Insert into tbl_wallet_transactions table
-                $walletTransaction = new Tbl_wallet_transactions();
-                $walletTransaction->amount = $wallet->wallet_amount;
-				$walletTransaction->type = 1; // Assuming type 1 represents the specified type
-
-                $walletTransaction->shop_id = $shop_id;
-                $walletTransaction->save();
-                \Log::info('Inserted into tbl_wallet_transactions table: ' . $walletTransaction->id);
-            } else {
-                \Log::error('Wallet not found for shop_id: ' . $shop_id);
-            }
-        }
-
-        $order->save();
-
-        return redirect('order_master')->with('success', 'Order status updated successfully.');
-    } else {
-        return redirect('order_master')->with('error', 'Order not found.');
-    }
-}
-
+		public function statusedit(Request $request, $id)
+		{
+			\Log::info('Received ID for statusedit: ' . $id);
+		
+			// Retrieve total_amount from the request
+			$total_amount = $request->input('total_amount');
+		
+			\Log::info('Received total_amount for statusedit: ' . $total_amount);
+		
+			// Ensure total_amount is a valid number
+			if (!is_numeric($total_amount)) {
+				\Log::error('Invalid total_amount received: ' . $total_amount);
+				return redirect('order_master')->with('error', 'Invalid total_amount received.');
+			}
+		
+			// Find the order by ID
+			$order = Tbl_order_masters::find($id);
+		
+			// Check if the order exists
+			if ($order) {
+				// Update the order status
+				$order->order_status = $request->order_status;
+		
+				// Check if the order status is "Cash Received" (assuming '5' is the code for 'Cash Received')
+				if ($request->order_status == '5') {
+					// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
+					$percentage = ($total_amount * 10) / 100;
+					\Log::info('Calculated Percentage: ' . $percentage);
+		
+					// Update the wallet_amount in tbl_wallets table based on shop_id
+					$shop_id = $order->shop_id;
+		
+					// Find the corresponding wallet record
+					$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+		
+					if ($wallet) {
+						// Update the wallet_amount
+						$wallet->wallet_amount += $percentage;
+						$wallet->save();
+						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+					} else {
+						\Log::error('Wallet not found for shop_id: ' . $shop_id);
+					}
+				}
+		
+				// Save the order
+				$order->save();
+		
+				// Redirect to the appropriate page
+				return redirect('order_master')->with('success', 'Order status updated successfully.');
+			} else {
+				// If the order is not found, redirect with an error message
+				return redirect('order_master')->with('error', 'Order not found.');
+			}
+		}
+		
+		
 
 public function product_order()
 {

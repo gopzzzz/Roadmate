@@ -208,6 +208,7 @@
   <div class="card-body">
     <table id="example1" class="table table-bordered table-striped">
         <thead>
+            
             <tr>
                 <th>id</th>
                 <th>OrderId</th>
@@ -232,7 +233,9 @@
         </thead>
         <tbody>
             @php 
+           
                 $i = 1;
+                
             @endphp
             @foreach($order as $key)
             <tr>
