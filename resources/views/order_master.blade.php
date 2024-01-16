@@ -3,6 +3,17 @@
 <head>
   <!-- Add these lines in your HTML layout -->
  <style>
+        .print-button {
+            background: linear-gradient(45deg, #007bff, #00ff00); /* Use a gradient background with a mix of two colors */
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            float: right; /* Align the button to the right */
+        }
+        
         /* Define your CSS styles for the invoice here */
         body {
             font-family: Arial, sans-serif;
@@ -60,23 +71,24 @@
         }
     </style>
     <style>
-  .additional-data-container {
-        display: inline-block;
-        margin-left: 5px;
-        border: 2px solid #008080; /* Border color for the rectangle (teal) */
-        padding: 5px; /* Adjust padding as needed */
-        border-radius: 8px; /* Adjust border-radius for rounded corners */
-        background-color: #008080; /* Background color for the rectangle (teal) */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
-    }
+.additional-data-container {
+    display: inline-block;
+    margin-left: 5px;
+    border: 2px solid #008080; /* Border color for the rectangle (teal) */
+    padding: 5px; /* Adjust padding as needed */
+    border-radius: 8px; /* Adjust border-radius for rounded corners */
+    background: linear-gradient(45deg, #001f3f, #008080); /* Gradient background from deep blue to light blue */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+}
 
-    .additional-data-arrow {
-        font-size: 20px; /* Adjust the font size as needed */
-        color: #ffffff; /* Change the color to white or another contrasting color */
-    }
+.additional-data-arrow {
+    font-size: 20px; /* Adjust the font size as needed */
+    color: #ffffff; /* Change the color to white or another contrasting color */
+}
+
+
 </style>
 </head>
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -108,8 +120,7 @@
                             <p align="right">
                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <form method="POST" action="{{url('orderinsert')}}" enctype="multipart/form-data">
-                                        @csrf
+                                  
                                         <div class="modal-dialog" role="document" style="width:80%;">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -120,87 +131,10 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body row">
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Shop</label>
-                                                        <select name="shopname" class="form-control">
-                                                            <option value="0">Select Shop</option>
-                                                            @foreach($mark as $key)
-                                                                <option value="{{$key->id}}">{{$key->shopname}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Total Amount</label>
-                                                        <input type="text" class="form-control" name="total_amount"
-                                                            placeholder="Enter Total Amount" required>
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Discount</label>
-                                                        <input type="text" class="form-control" name="discount" placeholder="Enter Discount" required>
-                                                            
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Coupen</label>
-                                                        <select name="coupencode" class="form-control">
-                                                        <option value="0">Select Coupen Code</option>
-                                                        @foreach($orderr as $key)
-
-                                                        <option value="{{$key->id}}">{{$key->coupencode}}</option>
-
-                                                        @endforeach
-
-
-                                                        </select>
-
-                                                    </div>
-
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Wallet</label>
-                                                        <select name="wallet" class="form-control">
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Payment Mode</label> &nbsp;&nbsp;
-                                                        <input type="radio" name="paymentmode" required value="1">
-                                                        Online
-                                                        <input type="radio" name="paymentmode" required value="0"> COD
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Total MRP</label>
-                                                        <input type="text" class="form-control" name="total_mrp"  placeholder="Enter Total MRP" required>
-                                                           
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Shipping Charge</label>
-                                                        <input type="text" class="form-control" name="shipping_charge" placeholder="Enter Shipping charge" required>
-                                                            
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Tax Amount</label>
-                                                        <input type="text"  class="form-control" name="tax_amount" placeholder="Enter Tax Amount" required>
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <br><br><label class="exampleModalLabel">Payment Status</label> &nbsp;&nbsp;
-                                                        <input type="radio"  name="pay_status" required value="1"> Paid
-                                                        <input type="radio"  name="pay_status" required value="0"> Unpaid
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Delivery Date</label>
-                                                        <input type="date"  class="form-control" name="delivery_date" placeholder="Enter Delivery Date" required>
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label class="exampleModalLabel">Order Date</label>
-                                                        <input type="date"  class="form-control" name="order_date" placeholder="Enter Order Date" required>
-                                                        </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">Close</button>
-                                                    <button type="submit" name="submit" class="btn btn-primary">Add
-                                                    </button>
+                                                  
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
                             </p>
                         </div>
@@ -240,14 +174,13 @@
             @foreach($order as $key)
             <tr>
                 <td>{{ $i++ }}</td>
-                <td>{{ $key->id }}</td>
+                <td>{{ $key->order_id }}</td>
                 <td>{{ $key->shopname }}</td>
                 <td>{{ $key->total_amount }}</td>
                 <td>{{ $key->discount }}</td>
                 <td>{{ $key->coupencode }}</td>
                 <td>{{ $key->wallet_redeem_id }}</td>
-                <td>
-                    @if($key->payment_mode==0) Cash on Delivery @else Online @endif
+                <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
                 </td>
                 <td>{{ $key->total_mrp }}</td>
                 <td>{{ $key->shipping_charge }}</td>
@@ -280,21 +213,22 @@
                 </td>
                 <td style="width: 50px;">
                     <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
-                        <button type="submit" class="btn btn-success btn-sm">Bill</button>
+                        <button type="submit" class="print-button">Bill</button>
                     </form>
                 </td>
                 <td>
-                    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}">
-                        Update Status
-                    </button>
-                </td>
+                <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
+    style="background: linear-gradient(45deg, #3498db, #001f3f); color: #fff;">
+    Update Status
+</button>
+ </td>
             </tr>
 
             <tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
                 <td colspan="16">
                     <div class="order-details-container">
                         <div id="tableContainer{{ $key->id }}" style="display: none;">
-                            <input type="hidden" name="order_id" value="{{ $key->id }}">
+                        <input type="hidden" name="order_id" value="{{ $key->id }}">
                             <div class="invoice-details">
                                 <div class="card-body">
                                     <div class="invoice-table">
@@ -316,7 +250,6 @@
                                                 <tr>
                                                    
                                                     @if($role==1)
-                                                        
                                                     @endif
                                                 </tr>
                                             </tfoot>
@@ -381,7 +314,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '__id__'],['total_amount' => '__id__']) }}" enctype="multipart/form-data">
+            <form id="statusEditForm" method="post" action="{{ route('statusedit', ['id' => '_id'],['total_amount' => '__id_']) }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body row">
                     <input type="hidden" name="id" id="stat_id" value="">
@@ -390,7 +323,7 @@
                     <div class="form-group col-sm-12">
                         <label class="exampleModalLabel">Order Status</label>
                         <select name="order_status" id="order_status" class="form-control" required>
-                            <option value="0">Pending</option>
+                        <option value="0">Pending</option>
                             <option value="1">Confirmed</option>
                             <option value="2">Shipped</option>
                             <option value="3">Delivered</option>
@@ -407,11 +340,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
 <script>
     function toggleTable(event, orderId) {
         event.stopPropagation();
