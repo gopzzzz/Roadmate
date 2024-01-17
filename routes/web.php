@@ -1212,6 +1212,8 @@ Route::post('/updateOrderStatus', [App\Http\Controllers\HomeController::class, '
 
 Route::get('/order_history', 'HomeController@order_history')->name('order_history');
 
+Route::get('/product-orders', 'HomeController@showProductOrders')->name('productOrders');
+
 
 
 Route::get('/customertype', [App\Http\Controllers\HomeController::class, 'customertype'])->name('customertype');

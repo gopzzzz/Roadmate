@@ -64,6 +64,12 @@
                               <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
                               <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com</small>
                            </div>
+                           @if(session('validationError'))
+    <script>
+        alert("{{ session('validationError') }}");
+    </script>
+@endif
+
                            <div class="form-group col-sm-6">
                               <label class="exampleModalLabel">Password</label>
                               <input class="form-control" name="password" placeholder="Enter Password" required>
@@ -164,7 +170,7 @@
                         <th>Phone Number</th>
                         <th>Area Name</th>
                         <th>Pincode</th>
-                        <!-- <th></th>  -->
+                        <th>Franchise Details</th>
                         @if($role==1)
                         <th>Action</th>
                         @endif
@@ -406,6 +412,8 @@
 </section>
 <!-- /.content -->
 </div>
+
+
 <script>
    document.addEventListener('DOMContentLoaded', function () {
        var phoneInput = document.querySelector('input[name="phone_number"]');
