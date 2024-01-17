@@ -164,7 +164,7 @@ class HomeController extends Controller
 		$timslot=Booktimemasters::all();
 		$userid=Auth::user()->id;
 		$role=Auth::user()->user_type;
-
+		$timslot=array();
 		if($role==3){
 			$fran=DB::table('tbl_franchase_details')
 			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
@@ -173,7 +173,7 @@ class HomeController extends Controller
 			->get();
 
 			//echo "<pre>";print_r($fran);exit;
-			$timslot=array();
+			
 			foreach($fran as $singleFranchise){
 				if($singleFranchise->type==4){
 					
@@ -1240,7 +1240,7 @@ public function shop_vehicle($Id) {
 			->get();
 	
 		$type = "";
-		$shops = DB::table('shops')
+		$shops[] = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
@@ -1309,6 +1309,16 @@ public function shop_vehicle($Id) {
 		$exe=Executives::all();
 		$role=Auth::user()->user_type;
 		$userid=Auth::user()->id;
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
+		$plac = Tbl_places::leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
+			->get();
+	
+		$type = "";
 
 		
 			$shops=array();
@@ -1342,7 +1352,7 @@ public function shop_vehicle($Id) {
 
 			}
 			
-		//
+		
 		}else{
 			$shops[] = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
@@ -1357,7 +1367,7 @@ public function shop_vehicle($Id) {
 		
 	
 		
-		return view('shops',compact('shops','shop_categories','exe','role'));	
+		return view('shops',compact('shops','shop_categories','exe','role','con','cond','dis','plac','type'));	
 	}
 
 	public function shopinsert(Request $request){
