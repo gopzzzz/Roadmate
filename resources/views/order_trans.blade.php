@@ -1,8 +1,31 @@
 @extends('layout.mainlayout')
 @section('content')
+
 <div class="content-wrapper">
+
 <head>
     <style>
+        
+   
+          /* Style the button for both screen and print media */
+          .print-button {
+            background: linear-gradient(45deg, #007bff, #00ff00); /* Use a gradient background with a mix of two colors */
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            float: right; /* Align the button to the right */
+        }
+     
+        /* Style the button for print media */
+        @media print {
+            .print-button {
+                display: none;
+            }
+        }
+     
         /* Define your CSS styles for the invoice here */
         body {
             font-family: Arial, sans-serif;
@@ -15,15 +38,19 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .invoice-header {
-            background-color: #e4cf23;
-            color: #e90f0e;
-            padding: 20px;
-            text-align: center;
-        }
-        .invoice-title {
-            font-size: 40px;
-            text-transform: uppercase;
-        }
+    background: linear-gradient(45deg, #8e44ad, #e67e22);
+    color: #000; /* Black text color for readability */
+    padding: 20px;
+    text-align: center;
+}
+.invoice-title {
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: bold; /* Add bold font weight */
+    text-align: center; /* Center-align the title */
+    margin-bottom: 10px; /* Add margin at the bottom for spacing */
+}
+
         .invoice-details {
             margin: 20px;
         }
@@ -60,7 +87,10 @@
         }
     </style>
 </head>
+<button class="print-button" onclick="printPage()">Print Page</button>
+
 <body>
+
     <div class="invoice">
         <div class="invoice-header">
             <div class="invoice-title">Invoice</div>
@@ -70,7 +100,6 @@
             @foreach($order as $key)
             @endforeach
             <tr>
-                
                     <th>Order ID</th>
                     <td>{{$key->order_id}}</td>
                 </tr>
@@ -143,10 +172,18 @@
                 <!-- Loop through your invoice items and populate the second table rows -->
                
             </table>
+
+            <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
         </div>
-        
+
     </div>
+
 </body>
 
 </div>
+
 @endsection
