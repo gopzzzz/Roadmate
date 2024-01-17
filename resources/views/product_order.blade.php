@@ -5,7 +5,13 @@
 
 <!-- <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
-    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-N2Lp0O1trMbsN01NJZSdZlPz53LW3fmBkSo2B1bFOcJOYc6sjvI4xkgUEQ8Hf/AClQQ5Np0UV5z/vlj+B6qSRg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+
+
+</style>
 </head>
 
 <div class="content-wrapper">
@@ -83,7 +89,36 @@
 
 
                      <p align="right">
+                     <div class="float-right">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="brandFilter">
+                <i class="fas fa-filter"></i>
+            </label>
+        </div>
+        <select id="brandFilter" class="custom-select">
+            <option value="">All Brands</option>
+            @foreach($brands as $brand)
+                <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
+            @endforeach
+        </select>
+        <div class="input-group-append">
+            <button class="btn btn-primary" onclick="applyBrandFilter()">Apply</button>
+        </div>
+    </div>
+</div>
 
+
+
+
+
+
+
+
+
+
+
+                            </p>
                   </div>
 
 
@@ -186,8 +221,15 @@ $i++;
 
 
 </div>
-<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+
+<script>
+    function applyBrandFilter() {
+        var selectedBrand = $("#brandFilter").val();
+        // Redirect to the same page with the selected brand as a query parameter
+        window.location.href = "{{ route('product_order') }}?brand=" + selectedBrand;
+    }
+</script>
+
 
 <script>
     function changeOrderStatus(productId, qty, price) {

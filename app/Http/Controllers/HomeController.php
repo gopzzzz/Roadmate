@@ -3714,22 +3714,37 @@ function sendNotification1($msg1,$title)
 				return redirect('order_master')->with('error', 'Order not found.');
 			}
 		}
-		
-		
-
-public function product_order()
-{
-	$orders = DB::table('tbl_order_trans')
-	->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
-	->where('order_status', 0)
-	->select(
-		'tbl_order_trans.*',
-		'tbl_brand_products.product_name'
-		)	->get();
 	
-	 $role=Auth::user()->user_type;
-	return view('product_order',compact('orders','role'));
- }
+		
+		
+		public function product_order(Request $request)
+		{
+			$role = Auth::user()->user_type;
+		
+			// Get the list of brands for the filter dropdown
+			$brands = DB::table('tbl_rm_products')->get();
+		
+			// Check if a brand filter is applied
+			$selectedBrand = $request->input('brand');
+		
+			$ordersQuery = DB::table('tbl_order_trans')
+				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
+		
+			// Apply brand filter if selected
+			if ($selectedBrand) {
+				$ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
+			}
+		
+			$orders = $ordersQuery
+				->where('order_status', 0)
+				->select(
+					'tbl_order_trans.*',
+					'tbl_brand_products.product_name'
+				)->get();
+		
+			return view('product_order', compact('orders', 'role', 'brands'));
+		}
+		
 
 
 
@@ -3750,35 +3765,6 @@ public function product_order()
 // }
 
 
-
-
-
-
-
-
-
-// public function updateOrderStatus(Request $request)
-// {
-//     $productId = $request->input('productId');
-//     \Log::info("Update Order Status called with productId: " . $productId);
-
-//     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
-
-//     foreach ($ordersToUpdate as $order) {
-//         $order->order_status = !$order->order_status;
-//         $order->save();
-
-//         if ($order->order_status == 1) {
-//             $placeOrder = $this->insertPlaceOrder($order);
-//         }
-//     }
-
-//     return response()->json([
-//         'success' => true,
-//         'message' => 'Order status updated successfully',
-//         'inserted_data' => isset($placeOrder) ? $placeOrder : null,
-//     ]);
-// }
 
  
  public function updateOrderStatus(Request $request)
@@ -3837,6 +3823,15 @@ public function product_order()
 
 // 	return response()->json(['success' => true]);
 // }
+
+
+public function order_history()
+{
+	$orders=DB::table('tbl_placeorders')->get();
+	 $role=Auth::user()->user_type;
+	return view('order_history',compact('role'));
+ }
+
 
 
         public function brands()
