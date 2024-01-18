@@ -6,7 +6,7 @@
 <!-- <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-N2Lp0O1trMbsN01NJZSdZlPz53LW3fmBkSo2B1bFOcJOYc6sjvI4xkgUEQ8Hf/AClQQ5Np0UV5z/vlj+B6qSRg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-N2Lp0O1trMbsN01NJZSdZlPz53LW3fmBkSo2B1bFOcJOYc6sjvI4xkgUEQ8Hf/AClQQ5Np0UV5z/vlj+B6qSRg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
 <style>
 
@@ -97,11 +97,13 @@
             </label>
         </div>
         <select id="brandFilter" class="custom-select">
-            <option value="">All Brands</option>
-            @foreach($brands as $brand)
-                <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
-            @endforeach
-        </select>
+    <option value="" @if(empty($selectedBrand)) selected @endif>All Brands</option>
+    @foreach($brands as $brand)
+        <option value="{{ $brand->id }}" @if($brand->id == $selectedBrand) selected @endif>{{ $brand->brand_name }}</option>
+    @endforeach
+</select>
+
+
         <div class="input-group-append">
             <button class="btn btn-primary" onclick="applyBrandFilter()">Apply</button>
         </div>
@@ -221,13 +223,26 @@ $i++;
 
 
 </div>
-
 <script>
     function applyBrandFilter() {
         var selectedBrand = $("#brandFilter").val();
         // Redirect to the same page with the selected brand as a query parameter
         window.location.href = "{{ route('product_order') }}?brand=" + selectedBrand;
     }
+
+    // Add this function to set the selected option in the dropdown
+    function setBrandFilterSelection() {
+        var selectedBrand = "{{ $selectedBrand }}"; // Add this line to get the selected brand from the controller
+        $("#brandFilter").val(selectedBrand);
+
+        // Move the selected option to the top
+        $("#brandFilter option[value='" + selectedBrand + "']").prependTo("#brandFilter");
+    }
+
+    // Call the function to set the selected option on page load
+    $(document).ready(function() {
+        setBrandFilterSelection();
+    });
 </script>
 
 

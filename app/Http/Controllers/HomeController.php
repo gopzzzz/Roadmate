@@ -3715,36 +3715,34 @@ function sendNotification1($msg1,$title)
 			}
 		}
 	
-		
-		
 		public function product_order(Request $request)
-		{
-			$role = Auth::user()->user_type;
-		
-			// Get the list of brands for the filter dropdown
-			$brands = DB::table('tbl_rm_products')->get();
-		
-			// Check if a brand filter is applied
-			$selectedBrand = $request->input('brand');
-		
-			$ordersQuery = DB::table('tbl_order_trans')
-				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
-		
-			// Apply brand filter if selected
-			if ($selectedBrand) {
-				$ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
-			}
-		
-			$orders = $ordersQuery
-				->where('order_status', 0)
-				->select(
-					'tbl_order_trans.*',
-					'tbl_brand_products.product_name'
-				)->get();
-		
-			return view('product_order', compact('orders', 'role', 'brands'));
-		}
-		
+{
+    $role = Auth::user()->user_type;
+
+    // Get the list of brands for the filter dropdown
+    $brands = DB::table('tbl_rm_products')->get();
+
+    // Check if a brand filter is applied
+    $selectedBrand = $request->input('brand');
+
+    $ordersQuery = DB::table('tbl_order_trans')
+        ->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
+
+    // Apply brand filter if selected
+    if ($selectedBrand) {
+        $ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
+    }
+
+    $orders = $ordersQuery
+        ->where('order_status', 0)
+        ->select(
+            'tbl_order_trans.*',
+            'tbl_brand_products.product_name'
+        )->get();
+
+    return view('product_order', compact('orders', 'role', 'brands', 'selectedBrand'));
+}
+
 
 
 
