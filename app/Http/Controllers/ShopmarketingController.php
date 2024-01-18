@@ -1157,36 +1157,19 @@ public function orderhistory(){
 catch (Exception $e)
 
 {
-
-
-    //return Json("Sorry! Please check input parameters and values");
-
-        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+  //return Json("Sorry! Please check input parameters and values");
+   echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 
 }
 
-public function vieworder(){
-    
-
-    
-      
+public function vieworder(){     
   $postdata = file_get_contents("php://input");					
-
   $json = str_replace(array("\t","\n"), "", $postdata);
-
   $data1 = json_decode($json);
-
   $order_id=$data1->order_id;
-
-
   try{	
-
-   
-
-   
-
     $products=DB::table('tbl_order_trans')
     ->join('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
     ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -1195,10 +1178,7 @@ public function vieworder(){
     ->where('tbl_order_masters.id',$order_id)
    // ->where('status',0)
     ->get();
-
-     
     $order_list = [];
-
     foreach ($products as $proItem) {
         $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->pro_id)->first();
         
@@ -1217,41 +1197,22 @@ public function vieworder(){
         // Add the $cartItem to the $cart array
         $order_list[] = $proItem;
     }
-
-
-     
-
-        if($order_list == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
+ if($order_list == null){
+ echo json_encode(array('error' => true, "message" => "Error"));
 
              }
 
             else{								
-
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+ $json_data = 0;
+ echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
 
                 }
-
-    
-
-  
-
-}
+            }
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+//return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
