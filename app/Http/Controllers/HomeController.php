@@ -452,6 +452,7 @@ class HomeController extends Controller
 		$user->email = $request->email;
 		$user->password = Hash::make($request->password);
 		$user->user_type = 3;
+		$user->login_status = 0;
 	
 		if ($user->save()) {
 			// Create franchise details
@@ -577,7 +578,7 @@ class HomeController extends Controller
     $user->password = Hash::make($request->password);
 	
     $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
-
+	$user->login_status = 0;
     if($user->save()){
 		$cr=new tbl_crms;
 		
@@ -655,6 +656,7 @@ class HomeController extends Controller
 			$sup->email=$request->email;
 			$sup->password=Hash::make($request->password);
 			$sup->user_type=$request->user_type;
+			$sup->login_status=0;
 			$sup->save();
 			return redirect('superadmin');
 		
