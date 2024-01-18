@@ -800,7 +800,7 @@ Route::post('productdetails','ShopmarketingController@productdetails');
 Route::post('wishlist','ShopmarketingController@wishlist');      
 Route::post('cart','ShopmarketingController@cart');
 
-
+             
 Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
 Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
 Route::post('cartadd','ShopmarketingController@cartadd');

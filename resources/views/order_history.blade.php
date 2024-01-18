@@ -94,7 +94,7 @@
    <th>Product Name</th>
          <th>Qunatity</th>
          <th>Total Price</th>
-    <th>Order Date</th>
+    
          <th></th>
    @if($role==1)
   @endif
@@ -140,7 +140,7 @@ $i++;
    <th>Product Name</th>
          <th>Qunatity</th>
          <th>Total Price</th>         
-         <th>Order Date</th>
+         
          <th></th>
  @if($role==1)
  @endif

@@ -3055,7 +3055,7 @@ public function mystorelist_shop(){
 
     ->where('store_lists.sale_satus',0)
     
-     ->limit(5)
+     ->limit(10)
 
     //->where('user_type',1)
 
@@ -3141,7 +3141,7 @@ public function mystorelist_shop_new(){
 
     ->where('store_lists.user_type',2)
     
-     ->limit(5)
+     ->limit(10)
 
     ->orderBy('store_lists.id', 'DESC')
 
@@ -3221,7 +3221,7 @@ public function mystorelist_shopdata(){
 
     ->orderBy('store_lists.id', 'DESC')
     
-     ->limit(5)
+     ->limit(10)
 
 		  ->select('store_lists.*','store_product_categories.cat_name','shops.shopname','shops.phone_number')
 
@@ -3259,7 +3259,7 @@ public function mystorelist_shopdata(){
 
 	  ->where('store_lists.sale_satus',0)
 	  
-	   ->limit(5)
+	   ->limit(10)
 
       ->orderBy('store_lists.id', 'DESC')
 

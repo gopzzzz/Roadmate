@@ -684,6 +684,36 @@
                   @elseif($role==3)
 
                   <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-university"></i>
+                              <p>
+                                  Shops
+                                  <i class="fas fa-angle-left right"></i>
+
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                           
+                              <!-- <li class="nav-item">
+                                  <a href="{{ url('vshops') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Visited Shops</p>
+                                  </a>
+                              </li> -->
+
+                              <li class="nav-item">
+                                  <a href="{{ url('ashops') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Added Shops</p>
+                                  </a>
+                              </li>
+                             
+
+
+                          </ul>
+                      </li>
+
+                  <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
                           <i class="nav-icon fas fa-briefcase"></i>
                           <p>

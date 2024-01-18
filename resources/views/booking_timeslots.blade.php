@@ -300,7 +300,8 @@
 
                   @endphp
 
-                  @foreach($timslot as $key)
+                  @foreach($timslot as $Itemkey)
+                    @foreach($Itemkey as $key)
 
                   <tr>
 
@@ -361,6 +362,8 @@
                 
 
                   @endphp
+
+                  @endforeach
 
                   @endforeach
 
