@@ -4,7 +4,7 @@
   <!-- Add these lines in your HTML layout -->
  <style>
         .print-button {
-            background: linear-gradient(45deg, #007bff, #00ff00); /* Use a gradient background with a mix of two colors */
+            background: linear-gradient(45deg, #007bff, #007bff); /* Use a gradient background with a mix of two colors */
             color: #fff;
             padding: 10px 15px;
             font-size: 16px;
@@ -70,24 +70,23 @@
             font-weight: bold;
         }
     </style>
-    <style>
-.additional-data-container {
-    display: inline-block;
-    margin-left: 5px;
-    border: 2px solid #008080; /* Border color for the rectangle (teal) */
-    padding: 5px; /* Adjust padding as needed */
-    border-radius: 8px; /* Adjust border-radius for rounded corners */
-    background: linear-gradient(45deg, #001f3f, #008080); /* Gradient background from deep blue to light blue */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
-}
+   <style>
+    .additional-data-container {
+        display: inline-block;
+        margin-left: 5px;
+        border: 2px solid #2dd22d; /* Border color for the rectangle (teal) */
+        padding: 5px; /* Adjust padding as needed */
+        border-radius: 8px; /* Adjust border-radius for rounded corners */
+        background: linear-gradient(45deg, #28a745, #28a745); /* Gradient background from deep blue to light blue */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    }
 
-.additional-data-arrow {
-    font-size: 20px; /* Adjust the font size as needed */
-    color: #ffffff; /* Change the color to white or another contrasting color */
-}
-
-
+    .additional-data-arrow {
+        font-size: 20px; /* Adjust the font size as needed */
+        color: #fff; /* Change the color to red */
+    }
 </style>
+
 </head>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -206,6 +205,7 @@
                 </td>
                 <td>{{ $key->delivery_date }}</td>
                 <td>{{ $key->order_date }}</td>
+              
                 <td>
                     <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
                         <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}">↓</span>
@@ -217,11 +217,14 @@
                     </form>
                 </td>
                 <td>
-                <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
-    style="background: linear-gradient(45deg, #3498db, #001f3f); color: #fff;">
-    Update Status
-</button>
- </td>
+    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
+        style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
+        Update Status
+    </button>
+</td>
+
+
+
             </tr>
 
             <tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
