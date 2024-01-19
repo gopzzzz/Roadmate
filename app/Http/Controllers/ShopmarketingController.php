@@ -118,7 +118,7 @@ public function categoryproductlist(){
   
                $json_data = 0;
   
-              echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+              echo json_encode(array('error' => false,"product"=>$productlist, "message" => "Success"));
   
                   }
 }
