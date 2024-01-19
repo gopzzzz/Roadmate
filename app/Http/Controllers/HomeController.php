@@ -69,6 +69,7 @@ use App\Tbl_franchase_details;
 use App\Tbl_hsncodes;
 use App\Tbl_placeorders;
 use App\Tbl_wallets;
+use App\Tbl_vendors;
 use DB;
 use Hash;
 use Auth;
@@ -1401,39 +1402,31 @@ public function shop_vehicle($Id) {
 		return redirect('shops');
 	}
     public function marketproducts(){
-		
-		$market = DB::table('tbl_rm_products')
+	    $market = DB::table('tbl_rm_products')
         ->leftJoin('tbl_rm_categorys', 'tbl_rm_products.cat_id', '=', 'tbl_rm_categorys.id')
-		
-        ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name','tbl_rm_categorys.cat_id')
+		->leftJoin('tbl_vendors', 'tbl_rm_products.vendor_id', '=', 'tbl_vendors.id')
+        ->select('tbl_rm_products.*', 'tbl_rm_categorys.category_name', 'tbl_vendors.vendor_name','tbl_rm_categorys.cat_id')
         ->orderby('tbl_rm_products.id','desc')->get();
-		
 		$mark=DB::table('tbl_rm_categorys')
 		->where('status',0)
-
 		->where('cat_id',0)
 		->get();
-
-		//echo "<pre>";print_r($market);exit;
-		
-		
-
+		$vendor=DB::table('tbl_vendors')
+		->where('status',0)
+        ->get();
+        //echo "<pre>";print_r($market);exit;
 		$role=Auth::user()->user_type;
-		return view('marketproducts',compact('market','mark','role'));
+		return view('marketproducts',compact('market','mark','role','vendor'));
 	}
    public function marketproductinsert(Request $request)
 	{
 		$market = new Tbl_rm_products;
-	
-		$market->brand_name = $request->brand_name;
-
-		
+	    $market->brand_name = $request->brand_name;
 		$market->cat_id = $request->subcategory;
-
-		$market->status = 0;
+		$market->vendor_id = $request->supplier;
+        $market->status = 0;
 		$market->save();
-	
-		return redirect('marketproducts')->with('success', 'Product added successfully');
+        return redirect('marketproducts')->with('success', 'Product added successfully');
 	}
     public function marketproductimageinsert(Request $request)
 	{
@@ -1515,13 +1508,10 @@ public function shop_vehicle($Id) {
 {
     $id = $request->id;
     $market = Tbl_rm_products::find($id);
-	
 	$market->brand_name = $request->brand_name;
-
-		
-	$market->cat_id = $request->subcategory;
-
-	$market->status = $request->status;
+    $market->cat_id = $request->subcategory;
+	$market->vendor_id = $request->supplier;
+    $market->status = $request->status;
 	$market->save();
     return redirect('marketproducts');
 }
@@ -2818,7 +2808,7 @@ function sendNotification1($msg1,$title)
 	//echo $msg1;exit;
     $friendToken = [];
 	$friendToken=DB::table('user_lists')
-	->where('device_token','!=','null')
+	->where('device_token','!=','null')  
 	->select('user_lists.device_token')
 	->limit(5)
 	->get()
@@ -4028,9 +4018,7 @@ public function order_history()
 	  public function subcategoryfetch(Request $request){
 			$id=$request->id;
 			$app = Tbl_rm_categorys::find($id);
-			
-
-            print_r(json_encode($app));
+			print_r(json_encode($app));
 		}
 
 		public function subcategoryedit(Request $request){
@@ -4075,35 +4063,65 @@ public function order_history()
 
 		return view('hsn',compact('hs','role'));
 	}
-
-	public function hsninsert(Request $request){
-		$hs=new Tbl_hsncodes;
-	
-		$hs->hsncode=$request->hsncode;
-		$hs->tax=$request->tax;
-		$hs->cgst=$request->cgst;
-		$hs->igst=$request->igst;
-		$hs->save();
-
-		return redirect('hsn')->with('success', 'Added successfully');	
-	
-}
-
-public function hsnfetch(Request $request){
+    public function hsninsert(Request $request){
+	$hs=new Tbl_hsncodes;
+	$hs->hsncode=$request->hsncode;
+	$hs->tax=$request->tax;
+	$hs->cgst=$request->cgst;
+	$hs->igst=$request->igst;
+	$hs->save();
+    return redirect('hsn')->with('success', 'Added successfully');	
+	}
+    public function hsnfetch(Request $request){
 	$id=$request->id;
 	$hs=Tbl_hsncodes::find($id);
 	print_r(json_encode($hs));
-}
-		
-public function hsnedit(Request $request){
-		$id=$request->id;
-		$hs=Tbl_hsncodes::find($id);
-		$hs->hsncode=$request->hsncode;
-		$hs->tax=$request->tax;
-		$hs->cgst=$request->cgst;
-		$hs->igst=$request->igst;
-		$hs->save();
-		
-		return redirect('hsn')->with('success', 'Edited successfully');
+    }
+	public function hsnedit(Request $request){
+	$id=$request->id;
+	$hs=Tbl_hsncodes::find($id);
+	$hs->hsncode=$request->hsncode;
+	$hs->tax=$request->tax;
+	$hs->cgst=$request->cgst;
+	$hs->igst=$request->igst;
+	$hs->save();
+	return redirect('hsn')->with('success', 'Edited successfully');
 	}
+	public function marketvendor(){
+	$vendor=DB::table('tbl_vendors')->orderBy('id', 'DESC')->get();
+	$role=Auth::user()->user_type;
+    return view('marketvendor',compact('vendor','role'));
+	}
+	public function vendorinsert(Request $request){
+	$vendor=new Tbl_vendors;
+	$vendor->vendor_name=$request->venname;
+	$vendor->address=$request->address;
+    $vendor->phone_number=$request->phonenumber;
+	$vendor->email=$request->email;
+	$vendor->shipping_address=$request->shipaddress;
+	$vendor->Gst_number=$request->gstnumber;
+	$vendor->status=0;
+    $vendor->save();
+    return redirect('marketvendor')->with('success', 'Added successfully');	
+	}
+    public function vendorfetch(Request $request){
+	$id=$request->id;
+	$vendor=Tbl_vendors::find($id);
+	print_r(json_encode($vendor));
+   }
+    public function vendoredit(Request $request){
+	$id=$request->id;
+	$vendor=Tbl_vendors::find($id);
+	$vendor->vendor_name=$request->venname;
+	$vendor->address=$request->address;
+	$vendor->phone_number=$request->phonenumber;
+	$vendor->email=$request->email;
+	$vendor->shipping_address=$request->shipaddress;
+	$vendor->Gst_number=$request->gstnumber;
+	$vendor->status=$request->status;
+    $vendor->save();
+	return redirect('marketvendor')->with('success', 'Edited successfully');
+	}
+
+
 }

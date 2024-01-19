@@ -222,6 +222,12 @@
                                   </a>
                               </li>
                               <li class="nav-item">
+                                  <a href="{{ url('marketvendor') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Vendors</p>
+                                  </a>
+                              </li>
+                              <li class="nav-item">
                                   <a href="{{ url('imgcompress') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>Image Drive</p>

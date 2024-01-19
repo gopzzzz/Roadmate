@@ -65,7 +65,7 @@
     <span aria-hidden="true">&times;</span>
     </button>
     </div>
-    <div class="modal-body row">
+    <div class="modal-body row">                  
     <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Main Category</label>
     <select name="category" id="category" class="form-control subcategoryadd" required>
@@ -82,7 +82,15 @@
         <option value="0">Select Subcategory</option>
     </select>
 </div>
-
+<div class="form-group col-sm-12">
+                <label class="exampleModalLabel">Supplier</label>
+                <select name="supplier" id="supplier" class="form-control" required>
+                    <option value="" disabled selected>Select Supplier</option>
+                    @foreach($vendor as $key)
+                        <option value="{{ $key->id }}">{{ $key->vendor_name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
 <div class="form-group col-sm-12">
 <label class="exampleModalLabel">Brand Name</label>
@@ -108,10 +116,10 @@
                  <thead>
 
                   <tr>
-
                     <th>id</th>
                     <th>Category</th>
-                    <th>subCategory</th>
+                    <th>SubCategory</th>
+                    <th>Supplier</th>
                     <th>Brand Name</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -139,6 +147,7 @@
                 
                     <td>@php  $cat=$key->cat_id; $catlist=DB::table('tbl_rm_categorys')->where('id',$cat)->first();@endphp @if(!$catlist) @else{{$catlist->category_name}}@endif</td>
                     <td>{{$key->category_name}}</td>
+                    <td>{{$key->vendor_name}}</td>
                     <td>{{$key->brand_name}}</td>
                     <td>@if($key->status==0) Active @else Inactive @endif</td>
                     <td>
@@ -231,7 +240,15 @@ $i++;
                     <option value="" disabled selected>Select Subcategory</option>
                 </select>
             </div>
-
+            <div class="form-group col-sm-12">
+                <label class="exampleModalLabel">Supplier</label>
+                <select name="supplier" id="vendor_name" class="form-control" required>
+                    <option value="" disabled selected>Select Supplier</option>
+                    @foreach($vendor as $key)
+                        <option value="{{ $key->id }}">{{ $key->vendor_name }}</option>
+                    @endforeach
+                </select>
+            </div>
 <div class="form-group col-sm-12">
 <label class="exampleModalLabel">Brand Name</label>
 <input class="form-control" name="brand_name" id="brand_name" required>
