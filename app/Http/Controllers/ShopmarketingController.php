@@ -62,54 +62,65 @@ public function categoryproductlist(){
 
   $data1 = json_decode($json);
   
-    
+  $index=$data1->index;
+  $offset=($index*20);
+  $limit=20;
+
 
   $categoryId=$data1->categoryid; 
   try{	
 
-      $productlist = DB::table('tbl_brand_products')
-          ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-          ->select('tbl_brand_products.*', 'tbl_rm_products.cat_id')
-          ->where('tbl_rm_products.cat_id', $categoryId)
-          ->where('tbl_brand_products.status',0)
-          
       
-          ->get();
-        $products = [];
 
-foreach ($productlist as $proItem) {
-    $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
-    
-    //echo "<pre>";print_r($imageArray);exit;
-
-    // Check if $imageArray is not null before accessing its properties
-    if ($imageArray) {
-        // Assuming there is a column named 'images' in tbl_productimages table
-        $proItem->images = $imageArray->images;
-    } else {
-        // If no images are found, set it to an empty array or null, depending on your needs
-        $proItem->images = "";
-        // or $cartItem->images = null;
-    }
-
-    // Add the $cartItem to the $cart array
-    $products[] = $proItem;
-}
-
-
-        if($productlist == null){
-
-                 echo json_encode(array('error' => true, "message" => "Error"));
-
-             }
-
-            else{								
-
-             $json_data = 0;
-
-            echo json_encode(array('error' => false,"productlist"=>$products, "message" => "Success"));
-
-                }
+          
+      $productlist=DB::table('tbl_brand_products')
+      ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+      ->select('tbl_brand_products.*')
+     
+      ->offset($offset) 
+      ->limit($limit) 
+      ->where('tbl_brand_products.status',0)
+      ->where('tbl_rm_products.cat_id', $categoryId)
+       ->get();
+       
+       
+          $products = [];
+  
+  foreach ($productlist as $proItem) {
+      $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
+      
+      //echo "<pre>";print_r($imageArray);exit;
+  
+      // Check if $imageArray is not null before accessing its properties
+      if ($imageArray) {
+          // Assuming there is a column named 'images' in tbl_productimages table
+          $proItem->images = $imageArray->images;
+      } else {
+          // If no images are found, set it to an empty array or null, depending on your needs
+          $proItem->images = "";
+          // or $cartItem->images = null;
+      }
+  
+      // Add the $cartItem to the $cart array
+      $products[] = $proItem;
+  }
+  
+  
+          if($productlist == null){
+  
+                 
+  
+            echo json_encode(array('error' => true, "message" => "Error"));
+  
+               }
+  
+              else{								
+  
+               $json_data = 0;
+  
+              echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+  
+                  }
 }
 catch (Exception $e)
 {
@@ -521,8 +532,7 @@ $postdata = file_get_contents("php://input");
   $index=$data1->index;
   $offset=($index*20);
   $limit=20;
-
-  
+ 
 
 
   try{	

@@ -165,39 +165,54 @@ class HomeController extends Controller
 		$timslot=Booktimemasters::all();
 		$userid=Auth::user()->id;
 		$role=Auth::user()->user_type;
-
+		$timslot=array();
 		if($role==3){
-			$fran=DB::table('tbl_franchises')->where('user_id',$userid)->first();
-			if($fran->type==4){
-				$timslot = DB::table('booktimemasters')
-				->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
-				->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
-				->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
-				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
-				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
-				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
-				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
-				->where('shops.place_id',$fran->district_id)
-				->orderBy('booktimemasters.id', 'desc')
-				->get();
-			}else{
-				$timslot = DB::table('booktimemasters')
-				->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
-				->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
-				->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
-				->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
-				->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
-				->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+			$fran=DB::table('tbl_franchase_details')
+			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+			->where('tbl_franchises.user_id',$userid)
+			->select('tbl_franchase_details.*')
+			->get();
+
+			//echo "<pre>";print_r($fran);exit;
+			
+			foreach($fran as $singleFranchise){
+				if($singleFranchise->type==4){
+					
+
+					$timslot[] = DB::table('booktimemasters')
+					->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+					->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+					->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+					->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
+					->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
+					->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
+					->orderBy('booktimemasters.id', 'desc')
+					->where('tbl_places.district_id',$singleFranchise->district_id)
+					->get();
+				}else{
+					$timslot[] = DB::table('booktimemasters')
+					->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
+					->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
+					->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
+					->leftJoin('shiop_categories', 'booktimemasters.shop_category_id', '=', 'shiop_categories.id')
+					->leftJoin('tbl_shop_offers', 'booktimemasters.book_id', '=', 'tbl_shop_offers.id')
+					->leftJoin('shops', 'booktimemasters.shop_id', '=', 'shops.id')
+					->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
+					->orderBy('booktimemasters.id', 'desc')
+					->where('shops.place_id',$singleFranchise->place_id)
+					->get();
+
+					//echo "<pre>";print_r($timslot);exit;
 				
-				->select('booktimemasters.*','tbl_shop_offers.title as offertitle','user_lists.name', 'user_lists.phnum','shiop_categories.category','shops.shopname','shops.phone_number','brand_models.brand_model','brand_lists.brand')
-				->where('shops.place_id',$fran->place_id)
-				->orderBy('booktimemasters.id', 'desc')
-				->get();
+				}
 			}
+			
 			
 
 		}else{
-			$timslot = DB::table('booktimemasters')
+			$timslot[]= DB::table('booktimemasters')
             ->leftJoin('user_lists', 'booktimemasters.customer_id', '=', 'user_lists.id')
 			->leftJoin('brand_models', 'booktimemasters.model_id', '=', 'brand_models.id')
 			->leftJoin('brand_lists', 'brand_models.brand', '=', 'brand_lists.id')
@@ -209,6 +224,8 @@ class HomeController extends Controller
 			->get();
 
 		}
+
+		//echo "<pre>";print_r($timslot);exit;
 		
 	
 			
@@ -436,6 +453,7 @@ class HomeController extends Controller
 		$user->email = $request->email;
 		$user->password = Hash::make($request->password);
 		$user->user_type = 3;
+		$user->login_status = 0;
 	
 		if ($user->save()) {
 			// Create franchise details
@@ -561,7 +579,7 @@ class HomeController extends Controller
     $user->password = Hash::make($request->password);
 	
     $user->user_type = $request->role; // You may need to adjust this based on your user type logic.
-
+	$user->login_status = 0;
     if($user->save()){
 		$cr=new tbl_crms;
 		
@@ -639,6 +657,7 @@ class HomeController extends Controller
 			$sup->email=$request->email;
 			$sup->password=Hash::make($request->password);
 			$sup->user_type=$request->user_type;
+			$sup->login_status=0;
 			$sup->save();
 			return redirect('superadmin');
 		
@@ -1251,7 +1270,7 @@ public function shop_vehicle($Id) {
 			->get();
 	
 		$type = "";
-		$shops = DB::table('shops')
+		$shops[] = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
@@ -1289,32 +1308,96 @@ public function shop_vehicle($Id) {
 	public function vshops(){
 		$shop_categories=Shiop_categories::all();
 		$exe=Executives::all();
-		
-		$shops = DB::table('shops')
+
+		$role=Auth::user()->user_type;
+
+		if($role==3){
+			$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',0)
 			->paginate(12);
-			$role=Auth::user()->user_type;
+		}else{
+			$shops = DB::table('shops')
+            ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+			->select('shops.*', 'shiop_categories.category','executives.name')
+			->orderBy('shops.id','DESC')
+			->where('shops.authorised_status',0)
+			->paginate(12);
+		}
+		
+		
+			
 		
 		return view('shops',compact('shops','shop_categories','exe','role'));	
 	}
 	public function ashops(){
 		$shop_categories=Shiop_categories::all();
 		$exe=Executives::all();
+		$role=Auth::user()->user_type;
+		$userid=Auth::user()->id;
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
+		$plac = Tbl_places::leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
+			->get();
+	
+		$type = "";
+
 		
-		$shops = DB::table('shops')
+			$shops=array();
+
+		if($role==3){
+			$fran=DB::table('tbl_franchase_details')
+			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+			->where('tbl_franchises.user_id',$userid)
+			->select('tbl_franchase_details.*')
+			->get();
+			foreach($fran as $singleFranlist){
+				if($singleFranlist->type==4){
+					$shops[] = DB::table('shops')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+					->select('shops.*', 'shiop_categories.category','executives.name')
+					->orderBy('shops.id','DESC')
+					->where('shops.authorised_status',1)
+					->where('tbl_places.district_id',$singleFranlist->district_id)
+					->paginate(12);
+				}else{
+					$shops[] = DB::table('shops')
+					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+					->select('shops.*', 'shiop_categories.category','executives.name')
+					->orderBy('shops.id','DESC')
+					->where('shops.authorised_status',1)
+					->paginate(12);
+				}
+
+			}
+			
+		
+		}else{
+			$shops[] = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',1)
+			->where('shops.place_id',$singleFranlist->place_id)
 			->paginate(12);
-			$role=Auth::user()->user_type;
 		
-		return view('shops',compact('shops','shop_categories','exe','role'));	
+		}
+		
+	
+		
+		return view('shops',compact('shops','shop_categories','exe','role','con','cond','dis','plac','type'));	
 	}
 
 	public function shopinsert(Request $request){
@@ -3705,87 +3788,85 @@ function sendNotification1($msg1,$title)
 			}
 		}
 	
-		
-		
 		public function product_order(Request $request)
-		{
-			$role = Auth::user()->user_type;
-		
-			// Get the list of brands for the filter dropdown
-			$brands = DB::table('tbl_rm_products')->get();
-		
-			// Check if a brand filter is applied
-			$selectedBrand = $request->input('brand');
-		
-			$ordersQuery = DB::table('tbl_order_trans')
-				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
-		
-			// Apply brand filter if selected
-			if ($selectedBrand) {
-				$ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
-			}
-		
-			$orders = $ordersQuery
-				->where('order_status', 0)
-				->select(
-					'tbl_order_trans.*',
-					'tbl_brand_products.product_name'
-				)->get();
-		
-			return view('product_order', compact('orders', 'role', 'brands'));
-		}
-		
+{
+    $role = Auth::user()->user_type;
+
+    // Get the list of brands for the filter dropdown
+    $brands = DB::table('tbl_rm_products')->get();
+
+    // Check if a brand filter is applied
+    $selectedBrand = $request->input('brand');
+
+    $ordersQuery = DB::table('tbl_order_trans')
+        ->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
+
+    // Apply brand filter if selected
+    if ($selectedBrand) {
+        $ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
+    }
+
+    $orders = $ordersQuery
+        ->where('order_status', 0)
+        ->select(
+            'tbl_order_trans.*',
+            'tbl_brand_products.product_name'
+        )->get();
+
+    return view('product_order', compact('orders', 'role', 'brands', 'selectedBrand'));
+}
 
 
 
-// public function updateOrderStatus(Request $request)
-// {
-//     $productId = $request->input('productId');
-//     \Log::info("Update Order Status called with productId: " . $productId);
 
-//     $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+public function updateOrderStatus(Request $request)
+{
+    $productId = $request->input('productId');
+    \Log::info("Update Order Status called with productId: " . $productId);
 
-//     foreach ($ordersToUpdate as $order) {
-//         $order->order_status = ($order->order_status == 0);
-//         $order->save();
+    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
 
-//     }
+    foreach ($ordersToUpdate as $order) {
+        $order->order_status = ($order->order_status == 0);
+        $order->save();
 
-//     return response()->json(['success' => true]);
-// }
+    }
+
+    return response()->json(['success' => true]);
+}
 
 
 
  
- public function updateOrderStatus(Request $request)
- {
-	 $productId = $request->input('productId');
-	 $qty = $request->input('qty');
-	 $price = $request->input('price');
+//  public function updateOrderStatus(Request $request)
+//  {
+// 	 $productId = $request->input('productId');
+// 	 $qty = $request->input('qty');
+// 	 $price = $request->input('price');
  
-	 \Log::info("Update Order Status called with productId: " . $productId);
+// 	 \Log::info("Update Order Status called with productId: " . $productId);
  
-	 $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+// 	 $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
  
-	 foreach ($ordersToUpdate as $order) {
+// 	 foreach ($ordersToUpdate as $order) {
 	
-		 $order->order_status = ($order->order_status == 0) ? 1 : 0;
-		 $order->save();
+// 		 $order->order_status = ($order->order_status == 0) ? 1 : 0;
+// 		 $order->save();
  
 		
-		 if ($order->order_status == 1) {
+// 		 if ($order->order_status == 1) {
 			
-			 $placeOrder = new Tbl_placeorders;
-			 $placeOrder->product_id = $productId;
-			 $placeOrder->qty = $qty;
-			 $placeOrder->amount = $price;
-			 $placeOrder->order_date = $order->order_date;
-			 $placeOrder->save();
-		 }
-	 }
+// 			 $placeOrder = new Tbl_placeorders;
+// 			 $placeOrder->product_id = $productId;
+// 			 $placeOrder->qty = $qty;
+// 			 $placeOrder->amount = $price;
+// 			 $placeOrder->order_date = $order->order_date;
+// 			 $placeOrder->save();
+// 		 }
+// 	 }
  
-	 return response()->json(['success' => true]);
- }
+// 	 return response()->json(['success' => true]);
+//  }
  
  
  
@@ -3817,9 +3898,17 @@ function sendNotification1($msg1,$title)
 
 public function order_history()
 {
-	$orders=DB::table('tbl_placeorders')->get();
+	$orders=DB::table('tbl_placeorders')
+	->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+	->select(
+		'tbl_placeorders.*',
+		'tbl_brand_products.product_name'
+	)
+
+	->get();
+	
 	 $role=Auth::user()->user_type;
-	return view('order_history',compact('role'));
+	return view('order_history',compact('orders','role'));
  }
 
 

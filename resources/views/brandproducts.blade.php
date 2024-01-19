@@ -229,11 +229,11 @@
                              <th>HSN Code</th>
                              <th>Status</th>
 
-                              @if($role==1)
+                              
 
                               <th>Action</th>
 
-                              @endif
+                            
 
                            </tr>
 
