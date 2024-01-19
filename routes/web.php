@@ -1319,4 +1319,8 @@ Route::post('/deleteImages', 'HomeController@deleteImages')->name('deleteImages'
 Route::get('/marketwallet', 'HomeController@marketwallet')->name('marketwallet');
 Route::post('/fetchsubcategory', [App\Http\Controllers\HomeController::class, 'fetchsubcategory'])->name('fetchsubcategory');
 Route::post('/marketproductimagedelete', [App\Http\Controllers\HomeController::class, 'marketproductimagedelete'])->name('marketproductimagedelete');
+Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor');
+Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
+Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
+Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
 

@@ -823,6 +823,7 @@ Route::post('product','ShopmarketingController@product');
 
 
 Route::post('bulkupdate','ShopmobController@bulkupdate');
+
 Route::get('bulkdataupload','ShopmobController@bulkdataupload');
 Route::get('testrun','ShopmobController@testrun');
 

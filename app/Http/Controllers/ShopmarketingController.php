@@ -428,9 +428,17 @@ public function cart(){
    
 $cartlist = DB::table('tbl_carts')
     ->join('tbl_brand_products', 'tbl_carts.product_id', '=', 'tbl_brand_products.id')
-    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_carts.*', 'tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
-    ->where('shop_id', $shopId)
+    ->leftjoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->leftjoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select(
+        'tbl_carts.*',
+        'tbl_brand_products.offer_price',
+        'tbl_brand_products.price',
+        'tbl_brand_products.product_name',
+        'tbl_brand_products.description',
+        'tbl_hsncodes.tax'
+    )
+    ->where('tbl_carts.shop_id', $shopId)  // Added table alias for shop_id
     ->get();
 
 // Initialize $cart outside the loop
@@ -1251,11 +1259,10 @@ public function updateorder(){
  }
 
 }
-public function shopwallet(){
-    
 
-    
-      
+
+public function shopwallet(){
+         
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -1263,8 +1270,6 @@ public function shopwallet(){
   $data1 = json_decode($json);
 
   $shop_id=$data1->shop_id;
-
-
   try{	
 
    
@@ -1279,47 +1284,29 @@ public function shopwallet(){
      
 
         if($wallet == null){
-
-
-
-               
+       
 
           echo json_encode(array('error' => true, "wallet"=>$wallet,"message" => "Error"));
 
              }
 
             else{								
-
-            
-
-            $json_data = 0;
+  $json_data = 0;
 
             echo json_encode(array('error' => false,"wallet"=>$wallet, "message" => "Success"));
 
-                }
-
-    
-
-  
+            } 
 
 }
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+ //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 }
-
-
-
-
-
 
 }
