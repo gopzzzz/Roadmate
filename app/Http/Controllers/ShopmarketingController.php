@@ -75,7 +75,8 @@ public function categoryproductlist(){
           
       $productlist=DB::table('tbl_brand_products')
       ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-      ->select('tbl_brand_products.*')
+      ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
      
       ->offset($offset) 
       ->limit($limit) 
@@ -535,10 +536,11 @@ $postdata = file_get_contents("php://input");
 
     $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_brand_products.*')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     
-  ->offset($offset) 
-  ->limit($limit) 
+    ->offset($offset) 
+    ->limit($limit) 
      ->get();
      
      
@@ -609,7 +611,8 @@ public function brandfilter(){
 
   $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_brand_products.*')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     ->where('tbl_brand_products.brand_id',$brand_id)
     ->where('tbl_brand_products.status',0)
       ->offset($offset) 
