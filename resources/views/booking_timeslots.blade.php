@@ -4,7 +4,13 @@
 
 @section('content')
 
+<head>
 
+<!-- Include SweetAlert CSS and JS files -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+</head>
 
 <div class="content-wrapper">
 
@@ -341,7 +347,9 @@
 <td>
     <i class="fa fa-edit edit_timeslot" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
     <i class="fa fa-eye view_timeslot" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}"></i>
-    <a href="{{ url('timeslotdelete') }}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i></a>
+    <a href="#" onclick="confirmDelete('{{ $key->id }}')">
+    <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
+</a>
     @if($key->work_status == 0)
         <button type="button" data-id="{{ $key->id }}" data-toggle="modal" class="btn btn-sm btn-success pending-modal">Status</button>
     @endif
@@ -700,5 +708,23 @@
         dateInput.min = new Date().toISOString().split('T')[0];
     });
 </script> -->
+<script>
+    function confirmDelete(timeslotId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If the user clicks "Yes", proceed with the deletion
+                window.location.href = "{{ url('timeslotdelete') }}/" + timeslotId;
+            }
+        });
+    }
+</script>
 
   @endsection

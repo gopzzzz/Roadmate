@@ -4,6 +4,14 @@
 
 @section('content')
 
+<head>
+
+<!-- Include SweetAlert CSS and JS files -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+
+</head>
 
 
 <div class="content-wrapper">
@@ -314,7 +322,9 @@
 
                                 
 
-                                <a href="{{url('featuredelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
+                                 <a href="#" onclick="confirmDelete('{{ $key->id }}')">
+    <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
+</a>
 
 
 
@@ -631,6 +641,25 @@
 
 
 </div>
+
+<script>
+    function confirmDelete(featureId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If the user clicks "Yes", proceed with the deletion
+                window.location.href = "{{ url('featuredelete') }}/" + featureId;
+            }
+        });
+    }
+</script>
 
 
 

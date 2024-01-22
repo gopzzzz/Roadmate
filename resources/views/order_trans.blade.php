@@ -9,7 +9,7 @@
    
           /* Style the button for both screen and print media */
           .print-button {
-            background: linear-gradient(45deg, #007bff, #00ff00); /* Use a gradient background with a mix of two colors */
+            background: linear-gradient(45deg, #d22d2d, #d22d2d); /* Use a gradient background with a mix of two colors */
             color: #fff;
             padding: 10px 15px;
             font-size: 16px;
@@ -38,11 +38,11 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .invoice-header {
-    background: linear-gradient(45deg, #8e44ad, #e67e22);
-    color: #000; /* Black text color for readability */
+    background: linear-gradient(45deg, #f2f20d, #f2f20d);
+    color: #ff0000; /* Black text color for readability */
     padding: 20px;
     text-align: center;
-}
+}    
 .invoice-title {
     font-size: 30px;
     text-transform: uppercase;
