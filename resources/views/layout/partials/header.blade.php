@@ -239,7 +239,12 @@
                                       <p>HSN</p>
                                   </a>
                               </li>
-                           
+                              <li class="nav-item">
+                                  <a href="{{ url('bill') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Bill</p>
+                                  </a>
+                              </li>
 
                           </ul>
                       </li>

@@ -1323,4 +1323,5 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
+Route::get('/bill', 'HomeController@bill')->name('bill');
 

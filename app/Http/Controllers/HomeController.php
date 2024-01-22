@@ -4211,6 +4211,10 @@ public function order_history()
     $vendor->save();
 	return redirect('marketvendor')->with('success', 'Edited successfully');
 	}
+	public function bill(){
+	$role=Auth::user()->user_type;
+	return view('bill',compact('role'));
+	}
 
 
 }
