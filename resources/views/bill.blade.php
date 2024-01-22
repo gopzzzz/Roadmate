@@ -97,21 +97,29 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <table style= "border: 2px solid black;">
 
-<div style="display: flex; flex-direction: column; align-items: center;">
+<div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
     <div style="display: flex; align-items: center;">
 
-        <img src="{{ asset('/market/RoadMateLogo.png') }}" alt="" width="200" height="100" style="margin-right: 10px;" />
-        <span style="font-family: 'Times New Roman', Times, serif; font-size: 25px; font-weight: bold; margin-right: 10px;">NEXTWAVE ACCESS PRIVATE LIMITED</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span style="font-family: 'Times New Roman', Times, serif; font-size: 34px; font-weight: bold;">PURCHASE ORDER</span>
+        <img src="{{ asset('/market/RoadMateLogo.png') }}" alt="" width="200" height="100" style="margin-right: 10px; margin-left: -55px;" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="font-family: 'Times New Roman', Times, serif; font-size: 20px; font-weight: bold; margin-right: 10px;">NEXTWAVE ACCESS PRIVATE LIMITED</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="font-family: 'Times New Roman', Times, serif; font-size: 25px; font-weight: bold;">PURCHASE ORDER</span>
     </div>
     </div>
 
-<div style="margin-left: 740px; display: flex; flex-direction: column;  ">
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: bold; ">DATE: <span style="background-color: #ffffcc; padding: 5px;">22/01/2024</span></span>
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: bold; margin-top: 10px;">PURCHASE ORDER NUMBER: <span style="background-color: #ffffcc; padding: 5px;">RM/PO/001/24</span></span>
-</div>
+    <table style="border-collapse: collapse; width: 33%; float: right; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: bold;">
+    <tr>
+        <th style="text-align: left; margin-right:10px; background-color: white; padding: 5px;">DATE:</th>
+        <th style="text-align: left; margin-right:10px; background-color: #ffffcc; padding: 5px;">22/01/2024</th>
+    </tr>
+    <tr>
+        <th style="background-color: white; margin-right:10px; padding: 5px;">PURCHASE ORDER NUMBER:</th>
+        <th style="background-color: #ffffcc; margin-right:10px; padding: 5px;">RM/PO/001/24</th>
+    </tr>
+</table>
 
-<div style="display: flex; flex-direction: column;">
+   
+
+<div style="display: flex; flex-direction: column; margin-top:50px;">
     <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">[Company Address]</span></span>
     <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">[Street name, City,  ZIP]</span></span>
     <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Phone: [000-000-0000]</span></span>
@@ -246,7 +254,7 @@
        <div style="margin-top: 20px;">
 
 <!-- Tax Analysis Table -->
-<table style="border-collapse: collapse; width: 55%; float: left;">
+<table style="border-collapse: collapse; width: 55%; float: left; margin-top:20px;">
     <tr>
         <th style="text-align: center; background-color: grey;" colspan="4">TAX ANALYSIS</th>
     </tr>
@@ -299,8 +307,8 @@
         <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹0.00</th>
     </tr>
     <tr>
-        <th style="text-align: left; border: 2px solid black;">TOTAL</th>
-        <th style="text-align: right; border: 2px solid black;">₹0.00</th>
+        <th style="text-align: left; border: 2px solid black;  background-color: grey;">TOTAL</th>
+        <th style="text-align: right; border: 2px solid black;  background-color: grey;">₹0.00</th>
     </tr>
 </table>
 <div style="clear: both;"></div>
@@ -310,9 +318,9 @@
   
     <hr style="border: 1px solid black;">
     <div style="display: flex; flex-direction: row;">
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 18px;  margin-left: 80px; margin-right: 250px; margin-bottom: 100px;">Approved By</span>
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 18px; margin-right: 250px; margin-bottom: 100px;">Authorized by:</span>
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 18px; margin-right: 20px; margin-bottom: 100px;">Checked By</span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 16px;  margin-left: 80px; margin-right: 250px; margin-bottom: 100px;">Approved By</span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-right: 250px; margin-bottom: 100px;">Authorized by:</span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-right: 20px; margin-bottom: 100px;">Checked By</span>
 </div>
 
 
