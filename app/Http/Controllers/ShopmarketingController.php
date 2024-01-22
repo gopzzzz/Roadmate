@@ -430,7 +430,10 @@ public function cart(){
 $cartlist = DB::table('tbl_carts')
     ->join('tbl_brand_products', 'tbl_carts.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_carts.*', 'tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    //->select('tbl_brand_products.*','tbl_hsncodes.tax')
+    ->select('tbl_carts.*','tbl_hsncodes.tax','tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
+   
     ->where('shop_id', $shopId)
     ->get();
 
