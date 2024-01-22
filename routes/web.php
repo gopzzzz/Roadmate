@@ -326,7 +326,7 @@ Route::post('/shop_categoriesedit', [
     'uses' => 'HomeController@shop_categoriesedit'
 ])->name('shop_categoriesedit');
 
-Route::get('shop_categoriesrdelete/{id}', [
+Route::get('shop_categoriesdelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@shop_categoriesdelete'
 ])->name('shop_categoriesdelete');
@@ -793,6 +793,11 @@ Route::get('/shopbank', [
     'uses' => 'HomeController@shopbank'
 ])->name('shopbank');
 
+Route::get('shopbankdelete/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@shopbankdelete'
+])->name('shopbankdelete');
+
 Route::post('/packfeaturesinsert', [
     'middleware' => 'auth',
     'uses' => 'HomeController@packfeaturesinsert'
@@ -1201,6 +1206,13 @@ Route::post('/hsnedit', [
     'middleware' => 'auth',
     'uses' => 'HomeController@hsnedit'
 ])->name('hsnedit'); 
+
+
+Route::get('hsndelete/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsndelete'
+])->name('hsndelete');
+
 
 Route::get('/product_order', 'HomeController@product_order')->name('product_order');
 

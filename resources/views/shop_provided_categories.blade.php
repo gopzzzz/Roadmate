@@ -1,5 +1,11 @@
 @extends('layout.mainlayout')
 @section('content')
+<head>
+   <!-- Include SweetAlert CSS and JS files -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+</head>
 <div class="content-wrapper">
    <!-- Content Header (Page header) -->
    <section class="content-header">
@@ -101,7 +107,9 @@
                               @if($role==1)  <td>
                                 <i class="fa fa-edit editshpprvdcat"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                                  <i class="fa fa-eye viewshpprvdcat"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-                                <a href="{{url('shop_providcatdelete')}}/{{ $key->id }}"><i class="fa fa-trash delete_banner text-danger"  aria-hidden="true"  data-id="{{$key->id}}"></i></a>
+                                 <a href="#" onclick="confirmDelete('{{ $key->id }}')">
+    <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
+</a>
                               </td>@endif
                            </tr>
                            @php 
@@ -216,4 +224,24 @@
    </section>
    <!-- /.content -->
 </div>
+
+<script>
+    function confirmDelete(providCatId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If the user clicks "Yes", proceed with the deletion
+                window.location.href = "{{ url('shop_providcatdelete') }}/" + providCatId;
+            }
+        });
+    }
+</script>
+
 @endsection
