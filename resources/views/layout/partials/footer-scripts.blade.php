@@ -1378,8 +1378,7 @@ $('.edit_fran').click(function(){
           var obj=JSON.parse(res)
 		  $('#marketproid').val(id);
 		  $('#category_name').val(obj.maincat_id);
-		
-
+		  $('#vendor_name').val(obj.vendor_id);
           $('#brand_name').val(obj.brand_name);
 		
 		  $('#status').val(obj.status);
@@ -3487,6 +3486,30 @@ $('#category_name').on('change', function () {
 					});	
 		}
 		$('#edithsn_modal').modal('show');
+	});
+	$('.edit_vendor').click(function(){
+	var id=$(this).data('id');
+	if(id){
+    $.ajax({
+					type: "POST",
+                    url: "{{ route('vendorfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#venname').val(obj.vendor_name);
+		  $('#address').val(obj.address);
+		  $('#phonenumber').val(obj.phone_number);
+		  $('#email').val(obj.email);
+		  $('#shipaddress').val(obj.shipping_address);
+		  $('#gstnumber').val(obj.Gst_number);
+		  $('#status').val(obj.status);
+          $('#vendorid').val(obj.id);
+                    },
+					});	
+		}
+		$('#editvendor_modal').modal('show');
 	});
 
 	$(document).on('click', '.editstatus', function () {

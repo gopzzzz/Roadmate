@@ -1257,11 +1257,10 @@ public function updateorder(){
  }
 
 }
-public function shopwallet(){
-    
 
-    
-      
+
+public function shopwallet(){
+         
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -1269,8 +1268,6 @@ public function shopwallet(){
   $data1 = json_decode($json);
 
   $shop_id=$data1->shop_id;
-
-
   try{	
 
    
@@ -1285,47 +1282,29 @@ public function shopwallet(){
      
 
         if($wallet == null){
-
-
-
-               
+       
 
           echo json_encode(array('error' => true, "wallet"=>$wallet,"message" => "Error"));
 
              }
 
             else{								
-
-            
-
-            $json_data = 0;
+  $json_data = 0;
 
             echo json_encode(array('error' => false,"wallet"=>$wallet, "message" => "Success"));
 
-                }
-
-    
-
-  
+            } 
 
 }
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+ //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 }
-
-
-
-
-
 
 }

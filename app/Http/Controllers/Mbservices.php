@@ -2233,29 +2233,14 @@ catch (Exception $e)
   try{	
 
     $apptype=$data1->apptype;
-
-
-
     $appversion=DB::table('app_versions')
-
-  
-
-	  ->where('app_type',$apptype)
-
-   
-
+   ->where('app_type',$apptype)
     ->get();
-
-     
-
-        if($appversion){
+  if($appversion){
 
           $json_data = 0;
 
           echo json_encode(array('error' => false, "data" => $appversion, "message" => "Success"));
-
-        
-
              }
 
             else{								
@@ -2263,18 +2248,13 @@ catch (Exception $e)
               echo json_encode(array('error' => true, "message" => "Error"));
 
            }
-
-    
-
 }
 
 catch (Exception $e)
 
 {
 
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+        //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 

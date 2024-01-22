@@ -190,7 +190,7 @@
       <div class="modal-body">
       
      
-        <form method="POST" action="{{ url('franchiseaddon') }}" enctype="multipart/form-data" name="franedit">
+        <form method="POST" action="{{ url('franchiseaddon') }}" enctype="multipart/form-data" name="franedit" onsubmit="return validateForm()">
           
                         @csrf    
                         <input type="hidden" name="fran_id" id="franchise_id">             
@@ -199,7 +199,7 @@
                               <div class="row">
                                  <div class="form-group col-sm-6">
                                     <label class="exampleModalLabel">Country</label>
-                                    <select name="country" class="form-control statefetchadd" data-order="0" id="country_0">
+                                    <select name="country" class="form-control statefetchadd" data-order="0" id="country_0" required>
                                        <option value="0">Select country</option>
                                        @foreach($con as $country)
                                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
@@ -208,7 +208,7 @@
                                  </div>
                                  <div class="form-group col-sm-6" >
                                     <label class="exampleModalLabel">States</label>
-                                    <select name="states" class="form-control districtfetchadd" data-order="0" id="state_0">
+                                    <select name="states" class="form-control districtfetchadd" data-order="0" id="state_0" required>
                                        <option value="0">Select state</option>
                                     </select>
                                  </div>
@@ -224,13 +224,13 @@
                                  </div>
                                  <div class="form-group col-sm-6">
                                     <label class="exampleModalLabel">District</label>
-                                    <select name="district" class="form-control districtadd" data-order="0" id="district_0">
+                                    <select name="district" class="form-control districtadd" data-order="0" id="district_0" required>
                                        <option value="0">Select District</option>
                                     </select>
                                  </div>
                                  <div class="form-group col-sm-12" id="typediv_0">
                                     <label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
-                                    <select name="place_id" id="place_id_0" class="form-control" data-order="0">
+                                    <select name="place_id" id="place_id_0" class="form-control" data-order="0" required>
                                        <option value="0">Select District</option>
                                     </select>
                                  </div>
@@ -413,6 +413,22 @@
 <!-- /.content -->
 </div>
 
+<script>
+    function validateForm() {
+        var countryValue = document.getElementById('country_0').value;
+        var stateValue = document.getElementById('state_0').value;
+        var typeValue = document.getElementById('type_0').value;
+
+        if (countryValue == '0' || stateValue == '0' || typeValue == '0') {
+            alert('Please select values for all required fields.');
+            return false; // prevent form submission
+        }
+
+        // Additional validation logic if needed
+
+        return true; // allow form submission
+    }
+</script>
 
 <script>
    document.addEventListener('DOMContentLoaded', function () {

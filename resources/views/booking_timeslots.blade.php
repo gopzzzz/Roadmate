@@ -263,7 +263,10 @@
                     <th>id</th>
 
                     <th>Customer</th>
+                    @if($role==1)
                     <th>Contact Number</th>
+                    @endif
+
                     <th>Brand/Model </th>
                     <th>Book Type</th>
                     @if($role==1)
@@ -305,7 +308,9 @@
                     <td>{{$i}}</td>
 
                     <td>{{$key->name}} </td>
+                    @if($role==1)
                     <td>{{$key->phnum}} </td>
+                    @endif
                     <td>{{$key->brand}}/{{$key->brand_model}} </td>
 
                     <td>@if($key->book_type==1) Eworkshop @elseif($key->book_type==2) Offer ({{$key->offertitle}}) @else Normal Service @endif </td>
@@ -373,14 +378,20 @@
                    <th>id</th>
 
                     <th>Customer</th>
+                    @if($role==1)
                     <th>Contact Number</th>
+                    @endif
                     <th>Brand/Model </th>
                     <th>Book Type</th>
-
+                    @if($role==1)
+					<th>Customer phno</th>
+          @endif
                     <th>Shop Category</th>
 
                     <th>Shop</th>
-
+                    @if($role==1)
+					<th>Shop mob</th>
+          @endif
                     <th>Date</th>
                     <th>Time</th>
                     <th>Shop Total Amount </th>
