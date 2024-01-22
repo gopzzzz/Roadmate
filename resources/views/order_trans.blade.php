@@ -42,7 +42,7 @@
     color: #ff0000; /* Black text color for readability */
     padding: 20px;
     text-align: center;
-}
+}    
 .invoice-title {
     font-size: 30px;
     text-transform: uppercase;
