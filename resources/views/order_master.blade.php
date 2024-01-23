@@ -216,6 +216,11 @@
                         <button type="submit" class="print-button">Bill</button>
                     </form>
                 </td>
+                <td style="width: 50px;">
+                    <form method="get" action="{{ route('order_invoice',  ['orderId' => $key->id]) }}">
+                        <button type="submit" class="print-button">Invoice</button>
+                    </form>
+                </td>
                 <td>
     <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
         style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">

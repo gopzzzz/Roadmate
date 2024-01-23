@@ -2669,7 +2669,7 @@ public function walletdebtthis(){
 		return redirect('termcondition')->with('success', 'Data Deleted successfully.');
 	}
 	
-
+ 
 	public function customertype()
 	{
 		 $customertype=Tbl_customertype::all();
@@ -3672,6 +3672,43 @@ function sendNotification1($msg1,$title)
 		    ->get();
 			 return response()->json($categorys);
 		}
+
+
+	    public function order_invoice($id) {
+
+		$markk=DB::table('tbl_order_trans')
+			->get();
+		$invoice=DB::table('tbl_order_masters')
+		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
+		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
+		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+		->where('tbl_order_masters.id',$id)
+			->select(
+				'tbl_order_masters.*',
+				'tbl_order_trans.order_id',
+				'tbl_order_trans.qty',
+				'tbl_order_trans.offer_amount',
+				'shops.shopname',
+				'shops.address' ,
+				'shops.delivery_id' ,
+				'tbl_brand_products.product_name',
+				'tbl_deliveryaddres.area',
+				'tbl_deliveryaddres.area1',
+				'tbl_deliveryaddres.city',
+				'tbl_deliveryaddres.district',
+				'tbl_deliveryaddres.state',
+				'tbl_deliveryaddres.country'
+				)
+			->get();
+		$role=Auth::user()->user_type;
+		return view('order_invoice',compact('role','markk','invoice'));
+	    }
+
+
+
+
+
 		
 		public function order_trans($orderId)
 		{

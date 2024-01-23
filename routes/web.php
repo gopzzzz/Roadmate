@@ -1295,6 +1295,9 @@ Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'markete
 // Route::post('/ordertransinsert', [App\Http\Controllers\HomeController::class, 'ordertransinsert'])->name('ordertransinsert');
 Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
 
+
+Route::get('/order_invoice/{orderId}', 'HomeController@order_invoice')->name('order_invoice');
+
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
 Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
 
