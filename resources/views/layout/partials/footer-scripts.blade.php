@@ -3583,9 +3583,9 @@ $(document).ready(function () {
                 console.log(res);
 
                 if (res.productList) {
-                    $('#searchshoplist').html(res.productList);
+                    $('#searchproductlist').html(res.productList);
                 } else {
-                    $('#searchshoplist').html(res);
+                    $('#searchproductlist').html(res);
                 }
             },
             error: function (error) {
@@ -3594,7 +3594,7 @@ $(document).ready(function () {
         });
     });
 
-    $('form').submit(function (e) {
+	$('.submitBtn').click(function (e) {
         e.preventDefault();
 
         $.ajax({
