@@ -109,11 +109,11 @@
     <table style="border-collapse: collapse; width: 33%; float: right; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: bold;">
     <tr>
         <th style="text-align: left; margin-right:10px; background-color: white; padding: 5px;">DATE:</th>
-        <th style="text-align: left; margin-right:10px; background-color: #ffffcc; padding: 5px;">22/01/2024</th>
+        <th style="text-align: left; margin-right:10px; background-color: #ccffcc; padding: 5px;">22/01/2024</th>
     </tr>
     <tr>
         <th style="background-color: white; margin-right:10px; padding: 5px;">PURCHASE ORDER NUMBER:</th>
-        <th style="background-color: #ffffcc; margin-right:10px; padding: 5px;">RM/PO/001/24</th>
+        <th style="background-color: #ccffcc; margin-right:10px; padding: 5px;">RM/PO/001/24</th>
     </tr>
 </table>
 
