@@ -4267,6 +4267,62 @@ public function order_history()
 	$role=Auth::user()->user_type;
 	return view('bill',compact('role'));
 	}
-
+	public function productpriority(Request $request){
+	$role = Auth::user()->user_type;
+	return view('productpriority', compact('role'));
+	}
+	public function search_product(Request $request)
+	{
+		$searchval = $request->searchval;
+		$productList = '';
+	
+		if ($searchval != '') {
+			$products = DB::table('tbl_brand_products')
+				->where('product_name', 'like', '%' . $searchval . '%')
+				->orderBy('id', 'DESC')
+				->get();
+		} else {
+			$products = DB::table('tbl_brand_products')
+				->orderBy('id', 'DESC')
+				->get();
+		}
+	
+		$role = Auth::user()->user_type;
+		$i = 1;
+	
+		if (count($products) > 0) {
+			foreach ($products as $key) {
+				$productList .= '<tr>';
+				$productList .= '<td>' . $i . '</td>';
+				$productList .= '<td>' . $key->product_name . '</td>';
+				// Style the checkbox with some margin and blue color
+				$productList .= '<td><input type="checkbox" name="selected_products[]" value="' . $key->id . '" style="margin-right; 5px; margin-left: 5px; background-color: red;"></td>';
+				$productList .= '</tr>';
+				$i++;
+			}
+		} else {
+			$productList .= '<tr><td colspan="3">No Results Found</td></tr>';
+		}
+	
+		return response()->json(['productList' => $productList]);
+	}
+	
+	public function update_Priority(Request $request)
+    {
+    try {
+    $selectedProductIds = explode(',', $request->input('selected_product_ids'));
+    DB::table('tbl_brand_products')
+    ->whereIn('id', $selectedProductIds)
+    ->update(['priority' => 1]);
+     return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
+    } catch (\Exception $e) {
+         \Log::error($e);
+     return response()->json(['success' => false, 'message' => 'Error updating priority']);
+    }
+    }
 
 }
+	
+
+
+
