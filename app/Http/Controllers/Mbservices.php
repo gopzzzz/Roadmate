@@ -2100,6 +2100,10 @@ catch (Exception $e)
   try{	
 
     $scat=$data1->scat;
+    $index=$data1->index;
+    $offset=($index*20);
+    $limit=20;
+
 
    // $utype=$data1->utype;
 
@@ -2115,7 +2119,9 @@ catch (Exception $e)
 
     ->where('store_lists.sale_satus',0)
     
-    ->limit(10)
+ 
+    ->offset($offset) 
+    ->limit($limit) 
 
    // ->where('user_type',1)
 
@@ -2157,7 +2163,8 @@ catch (Exception $e)
 
     ->where('store_lists.sale_satus',0)
     
-      ->limit(10)
+    ->offset($offset) 
+    ->limit($limit) 
 
     //->where('user_type',1)
 
