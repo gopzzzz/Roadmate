@@ -119,7 +119,7 @@ public function categoryproductlist(){
   
                $json_data = 0;
   
-              echo json_encode(array('error' => false,"product"=>$productlist, "message" => "Success"));
+              echo json_encode(array('error' => false,"productlist"=>$productlist, "message" => "Success"));
   
                   }
 }
@@ -497,9 +497,9 @@ public function deliveryaddressadd()
 
   $query->state	=$data1->state;
   $query->district=$data1->district;
-  $query->city=$data1->city;
+  $query->city=$data1->area1;
   $query->phone=$data1->phone;
-
+  $query->pincode=$data1->pincode;
 
   if($query->save()){
 

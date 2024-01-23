@@ -69,6 +69,7 @@ use App\Tbl_franchase_details;
 use App\Tbl_hsncodes;
 use App\Tbl_placeorders;
 use App\Tbl_wallets;
+use App\Tbl_wallet_transactions;
 use App\Tbl_vendors;
 use DB;
 use Hash;
@@ -3670,12 +3671,15 @@ function sendNotification1($msg1,$title)
 		
 			$order = DB::table('tbl_order_masters')
 				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode')
-				->orderBy('tbl_order_masters.order_status', 'ASC') 
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+				
 				->orderBy('tbl_order_masters.id', 'DESC')
 				
 				->paginate(10);
+
+			//	echo "<pre>";print_r($order);exit;
 		
 			$mark = DB::table('shops')->get();
 			$orderr = DB::table('tbl_coupens')->get();
@@ -3754,9 +3758,10 @@ function sendNotification1($msg1,$title)
 			if ($order) {
 				// Update the order status
 				$order->order_status = $request->order_status;
+				$order->payment_status = $request->paystatus;
 		
 				// Check if the order status is "Cash Received" (assuming '5' is the code for 'Cash Received')
-				if ($request->order_status == '5') {
+				if ($request->paystatus == '1') {
 					// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
 					$percentage = ($total_amount * 10) / 100;
 					\Log::info('Calculated Percentage: ' . $percentage);
@@ -3769,12 +3774,20 @@ function sendNotification1($msg1,$title)
 		
 					if ($wallet) {
 						// Update the wallet_amount
-						$wallet->wallet_amount += $percentage;
+						$wallet->wallet_amount += $wallet->amount+$percentage;
 						$wallet->save();
 						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
 					} else {
-						\Log::error('Wallet not found for shop_id: ' . $shop_id);
+						$w=new Tbl_wallets;
+						$w->shop_id=$shop_id;
+						$w->wallet_amount += $percentage;
+						$w->save();
 					}
+					    $wh=new Tbl_wallet_transactions;
+						$wh->amount=$percentage;
+						$wh->type = 1;
+						$wh->shop_id =$shop_id = $percentage;
+
 				}
 		
 				// Save the order
