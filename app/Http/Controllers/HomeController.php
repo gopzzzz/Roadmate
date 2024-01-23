@@ -267,9 +267,10 @@ class HomeController extends Controller
 	}
 	
 	public function timeslotdelete($id){
-		DB::delete('delete from booktimemasters where id = ?',[$id]);
-		return redirect('timeslot');
+		DB::delete('delete from booktimemasters where id = ?', [$id]);
+		return redirect('timeslot')->with('success', 'Deleted Successfully');
 	}
+	
 	public function executive(){
 		$exe=DB::table('executives')->orderBy('id', 'DESC')->get();
 		$role=Auth::user()->user_type;
@@ -308,7 +309,7 @@ class HomeController extends Controller
         $exe->district = $request->district;
         $exe->location = $request->location;
         $exe->save();
-        return redirect('executive');
+        return redirect('executive')->with('success', 'Executive Inserted Successfully');
     }
    }
     public function executivenew(){
@@ -338,15 +339,15 @@ class HomeController extends Controller
 		
 		}
 			$exeedit->save(); 
-		return redirect('executive');
+		return redirect('executive')->with('success', 'Executive Edited Successfully');
 
 	}
 	
 	public function exedelete($id){
-		DB::delete('delete from executives where id = ?',[$id]);
-		return redirect('executive');
+		DB::delete('delete from executives where id = ?', [$id]);
+		return redirect('executive')->with('success', 'Executive Deleted Successfully');
 	}
-
+	
 	public function franchises() {
 		$franchiseDetails = Tbl_franchase_details::select('franchise_id', 'type', 'place_id', 'district_id')->get();
 	
@@ -635,13 +636,14 @@ class HomeController extends Controller
 			// Delete user
 			$user->delete();
 	
+			// Display a success message
 			return redirect()->back()->with('success', 'Staff deleted successfully.');
 		}
 	
 		return redirect()->back()->with('error', 'User not found.');
 	}
 	
-	
+
 
 	//superadmin
 	public function superadmin(){
@@ -689,7 +691,7 @@ class HomeController extends Controller
 			$banner->save();
 		}  
 		
-		return redirect('banner');
+		return redirect('banner')->with('success', 'Banner inserted successfully.');
 	}
 	public function bannerfetch(Request $request){
 		$id=$request->id;
@@ -708,12 +710,13 @@ class HomeController extends Controller
 			$banner->save();
 		}  
 		
-		return redirect('banner');
+		return redirect('banner')->with('success', 'Banner Edited successfully.');
 	}
 	public function bannerdelete($id){
-		DB::delete('delete from banners where id = ?',[$id]);
-		return redirect('banner');
-   }
+		DB::delete('delete from banners where id = ?', [$id]);
+		return redirect('banner')->with('success', 'Banner deleted successfully.');
+	}
+	
    public function accountdelete($id){
        	DB::delete('delete from user_lists where id = ?',[$id]);
        	 DB::delete('delete from user_vehicles where user_id = ?',[$id]);
@@ -764,7 +767,7 @@ class HomeController extends Controller
 			
 		}  
 		$store_list->save();
-		return redirect('store_listing');
+		return redirect('store_listing')->with('success', 'Data Inserted Successfully');
 	}
    public function storefetch(Request $request){
 		$id=$request->id;
@@ -803,7 +806,7 @@ class HomeController extends Controller
 			
 		}  
 		$store_list->save();
-		return redirect('store_listing');
+		return redirect('store_listing')->with('success', 'Data Edited Successfully');
 	}
     public function store_categories(){
 		$store_categories=Store_product_categories::all();
@@ -815,7 +818,7 @@ class HomeController extends Controller
 		$store_category=new Store_product_categories;
 		$store_category->cat_name=$request->category;
 		$store_category->save();
-		return redirect('store_categories');
+		return redirect('store_categories')->with('success','Product Category inserted successfully');
 	}
 	
 	public function store_categoriesfetch(Request $request){
@@ -829,12 +832,12 @@ class HomeController extends Controller
 		$store_category=Store_product_categories::find($id);
 		$store_category->cat_name = $request->category;
 		$store_category->save();
-		return redirect('store_categories');
+		return redirect('store_categories')->with('success','Product Category edited successfully');
 	}
 	
 	public function store_categoriesdelete($id){
-		DB::delete('delete from store_product_categories where id = ?',[$id]);
-		return redirect('store_categories');
+		DB::delete('delete from store_product_categories where id = ?', [$id]);
+		return redirect('store_categories')->with('success','Product Category deleted successfully');
 	}
 	
 	public function shopproduct_offers(){
@@ -866,7 +869,7 @@ class HomeController extends Controller
 			
 		}  
 		$prod_offr->save();
-		return redirect('shopproduct_offers');
+		return redirect('shopproduct_offers')->with('success','Product offer inserted successfully');
 	}
 	
 	public function product_offersfetch(Request $request){
@@ -893,12 +896,14 @@ class HomeController extends Controller
 			
 		}  
 		$prod_offr->save();
-		return redirect('shopproduct_offers');
+		return redirect('shopproduct_offers')->with('success','Product offer edited successfully');
 	}
+
 	public function product_offersdelete($id){
-		DB::delete('delete from product_offers where id = ?',[$id]);
-		return redirect('shopproduct_offers');
+		DB::delete('delete from product_offers where id = ?', [$id]);
+		return redirect('shopproduct_offers')->with('success','Product offer deleted successfully');
 	}
+	
 	public function shop_offers(){
 		$shopoffr=Tbl_shop_offers::all();
 		$shopoffr = DB::table('tbl_shop_offers')
@@ -940,7 +945,7 @@ class HomeController extends Controller
 			
 		}  
 		$shop_offr->save();
-		return redirect('shop_offers');
+		return redirect('shop_offers')->with('success','Shop offer inserted successfully');
 	}
 	
 	public function shop_offersfetch(Request $request){
@@ -970,15 +975,17 @@ class HomeController extends Controller
 			
 		}  
 		$shop_offr->save();
-		return redirect('shop_offers');
+		return redirect('shop_offers')->with('success','Shop offer edited successfully');
 	}
+
 	public function shop_offersdelete($id){
 		if(DB::delete('delete from tbl_shop_offers where id = ?',[$id])){
 			DB::delete('delete from shop_offer_models where offer_id = ?',[$id]);
 		}
 
-	return redirect('shop_offers');
+	return redirect('shop_offers')->with('success','Shop offer deleted successfully');
 	}
+
 	public function shopoffermodels(){
 		$offrmodl=Shop_offer_models::all();
 		$offrmodl = DB::table('shop_offer_models')
@@ -1119,7 +1126,7 @@ public function shop_vehicle($Id) {
 		$shop_timeslots->shop_id=$request->shop;
 		$shop_timeslots->timeslot=$request->timeslot;
 		$shop_timeslots->save();
-		return redirect('shoptimeslot');
+		return redirect('shoptimeslot')->with('success','Shop Timeslot inserted successfully');
 	}
 	
 	public function shoptimeslotfetch(Request $request){
@@ -1133,12 +1140,13 @@ public function shop_vehicle($Id) {
 		$shop_time->shop_id=$request->shop;
 		$shop_time->timeslot=$request->timeslot;
 		$shop_time->save();
-		return redirect('shoptimeslot');
+		return redirect('shoptimeslot')->with('success','Shop Timeslot edited successfully');
 	}
 	public function shoptimeslotdelete($id){
-		DB::delete('delete from shop_timeslots where id = ?',[$id]);
-		return redirect('shoptimeslot');
+		DB::delete('delete from shop_timeslots where id = ?', [$id]);
+		return redirect('shoptimeslot')->with('success','Shop Timeslot deleted successfully');
 	}
+	
 	public function shopreviews(){
 		
 		$review = DB::table('reviews')
@@ -1163,7 +1171,7 @@ public function shop_vehicle($Id) {
 	
 	public function shopreviewsdelete($id){
 		DB::delete('delete from reviews where id = ?',[$id]);
-		return redirect('shopreviews');
+		return redirect('shopreviews')->with('success','Reviews deleted successfully');
 	}
 	
 	public function shop_providcat(){
@@ -1187,7 +1195,7 @@ public function shop_vehicle($Id) {
 		$provd_cat->shop_id=$request->shop;
 		$provd_cat->shop_cat_id=$request->category;
 		$provd_cat->save();
-		return redirect('shop_providcat');
+		return redirect('shop_providcat')->with('success','Provided Category inserted successfully');
 	}
 	public function shop_providcatfetch(Request $request){
 		$id=$request->id;
@@ -1200,12 +1208,14 @@ public function shop_vehicle($Id) {
 		$shop_provd_cat->shop_id=$request->shop;
 		$shop_provd_cat->shop_cat_id=$request->cat;
 		$shop_provd_cat->save();
-		return redirect('shop_providcat');
+		return redirect('shop_providcat')->with('success','Provided Category edited successfully');
 	}
+
 	public function shop_providcatdelete($id){
-		DB::delete('delete from shop_provide_categories where id = ?',[$id]);
-		return redirect('shop_providcat');
-	}
+    DB::delete('delete from shop_provide_categories where id = ?', [$id]);
+    return redirect('shop_providcat')->with('success','Provided Category deleted successfully');
+}
+
     public function shop_categories(){
 		
 		$shop_categories = DB::table('shiop_categories')
@@ -1228,7 +1238,7 @@ public function shop_vehicle($Id) {
 			
 		}  
 		$shop_category->save();
-		return redirect('shop_categories');
+		return redirect('shop_categories')->with('success','Shop category inserted successfully');
 	}
 	public function shop_categoriesfetch(Request $request){
 		$id=$request->id;
@@ -1251,12 +1261,14 @@ public function shop_vehicle($Id) {
 			$shop_category->image=$request->image;
 		}
 		$shop_category->save();
-		return redirect('shop_categories');
+		return redirect('shop_categories')->with('success','Shop category inserted successfully');
 	}
-	public function shop_categoriesdelete($id){
-		DB::delete('delete from shiop_categories where id = ?',[$id]);
-		return redirect('shop_categories');
-	}
+
+public function shop_categoriesdelete($id){
+    DB::delete('delete from shiop_categories where id = ?', [$id]);
+    return redirect('shop_categories')->with('success','Shop category deleted successfully');
+}
+
 	
 	public function shops(){
 		$shop_categories=Shiop_categories::all();
@@ -1483,7 +1495,7 @@ public function shop_vehicle($Id) {
 			
 		}  
 		$shop->save();
-		return redirect('shops');
+		return redirect('shops')->with('success', 'Shop edited successfully!');
 	}
     public function marketproducts(){
 	    $market = DB::table('tbl_rm_products')
@@ -1611,14 +1623,20 @@ public function shop_vehicle($Id) {
 		
 		return view('customers',compact('customers'));
 	}
+
 	public function shopdelete($id){
-		DB::delete('delete from shops where id = ?',[$id]);
-		return redirect('shops');
+		DB::delete('delete from shops where id = ?', [$id]);
+		return redirect('shops')->with('success', 'Shop Deleted Successfully');
 	}
+	
+
 	public function storedelete($id){
-		DB::delete('delete from store_lists where id = ?',[$id]);
-		return redirect('store_listing');
+		DB::delete('delete from store_lists where id = ?', [$id]);
+		return redirect('store_listing')->with('success', 'Store Deleted Successfully');
 	}
+	
+
+
 	public function editstore(Request $request){
 		$id=$request->id;
 		$store_list=Store_lists::find($id);
@@ -1665,18 +1683,20 @@ public function shop_vehicle($Id) {
 		$vehtype=Vehicle_types::find($id);
 		$vehtype->veh_type=$request->vehtype;
 		$vehtype->save();
-		return redirect('vehtype');
+		return redirect('vehtype')->with('success', 'Vehicle type edited successfully');
 	}
 	public function vehtypeinsert(Request $request){
 		$vehtype=new Vehicle_types;
 		$vehtype->veh_type=$request->vehtype;
+		$vehtype->veh_img=0;
 		$vehtype->save();
-		return redirect('vehtype');
+		return redirect('vehtype')->with('success', 'Vehicle type inserted successfully');
 	}
 	public function vehtypedelete($id){
-		DB::delete('delete from vehicle_types where id = ?',[$id]);
-		return redirect('vehtype');
+		DB::delete('delete from vehicle_types where id = ?', [$id]);
+		return redirect('vehtype')->with('success', 'Vehicle type deleted successfully');
 	}
+	
 	public function fueltype(){
 		$fuel=Fuel_types::all();
 		$role=Auth::user()->user_type;
@@ -1686,7 +1706,7 @@ public function shop_vehicle($Id) {
 		$fueltype=new Fuel_types;
 		$fueltype->fuel_type=$request->fueltype;
 		$fueltype->save();
-		return redirect('fueltype');
+		return redirect('fueltype')->with('success', 'Fuel type Inserted successfully');
 	}
 	public function fueltypefetch(Request $request){
 		$id=$request->id;
@@ -1698,12 +1718,13 @@ public function shop_vehicle($Id) {
 		$fueltype=Fuel_types::find($id);
 		$fueltype->fuel_type=$request->fueltype;
 		$fueltype->save();
-		return redirect('fueltype');
+		return redirect('fueltype')->with('success', 'Fuel type edited successfully');
 	}
 	public function fueltypedelete($id){
-		DB::delete('delete from fuel_types where id = ?',[$id]);
-		return redirect('fueltype');
+		DB::delete('delete from fuel_types where id = ?', [$id]);
+		return redirect('fueltype')->with('success', 'Fuel type deleted successfully');
 	}
+	
 	public function brand(){
 	
 		$brand=DB::table('brand_lists')
@@ -1765,19 +1786,20 @@ public function shop_vehicle($Id) {
 		$brands->vehicle=$request->vehtype;
 		$brands->brand=$request->brand;
 		$brands->save();
-		return redirect('brand');
+		return redirect('brand')->with('success','Brand edited successfully');
 	}
 	public function brandinsert(Request $request){
 		$brand=new Brand_lists;
 		$brand->vehicle=$request->vehtype;
 		$brand->brand=$request->brand;
 		$brand->save();
-		return redirect('brand');
+		return redirect('brand')->with('success','Brand inserted successfully');
 	}
 	public function branddelete($id){
-		DB::delete('delete from brand_lists where id = ?',[$id]);
-		return redirect('brand');
+		DB::delete('delete from brand_lists where id = ?', [$id]);
+		return redirect('brand')->with('success','Brand deleted successfully');
 	}
+	
 	public function models(){
 		$model=Brand_models::all();
 		$model=DB::table('brand_models')
@@ -1809,7 +1831,7 @@ public function shop_vehicle($Id) {
 		$model->brand=$request->brand;
 		$model->fuel_type=$request->fuel;
 		$model->save();
-		return redirect('models');
+		return redirect('models')->with('success','Model inserted successfully');
 	}
 	public function modelfetch(Request $request){
 		$id=$request->id;
@@ -1830,12 +1852,14 @@ public function shop_vehicle($Id) {
 		$models->brand=$request->brand_edit;
 		$models->fuel_type=$request->fuel_edit;
 		$models->save();
-		return redirect('models');
+		return redirect('models')->with('success','Model edited successfully');
 	}
+
 	public function modeledelete($id){
-		DB::delete('delete from brand_models where id = ?',[$id]);
-		return redirect('models');
+		DB::delete('delete from brand_models where id = ?', [$id]);
+		return redirect('models')->with('success','Model deleted successfully');
 	}
+	
 	public function vehcle(){
 		$vehcl=Vehicles::all();
 		$vehcl=DB::table('vehicles')
@@ -1855,7 +1879,7 @@ public function shop_vehicle($Id) {
 		$vehcl->brand=$request->brand;
 		$vehcl->fuel_type=$request->fuel;
 		$vehcl->save();
-		return redirect('vehcle');
+		return redirect('vehcle')->with('success','Vehicle inserted successfully');
 	}
 	
 	public function vehclefetch(Request $request){
@@ -1883,12 +1907,14 @@ public function shop_vehicle($Id) {
 		$vehcl->brand=$request->brand_edit;
 		$vehcl->fuel_type=$request->fuel_edit;
 		$vehcl->save();
-		return redirect('vehcle');
+		return redirect('vehcle')->with('success','Vehicle edited successfully');
 	}
+
 	public function vehcledelete($id){
-		DB::delete('delete from vehicles where id = ?',[$id]);
-		return redirect('vehcle');
-	}
+    DB::delete('delete from vehicles where id = ?', [$id]);
+    return redirect('vehcle')->with('success','Vehicle deleted successfully');
+}
+
 	public function uservehcle(){
 		
 		$usrvehcl=DB::table('user_vehicles')
@@ -1918,7 +1944,7 @@ public function shop_vehicle($Id) {
 		$usrvehcl->fuel_type=$request->fuel;
 		$usrvehcl->vehicle_number=$request->vehnum;
 		$usrvehcl->save();
-		return redirect('uservehcle');
+		return redirect('uservehcle')->with('success','Customers vehicle inserted successfully');
 	}
 	
 	public function uservehclefetch(Request $request){
@@ -1952,12 +1978,14 @@ public function shop_vehicle($Id) {
 		$usrvehcl->fuel_type=$request->fuel_edit;
 		$usrvehcl->vehicle_number=$request->veh_num;
 		$usrvehcl->save();
-		return redirect('uservehcle');
+		return redirect('uservehcle')->with('success','Customers vehicle edited successfully');
 	}
+
 	public function uservehcledelete($id){
-		DB::delete('delete from user_vehicles where id = ?',[$id]);
-		return redirect('uservehcle');
+		DB::delete('delete from user_vehicles where id = ?', [$id]);
+		return redirect('uservehcle')->with('success','Customers vehicle deleted successfully');
 	}
+	
 	public function mystorequeries(){
 		
 		$custmr1=User_lists::all();
@@ -1981,11 +2009,11 @@ public function shop_vehicle($Id) {
 		//->first();
 		print_r(json_encode($mystrquris));
 	}
-	
 	public function mystorequerydelete($id){
-		DB::delete('delete from mystorequerys where id = ?',[$id]);
-		return redirect('mystorequeries');
+		DB::delete('delete from mystorequerys where id = ?', [$id]);
+		return redirect('mystorequeries')->with('success', 'Data deleted successfully');
 	}
+	
 	public function storequeryanswr(){
 	
 		$strquransr=DB::table('storequery_answers')
@@ -2005,7 +2033,7 @@ public function shop_vehicle($Id) {
 	   $qury_answr->answer=$request->answr;
 	   $qury_answr->anuserid=$request->usr;
 	   $qury_answr->save();
-	   return redirect('storequeryanswr');
+	   return redirect('storequeryanswr')->with('success', 'Data inserted successfully');
 	}
 	public function storequeryanswrfeatch(Request $request){
 		$id=$request->id;
@@ -2024,12 +2052,13 @@ public function shop_vehicle($Id) {
 	   $qury_answr->answer=$request->answr;
 	   $qury_answr->anuserid=$request->usr;
 	   $qury_answr->save();
-	   return redirect('storequeryanswr');
+	   return redirect('storequeryanswr')->with('success', 'Data edited successfully');
 	}
 	public function storequeryanswrdelete($id){
-		DB::delete('delete from storequery_answers where id = ?',[$id]);
-		return redirect('storequeryanswr');
+		DB::delete('delete from storequery_answers where id = ?', [$id]);
+		return redirect('storequeryanswr')->with('success', 'Data deleted successfully');
 	}
+	
 	public function packfeatures(){
 		//$feature=Package_features::all();
 	
@@ -2083,7 +2112,7 @@ public function shop_vehicle($Id) {
 		$shopbank->ifsc=$request->ifsc;
 		$shopbank->bankaccount=$request->bankaccount;
 		$shopbank->save();
-		return redirect('shopbank');
+		return redirect('shopbank')->with('success', 'Data inserted successfully.');
 	}
 	public function editshopbank(Request $request){
 		$id=$request->id;
@@ -2095,14 +2124,20 @@ public function shop_vehicle($Id) {
 		$shopbank->ifsc=$request->ifsc;
 		$shopbank->bankaccount=$request->bankaccount;
 		$shopbank->save();
+		return redirect('shopbank')->with('success', 'Data edited successfully.');
+	}
+
+	public function shopbankdelete($id){
+		DB::delete('delete from tbl_shopbankdetails where id = ?', [$id]);
 		return redirect('shopbank');
 	}
+	
 	public function packfeaturesinsert(Request $request){
 	   $feature=new Package_features;
 	   $feature->package_id=$request->packg;
 	   $feature->feature=$request->feature;
 	   $feature->save();
-	   return redirect('common');
+	   return redirect('common')->with('success', 'Data inserted successfully.');
 	}
 	public function packageservice(){
 		$packserv=Package_service_lists::all();
@@ -2123,7 +2158,7 @@ public function shop_vehicle($Id) {
 	   $packserv->package_id=$request->packgs;
 	   $packserv->service_id=$request->shop_cat;
 	   $packserv->save();
-	   return redirect('packageservice');
+	   return redirect('packageservice')->with('success', 'Data inserted successfully.');
 	}
 	public function packageservicefetch(Request $request){
 		$id=$request->id;
@@ -2136,12 +2171,13 @@ public function shop_vehicle($Id) {
 	   $pack_serv->package_id=$request->packgs;
 	   $pack_serv->service_id=$request->shop_cat;
 	   $pack_serv->save();
-	   return redirect('packageservice');
+	   return redirect('packageservice')->with('success', 'Data edited successfully.');
 	}
 	public function packageservicedelete($id){
-		DB::delete('delete from package_service_lists where id = ?',[$id]);
-		return redirect('packageservice');
+		DB::delete('delete from package_service_lists where id = ?', [$id]);
+		return redirect('packageservice')->with('success', 'Data deleted successfully.');
 	}
+	
 	public function packfeaturesfetch(Request $request){
 		$id=$request->id;
 		$feature=Package_features::find($id);
@@ -2233,7 +2269,7 @@ public function shop_vehicle($Id) {
 				$package->model_id=$request->vehmodel;
 				$package->fuel_type=$request->fueltype;
 				$package->save();
-				return redirect('common');
+				return redirect('common')->with('success', 'Data inserted successfully.');
 			}
 			
 		
@@ -2266,7 +2302,7 @@ public function shop_vehicle($Id) {
 			$pack->vehmodel=$request->vehmodel;
 			$pack->status=$request->status;
 			$pack->save();
-			return redirect('common');
+			return redirect('common')->with('success', 'Data edited successfully.');
 		
 		}  else{
 			
@@ -2281,15 +2317,17 @@ public function shop_vehicle($Id) {
 			$pack->vehmodel=$request->vehmodel;
 			$pack->status=$request->status;
 			$pack->save();
-			return redirect('common');
+			return redirect('common')->with('success', 'Data edited successfully.');
 		}
 		
 	}
 	
 	public function packagedelete($id){
-		DB::delete('delete from packages where id = ?',[$id]);
-		return redirect('common');
+		DB::delete('delete from packages where id = ?', [$id]);
+		return redirect('common')->with('success', 'Data deleted successfully.');
 	}
+
+
 	public function packagedeleteforveh($id){
 		DB::delete('delete from packages_forvehmodels where id = ?',[$id]);
 		return redirect('common');
@@ -2322,7 +2360,7 @@ public function shop_vehicle($Id) {
 			$packagedet->pkg_id=$request->packag;
 			$packagedet->pkg_det_details=$request->desc;
 			$packagedet->save();
-			return redirect('packagedet');
+			return redirect('packagedet')->with('success', 'Data inserted successfully.');
 		  
 		
 		
@@ -2339,15 +2377,17 @@ public function shop_vehicle($Id) {
 			$package_det->pkg_id=$request->packag;
 			$package_det->pkg_det_details=$request->desc;
 			$package_det->save();
-			return redirect('packagedet');
+			return redirect('packagedet')->with('success', 'Data edited successfully.');
 		  
 		
 		
 	}
+
 	public function packagedetdelete($id){
-		DB::delete('delete from packages_dets where id = ?',[$id]);
-		return redirect('packagedet');
+		DB::delete('delete from packages_dets where id = ?', [$id]);
+		return redirect('packagedet')->with('success', 'Data deleted successfully.');
 	}
+	
 	
 	public function packageshop(){
 		$packageshop=DB::table('packages_shops')
@@ -2368,7 +2408,7 @@ public function shop_vehicle($Id) {
 			$packageshop->pkg_shp_id=$request->shops;
 			$packageshop->pkg_id=$request->packgs;
 			$packageshop->save();
-			return redirect('packageshop');
+			return redirect('packageshop')->with('success', 'Data inserted successfully.');
 		
 	}
 	
@@ -2383,13 +2423,14 @@ public function shop_vehicle($Id) {
 			$package_shop->pkg_shp_id=$request->shops;
 			$package_shop->pkg_id=$request->packgs;
 			$package_shop->save();
-			return redirect('packageshop');
+			return redirect('packageshop')->with('success', 'Data edited successfully.');
 		
 	}
 	public function packageshopdelete($id){
-		DB::delete('delete from packages_shops where id = ?',[$id]);
-		return redirect('packageshop');
+		DB::delete('delete from packages_shops where id = ?', [$id]);
+		return redirect('packageshop')->with('success', 'Data deleted successfully.');
 	}
+	
 	public function packagebook(){
 		$packagebook=Package_books::all();
 		$packagebook=DB::table('package_books')
@@ -2569,9 +2610,10 @@ public function walletdebtthis(){
 	     print_r(json_encode($sugg));
     }
 	public function suggcomplntdelete($id){
-		DB::delete('delete from tbl_sugg_complaints where id = ?',[$id]);
-		return redirect('suggcomplnt');
+		DB::delete('delete from tbl_sugg_complaints where id = ?', [$id]);
+		return redirect('suggcomplnt')->with('success', 'Data deleted successfully.');
 	}
+	
 	public function termcondition(){
 		$terms=Tbl_terms_conditions::all();
 		$role=Auth::user()->user_type;
@@ -2586,7 +2628,7 @@ public function walletdebtthis(){
 		$feature=new Features;
 		$feature->feature=$request->feature;
 		$feature->save();
-		return redirect('feature');
+		return redirect('feature')->with('success', 'Feature inserted successfully.');
 	}
 	public function featurefetch(Request $request){
 		$id=$request->id;
@@ -2598,17 +2640,18 @@ public function walletdebtthis(){
 		$feature=Features::find($id);
 		$feature->feature=$request->feature;
 		$feature->save();
-		return redirect('feature');
+		return redirect('feature')->with('success', 'Feature edited successfully.');
 	}
 	public function featuredelete($id){
-		DB::delete('delete from features where id = ?',[$id]);
-		return redirect('feature');
+		DB::delete('delete from features where id = ?', [$id]);
+		return redirect('feature')->with('success', 'Feature Deleted successfully.');
 	}
+	
 	public function termconditioninsert(Request $request){
 		$terms=new Tbl_terms_conditions;
 		$terms->tc_details=$request->tc;
 		$terms->save();
-		return redirect('termcondition');
+		return redirect('termcondition')->with('success', 'Data inserted successfully.');
 	}
 	public function termconditionfetch(Request $request){
 		$id=$request->id;
@@ -2620,15 +2663,17 @@ public function walletdebtthis(){
 		$terms=Tbl_terms_conditions::find($id);
 		$terms->tc_details=$request->tc;
 		$terms->save();
-		return redirect('termcondition');
+		return redirect('termcondition')->with('success', 'Data edited successfully.');
 	}
 	public function termconditiondelete($id){
-		DB::delete('delete from tbl_terms_conditions where id = ?',[$id]);
-		return redirect('termcondition');
+		DB::delete('delete from tbl_terms_conditions where id = ?', [$id]);
+		return redirect('termcondition')->with('success', 'Data Deleted successfully.');
 	}
+	
 
 	public function customertype()
 	{
+		 $customertype=Tbl_customertype::all();
 		 $customertype=Tbl_customertype::all();
 		 $role=Auth::user()->user_type;
 		  return view('customertype',compact('customertype','role'));
@@ -4189,6 +4234,13 @@ public function order_history()
 	$hs->save();
 	return redirect('hsn')->with('success', 'Edited successfully');
 	}
+
+	public function hsndelete($id){
+		DB::delete('delete from tbl_hsncodes where id = ?', [$id]);
+		return redirect('hsn')->with('success', 'HSN deleted successfully.');
+	}
+	
+
 	public function marketvendor(){
 	$vendor=DB::table('tbl_vendors')->orderBy('id', 'DESC')->get();
 	$role=Auth::user()->user_type;
@@ -4223,6 +4275,10 @@ public function order_history()
 	$vendor->status=$request->status;
     $vendor->save();
 	return redirect('marketvendor')->with('success', 'Edited successfully');
+	}
+	public function bill(){
+	$role=Auth::user()->user_type;
+	return view('bill',compact('role'));
 	}
 
 

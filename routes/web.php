@@ -326,7 +326,7 @@ Route::post('/shop_categoriesedit', [
     'uses' => 'HomeController@shop_categoriesedit'
 ])->name('shop_categoriesedit');
 
-Route::get('shop_categoriesrdelete/{id}', [
+Route::get('shop_categoriesdelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@shop_categoriesdelete'
 ])->name('shop_categoriesdelete');
@@ -793,6 +793,11 @@ Route::get('/shopbank', [
     'uses' => 'HomeController@shopbank'
 ])->name('shopbank');
 
+Route::get('shopbankdelete/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@shopbankdelete'
+])->name('shopbankdelete');
+
 Route::post('/packfeaturesinsert', [
     'middleware' => 'auth',
     'uses' => 'HomeController@packfeaturesinsert'
@@ -1202,6 +1207,13 @@ Route::post('/hsnedit', [
     'uses' => 'HomeController@hsnedit'
 ])->name('hsnedit'); 
 
+
+Route::get('hsndelete/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@hsndelete'
+])->name('hsndelete');
+
+
 Route::get('/product_order', 'HomeController@product_order')->name('product_order');
 
 
@@ -1323,4 +1335,5 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
+Route::get('/bill', 'HomeController@bill')->name('bill');
 
