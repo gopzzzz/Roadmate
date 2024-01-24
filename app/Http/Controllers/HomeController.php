@@ -4432,21 +4432,23 @@ public function order_history()
 	
 		return view('bill',compact('role','master','vendor','bills'));
 		}
-	public function productpriority(Request $request){
-	$role = Auth::user()->user_type;
-	$product = DB::table('tbl_brand_products')
-    ->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
-    ->where('tbl_brand_products.priority', 1)
-    ->select('tbl_brand_products.*', 'tbl_productimages.images') 
-    ->orderBy('tbl_brand_products.id', 'desc')
-    ->get();
-return view('productpriority', compact('role','product'));
-	}
+		public function productpriority(Request $request){
+			$role = Auth::user()->user_type;
+			$product = DB::table('tbl_brand_products')
+				->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
+				->where('tbl_brand_products.priority', 1)
+				->select('tbl_brand_products.*', 'tbl_productimages.images') 
+				->groupBy('tbl_brand_products.id') 
+				->orderBy('tbl_brand_products.id', 'desc')
+				->get();
+			return view('productpriority', compact('role','product'));
+		}
+		
 	public function search_product(Request $request)
 	{
 		$searchval = $request->searchval;
 		$productList = '';
-	
+
 		if ($searchval != '') {
 			$products = DB::table('tbl_brand_products')
 				->where('product_name', 'like', '%' . $searchval . '%')
@@ -4478,17 +4480,37 @@ return view('productpriority', compact('role','product'));
 	}
 	
 	public function update_Priority(Request $request)
+	{
+		try {
+			$selectedProductIds = explode(',', $request->input('selected_product_ids'));
+	
+			
+			DB::table('tbl_brand_products')->update(['priority' => 0]);
+
+			$recentProducts = DB::table('tbl_brand_products')
+				->whereIn('id', $selectedProductIds)
+				->orderBy('created_at', 'desc') 
+				->take(6)
+				->pluck('id');
+	
+			DB::table('tbl_brand_products')
+				->whereIn('id', $recentProducts)
+				->update(['priority' => 1]);
+	
+			return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
+		} catch (\Exception $e) {
+			\Log::error($e);
+			return response()->json(['success' => false, 'message' => 'Error updating priority']);
+		}
+	}
+	
+	public function removePriority($productId)
     {
-    try {
-    $selectedProductIds = explode(',', $request->input('selected_product_ids'));
-    DB::table('tbl_brand_products')
-    ->whereIn('id', $selectedProductIds)
-    ->update(['priority' => 1]);
-     return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
-    } catch (\Exception $e) {
-         \Log::error($e);
-     return response()->json(['success' => false, 'message' => 'Error updating priority']);
-    }
+        DB::table('tbl_brand_products')
+            ->where('id', $productId)
+            ->update(['priority' => 0]);
+
+        return redirect()->back()->with('success', 'Priority removed successfully.');
     }
 
 }

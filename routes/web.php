@@ -1349,3 +1349,4 @@ Route::post('/search_product', [
     'uses' => 'HomeController@search_product'
 ])->name('search_product');
 Route::post('/update_Priority', [App\Http\Controllers\HomeController::class, 'update_Priority'])->name('update_Priority');
+Route::get('/remove-priority/{productId}', 'HomeController@removePriority')->name('removePriority');
