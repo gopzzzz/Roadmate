@@ -48,14 +48,14 @@
         </div>
     </div>
 
-    <div id="searchshoplist"></div>
+    <div id="searchproductlist"></div>
 
     <!-- Hidden input field to store selected product IDs -->
     <input type="hidden" name="selected_product_ids" id="selected_product_ids">
 
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" name="submit" class="btn btn-primary">Add</button>
+        <button type="submit" class="submitBtn btn btn-primary">Add</button>
     </div>
 </form>
 
