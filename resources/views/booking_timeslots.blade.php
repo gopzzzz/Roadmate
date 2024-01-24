@@ -269,20 +269,20 @@
                     <th>id</th>
 
                     <th>Customer</th>
-                    @if($role==1)
+                    @if($role==1 || $role==2)
                     <th>Contact Number</th>
                     @endif
 
                     <th>Brand/Model </th>
                     <th>Book Type</th>
-                    @if($role==1)
+                    @if($role==1 || $role==2)
 					<th>Customer phno</th>
           @endif
 
                     <th>Shop Category</th>
 
                     <th>Shop</th>
-                    @if($role==1)
+                    @if($role==1 || $role==2)
 					<th>Shop mob</th>
           @endif
                     <th>Date</th>
@@ -314,19 +314,19 @@
                     <td>{{$i}}</td>
 
                     <td>{{$key->name}} </td>
-                    @if($role==1)
+                    @if($role==1 || $role==2)
                     <td>{{$key->phnum}} </td>
                     @endif
                     <td>{{$key->brand}}/{{$key->brand_model}} </td>
 
                     <td>@if($key->book_type==1) Eworkshop @elseif($key->book_type==2) Offer ({{$key->offertitle}}) @else Normal Service @endif </td>
-                    @if($role==1)
+                    @if($role==1 || $role==2)
 					<td>{{$key->phnum}} </td>
           @endif
                     <td>{{$key->category}}</td>
 
                     <td>{{$key->shopname}}</td>
-                    @if($role==1)
+                    @if($role==1 || $role==2)
 					<td>{{$key->phone_number}}</td>
           @endif
 					

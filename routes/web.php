@@ -1288,6 +1288,11 @@ Route::post('/fetchdistrict', [App\Http\Controllers\HomeController::class, 'fetc
 Route::post('/placefetch', [App\Http\Controllers\HomeController::class, 'placefetch'])->name('placefetch');
 Route::post('/placeedit', [App\Http\Controllers\HomeController::class, 'placeedit'])->name('placeedit');
 Route::get('/market_category', 'HomeController@market_category')->name('market_category');
+Route::get('/purchase_order', 'HomeController@purchase_order')->name('purchase_order');
+Route::get('/view_bill/{id}', 'HomeController@view_bill')->name('view_bill');
+Route::get('/purchaseorder_bill', 'HomeController@purchaseorder_bill')->name('purchaseorder_bill');
+Route::get('/updatepo/{id}', 'HomeController@updatepo')->name('updatepo');
+
 
 Route::post('/marketinsert', [App\Http\Controllers\HomeController::class, 'marketinsert'])->name('marketinsert');
 Route::post('/marketfetch', [App\Http\Controllers\HomeController::class, 'marketfetch'])->name('marketfetch');
@@ -1335,5 +1340,5 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
-Route::get('/bill', 'HomeController@bill')->name('bill');
+Route::get('/bill/{id}', 'HomeController@bill')->name('bill');
 

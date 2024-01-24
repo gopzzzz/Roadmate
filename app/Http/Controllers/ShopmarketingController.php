@@ -756,6 +756,7 @@ public function brand_list(){
     try {    
         $brandlist = DB::table('tbl_rm_products')
             ->where('cat_id', $subcat_id)
+            ->where('status', 0)
             ->get();
 
         if ($brandlist == null) {
