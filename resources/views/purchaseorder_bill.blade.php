@@ -128,7 +128,7 @@
                     <a href="{{url('bill/'.$key->id)}}" target="_blank"><button type="button" class="btn btn-success btn-sm" >PO print</button></a>
                 </td>
 </tr>
-
+ 
 
 
 @php 
