@@ -4306,7 +4306,13 @@ public function order_history()
 	}
 	public function productpriority(Request $request){
 	$role = Auth::user()->user_type;
-	return view('productpriority', compact('role'));
+	$product = DB::table('tbl_brand_products')
+    ->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
+    ->where('tbl_brand_products.priority', 1)
+    ->select('tbl_brand_products.*', 'tbl_productimages.images') 
+    ->orderBy('tbl_brand_products.id', 'desc')
+    ->get();
+return view('productpriority', compact('role','product'));
 	}
 	public function search_product(Request $request)
 	{
@@ -4332,7 +4338,6 @@ public function order_history()
 				$productList .= '<tr>';
 				$productList .= '<td>' . $i . '</td>';
 				$productList .= '<td>' . $key->product_name . '</td>';
-				// Style the checkbox with some margin and blue color
 				$productList .= '<td><input type="checkbox" name="selected_products[]" value="' . $key->id . '" style="margin-right; 5px; margin-left: 5px; background-color: red;"></td>';
 				$productList .= '</tr>';
 				$i++;
