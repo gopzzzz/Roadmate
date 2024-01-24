@@ -1295,7 +1295,6 @@ Route::post('/marketedit', [App\Http\Controllers\HomeController::class, 'markete
 // Route::post('/ordertransinsert', [App\Http\Controllers\HomeController::class, 'ordertransinsert'])->name('ordertransinsert');
 Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_trans');
 
-
 Route::get('/order_invoice/{orderId}', 'HomeController@order_invoice')->name('order_invoice');
 
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
@@ -1338,10 +1337,4 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
-Route::get('/bill', 'HomeController@bill')->name('bill');
-Route::get('/productpriority', 'HomeController@productpriority')->name('productpriority');
-Route::post('/search_product', [
-    'middleware' => 'auth',
-    'uses' => 'HomeController@search_product'
-])->name('search_product');
-Route::post('/update_Priority', [App\Http\Controllers\HomeController::class, 'update_Priority'])->name('update_Priority');
+

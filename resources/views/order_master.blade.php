@@ -217,7 +217,7 @@
                     </form>
                 </td>
                 <td style="width: 50px;">
-                    <form method="get" action="{{ route('order_invoice',  ['orderId' => $key->id]) }}">
+                    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Invoice</button>
                     </form>
                 </td>

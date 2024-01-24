@@ -3674,7 +3674,7 @@ function sendNotification1($msg1,$title)
 		}
 
 
-	    public function order_invoice($id) {
+	    public function order_invoice($orderId) {
 
 		$markk=DB::table('tbl_order_trans')
 			->get();
@@ -3683,7 +3683,7 @@ function sendNotification1($msg1,$title)
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-		->where('tbl_order_masters.id',$id)
+		->where('tbl_order_masters.id',$orderId)
 			->select(
 				'tbl_order_masters.*',
 				'tbl_order_trans.order_id',
