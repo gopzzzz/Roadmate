@@ -59,37 +59,27 @@ class ShopmarketingController extends Controller
 public function categoryproductlist(){
   $postdata = file_get_contents("php://input");					
   $json = str_replace(array("\t","\n"), "", $postdata);
-
-  $data1 = json_decode($json);
-  
-  $index=$data1->index;
-  $offset=($index*20);
-  $limit=20;
-
-
+$data1 = json_decode($json);
+$index=$data1->index;
+$offset=($index*20);
+$limit=20;
   $categoryId=$data1->categoryid; 
   try{	
-
-      
-
-          
       $productlist=DB::table('tbl_brand_products')
       ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
       ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
     ->select('tbl_brand_products.*','tbl_hsncodes.tax')
-     
-      ->offset($offset) 
-      ->limit($limit) 
       ->where('tbl_brand_products.status',0)
       ->where('tbl_rm_products.cat_id', $categoryId)
+      ->orderBy('id', 'DESC')
+      ->offset($offset) 
+      ->limit($limit)
        ->get();
        
-       
-          $products = [];
+  $products = [];
   
   foreach ($productlist as $proItem) {
-      $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
-      
+      $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();  
       //echo "<pre>";print_r($imageArray);exit;
   
       // Check if $imageArray is not null before accessing its properties
@@ -105,13 +95,8 @@ public function categoryproductlist(){
       // Add the $cartItem to the $cart array
       $products[] = $proItem;
   }
-  
-  
           if($productlist == null){
-  
-                 
-  
-            echo json_encode(array('error' => true, "message" => "Error"));
+    echo json_encode(array('error' => true, "message" => "Error"));
   
                }
   
@@ -125,78 +110,40 @@ public function categoryproductlist(){
 }
 catch (Exception $e)
 {
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+         //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 }
 public function categorylist(){
-    
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
-
-  $json = str_replace(array("\t","\n"), "", $postdata);
-
-  $data1 = json_decode($json);
-
-  
-
-
-  try{	
-
-   
-
-   
-
-    $categorylist=DB::table('tbl_rm_categorys')
+     $postdata = file_get_contents("php://input");					
+    $json = str_replace(array("\t","\n"), "", $postdata);
+      $data1 = json_decode($json);
+ try{	
+   $categorylist=DB::table('tbl_rm_categorys')
     ->where('cat_id',0)
      ->where('status',0)
      ->get();
-
-     
-
-        if($categorylist == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
+ if($categorylist == null){
+        echo json_encode(array('error' => true, "message" => "Error"));
 
              }
 
             else{								
+        $json_data = 0;
+       echo json_encode(array('error' => false,"categorylist"=>$categorylist, "message" => "Success"));
 
-            
-
-            $json_data = 0;
-
-            echo json_encode(array('error' => false,"categorylist"=>$categorylist, "message" => "Success"));
-
-                }
-
-    
-
-  
-
-}
+                }}
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
-
-        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+ //return Json("Sorry! Please check input parameters and values");
+ echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 }
-
 public function subcategorylist(){
       
   $postdata = file_get_contents("php://input");					
@@ -209,61 +156,34 @@ public function subcategorylist(){
 
 
   try{	
-
-   
-
-   
-
-    $subcatlist=DB::table('tbl_rm_categorys')
+       $subcatlist=DB::table('tbl_rm_categorys')
     ->where('cat_id',$cat_id)
     ->where('status',0)
     ->get();
+ if($subcatlist == null){
 
-     
-
-        if($subcatlist == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
+  echo json_encode(array('error' => true, "message" => "Error"));
 
              }
 
             else{								
-
-            
-
             $json_data = 0;
 
             echo json_encode(array('error' => false,"subcategorylist"=>$subcatlist, "message" => "Success"));
 
                 }
-
-    
-
-  
-
 }
 
 catch (Exception $e)
 
-{
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+{  //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 }
-
-
 public function productdetails(){
-    
-    
-    
-    
+       
   $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
@@ -271,9 +191,6 @@ public function productdetails(){
   $data1 = json_decode($json);
 
   $productId=$data1->productid;
-  
-
-
   try{	
     $productDetails = DB::table('tbl_brand_products')
      ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
@@ -289,9 +206,7 @@ if ($productDetails) {
         ->get()
         ->pluck('images')
         ->all();
-
-    
-    $productDetails->images = $images;
+$productDetails->images = $images;
     
     return response()->json([
         'error' => false,
@@ -309,40 +224,22 @@ if ($productDetails) {
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+//return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
 }
-
-
 public function wishlist(){
     
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
+$postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
 
   $shopId=$data1->shop_id;
-
-
-
-  try{	
-
-   
-
-   
-
-
-
+try{	
 $wishlist = DB::table('tbl_rm_wishlists')
     ->join('tbl_brand_products', 'tbl_rm_wishlists.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
@@ -369,25 +266,14 @@ foreach ($wishlist as $cartItem) {
     // Add the $cartItem to the $cart array
     $wish[] = $cartItem;
 }
-
-
-
-  //  echo "<pre>";print_r($wish);exit;
-     
-
-        if($wish == null){
-
-               
-
-          echo json_encode(array('error' => true,"wishlist"=>$wish, "message" => "Error"));
+ //  echo "<pre>";print_r($wish);exit;
+      if($wish == null){
+ echo json_encode(array('error' => true,"wishlist"=>$wish, "message" => "Error"));
 
              }
 
             else{								
-
-            
-
-            $json_data = 0;
+ $json_data = 0;
 
             echo json_encode(array('error' => false,"wishlist"=>$wish, "message" => "Success"));
 
@@ -397,10 +283,7 @@ foreach ($wishlist as $cartItem) {
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+ //return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
@@ -409,24 +292,14 @@ catch (Exception $e)
 
 public function cart(){
     
-    
-    
-    
-  $postdata = file_get_contents("php://input");					
+$postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
 
   $data1 = json_decode($json);
 
   $shopId=$data1->shop_id;
-
-
-
-  try{	
-
-   
-
-   
+try{	
 $cartlist = DB::table('tbl_carts')
     ->join('tbl_brand_products', 'tbl_carts.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
@@ -462,21 +335,12 @@ if (empty($cart)) {
 } else {
     echo json_encode(array('error' => false, "cart" => $cart, "message" => "Success"));
 }
-
-
-    
-
-  
-
 }
 
 catch (Exception $e)
 
 {
-
-        
-
-    //return Json("Sorry! Please check input parameters and values");
+//return Json("Sorry! Please check input parameters and values");
 
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
@@ -486,22 +350,17 @@ public function deliveryaddressadd()
 {
  $postdata = file_get_contents("php://input");					
  $json = str_replace(array("\t","\n"), "", $postdata);
-
-  $data1 = json_decode($json);
+ $data1 = json_decode($json);
  $query=new Tbl_deliveryaddres;
   $query->shop_id=$data1->shop_id;
-
-  $query->area=$data1->area;
+$query->area=$data1->area;
   $query->area1=$data1->area1;
   $query->country=$data1->country;
-
-  $query->state	=$data1->state;
+$query->state	=$data1->state;
   $query->district=$data1->district;
   $query->city=$data1->area1;
   $query->phone=$data1->phone;
-  $query->pincode=$data1->pincode;
-
-  if($query->save()){
+  $query->pincode=$data1->pincode;if($query->save()){
 
     $last=$query->id;
 
@@ -513,9 +372,7 @@ public function deliveryaddressadd()
 
   }
 
- 
-
- }
+}
 
  public function product(){
     
@@ -528,26 +385,17 @@ $postdata = file_get_contents("php://input");
   $index=$data1->index;
   $offset=($index*20);
   $limit=20;
- 
-
-
-  try{	
-
-   
-
-   
+ try{	
 
     $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
     ->select('tbl_brand_products.*','tbl_hsncodes.tax')
-    
+    ->orderBy('id', 'DESC')
     ->offset($offset) 
     ->limit($limit) 
      ->get();
-     
-     
-        $products = [];
+       $products = [];
 
 foreach ($productlist as $proItem) {
     $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
@@ -567,15 +415,8 @@ foreach ($productlist as $proItem) {
     // Add the $cartItem to the $cart array
     $products[] = $proItem;
 }
-
-
-     
-
-        if($productlist == null){
-
-               
-
-          echo json_encode(array('error' => true, "message" => "Error"));
+ if($productlist == null){
+ echo json_encode(array('error' => true, "message" => "Error"));
 
              }
 
@@ -618,6 +459,7 @@ public function brandfilter(){
     ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     ->where('tbl_brand_products.brand_id',$brand_id)
     ->where('tbl_brand_products.status',0)
+    ->orderBy('id', 'DESC')
       ->offset($offset) 
       ->limit($limit) 
      ->get();
@@ -713,12 +555,8 @@ public function searchproduct(){
       $products[] = $proItem;
   }
   
-  
-          if($productlist == null){
-  
-                 
-  
-            echo json_encode(array('error' => true, "message" => "Error"));
+ if($productlist == null){
+   echo json_encode(array('error' => true, "message" => "Error"));
   
                }
   
@@ -867,10 +705,7 @@ public function placeorder(){
    $order->order_date=$data1->order_date;
    $order->save();
 
-   $orderid=$order->id;
-
-  
-   
+   $orderid=$order->id; 
     //echo $walletamount;exit;
     
        // echo "hi";exit;
@@ -894,12 +729,7 @@ public function placeorder(){
         $his->type=2;
         $his->shop_id=$data1->wallet_redeem_id;
         $his->save();
-   
-
-
    foreach($data1->orderlist as $singlelist){	
-
-
       $trans = new Tbl_order_trans();
 
       $trans->product_id = $singlelist->product_id;
@@ -920,13 +750,7 @@ public function placeorder(){
       if($check){
         DB::table('tbl_carts')->where('id',$check->id)->delete();
       }
-
-
-    	
-
-    
-
-        }
+}
         $json_data = 1;     
 
         echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
@@ -941,14 +765,6 @@ public function placeorder(){
 
         echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
     }
-
-        
-       
-
-     
-
-      
-
  } 
 
  public function cartadd(){
@@ -964,10 +780,7 @@ public function placeorder(){
     if($check){
 
         $cartupdate=Tbl_carts::find($check->id);
-
         $cartupdate->qty=$check->qty+1;
-       
-       
         if($cartupdate->save()){
        
          $json_data = 1;
@@ -1004,11 +817,6 @@ public function placeorder(){
       
         }
     }
-  
-   
-  
-
-  
    }
 
    public function cartdelete(){
@@ -1046,18 +854,10 @@ public function wishlistadd(){
     $json = str_replace(array("\t","\n"), "", $postdata);
   
     $data1 = json_decode($json);
-  
-   
-  
     $query=new Tbl_rm_wishlists;
     $query->product_id=$data1->product_id;
 
     $query->shop_id=$data1->shop_id;
-  
- 
-   
-  
-  
     if($query->save()){
   
       $last=$query->id;
@@ -1258,8 +1058,6 @@ public function updateorder(){
  }
 
 }
-
-
 public function shopwallet(){
          
   $postdata = file_get_contents("php://input");					
@@ -1270,11 +1068,6 @@ public function shopwallet(){
 
   $shop_id=$data1->shop_id;
   try{	
-
-   
-
-   
-
     $wallet=DB::table('tbl_wallets')
     ->where('shop_id',$shop_id)
    // ->where('status',0)

@@ -3516,16 +3516,13 @@ $('#category_name').on('change', function () {
     var id = $(this).data('id');
     console.log('Clicked on editstatus with id:', id);
 
-    // Set the form action dynamically
     var form = $('#statusEditForm');
     var url = "{{ route('statusedit', '__id__') }}";
     url = url.replace('__id__', id);
     form.attr('action', url);
 
-    // Update the hidden inputs with the current values
     $('#stat_id').val(id);
 
-    // Fetch current status via AJAX
     $.ajax({
         type: "POST",
         url: "{{ route('orderfetch') }}",
@@ -3536,9 +3533,7 @@ $('#category_name').on('change', function () {
         success: function (res) {
             console.log('AJAX Response:', res);
 
-            // Check if the order details are found
             if (res.id) {
-                // Update the modal with the current status
                 $('#order_status').val(res.order_status);
                 $('#total_amount').val(res.total_amount);
 
@@ -3546,12 +3541,81 @@ $('#category_name').on('change', function () {
                 console.log('Modal shown');
             } else {
                 console.error('Order details not found');
-                // Handle the case when order details are not found
             }
         },
         error: function (xhr, status, error) {
             console.error('AJAX Error:', error);
         }
+    });
+});
+
+$(document).ready(function () {
+    var selectedProductIds = [];
+
+    $(document).on('change', 'input[name="selected_products[]"]', function () {
+        var productId = $(this).val();
+
+        if ($(this).is(':checked')) {
+            if (selectedProductIds.length >= 6) {
+                $(this).prop('checked', false);
+                alert('Priority List Over.');
+            } else {
+                selectedProductIds.push(productId);
+            }
+        } else {
+            selectedProductIds = selectedProductIds.filter(id => id !== productId);
+        }
+
+        $('#selected_product_ids').val(selectedProductIds.join(','));
+    });
+
+    $('#search_product').keyup(function () {
+        var searchval = $(this).val();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('search_product') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                searchval: searchval
+            },
+            success: function (res) {
+                console.log(res);
+
+                if (res.productList) {
+                    $('#searchshoplist').html(res.productList);
+                } else {
+                    $('#searchshoplist').html(res);
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching search results:', error);
+            }
+        });
+    });
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('update_Priority') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                selected_product_ids: $('#selected_product_ids').val()
+            },
+			success: function (res) {
+    if (res && res.success) {
+        alert(res.message); 
+        
+        window.location.href = "{{ url('productpriority') }}";
+    } else {
+        console.error('Error updating priority:', res ? res.message : 'Unknown error');
+    }
+},
+
+        });
     });
 });
 </script>
