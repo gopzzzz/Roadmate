@@ -8,6 +8,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 
 
 use App\User;
@@ -2098,12 +2100,13 @@ catch (Exception $e)
  $data1 = json_decode($json);
 
   try{	
-
-    $scat=$data1->scat;
     $index=$data1->index;
     $offset=($index*20);
     $limit=20;
+    $scat=$data1->scat;
 
+    $currentDate = Carbon::now();
+$threeMonthsAgo = $currentDate->subMonths(3);
 
    // $utype=$data1->utype;
 
@@ -2118,8 +2121,9 @@ catch (Exception $e)
       ->leftJoin('shops', 'store_lists.user_id', '=', 'shops.id')
 
     ->where('store_lists.sale_satus',0)
+
+    ->where('store_lists.created_at', '>=', $threeMonthsAgo)
     
- 
     ->offset($offset) 
     ->limit($limit) 
 
@@ -2162,6 +2166,8 @@ catch (Exception $e)
       ->where('store_lists.store_prod_category',$scat)
 
     ->where('store_lists.sale_satus',0)
+    
+    ->where('store_lists.created_at', '>=', $threeMonthsAgo)
     
     ->offset($offset) 
     ->limit($limit) 

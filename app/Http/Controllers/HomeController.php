@@ -69,7 +69,9 @@ use App\Tbl_franchase_details;
 use App\Tbl_hsncodes;
 use App\Tbl_placeorders;
 use App\Tbl_wallets;
+use App\Tbl_wallet_transactions;
 use App\Tbl_vendors;
+use App\Tbl_place_order_masters;
 use DB;
 use Hash;
 use Auth;
@@ -3674,7 +3676,7 @@ function sendNotification1($msg1,$title)
 		}
 
 
-	    public function order_invoice($id) {
+	    public function order_invoice($orderId) {
 
 		$markk=DB::table('tbl_order_trans')
 			->get();
@@ -3683,7 +3685,7 @@ function sendNotification1($msg1,$title)
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-		->where('tbl_order_masters.id',$id)
+		->where('tbl_order_masters.id',$orderId)
 			->select(
 				'tbl_order_masters.*',
 				'tbl_order_trans.order_id',
@@ -3752,12 +3754,15 @@ function sendNotification1($msg1,$title)
 		
 			$order = DB::table('tbl_order_masters')
 				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode')
-				->orderBy('tbl_order_masters.order_status', 'ASC') 
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+				
 				->orderBy('tbl_order_masters.id', 'DESC')
 				
 				->paginate(10);
+
+			//	echo "<pre>";print_r($order);exit;
 		
 			$mark = DB::table('shops')->get();
 			$orderr = DB::table('tbl_coupens')->get();
@@ -3836,9 +3841,10 @@ function sendNotification1($msg1,$title)
 			if ($order) {
 				// Update the order status
 				$order->order_status = $request->order_status;
+				$order->payment_status = $request->paystatus;
 		
 				// Check if the order status is "Cash Received" (assuming '5' is the code for 'Cash Received')
-				if ($request->order_status == '5') {
+				if ($request->paystatus == '1') {
 					// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
 					$percentage = ($total_amount * 10) / 100;
 					\Log::info('Calculated Percentage: ' . $percentage);
@@ -3851,12 +3857,20 @@ function sendNotification1($msg1,$title)
 		
 					if ($wallet) {
 						// Update the wallet_amount
-						$wallet->wallet_amount += $percentage;
+						$wallet->wallet_amount += $wallet->amount+$percentage;
 						$wallet->save();
 						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
 					} else {
-						\Log::error('Wallet not found for shop_id: ' . $shop_id);
+						$w=new Tbl_wallets;
+						$w->shop_id=$shop_id;
+						$w->wallet_amount += $percentage;
+						$w->save();
 					}
+					    $wh=new Tbl_wallet_transactions;
+						$wh->amount=$percentage;
+						$wh->type = 1;
+						$wh->shop_id =$shop_id = $percentage;
+
 				}
 		
 				// Save the order
@@ -4300,10 +4314,124 @@ public function order_history()
     $vendor->save();
 	return redirect('marketvendor')->with('success', 'Edited successfully');
 	}
-	public function bill(){
-	$role=Auth::user()->user_type;
-	return view('bill',compact('role'));
+
+	public function purchase_order(){
+		$ordersQuery = DB::table('tbl_order_trans')
+    ->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+    ->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->leftJoin('tbl_vendors', 'tbl_rm_products.vendor_id', '=', 'tbl_vendors.id')
+    ->where('tbl_order_trans.order_status', 0)
+    ->groupBy('tbl_rm_products.vendor_id')
+    ->select(
+        'tbl_order_trans.*',
+        'tbl_brand_products.product_name',
+        'tbl_rm_products.vendor_id',
+        'tbl_vendors.vendor_name',
+        DB::raw('COUNT(tbl_order_trans.id) as total_products'), // Counting the products
+		DB::raw('SUM(tbl_order_trans.offer_amount) as totalamount')
+    )
+    ->get();
+
+   
+
+		//echo "<pre>";print_r($ordersQuery);exit;
+		$role=Auth::user()->user_type;
+		return view('purchase_order',compact('role','ordersQuery'));
 	}
+	public function view_bill($id){
+		$role=Auth::user()->user_type;
+		$ordersQuery = DB::table('tbl_order_trans')
+    ->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+    ->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->leftJoin('tbl_vendors', 'tbl_rm_products.vendor_id', '=', 'tbl_vendors.id')
+    ->where('tbl_order_trans.order_status', 0)
+    ->where('tbl_rm_products.vendor_id',$id)
+    ->select(
+        'tbl_order_trans.*',
+        'tbl_brand_products.product_name',
+        'tbl_rm_products.vendor_id',
+        'tbl_vendors.vendor_name',
+     
+    )
+    ->get();
+
+	
+		return view('view_bill',compact('role','ordersQuery'));
+	}
+	public function updatepo($id){
+		
+		
+		 
+		$ordersToInsert = DB::table('tbl_order_trans')
+		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+		->where('tbl_rm_products.vendor_id',$id)
+	->where('tbl_order_trans.order_status', 0)
+	->select('tbl_order_trans.*')
+	->get();
+		 
+	$bill=DB::table('tbl_place_order_masters')->orderBy('id', 'DESC')->first();
+	if($bill){
+		$ordernum=$bill->bill_number+1;
+		
+	}else{
+		$ordernum=1000;
+
+	}
+		 $master=new Tbl_place_order_masters;
+		 $master->bill_num=$ordernum;
+		 $master->vendor_id=$id;
+		 $master->request_by=Auth::user()->id;
+		 $master->order_date =date('Y-m-d');
+		 $master->save();
+			 foreach ($ordersToInsert as $order) {
+
+				
+
+				$placeOrder = new Tbl_placeorders;
+				$placeOrder->bill_number = $master->id;
+				$placeOrder->product_id = $order->product_id;
+				$placeOrder->qty = $order->qty;
+				$placeOrder->amount = $order->offer_amount;
+				$placeOrder->order_date =date('Y-m-d');
+				$placeOrder->save();
+
+				$update = \DB::table('tbl_order_trans') ->where('id', $order->id) ->limit(1) ->update( [ 'order_status' => 1]);
+			
+				
+			 }
+	
+        return redirect('purchaseorder_bill');
+
+	
+	}
+
+	
+	public function purchaseorder_bill(){
+		$ordersQuery=DB::table('tbl_place_order_masters')
+		->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
+		->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+		->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
+		->get();
+		$role=Auth::user()->user_type;
+		return view('purchaseorder_bill',compact('role','ordersQuery'));
+	}
+	public function bill($id){
+		$role=Auth::user()->user_type;
+		$master=DB::table('tbl_place_order_masters')
+		->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+		->where('tbl_place_order_masters.id',$id)
+		->select('tbl_place_order_masters.*','users.name')
+		->first();
+		$vendor=DB::table('tbl_vendors')->where('id',$master->vendor_id)->first();
+		$bills=DB::table('tbl_placeorders')->where('bill_number',$id)
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name')
+		->get();
+	
+	
+		return view('bill',compact('role','master','vendor','bills'));
+		}
 	public function productpriority(Request $request){
 	$role = Auth::user()->user_type;
 	$product = DB::table('tbl_brand_products')

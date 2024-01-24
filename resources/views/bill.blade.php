@@ -109,19 +109,19 @@
     <table style="border-collapse: collapse; width: 33%; float: right; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: bold;">
     <tr>
         <th style="text-align: left; margin-right:10px; background-color: white; padding: 5px;">DATE:</th>
-        <th style="text-align: left; margin-right:10px; background-color: #ccffcc; padding: 5px;">22/01/2024</th>
+        <th style="text-align: left; margin-right:10px; background-color: #ffffcc; padding: 5px;">{{date('d-m-Y')}}</th>
     </tr>
     <tr>
         <th style="background-color: white; margin-right:10px; padding: 5px;">PURCHASE ORDER NUMBER:</th>
-        <th style="background-color: #ccffcc; margin-right:10px; padding: 5px;">RM/PO/001/24</th>
+        <th style="background-color: #ffffcc; margin-right:10px; padding: 5px;">{{date( 'd-m-Y', strtotime( $master->order_date ) )}}</th>
     </tr>
 </table>
 
    
 
 <div style="display: flex; flex-direction: column; margin-top:50px;">
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">[Company Address]</span></span>
-    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">[Street name, City,  ZIP]</span></span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">NEXTWAVE ACCESS PRIVATE LIMITED</span></span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Kinfra Hi-Tech Park , HMT Colony PO , Kalamassery , Kochi , Kerala ,Pin:683503</span></span>
     <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Phone: [000-000-0000]</span></span>
     <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Fax: [000-000-0000]</span></span>
 </div>
@@ -133,21 +133,22 @@
     <!-- Vendor Name Details -->
     <div style="margin-right: 350px; display: flex; flex-direction: column;">
         <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: bold; margin-top: 10px;"><span style="background-color: #f2f2f2; padding: 10px; display: inline-block; margin-right: -30px;">VENDOR NAME</span></span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Name]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Company Name]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Address]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[City, ST ZIP]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Phone & Email]</span>
+
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->vendor_name}}</span>
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->address}}</span>
+
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->phone_number}}</span>
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->email}}</span>
     </div>
 
     <!-- Shipping Address Details -->
     <div style="margin-right: 30px; display: flex; flex-direction: column;">
         <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: bold; margin-top: 10px;"><span style="background-color: #f2f2f2; padding: 10px; display: inline-block; margin-right: -30px;">SHIPPING ADDRESS</span></span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Name]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Company Name]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Address]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[City, ST ZIP]</span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">[Phone & Email]</span>
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->vendor_name}}</span> 
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->shipping_address}}</span>
+
+<span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->phone_number}}</span>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->email}}</span>
     </div>
 
 </div>
@@ -164,7 +165,7 @@
                 </tr>
                 
                 <tr  style="border: 1px solid grey;">
-                <td style="border: 2px solid #f2f2f2;">1</td>
+                <td style="border: 2px solid #f2f2f2;">1.{{$master->name}}</td>
                 <td style="border: 2px solid #f2f2f2;"></td>
                 <td style="border: 2px solid #f2f2f2;"></td>          
                 <td style="border: 2px solid #f2f2f2;"></td>                </tr>    
@@ -180,109 +181,41 @@
     <th style="text-align: center; width: 20%;">UNIT PRICE (Including GST)</th>
     <th style="text-align: center; width: 20%;">TOTAL</th>
 </tr>
+
+@php  
+$i=1;
+@endphp
+
+@foreach($bills as $key)
+
+<tr  style="border: 1px solid grey;">
+           <td style="border: 2px solid #f2f2f2;;">{{$i}}</td>
+           <td style="border: 2px solid #f2f2f2;">{{$key->product_name}}</td>
+           <td style="border: 2px solid #f2f2f2; text-align: center;">{{$key->qty}}</td>
+           <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$key->amount}}</td>
+           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{$key->amount}}</td>
+       </tr> 
+
+@php 
+
+
+
+$i++;
+
+
+
+@endphp
+
+@endforeach
+
+
        
-       <tr  style="border: 1px solid grey;">
-           <td style="border: 2px solid #f2f2f2;;">[123456]</td>
-           <td style="border: 2px solid #f2f2f2;">Product A</td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;">0</td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;">₹0.00</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr> 
-       <tr  style="border: 1px solid grey;">
-           <td style="border: 2px solid #f2f2f2;">[121212]</td>
-           <td style="border: 2px solid #f2f2f2;">Product B</td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;">0</td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;">₹0.00</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>   <tr  style="border: 1px solid grey;">
-           <td style="border: 2px solid #f2f2f2;">[131313]</td>
-           <td style="border: 2px solid #f2f2f2;">Product C</td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;">0</td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;">₹0.00</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>   <tr  style="border: 1px solid grey;">
-           <td style="border: 2px solid #f2f2f2;;">[141414]</td>
-           <td style="border: 2px solid #f2f2f2;">Product D</td>
-           <td style="border: 2px solid #f2f2f2; text-align: center; ">0</td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;">₹0.00</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr> 
-       <tr  style="border: 1px solid grey;">
-           <td style="border: 2px solid #f2f2f2;">[151515]</td>
-           <td style="border: 2px solid #f2f2f2;">Product E</td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;">0</td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;">₹0.00</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr> 
-       <tr  style="border: 1px solid grey;">
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;"></td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>    <tr  style="border: 1px solid grey;">
-       <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;"></td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>    <tr  style="border: 1px solid grey;">
-       <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;"></td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>    <tr  style="border: 1px solid grey;">
-       <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;"></td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>    <tr  style="border: 1px solid grey;">
-       <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;"></td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr>    <tr  style="border: 1px solid grey;">
-       <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: center;"></td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;"></td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹0.00</td>
-       </tr> 
+      
+      
        <div style="margin-top: 20px;">
 
 <!-- Tax Analysis Table -->
-<table style="border-collapse: collapse; width: 55%; float: left; margin-top:20px;">
-    <tr>
-        <th style="text-align: center; background-color: grey;" colspan="4">TAX ANALYSIS</th>
-    </tr>
-    <tr>
-        <th style="text-align: center; background-color: white; border: 1px solid black; font-weight: normal;">SI NO</th>
-        <th style="text-align: center; background-color: white; border: 1px solid black; font-weight: normal;">HSN CODE</th>
-        <th style="text-align: center; background-color: white; border: 1px solid black; font-weight: normal;">SGST</th>
-        <th style="text-align: center; background-color: white; border: 1px solid black; font-weight: normal;">CGST</th>
-    </tr>
-    <tr style="border: 1px solid grey;">
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-    </tr>
-    <tr style="border: 1px solid grey;">
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-    </tr>
-    <tr style="border: 1px solid grey;">
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-        <td style="border: 1px solid black;"></td>
-    </tr>
-</table>
+
 
 <!-- Subtotal Table -->
 <table style="border-collapse: collapse; width: 35%; float: right;">

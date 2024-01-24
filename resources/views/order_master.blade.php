@@ -146,14 +146,15 @@
                 <th>id</th>
                 <th>OrderId</th>
                 <th>Shop Name</th>
+                <th>Phone Number</th>
+                <th>Address</th>
                 <th>Total Amount</th>
                 <th>Discount</th>
-                <th>Coupon Code</th>
-                <th>Wallet</th>
+                
                 <th>Payment Mode</th>
-                <th>Total MRP</th>
-                <th>Shipping Charge</th>
-                <th>Tax Amount</th>
+               
+             
+             
                 <th>Payment Status</th>
                 <th>Order Status</th>
                 <th>Delivery Date</th>
@@ -175,15 +176,17 @@
                 <td>{{ $i++ }}</td>
                 <td>{{ $key->order_id }}</td>
                 <td>{{ $key->shopname }}</td>
+               
+                <td>{{ $key->phone }}</td>
+                <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
                 <td>{{ $key->total_amount }}</td>
                 <td>{{ $key->discount }}</td>
-                <td>{{ $key->coupencode }}</td>
-                <td>{{ $key->wallet_redeem_id }}</td>
+                
                 <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
                 </td>
-                <td>{{ $key->total_mrp }}</td>
-                <td>{{ $key->shipping_charge }}</td>
-                <td>{{ $key->tax_amount }}</td>
+                
+              
+               
                 <td>
                     @if($key->payment_status==0) Unpaid @else Paid @endif
                 </td>         
@@ -197,9 +200,9 @@
                     @elseif ($key->order_status == 3)
                         Delivered
                     @elseif ($key->order_status == 4)
-                        Return
+                        Cancel
                     @elseif ($key->order_status == 5)
-                        Cash Received
+                       Return
                     @else
                     @endif
                 </td>
@@ -217,14 +220,14 @@
                     </form>
                 </td>
                 <td style="width: 50px;">
-                    <form method="get" action="{{ route('order_invoice',  ['orderId' => $key->id]) }}">
+                    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Invoice</button>
                     </form>
                 </td>
                 <td>
     <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
         style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
-        Update Status
+        Update 
     </button>
 </td>
 
@@ -280,14 +283,15 @@
                 <th>id</th>
                 <th>OrderId</th>
                 <th>Shop Name</th>
+                <th>Phone Number</th>
+                <th>Address</th>
                 <th>Total Amount</th>
                 <th>Discount</th>
-                <th>Coupen Code</th>
-                <th>Wallet</th>
+             
                 <th>Payment Mode</th>
-                <th>Total MRP</th>
-                <th>Shipping Charge</th>
-                <th>Tax Amount</th>
+              
+               
+             
                 <th>Payment Status</th>
                 <th>Order Status</th>
                 <th>Delivery Date</th>
@@ -335,8 +339,17 @@
                             <option value="1">Confirmed</option>
                             <option value="2">Shipped</option>
                             <option value="3">Delivered</option>
-                            <option value="4">Return</option>
-                            <option value="5">Cash Received</option>
+                            <option value="4">Cancel</option>
+                            <option value="5">Return</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="exampleModalLabel">Pay Status</label>
+                        <select name="paystatus" id="paystatus" class="form-control" required>
+                      
+                            <option value="0">Not Paid</option>
+                            <option value="1">Paid</option>
+                            
                         </select>
                     </div>
                 </div>

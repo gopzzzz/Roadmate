@@ -67,7 +67,8 @@ $limit=20;
   try{	
       $productlist=DB::table('tbl_brand_products')
       ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-      ->select('tbl_brand_products.*')
+      ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
       ->where('tbl_brand_products.status',0)
       ->where('tbl_rm_products.cat_id', $categoryId)
       ->orderBy('id', 'DESC')
@@ -103,7 +104,7 @@ $limit=20;
   
                $json_data = 0;
   
-              echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+              echo json_encode(array('error' => false,"productlist"=>$productlist, "message" => "Success"));
   
                   }
 }
@@ -301,17 +302,12 @@ $postdata = file_get_contents("php://input");
 try{	
 $cartlist = DB::table('tbl_carts')
     ->join('tbl_brand_products', 'tbl_carts.product_id', '=', 'tbl_brand_products.id')
-    ->leftjoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->leftjoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-    ->select(
-        'tbl_carts.*',
-        'tbl_brand_products.offer_price',
-        'tbl_brand_products.price',
-        'tbl_brand_products.product_name',
-        'tbl_brand_products.description',
-        'tbl_hsncodes.tax'
-    )
-    ->where('tbl_carts.shop_id', $shopId)  // Added table alias for shop_id
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    //->select('tbl_brand_products.*','tbl_hsncodes.tax')
+    ->select('tbl_carts.*','tbl_hsncodes.tax','tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
+   
+    ->where('shop_id', $shopId)
     ->get();
 
 // Initialize $cart outside the loop
@@ -362,9 +358,9 @@ $query->area=$data1->area;
   $query->country=$data1->country;
 $query->state	=$data1->state;
   $query->district=$data1->district;
-  $query->city=$data1->city;
+  $query->city=$data1->area1;
   $query->phone=$data1->phone;
-if($query->save()){
+  $query->pincode=$data1->pincode;if($query->save()){
 
     $last=$query->id;
 
@@ -393,10 +389,11 @@ $postdata = file_get_contents("php://input");
 
     $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_brand_products.*')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     ->orderBy('id', 'DESC')
-  ->offset($offset) 
-  ->limit($limit) 
+    ->offset($offset) 
+    ->limit($limit) 
      ->get();
        $products = [];
 
@@ -458,7 +455,8 @@ public function brandfilter(){
 
   $productlist=DB::table('tbl_brand_products')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_brand_products.*')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     ->where('tbl_brand_products.brand_id',$brand_id)
     ->where('tbl_brand_products.status',0)
     ->orderBy('id', 'DESC')
@@ -596,6 +594,7 @@ public function brand_list(){
     try {    
         $brandlist = DB::table('tbl_rm_products')
             ->where('cat_id', $subcat_id)
+            ->where('status', 0)
             ->get();
 
         if ($brandlist == null) {
