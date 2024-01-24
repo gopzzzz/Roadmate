@@ -284,9 +284,11 @@ $i=1;
    <td>{{$key->description}}</td>
    <td>{{ $key->hsncode }} ({{ $key->tax }}%)</td>
    <td>@if($key->status==0) Active @else Inactive @endif</td>
+   @if($role==1)
   <td>
    <i class="fa fa-edit edit_brandproduct"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
   </td>
+  @endif
 
 
 
