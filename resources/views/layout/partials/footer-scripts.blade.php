@@ -3569,30 +3569,34 @@ $(document).ready(function () {
         $('#selected_product_ids').val(selectedProductIds.join(','));
     });
 
-    $('#search_product').keyup(function () {
-        var searchval = $(this).val();
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "{{ route('search_product') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                searchval: searchval
-            },
-            success: function (res) {
-                console.log(res);
+	$('#search_product').keyup(function () {
+    var searchval = $(this).val();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_product') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
 
+            if (searchval !== '') {  
                 if (res.productList) {
                     $('#searchproductlist').html(res.productList);
                 } else {
                     $('#searchproductlist').html(res);
                 }
-            },
-            error: function (error) {
-                console.error('Error fetching search results:', error);
+            } else {
+                $('#searchproductlist').html('');  
             }
-        });
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
     });
+});
 
 	$('.submitBtn').click(function (e) {
         e.preventDefault();

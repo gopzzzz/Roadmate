@@ -202,12 +202,12 @@ $i++;
 
 
 </div>
-
 <script>
     function removePriority(productId) {
         window.location.href = "{{ route('removePriority', ['productId' => ':productId']) }}".replace(':productId', productId);
     }
 </script>
+
 
 @endsection
 
