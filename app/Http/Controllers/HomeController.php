@@ -1386,11 +1386,13 @@ public function shop_categoriesdelete($id){
 					->paginate(12);
 				}else{
 					$shops[] = DB::table('shops')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 					->select('shops.*', 'shiop_categories.category','executives.name')
 					->orderBy('shops.id','DESC')
 					->where('shops.authorised_status',1)
+					->where('tbl_places.id',$singleFranlist->place_id)
 					->paginate(12);
 				}
 
