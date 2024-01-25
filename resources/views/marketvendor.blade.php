@@ -59,10 +59,10 @@
     <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
       <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
 </div>
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
  <label class="exampleModalLabel">Shipping Address</label>
   <textarea class="form-control" name="shipaddress" placeholder="Enter Shipping Address" required></textarea>
-</div>
+</div> -->
 <div class="form-group col-sm-6">
  <label class="exampleModalLabel">GST Number</label>
   <input class="form-control" name="gstnumber" placeholder="Enter GST Number" required>
@@ -88,7 +88,7 @@
     <th>Address</th>
     <th>Phone Number</th>
     <th>Email</th>
-    <th>Shipping Address</th>
+    <!-- <th>Shipping Address</th> -->
     <th>GST Number</th>
     <th>Status</th>
     @if($role==1)
@@ -108,7 +108,7 @@
 	 <td>{{$key->address}}</td>
      <td>{{$key->phone_number}}</td>
      <td>{{$key->email}}</td>
-	 <td>{{$key->shipping_address}}</td>
+	
      <td>{{$key->Gst_number}}</td>
      <td>@if($key->status==0) Active @else Inactive @endif</td>
     @if($role==1)
@@ -127,7 +127,7 @@
                      <th>Address</th>
                        <th>Phone Number</th>
                         <th>Email</th>
-                          <th>Shipping Address</th>
+                          <!-- <th>Shipping Address</th> -->
                            <th>GST Number</th>
                              <th>Status</th>
          @if($role==1)
@@ -166,10 +166,10 @@
     <input type="email" class="form-control" name="email"  id="email" placeholder="Enter Email" required>
      <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
 </div>
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
  <label class="exampleModalLabel">Shipping Address</label>
    <textarea class="form-control" name="shipaddress" id="shipaddress" placeholder="Enter Shipping Address" required></textarea>
-</div>
+</div> -->
 <div class="form-group col-sm-6">
   <label class="exampleModalLabel">GST Number</label>
    <input class="form-control" name="gstnumber" id="gstnumber" placeholder="Enter GST Number" required>

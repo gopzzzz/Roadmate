@@ -4169,6 +4169,9 @@ public function order_history()
             $app->version_code= $request->version_code;
 			$app->version_name	= $request->version_name;
 			$app->app_type	= $request->app_type;
+			$app->phone_number	= $request->phone_number;
+			$app->ios_code	= $request->ios_code;
+			$app->security_code	= $request->security_code;
             $app->app_status = $request->status;
 		    $app->save();
 			return back();
@@ -4290,7 +4293,6 @@ public function order_history()
 	$vendor->address=$request->address;
     $vendor->phone_number=$request->phonenumber;
 	$vendor->email=$request->email;
-	$vendor->shipping_address=$request->shipaddress;
 	$vendor->Gst_number=$request->gstnumber;
 	$vendor->status=0;
     $vendor->save();
@@ -4308,7 +4310,6 @@ public function order_history()
 	$vendor->address=$request->address;
 	$vendor->phone_number=$request->phonenumber;
 	$vendor->email=$request->email;
-	$vendor->shipping_address=$request->shipaddress;
 	$vendor->Gst_number=$request->gstnumber;
 	$vendor->status=$request->status;
     $vendor->save();

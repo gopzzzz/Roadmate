@@ -59,7 +59,7 @@
 
         .company-logo {
             text-align: center;
-            margin-top: -1px;
+            margin-top: 10px;
 
         }
 

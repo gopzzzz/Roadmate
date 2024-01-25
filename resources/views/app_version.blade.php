@@ -196,6 +196,9 @@
 
 		 <th>Version Code</th>
 										<th>version Name</th>
+                              <th>Phone Number</th>
+                              <th>IOS Code</th>
+                              <th>Security Code</th>
                                        <th> App Type</th>	
                                         <th>Status</th>
 
@@ -220,6 +223,9 @@
                                      <td>{{$key->version_code}}</td>
 
                                      <td>{{$key->version_name}}</td>
+                                     <td>{{$key->phone_number}}</td>
+                                     <td>{{$key->ios_code}}</td>
+                                     <td>{{$key->security_code}}</td>
                                      <td>{{$key->app_type}}</td>
 
 
@@ -239,6 +245,9 @@
 										<th>id</th>
                                         <th>Version Code</th>
 										<th>version Name</th>
+                              <th>Phone Number</th>                             
+                              <th>IOS Code</th>
+                              <th>Security Code</th>
                                        <th> App Type</th>	
                                         <th>Status</th>
 									
@@ -320,6 +329,22 @@
 				  <div class="form-group col-sm-12">
 				  <label class="exampleModalLabel">Version Name</label>
                   <input type="text" class="form-control" name="version_name" id="version_name" required>
+
+												</div>
+
+                                    <div class="form-group col-sm-12">
+				  <label class="exampleModalLabel">Phone Number</label>
+                  <input type="text" class="form-control" name="phone_number" id="phone_number" required>
+
+												</div>
+                                    <div class="form-group col-sm-12">
+				  <label class="exampleModalLabel">IOS Code</label>
+                  <input type="text" class="form-control" name="ios_code" id="ios_code" required>
+
+												</div>
+                                    <div class="form-group col-sm-12">
+				  <label class="exampleModalLabel">Security Code</label>
+                  <input type="text" class="form-control" name="security_code" id="security_code" required>
 
 												</div>
                                                 <div class="form-group col-sm-12">
