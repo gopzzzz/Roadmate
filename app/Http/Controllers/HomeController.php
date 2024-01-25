@@ -4426,7 +4426,8 @@ public function order_history()
 		$vendor=DB::table('tbl_vendors')->where('id',$master->vendor_id)->first();
 		$bills=DB::table('tbl_placeorders')->where('bill_number',$id)
 		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-		->select('tbl_placeorders.*','tbl_brand_products.product_name')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
 		->get();
 	
 	
