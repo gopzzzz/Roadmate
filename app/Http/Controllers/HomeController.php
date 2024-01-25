@@ -4447,41 +4447,37 @@ public function order_history()
 			return view('productpriority', compact('role','product'));
 		}
 		
-	public function search_product(Request $request)
-	{
-		$searchval = $request->searchval;
-		$productList = '';
-
-		if ($searchval != '') {
-			$products = DB::table('tbl_brand_products')
-				->where('product_name', 'like', '%' . $searchval . '%')
-				->orderBy('id', 'DESC')
-				->get();
-		} else {
-			$products = DB::table('tbl_brand_products')
-				->orderBy('id', 'DESC')
-				->get();
-		}
-	
-		$role = Auth::user()->user_type;
-		$i = 1;
-	
-		if (count($products) > 0) {
-			foreach ($products as $key) {
-				$productList .= '<tr>';
-				$productList .= '<td>' . $i . '</td>';
-				$productList .= '<td>' . $key->product_name . '</td>';
-				$productList .= '<td><input type="checkbox" name="selected_products[]" value="' . $key->id . '" style="margin-right; 5px; margin-left: 5px; background-color: red;"></td>';
-				$productList .= '</tr>';
-				$i++;
+		public function search_product(Request $request)
+		{
+			$searchval = $request->searchval;
+			$productList = '';
+		
+			if ($searchval != '') {
+				$products = DB::table('tbl_brand_products')
+					->where('product_name', 'like', '%' . $searchval . '%')
+					->orderBy('id', 'DESC')
+					->get();
+		
+				$role = Auth::user()->user_type;
+				$i = 1;
+		
+				if (count($products) > 0) {
+					foreach ($products as $key) {
+						$productList .= '<tr>';
+						$productList .= '<td>' . $i . '</td>';
+						$productList .= '<td>' . $key->product_name . '</td>';
+						$productList .= '<td><input type="checkbox" name="selected_products[]" value="' . $key->id . '" style="margin-right; 5px; margin-left: 5px; background-color: red;"></td>';
+						$productList .= '</tr>';
+						$i++;
+					}
+				} else {
+					$productList .= '<tr><td colspan="3">No Results Found</td></tr>';
+				}
 			}
-		} else {
-			$productList .= '<tr><td colspan="3">No Results Found</td></tr>';
+		
+			return response()->json(['productList' => $productList]);
 		}
-	
-		return response()->json(['productList' => $productList]);
-	}
-	
+		
 	public function update_Priority(Request $request)
 	{
 		try {
