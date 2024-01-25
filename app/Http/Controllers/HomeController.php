@@ -4292,7 +4292,7 @@ public function order_history()
 	$vendor->address=$request->address;
     $vendor->phone_number=$request->phonenumber;
 	$vendor->email=$request->email;
-	$vendor->shipping_address=$request->shipaddress;
+	$vendor->vendor_code=$request->vendorcode;
 	$vendor->Gst_number=$request->gstnumber;
 	$vendor->status=0;
     $vendor->save();
@@ -4310,7 +4310,7 @@ public function order_history()
 	$vendor->address=$request->address;
 	$vendor->phone_number=$request->phonenumber;
 	$vendor->email=$request->email;
-	$vendor->shipping_address=$request->shipaddress;
+	$vendor->vendor_code=$request->vendorcode;
 	$vendor->Gst_number=$request->gstnumber;
 	$vendor->status=$request->status;
     $vendor->save();
@@ -4335,7 +4335,7 @@ public function order_history()
     ->get();
 
    
-
+                 
 		//echo "<pre>";print_r($ordersQuery);exit;
 		$role=Auth::user()->user_type;
 		return view('purchase_order',compact('role','ordersQuery'));

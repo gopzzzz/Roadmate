@@ -3502,7 +3502,7 @@ $('#category_name').on('change', function () {
 		  $('#address').val(obj.address);
 		  $('#phonenumber').val(obj.phone_number);
 		  $('#email').val(obj.email);
-		  $('#shipaddress').val(obj.shipping_address);
+		  $('#vendorcode').val(obj.vendor_code);
 		  $('#gstnumber').val(obj.Gst_number);
 		  $('#status').val(obj.status);
           $('#vendorid').val(obj.id);

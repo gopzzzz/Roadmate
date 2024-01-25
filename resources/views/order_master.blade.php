@@ -205,7 +205,7 @@
                        Return
                     @else
                     @endif
-                </td>
+                </td>               
                 <td>{{ $key->delivery_date }}</td>
                 <td>{{ $key->order_date }}</td>
               
