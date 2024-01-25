@@ -1386,11 +1386,13 @@ public function shop_categoriesdelete($id){
 					->paginate(12);
 				}else{
 					$shops[] = DB::table('shops')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 					->select('shops.*', 'shiop_categories.category','executives.name')
 					->orderBy('shops.id','DESC')
 					->where('shops.authorised_status',1)
+					->where('tbl_places.id',$singleFranlist->place_id)
 					->paginate(12);
 				}
 
@@ -4373,7 +4375,7 @@ public function order_history()
 		 
 	$bill=DB::table('tbl_place_order_masters')->orderBy('id', 'DESC')->first();
 	if($bill){
-		$ordernum=$bill->bill_number+1;
+		$ordernum=$bill->bill_num+1;
 		
 	}else{
 		$ordernum=1000;
@@ -4427,7 +4429,8 @@ public function order_history()
 		$vendor=DB::table('tbl_vendors')->where('id',$master->vendor_id)->first();
 		$bills=DB::table('tbl_placeorders')->where('bill_number',$id)
 		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-		->select('tbl_placeorders.*','tbl_brand_products.product_name')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
 		->get();
 	
 	
@@ -4436,12 +4439,13 @@ public function order_history()
 		public function productpriority(Request $request){
 			$role = Auth::user()->user_type;
 			$product = DB::table('tbl_brand_products')
-				->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
+				//->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
 				->where('tbl_brand_products.priority', 1)
-				->select('tbl_brand_products.*', 'tbl_productimages.images') 
+				->select('tbl_brand_products.*') 
 				->groupBy('tbl_brand_products.id') 
 				->orderBy('tbl_brand_products.id', 'desc')
 				->get();
+				echo "<pre>";print_r($product);exit;
 			return view('productpriority', compact('role','product'));
 		}
 		
