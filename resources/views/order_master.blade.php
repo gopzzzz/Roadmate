@@ -211,11 +211,11 @@
                         <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}">↓</span>
                     </div>
                 </td>
-                <td style="width: 50px;">
+                <!-- <td style="width: 50px;">
                     <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Bill</button>
                     </form>
-                </td>
+                </td> -->
                 <td style="width: 50px;">
                     <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Invoice</button>

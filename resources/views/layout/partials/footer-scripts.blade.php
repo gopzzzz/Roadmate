@@ -332,6 +332,9 @@ $(document).on('click', '.edit_country', function () {
     $('#appid').val(obj.id);
     $('#version_name').val(obj.version_name);
     $('#version_code').val(obj.version_code);
+	$('#phone_number').val(obj.phone_number);
+	$('#ios_code').val(obj.ios_code);
+	$('#security_code').val(obj.security_code);
     $('#app_type').val(obj.app_type);
     $('#status').val(obj.app_status);
 

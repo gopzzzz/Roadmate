@@ -4171,6 +4171,9 @@ public function order_history()
             $app->version_code= $request->version_code;
 			$app->version_name	= $request->version_name;
 			$app->app_type	= $request->app_type;
+			$app->phone_number	= $request->phone_number;
+			$app->ios_code	= $request->ios_code;
+			$app->security_code	= $request->security_code;
             $app->app_status = $request->status;
 		    $app->save();
 			return back();
