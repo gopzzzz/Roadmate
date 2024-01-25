@@ -152,10 +152,7 @@
                 <th>Discount</th>
                 
                 <th>Payment Mode</th>
-               
-             
-             
-                <th>Payment Status</th>
+                    <th>Payment Status</th>
                 <th>Order Status</th>
                 <th>Delivery Date</th>
                 <th>Order Date</th>
@@ -205,7 +202,7 @@
                        Return
                     @else
                     @endif
-                </td>               
+                </td>
                 <td>{{ $key->delivery_date }}</td>
                 <td>{{ $key->order_date }}</td>
               
