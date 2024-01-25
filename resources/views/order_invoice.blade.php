@@ -29,7 +29,9 @@
             }
         }
         body {
-            font-family: 'Times New Roman';
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2; 
+            font-size: 15px; 
         }
 
         .invoice {
@@ -57,14 +59,14 @@
 
         .company-logo {
             text-align: center;
-            margin-top: -40px;
+            margin-top: -1px;
 
         }
 
         .company-logo img {
        
-            max-width: 200px; /* Adjust the size of the logo */
-            height: auto;
+            max-width: 210px; /* Adjust the size of the logo */
+            height: 85px;
         }
 
         .invoice-details {
@@ -179,7 +181,10 @@
           
         }
          .invoice-items td {
-            border: 1px solid #000000;
+            border: 1px solid #ffffff;
+            border-left:2px solid #000000;
+            border-right:2px solid #000000;
+            
             padding: 12px;
             text-align: left;
             
@@ -195,7 +200,9 @@
         }
 
         .total-row td {
-            border: 1px solid #000000;
+            border-top: 1px solid #000000;
+            border-right: 2px solid #000000;
+            border-bottom: 2px solid #000000;
             background-color: #f0f0f0;
             
         }
@@ -281,7 +288,7 @@
             <div class="left-details">
                 <p class="details-label"></p>
                 <p style="font-size:20px;"><b>NEXTWAVE ACCESS PRIVATE LIMITED</b></p>
-                <p>Kinfra Hi-tech Park &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9995723014<br>
+                <p>Kinfra Hi-tech Park &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9995723014<br>
                 HMT Colony PO,Kalamassery,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #3364FF; font-family: Arial; text-decoration: underline;">info@roadmate.in</span><br>
                 North Kalamassery, Kochi, Kerala &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #3364FF; font-family: Arial; text-decoration: underline;">www.RoadMate.in </span><br>
                 683503 <br>
@@ -296,9 +303,9 @@
             <div class="right-details">
             
     <p class="details-label"></p><br><br>   
-    <div class="details-item"><strong>Date:</strong> <span class="highlight-background">{{ \Carbon\Carbon::now()->format('Y-m-d') }}</span></div>
-    <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{ str_pad($key->order_id, STR_PAD_LEFT) }}/{{ date('y') }}</span></div>
-    <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{ str_pad($key->order_id, 2, '0', STR_PAD_LEFT) }}/{{ date('y') }}</span></div>
+    <div class="details-item"><strong>Date:</strong> <span class="highlight-background">{{ now()->format('d-m-Y') }}</span></div>
+    <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->order_id}}/{{ date('y') }}</span></div>
+    <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->order_id}}/{{ date('y') }}</span></div>
     <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">00003</span></div>
     <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ $key->delivery_date }}</span></div>
 
@@ -395,7 +402,7 @@
     <p class="details-label"></p>  
     <div class="thank-you">
                 <p style="color: grey; text-align:center; font-size:25px;"><b>Thank you for your business!</b></p>
-                <p style="color: grey;">Should you have any enquiries concerning this invoice,please contact us.</p>
+                <p style="color: grey; font-size:14px;">Should you have any enquiries concerning this invoice,please contact us.</p>
                 <!-- Add more thank-you notes as needed -->
             </div>
         </div> 

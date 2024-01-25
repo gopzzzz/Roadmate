@@ -180,12 +180,19 @@
     <th style="text-align: center; width: 40%;">DESCRIPTION</th>
     <th style="text-align: center; width: 10%;">QTY</th>
     <th style="text-align: center; width: 20%;">UNIT PRICE (Including GST)</th>
+    <th style="text-align: center; width: 20%;">TAX %</th>
+    <th style="text-align: center; width: 20%;">TAXABLE AMOUNT</th>
     <th style="text-align: center; width: 20%;">TOTAL</th>
 </tr>
 
 @php  
 $i=1;
+$sum=0;
+$taxableamount=0;
+$subtotal=0;
 @endphp
+
+
 
 @foreach($bills as $key)
 
@@ -193,21 +200,34 @@ $i=1;
            <td style="border: 2px solid #f2f2f2;;">{{$i}}</td>
            <td style="border: 2px solid #f2f2f2;">{{$key->product_name}}</td>
            <td style="border: 2px solid #f2f2f2; text-align: center;">{{$key->qty}}</td>
-           <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$key->amount}}</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{$key->amount}}</td>
+           <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$key->amount - ($key->amount*$key->tax/100)}}</td>
+           <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$key->tax}}</td>
+           <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{($key->amount*$key->tax/100)*$key->qty}}</td>
+           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{$key->qty*$key->amount}}</td>
        </tr> 
 
 @php 
 
+$sum += $key->qty*$key->amount;
+$taxableamount += ($key->amount*$key->tax/100)*$key->qty;
+$subtotal+= $key->qty*($key->amount - ($key->amount*$key->tax/100));
 
 
 $i++;
 
 
 
+
 @endphp
 
 @endforeach
+
+
+
+
+
+
+
 
 
        
@@ -222,11 +242,11 @@ $i++;
 <table style="border-collapse: collapse; width: 35%; float: right;">
     <tr>
         <th style="text-align: left; background-color: white; font-weight: normal;">SUBTOTAL</th>
-        <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹0.00</th>
+        <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹{{$subtotal}}</th>
     </tr>
     <tr>
         <th style="text-align: left; background-color: white; font-weight: normal;">TAX RATE</th>
-        <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹0.00</th>
+        <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹{{$taxableamount}}</th>
     </tr>
     <tr>
         <th style="text-align: left; background-color: white; font-weight: normal;">TAX</th>
@@ -242,7 +262,7 @@ $i++;
     </tr>
     <tr>
         <th style="text-align: left; border: 2px solid black;  background-color: grey;">TOTAL</th>
-        <th style="text-align: right; border: 2px solid black;  background-color: grey;">₹0.00</th>
+        <th style="text-align: right; border: 2px solid black;  background-color: grey;">₹{{$sum}}</th>
     </tr>
 </table>
 <div style="clear: both;"></div>
