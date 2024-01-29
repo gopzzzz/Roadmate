@@ -114,7 +114,7 @@
     </tr>
     <tr>
         <th style="background-color: white; margin-right:10px; padding: 5px;">PURCHASE ORDER NUMBER:</th>
-        <th style="background-color: #ffffcc; margin-right:10px; padding: 5px;">{{date( 'd-m-Y', strtotime( $master->order_date ) )}}</th>
+        <th style="background-color: #ffffcc; margin-right:10px; padding: 5px;">{{$master->bill_num}}</th>
     </tr>
 </table>
 
@@ -145,11 +145,10 @@
     <!-- Shipping Address Details -->
     <div style="margin-right: 30px; display: flex; flex-direction: column;">
         <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: bold; margin-top: 10px;"><span style="background-color: #f2f2f2; padding: 10px; display: inline-block; margin-right: -30px;">SHIPPING ADDRESS</span></span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->vendor_name}}</span> 
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->shipping_address}}</span>
-
-<span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->phone_number}}</span>
-<span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->email}}</span>
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">NEXTWAVE ACCESS PRIVATE LIMITED</span></span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Kinfra Hi-Tech Park , HMT Colony PO , Kalamassery , Kochi , Kerala ,Pin:683503</span></span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Phone: [000-000-0000]</span></span>
+    <span style="font-family: 'Montserrat', sans-serif; font-size: 15px;  margin-top: 10px;">Fax: [000-000-0000]</span></span>
     </div>
 
 </div>
