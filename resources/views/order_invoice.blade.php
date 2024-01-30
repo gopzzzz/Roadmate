@@ -59,7 +59,7 @@
 
         .company-logo {
             text-align: center;
-            margin-top: -1px;
+            margin-top: 10px;
 
         }
 
@@ -245,7 +245,7 @@
         .bank-details {
             width: 48%;
             border-top: 1px solid #ccc;
-            padding-top: 20px;
+            padding-top: 20px;    
             
             margin-top: 20px;
         }

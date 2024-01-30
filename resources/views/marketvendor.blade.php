@@ -60,8 +60,8 @@
       <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
 </div>
 <div class="form-group col-sm-6">
- <label class="exampleModalLabel">Shipping Address</label>
-  <textarea class="form-control" name="shipaddress" placeholder="Enter Shipping Address" required></textarea>
+  <label class="exampleModalLabel">Vendor Code</label>
+    <input class="form-control" name="vendorcode" placeholder="Enter Vendor Code" required>
 </div>
 <div class="form-group col-sm-6">
  <label class="exampleModalLabel">GST Number</label>
@@ -88,7 +88,7 @@
     <th>Address</th>
     <th>Phone Number</th>
     <th>Email</th>
-    <th>Shipping Address</th>
+    <th>Vendor Code</th>
     <th>GST Number</th>
     <th>Status</th>
     @if($role==1)
@@ -108,7 +108,7 @@
 	 <td>{{$key->address}}</td>
      <td>{{$key->phone_number}}</td>
      <td>{{$key->email}}</td>
-	 <td>{{$key->shipping_address}}</td>
+	 <td>{{$key->vendor_code}}</td>
      <td>{{$key->Gst_number}}</td>
      <td>@if($key->status==0) Active @else Inactive @endif</td>
     @if($role==1)
@@ -127,7 +127,7 @@
                      <th>Address</th>
                        <th>Phone Number</th>
                         <th>Email</th>
-                          <th>Shipping Address</th>
+                        <th>Vendor Code</th>
                            <th>GST Number</th>
                              <th>Status</th>
          @if($role==1)
@@ -167,8 +167,8 @@
      <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
 </div>
 <div class="form-group col-sm-6">
- <label class="exampleModalLabel">Shipping Address</label>
-   <textarea class="form-control" name="shipaddress" id="shipaddress" placeholder="Enter Shipping Address" required></textarea>
+  <label class="exampleModalLabel">Vendor Code</label>
+    <input class="form-control" name="vendorcode" id="vendorcode" placeholder="Enter Vendor Code" required>
 </div>
 <div class="form-group col-sm-6">
   <label class="exampleModalLabel">GST Number</label>
