@@ -55,10 +55,10 @@
   $(function () {
     var table = $("#example1").DataTable({
 					"searching": true,
-					dom: 'Bfrtip',
-						buttons: [
-							'copy', 'csv', 'excel', 'pdf', 'print'
-						]
+					//dom: 'Bfrtip',
+					//	buttons: [
+					//		'copy', 'csv', 'excel', 'pdf', 'print'
+					//	]
     			});
     $('#example2').DataTable({
       "paging": true,

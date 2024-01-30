@@ -429,7 +429,11 @@
                     </div>
                 </form>
 
+                @if($role==1)
+
                 <a href="{{url('exportshop')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
+
+                @endif
 
                 <table  class="table table-bordered table-striped" id="example1">
 

@@ -392,6 +392,7 @@ $postdata = file_get_contents("php://input");
     ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
     ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     ->orderBy('id', 'DESC')
+    ->where('tbl_brand_products.status',0)
     ->offset($offset) 
     ->limit($limit) 
      ->get();
