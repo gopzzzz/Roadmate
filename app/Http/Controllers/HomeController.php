@@ -4441,13 +4441,12 @@ public function order_history()
 		public function productpriority(Request $request){
 			$role = Auth::user()->user_type;
 			$product = DB::table('tbl_brand_products')
-				//->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
+				->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
 				->where('tbl_brand_products.priority', 1)
-				->select('tbl_brand_products.*') 
+				->select('tbl_brand_products.*','tbl_productimages.images') 
 				->groupBy('tbl_brand_products.id') 
 				->orderBy('tbl_brand_products.id', 'desc')
 				->get();
-				echo "<pre>";print_r($product);exit;
 			return view('productpriority', compact('role','product'));
 		}
 		
@@ -4458,6 +4457,7 @@ public function order_history()
 		
 			if ($searchval != '') {
 				$products = DB::table('tbl_brand_products')
+				->where('tbl_brand_products.priority', 0)
 					->where('product_name', 'like', '%' . $searchval . '%')
 					->orderBy('id', 'DESC')
 					->get();
@@ -4481,32 +4481,32 @@ public function order_history()
 		
 			return response()->json(['productList' => $productList]);
 		}
+		public function update_Priority(Request $request)
+		{
+			try {
+				$selectedProductIds = explode(',', $request->input('selected_product_ids'));
+				$currentPriority1Count = DB::table('tbl_brand_products')->where('priority', 1)->count();
+				$availableSlots = 6 - $currentPriority1Count;
+				if ($availableSlots <= 0) {
+					return response()->json(['success' => false, 'message' => 'PRIORITY LIST IS ALREADY FULL']);
+				}
+				if (count($selectedProductIds) > $availableSlots) {
+					return response()->json(['success' => false, 'message' => 'YOU CAN ONLY UPDATE ' . $availableSlots . ' PRODUCTS PRIORITY']);
+				}
+				$recentProducts = DB::table('tbl_brand_products')
+					->whereIn('id', $selectedProductIds)
+					->orderBy('created_at', 'desc')
+					->pluck('id');
 		
-	public function update_Priority(Request $request)
-	{
-		try {
-			$selectedProductIds = explode(',', $request->input('selected_product_ids'));
-	
-			
-			DB::table('tbl_brand_products')->update(['priority' => 0]);
-
-			$recentProducts = DB::table('tbl_brand_products')
-				->whereIn('id', $selectedProductIds)
-				->orderBy('created_at', 'desc') 
-				->take(6)
-				->pluck('id');
-	
-			DB::table('tbl_brand_products')
-				->whereIn('id', $recentProducts)
-				->update(['priority' => 1]);
-	
-			return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
-		} catch (\Exception $e) {
-			\Log::error($e);
-			return response()->json(['success' => false, 'message' => 'Error updating priority']);
+				DB::table('tbl_brand_products')
+					->whereIn('id', $recentProducts)
+					->update(['priority' => 1]);
+	   	return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
+			} catch (\Exception $e) {
+				\Log::error($e);
+				return response()->json(['success' => false, 'message' => 'Error updating priority']);
+			}
 		}
-	}
-	
 	public function removePriority($productId)
     {
         DB::table('tbl_brand_products')

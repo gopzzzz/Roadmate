@@ -3572,39 +3572,41 @@ $(document).ready(function () {
         $('#selected_product_ids').val(selectedProductIds.join(','));
     });
 
-	$('#search_product').keyup(function () {
-    var searchval = $(this).val();
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: "{{ route('search_product') }}",
-        data: {
-            "_token": "{{ csrf_token() }}",
-            searchval: searchval
-        },
-        success: function (res) {
-            console.log(res);
-
-            if (searchval !== '') {  
-                if (res.productList) {
-                    $('#searchproductlist').html(res.productList);
-                } else {
-                    $('#searchproductlist').html(res);
-                }
-            } else {
-                $('#searchproductlist').html('');  
-            }
-        },
-        error: function (error) {
-            console.error('Error fetching search results:', error);
+    $('#search_product').keyup(function () {
+        var searchval = $(this).val();
+		if (searchval === '') {
+            $('.error-message').hide();
         }
+		   $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('search_product') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                searchval: searchval
+            },
+            success: function (res) {
+                console.log(res);
+
+                if (searchval !== '') {
+                    if (res.productList) {
+                        $('#searchproductlist').html(res.productList);
+                    } else {
+                        $('#searchproductlist').html(res);
+                    }
+                } else {
+                    $('#searchproductlist').html('');
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching search results:', error);
+            }
+        });
     });
-});
 
-	$('.submitBtn').click(function (e) {
+    $('.submitBtn').click(function (e) {
         e.preventDefault();
-
-        $.ajax({
+		  $.ajax({
             type: "POST",
             dataType: "json",
             url: "{{ route('update_Priority') }}",
@@ -3612,16 +3614,28 @@ $(document).ready(function () {
                 "_token": "{{ csrf_token() }}",
                 selected_product_ids: $('#selected_product_ids').val()
             },
-			success: function (res) {
-    if (res && res.success) {
-        alert(res.message); 
-        
-        window.location.href = "{{ url('productpriority') }}";
-    } else {
-        console.error('Error updating priority:', res ? res.message : 'Unknown error');
-    }
-},
+            success: function (res) {
+                console.log('Success:', res);
 
+                if (res && res.success) {
+                    alert(res.message);
+
+                   
+                    window.location.href = "{{ url('productpriority') }}";
+                } else {
+                    console.error('Error updating priority:', res ? res.message : 'Unknown error');
+
+                  
+                    $('.error-message').text(' ' + res.message);
+                    $('.error-message').show();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Ajax Error:', jqXHR, textStatus, errorThrown);
+
+                $('.error-message').text('Error updating priority: ' + jqXHR.responseJSON.message);
+                $('.error-message').show(); 
+            }
         });
     });
 });
