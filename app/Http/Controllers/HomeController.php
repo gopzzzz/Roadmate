@@ -72,6 +72,8 @@ use App\Tbl_wallets;
 use App\Tbl_wallet_transactions;
 use App\Tbl_vendors;
 use App\Tbl_place_order_masters;
+use App\Tbl_sale_order_masters;
+use App\Tbl_sale_order_trans;
 use DB;
 use Hash;
 use Auth;
@@ -3886,52 +3888,134 @@ function sendNotification1($msg1,$title)
 			}
 		}
 	
+		public function sale_order_master($orderId) {
+
+			$markk=DB::table('tbl_order_trans')
+			->get();
+		$saleorder=DB::table('tbl_order_masters')
+		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
+		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
+		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+		->where('tbl_order_masters.id',$orderId)
+			->select(
+				'tbl_order_masters.*',
+				'tbl_order_trans.order_id',
+				'tbl_order_trans.qty',
+				'tbl_order_trans.offer_amount',
+				'shops.shopname',
+				'shops.address' ,
+				'shops.delivery_id' ,
+				'tbl_brand_products.product_name',
+				'tbl_deliveryaddres.phone',
+				'tbl_deliveryaddres.pincode',
+				'tbl_deliveryaddres.area',
+				'tbl_deliveryaddres.area1',
+				'tbl_deliveryaddres.city',
+				'tbl_deliveryaddres.district',
+				'tbl_deliveryaddres.state',
+				'tbl_deliveryaddres.country'
+				)
+			->get();
+		$role=Auth::user()->user_type;
+		return view('sale_order_master',compact('role','markk','saleorder'));
+	    }
+
+
+		public function sale_orderinsert(Request $request) {
+			$shopId = $request->shop_id;
+		
+			try {
+				$saleMaster = new Tbl_sale_order_masters;
+				$saleMaster->shop_id = $request->shopId[0];
+				$saleMaster->order_id = $request->orderId[0];
+				$saleMaster->total_amount = 0;
+				$saleMaster->discount = $request->discount;
+				$saleMaster->coupen_id = 0;
+				$saleMaster->wallet_redeem_id = 0;
+				$saleMaster->payment_mode = $request->payment;
+				$saleMaster->total_mrp = 0;
+				$saleMaster->shipping_charge = 0;
+				$saleMaster->tax_amount = 0;
+				$saleMaster->payment_status = 0;
+				$saleMaster->delivery_date = $request->delivery_date;
+				$saleMaster->order_date = $request->orderdate;
+				$saleMaster->save();
+		
+				if (!empty($request->order_id) && is_array($request->order_id)) {
+					foreach ($request->order_id as $index => $orderId) {
+						$saleTrans[] = [
+							'order_id' => $orderId,
+							'product_id' => 0,
+							'sale_order_id' => $saleMaster->id,
+							'qty' => $request->qty[$index],
+							'offer_amount' => $request->offer[$index],
+							'price' => 0,
+							'taxable_amount' => 0
+						];
+					}
+		   
+					
+					Tbl_sale_order_trans::insert($saleTrans);
+				}
+		
+				
+				Tbl_order_masters::where('order_id', $request->orderId[0])->update(['sale_status' => 1]);
+		
+				return redirect('sale_order_master');
+			} catch (\Exception $e) {
+				
+				dd($e->getMessage());
+			}
+		}
+		
+		
+
+
 		public function product_order(Request $request)
-{
-    $role = Auth::user()->user_type;
+        {
+			$role = Auth::user()->user_type;
 
-    // Get the list of brands for the filter dropdown
-    $brands = DB::table('tbl_rm_products')->get();
+			// Get the list of brands for the filter dropdown
+			$brands = DB::table('tbl_rm_products')->get();
 
-    // Check if a brand filter is applied
-    $selectedBrand = $request->input('brand');
+			// Check if a brand filter is applied
+			$selectedBrand = $request->input('brand');
 
-    $ordersQuery = DB::table('tbl_order_trans')
-        ->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
+			$ordersQuery = DB::table('tbl_order_trans')
+				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
 
-    // Apply brand filter if selected
-    if ($selectedBrand) {
-        $ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
-    }
+			// Apply brand filter if selected
+			if ($selectedBrand) {
+				$ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
+			}
 
-    $orders = $ordersQuery
-        ->where('order_status', 0)
-        ->select(
-            'tbl_order_trans.*',
-            'tbl_brand_products.product_name'
-        )->get();
+			$orders = $ordersQuery
+				->where('order_status', 0)
+				->select(
+					'tbl_order_trans.*',
+					'tbl_brand_products.product_name'
+				)->get();
 
-    return view('product_order', compact('orders', 'role', 'brands', 'selectedBrand'));
-}
-
-
+			return view('product_order', compact('orders', 'role', 'brands', 'selectedBrand'));
+		}
 
 
-public function updateOrderStatus(Request $request)
-{
-    $productId = $request->input('productId');
-    \Log::info("Update Order Status called with productId: " . $productId);
+		public function updateOrderStatus(Request $request)
+		{
+			$productId = $request->input('productId');
+			\Log::info("Update Order Status called with productId: " . $productId);
 
-    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+			$ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
 
-    foreach ($ordersToUpdate as $order) {
-        $order->order_status = ($order->order_status == 0);
-        $order->save();
+			foreach ($ordersToUpdate as $order) {
+				$order->order_status = ($order->order_status == 0);
+				$order->save();
 
-    }
+			}
 
-    return response()->json(['success' => true]);
-}
+			return response()->json(['success' => true]);
+		}
 
 
 
@@ -4262,11 +4346,13 @@ public function order_history()
 	$hs->save();
     return redirect('hsn')->with('success', 'Added successfully');	
 	}
+
     public function hsnfetch(Request $request){
 	$id=$request->id;
 	$hs=Tbl_hsncodes::find($id);
 	print_r(json_encode($hs));
     }
+
 	public function hsnedit(Request $request){
 	$id=$request->id;
 	$hs=Tbl_hsncodes::find($id);
