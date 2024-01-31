@@ -88,7 +88,7 @@
                                                     <div class="form-group col-sm-2">
                                                     <input class="form-control" name="orderId[]" value="{{ $key->order_id }}" required>
                                                 </div>
-                                               
+                                                   
                                                 <div>
                                                     <label class="exampleModalLabel">ORDER DATE:</label>
                                                     </div>

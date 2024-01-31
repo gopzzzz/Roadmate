@@ -3954,7 +3954,7 @@ function sendNotification1($msg1,$title)
 							'taxable_amount' => 0
 						];
 					}
-		
+		   
 					
 					Tbl_sale_order_trans::insert($saleTrans);
 				}
