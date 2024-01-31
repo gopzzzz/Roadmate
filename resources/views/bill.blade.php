@@ -146,7 +146,6 @@
     <div style="margin-right: 30px; display: flex; flex-direction: column;">
         <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: bold; margin-top: 10px;"><span style="background-color: #f2f2f2; padding: 10px; display: inline-block; margin-right: -30px;">SHIPPING ADDRESS</span></span>
         <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->vendor_name}}</span> 
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->shipping_address}}</span>
 
 <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->phone_number}}</span>
 <span style="font-family: 'Montserrat', sans-serif; font-size: 15px; margin-top: 10px;">{{$vendor->email}}</span>
