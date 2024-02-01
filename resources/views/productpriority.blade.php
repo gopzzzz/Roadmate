@@ -19,6 +19,8 @@
  </section>
  @if(session('success'))
   <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
  @endif
  <!-- Main content -->
  <section class="content">
@@ -75,8 +77,10 @@
 
     <div id="searchproductlist"></div>
 
-    <!-- Hidden input field to store selected product IDs -->
+   
     <input type="hidden" name="selected_product_ids" id="selected_product_ids">
+
+<div class="alert alert-danger error-message" role="alert" style="display: none; color: white; font-family: 'Roboto', sans-serif; font-weight: bold;"></div>
 
     </div>
     </div>
@@ -126,10 +130,10 @@
 
                   <tr>
 
-                    <th>id</th>
+                    <th>Id</th>
 
 
-                    <th>Productname</th>
+                    <th>Product Name</th>
                     <th>Product Image</th>
 
 <th></th>
@@ -152,10 +156,9 @@
                     
 
                   <td>{{$key->product_name}}</td>
+                  <td><img src="{{ asset('/market/'.$key->images) }}" alt="" width="75"/></td>
 
-                  <td>
-											<img src="{{ asset('/market/'.$key->images) }}" alt=""  width="200" height="100" />
-										</td>
+              
                   
                     <td>
                     <button class="btn btn-primary edit_priority" data-toggle="modal" onclick="removePriority('{{$key->id}}')">
@@ -170,7 +173,7 @@ $i++;
 </tbody>
 <tfoot>
 <tr>
-<th>id</th>
+<th>Id</th>
  <th>Product Name</th>
                     <th>Product Image</th>
 
