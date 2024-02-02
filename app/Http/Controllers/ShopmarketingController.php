@@ -9,6 +9,8 @@ use App\Tbl_rm_wishlists;
 use App\Tbl_order_trans;
 use App\Tbl_order_masters;
 use App\Tbl_wallet_transactions;
+use App\Tbl_cancel_orders;
+use App\Tbl_product_ratings;
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -395,6 +397,67 @@ $postdata = file_get_contents("php://input");
     ->where('tbl_brand_products.status',0)
     ->offset($offset) 
     ->limit($limit) 
+     ->get();
+       $products = [];
+
+foreach ($productlist as $proItem) {
+    $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->id)->first();
+    
+    //echo "<pre>";print_r($imageArray);exit;
+
+    // Check if $imageArray is not null before accessing its properties
+    if ($imageArray) {
+        // Assuming there is a column named 'images' in tbl_productimages table
+        $proItem->images = $imageArray->images;
+    } else {
+        // If no images are found, set it to an empty array or null, depending on your needs
+        $proItem->images = "";
+        // or $cartItem->images = null;
+    }
+
+    // Add the $cartItem to the $cart array
+    $products[] = $proItem;
+}
+ if($productlist == null){
+ echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+             $json_data = 0;
+
+            echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+
+                }
+}
+
+catch (Exception $e)
+
+{
+  //return Json("Sorry! Please check input parameters and values");
+
+        echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+}
+public function priorityproducts(){
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+ 
+ try{	
+
+    $productlist=DB::table('tbl_brand_products')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+    ->orderBy('id', 'DESC')
+    ->where('tbl_brand_products.status',0)
+    ->where('tbl_brand_products.priority',1)
      ->get();
        $products = [];
 
@@ -982,7 +1045,7 @@ public function vieworder(){
     ->join('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
     ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_order_masters.*','tbl_brand_products.id as pro_id','tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name')
+    ->select('tbl_order_masters.*','tbl_brand_products.id as pro_id','tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name','tbl_order_trans.order_status as product_status')
     ->where('tbl_order_masters.id',$order_id)
    // ->where('status',0)
     ->get();
@@ -1100,6 +1163,168 @@ catch (Exception $e)
         echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
 
 }
+}
+public function cancelorder(){
+    
+    
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+ $data1 = json_decode($json);
+
+ $order_id=$data1->trans_id;
+ $status=$data1->status;
+
+
+ $orderstatus=Tbl_order_trans::find($order_id);
+
+ if($data1->qty==$orderstatus->qty){
+    $orderstatus->order_status=$status;
+    
+ }else{
+    $quantity=$orderstatus->qty-$data1->qty;
+    $orderstatus->qty=$quantity;
+ }
+
+
+
+
+
+
+ if($orderstatus->save()){
+
+    $cancel =new Tbl_cancel_orders;
+    $cancel->type=$status;
+    $cancel->order_trans_id=$order_id;
+    $cancel->qty=$data1->qty;
+    $cancel->comment=$data1->reason;
+    $cancel->save();
+
+
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+
+ }else{
+
+  $json_data = 1;
+
+  echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+
+ }
+}
+public function productrating(){
+    $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+ $data1 = json_decode($json);
+
+ $type=$data1->type;
+
+ $shopid=$data1->shopid;
+
+ $productid=$data1->productid;
+
+ $stars=$data1->stars;
+ 
+
+ $check=DB::table('tbl_product_ratings')->where('type',$type)->where('product_id',$productid)->where('shopid',$shopid)->first();
+
+ if($check==null){
+
+    
+    $rating =new Tbl_product_ratings;
+    $rating->product_id=$productid;
+    $rating->type=$type;
+    $rating->rating=$stars;
+    $rating->shopid=$shopid;
+    $rating->save();
+
+    $json_data = 1;
+
+    echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+ }else{
+    $json_data = 0;
+
+    echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+
+ }
+
+
+}
+public function getproductorderdetails(){
+    
+    
+    $postdata = file_get_contents("php://input");                    
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+
+    $data1 = json_decode($json);
+
+    $shopId = $data1->shopid;
+
+    $productId = $data1->productid;
+
+    $type = $data1->type;
+
+    $trans_id=$data1->billproductid;
+    
+    try {  
+        
+        $ratings = DB::table('tbl_product_ratings')
+            ->where('shopid', $shopId)
+            ->where('product_id', $productId)
+            ->where('type', $type)
+            ->first();
+
+            if($ratings==null){
+                $stars=0;
+            }else{
+                $stars=$ratings->rating;
+            }
+
+
+            $products=DB::table('tbl_order_trans')
+           ->join('tbl_order_masters', 'tbl_order_trans.order_id', '=', 'tbl_order_masters.id')
+            ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+            ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+            ->select('tbl_brand_products.id as pro_id','tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name','tbl_order_trans.order_status as product_status','tbl_order_masters.order_status','tbl_order_masters.delivery_date')
+            ->where('tbl_order_trans.id',$trans_id)
+           // ->where('status',0)
+            ->get();
+            $order_list = [];
+            foreach ($products as $proItem) {
+                $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->pro_id)->first();
+                
+                //echo "<pre>";print_r($imageArray);exit;
+            
+                // Check if $imageArray is not null before accessing its properties
+                if ($imageArray) {
+                    // Assuming there is a column named 'images' in tbl_productimages table
+                    $proItem->images = $imageArray->images;
+                } else {
+                    // If no images are found, set it to an empty array or null, depending on your needs
+                    $proItem->images = "";
+                    // or $cartItem->images = null;
+                }
+            
+                // Add the $cartItem to the $cart array
+                $order_list[] = $proItem;
+            }
+
+        if ($order_list == null) {
+            echo json_encode(array('error' => true, "message" => "Error"));
+        } else {                                
+            $json_data = 0;
+            echo json_encode(array('error' => false, "ratings" => $stars,"order_list"=>$order_list,"message" => "Success"));
+        }
+    } catch (Exception $e) {
+        // Handle the exception here
+        echo json_encode(array('error' => true, "message" => "An error occurred."));
+    }
 }
 
 }
