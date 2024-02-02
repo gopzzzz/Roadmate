@@ -4441,13 +4441,13 @@ public function order_history()
 		public function productpriority(Request $request){
 			$role = Auth::user()->user_type;
 			$product = DB::table('tbl_brand_products')
-				//->join('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
-				->where('tbl_brand_products.priority', 1)
-				->select('tbl_brand_products.*') 
-				->groupBy('tbl_brand_products.id') 
-				->orderBy('tbl_brand_products.id', 'desc')
-				->get();
-				echo "<pre>";print_r($product);exit;
+			->leftJoin('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
+			->where('tbl_brand_products.priority', 1)
+			->select('tbl_brand_products.*','tbl_productimages.images') 
+			->groupBy('tbl_brand_products.id') 
+			->orderBy('tbl_brand_products.id', 'desc')
+			->get();
+				//echo "<pre>";print_r($product);exit;
 			return view('productpriority', compact('role','product'));
 		}
 		
