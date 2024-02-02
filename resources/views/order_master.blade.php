@@ -226,10 +226,15 @@
                     </form>
                 </td>
                 <td>
-                    <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id])}}">
-                        <button type="submit" class="btn btn-primary sale">Generate Sale Order</button>
-                    </form>
-                </td>
+    @if($key->sale_status == 0)
+        <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
+            <button type="submit" class="btn btn-primary sale">Generate Sale Invoice</button>
+        </form>
+    @else
+        <span class="text-success">Sale Invoice Generated</span>
+    @endif
+</td>
+
                 
                 <td>
     <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"

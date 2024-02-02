@@ -3899,14 +3899,18 @@ function sendNotification1($msg1,$title)
 		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 		->where('tbl_order_masters.id',$orderId)
-			->select(
+			->select( 
 				'tbl_order_masters.*',
+				'tbl_order_trans.product_id',
 				'tbl_order_trans.order_id',
 				'tbl_order_trans.qty',
+				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
+				'shops.id',
 				'shops.shopname',
 				'shops.address' ,
 				'shops.delivery_id' ,
+				'tbl_brand_products.id',
 				'tbl_brand_products.product_name',
 				'tbl_deliveryaddres.phone',
 				'tbl_deliveryaddres.pincode',
@@ -3923,56 +3927,79 @@ function sendNotification1($msg1,$title)
 	    }
 
 
-		public function sale_orderinsert(Request $request) {
-			$shopId = $request->shop_id;
 		
+		public function sale_orderinsert(Request $request)
+		{
 			try {
+				\Log::info('Debug: Request data', ['request' => $request->all()]);
+
+				 $shop = Shops::where('shopname', $request->shopname)->first();
+
+				 if (!$shop) {
+					 
+					 dd("Shop with name $request->shopname not found");
+				 }
 				$saleMaster = new Tbl_sale_order_masters;
-				$saleMaster->shop_id = $request->shopId[0];
-				$saleMaster->order_id = $request->orderId[0];
-				$saleMaster->total_amount = 0;
+				$saleMaster->shop_id = $shop->id;
+				$saleMaster->order_id = is_array($request->orderId) ? $request->orderId[0] : null;
+				$saleMaster->total_amount = $request->total_amount;
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
 				$saleMaster->wallet_redeem_id = 0;
 				$saleMaster->payment_mode = $request->payment;
-				$saleMaster->total_mrp = 0;
+				$saleMaster->total_mrp = $request->total_mrp;
 				$saleMaster->shipping_charge = 0;
 				$saleMaster->tax_amount = 0;
 				$saleMaster->payment_status = 0;
 				$saleMaster->delivery_date = $request->delivery_date;
 				$saleMaster->order_date = $request->orderdate;
-				$saleMaster->save();
 		
-				if (!empty($request->order_id) && is_array($request->order_id)) {
-					foreach ($request->order_id as $index => $orderId) {
-						$saleTrans[] = [
-							'order_id' => $orderId,
-							'product_id' => 0,
-							'sale_order_id' => $saleMaster->id,
-							'qty' => $request->qty[$index],
-							'offer_amount' => $request->offer[$index],
-							'price' => 0,
-							'taxable_amount' => 0
-						];
+				if ($saleMaster->save()) {
+					if (!is_null($request->orderId) && is_array($request->orderId)) {
+						foreach ($request->orderId as $index => $orderId) {
+							\Log::info('Debug: Inside Loop');
+						
+							$product_name = $request->product_name[$index] ?? null;
+							\Log::info('Debug: Product Name', ['product_name' => $product_name]);
+						
+							$product = $product_name ? Tbl_brand_products::where('product_name', $product_name)->first() : null;
+							\Log::info('Debug: Product', ['product' => $product]);
+						
+							$saleTrans = new Tbl_sale_order_trans;
+							$saleTrans->order_id = $orderId;
+							$saleTrans->product_id = $product ? $product->id : 0;
+							$saleTrans->sale_order_id = $saleMaster->id;
+							$saleTrans->qty = $request->qty[$index];
+							$saleTrans->offer_amount = $request->offer_amount[$index];
+							$saleTrans->price = $request->price[$index] ?? 0;
+							$saleTrans->taxable_amount = 0;
+						
+							if (!$saleTrans->save()) {
+								\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+							} 
+						}
+										
+								Tbl_order_masters::where('id', $saleMaster->order_id)->update(['sale_status' => 1]);
+				
+								Session::flash('success', 'Sale Invoice generated successfully!');
+							} else {
+								\Log::info('Debug: Sale transaction saved successfully.');
+								dd("$request->orderId is null");
+							}
+				
+						} else {
+							Session::flash('error', 'Error adding Sale Invoice. Please try again.');
+						}
+				
+						return redirect('order_master');
+					} catch (\Exception $e) {
+						\Log::error($e->getMessage());
+						dd($e->getMessage());
 					}
-		   
-					
-					Tbl_sale_order_trans::insert($saleTrans);
 				}
 		
-				
-				Tbl_order_masters::where('order_id', $request->orderId[0])->update(['sale_status' => 1]);
-		
-				return redirect('sale_order_master');
-			} catch (\Exception $e) {
-				
-				dd($e->getMessage());
-			}
-		}
-		
-		
 
-
+				
 		public function product_order(Request $request)
         {
 			$role = Auth::user()->user_type;
