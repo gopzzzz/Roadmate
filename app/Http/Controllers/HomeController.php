@@ -3704,6 +3704,7 @@ function sendNotification1($msg1,$title)
 				'tbl_deliveryaddres.city',
 				'tbl_deliveryaddres.district',
 				'tbl_deliveryaddres.state',
+				'tbl_deliveryaddres.pincode',
 				'tbl_deliveryaddres.country'
 				)
 			->get();
@@ -4543,6 +4544,7 @@ public function order_history()
 		
 			if ($searchval != '') {
 				$products = DB::table('tbl_brand_products')
+				->where('tbl_brand_products.status', 0)
 				->where('tbl_brand_products.priority', 0)
 					->where('product_name', 'like', '%' . $searchval . '%')
 					->orderBy('id', 'DESC')

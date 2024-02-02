@@ -134,7 +134,7 @@
 
 
 
-                        <form method="POST" action="{{url('districtinsert')}}" enctype="multipart/form-data">
+                        <form method="POST" id="form1" action="{{url('districtinsert')}}" enctype="multipart/form-data">
 
 
 
@@ -221,7 +221,7 @@
 
 
 
-                                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                    <button type="submit" class="btn btn-primary form1-submit">Add</button>
 
 
 
@@ -275,7 +275,7 @@
          <th>State</th>
          <th>District</th>
 
-         <th>Deleted status</th>
+         <th>Status</th>
 
 
         
@@ -393,7 +393,7 @@
          <th>State</th>
          <th>District</th>
 
-         <th>Deleted status</th>
+         <th>Status</th>
 
 
         
@@ -648,6 +648,23 @@
             }
         });
     });
+    
+    
+
+    $(document).ready(function() {
+      $("#form1").submit(function(event) {
+        var country = $("#country").val();
+        var state_1 = $("#state_1").val();
+      
+
+        // Check if the values are empty or have default values
+        if (country === "0" || state_1 === "0" ) {
+            alert("Please fill out all required fields.");
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+});
+
 </script>
 
 @endsection
