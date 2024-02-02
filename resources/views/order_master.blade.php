@@ -116,13 +116,13 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        
-                           
+                    <div class="card-header">
+                            <h3 class="card-title">Order</h3>
                             <p align="right">
                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                   
-                                        <div class="modal-dialog" role="document" style="width:80%;">
+                                    <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Order</h5>
@@ -140,8 +140,8 @@
                             </p>
                        
                   <!-- /.card-header -->
- 
-    <table id="example1" class="table table-bordered table-striped" style="background-color: #fff;">
+  <div class="card-body">
+  <table id="example1" class="table table-bordered table-striped table-sm">
         <thead>
             
             <tr>
@@ -159,6 +159,9 @@
                 <th>Delivery Date</th>
                 <th>Order Date</th>
                 <th></th>
+                <th></th>
+                <th></th>
+
                 @if($role==1)
                     <!-- Add your header content for role 1 if needed -->
                 @endif
@@ -295,28 +298,11 @@
             @endif
         </tbody>
         <tfoot>
-            <tr>
-                <th>id</th>
-                <th>OrderId</th>
-                <th>Shop Name</th>
-                <th>Phone Number</th>
-                <th>Address</th>
-                <th>Total Amount</th>
-                <th>Discount</th>
-             
-                <th>Payment Mode</th>
-              
-               
-             
-                <th>Payment Status</th>
-                <th>Order Status</th>
-                <th>Delivery Date</th>
-                <th>Order Date</th>
-                <th></th>
+          
                 @if($role==1)
                   
                 @endif
-            </tr>
+            
         </tfoot>
     </table>
     <div class="row">
