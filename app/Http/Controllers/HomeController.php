@@ -72,6 +72,8 @@ use App\Tbl_wallets;
 use App\Tbl_wallet_transactions;
 use App\Tbl_vendors;
 use App\Tbl_place_order_masters;
+use App\Tbl_sale_order_masters;
+use App\Tbl_sale_order_trans;
 use DB;
 use Hash;
 use Auth;
@@ -1284,7 +1286,7 @@ public function shop_categoriesdelete($id){
 			->get();
 	
 		$type = "";
-		$shops[] = DB::table('shops')
+		$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
@@ -1343,10 +1345,12 @@ public function shop_categoriesdelete($id){
 			->paginate(12);
 		}
 		
-		
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
 			
 		
-		return view('shops',compact('shops','shop_categories','exe','role'));	
+		return view('shops',compact('shops','shop_categories','exe','role','con','cond','dis'));	
 	}
 	public function ashops(){
 		$shop_categories=Shiop_categories::all();
@@ -1365,7 +1369,7 @@ public function shop_categoriesdelete($id){
 		$type = "";
 
 		
-			$shops=array();
+			$shops="";
 
 		if($role==3){
 			$fran=DB::table('tbl_franchase_details')
@@ -1375,7 +1379,7 @@ public function shop_categoriesdelete($id){
 			->get();
 			foreach($fran as $singleFranlist){
 				if($singleFranlist->type==4){
-					$shops[] = DB::table('shops')
+					$shops = DB::table('shops')
 					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
@@ -1385,7 +1389,7 @@ public function shop_categoriesdelete($id){
 					->where('tbl_places.district_id',$singleFranlist->district_id)
 					->paginate(12);
 				}else{
-					$shops[] = DB::table('shops')
+					$shops= DB::table('shops')
 					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
@@ -1399,14 +1403,28 @@ public function shop_categoriesdelete($id){
 			}
 			
 		
-		}else{
-			$shops[] = DB::table('shops')
+		}elseif($role==7){
+		    $eid=DB::table('executives')->where('user_id',$userid)->first();
+		    
+		    	$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',1)
-			->where('shops.place_id',$singleFranlist->place_id)
+			->where('shops.place_id',null)
+			->where('shops.exeid',$eid->id)
+		//	->where('shops.place_id',$singleFranlist->place_id)
+			->paginate(12);
+		}
+		elseif($role==1){
+			$shops = DB::table('shops')
+            ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+			->select('shops.*', 'shiop_categories.category','executives.name')
+			->orderBy('shops.id','DESC')
+			->where('shops.authorised_status',1)
+		//	->where('shops.place_id',$singleFranlist->place_id)
 			->paginate(12);
 		
 		}
@@ -1469,6 +1487,22 @@ public function shop_categoriesdelete($id){
 		$shop=Shops::find($id);
 		print_r(json_encode($shop));
 	}
+	public function createaccount(Request $request){
+	    $id=$request->id;
+		$account=new User;
+		$account->name="BDE";
+		$account->email=$request->email;
+		$account->user_type=7;
+		$account->login_status=0;
+		$account->password=Hash::make("Roadmate@BDE");
+		if($account->save()){
+			DB::table('executives')
+            ->where('id', $id)
+            ->update(['user_id' =>$account->id]);
+		}
+		return redirect()->back();
+		
+	}
 	public function shopedit(Request $request){
 		$id=$request->id;
 		$shop=Shops::find($id);
@@ -1486,6 +1520,7 @@ public function shop_categoriesdelete($id){
 		$shop->phone_number=$request->phone1;
 		$shop->phone_number2=$request->phone2;
 		$shop->pincode=$request->pincode;
+		$shop->place_id=$request->place_id;
 		$shop->description=$request->desc;
 		$shop->lattitude=$request->latitude;
 		$shop->logitude=$request->longitude;
@@ -3886,52 +3921,161 @@ function sendNotification1($msg1,$title)
 			}
 		}
 	
+		public function sale_order_master($orderId) {
+
+			$markk=DB::table('tbl_order_trans')
+			->get();
+		$saleorder=DB::table('tbl_order_masters')
+		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
+		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
+		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+		->where('tbl_order_masters.id',$orderId)
+			->select( 
+				'tbl_order_masters.*',
+				'tbl_order_trans.product_id',
+				'tbl_order_trans.order_id',
+				'tbl_order_trans.qty',
+				'tbl_order_trans.price',
+				'tbl_order_trans.offer_amount',
+				'shops.id',
+				'shops.shopname',
+				'shops.address' ,
+				'shops.delivery_id' ,
+				'tbl_brand_products.id',
+				'tbl_brand_products.product_name',
+				'tbl_deliveryaddres.phone',
+				'tbl_deliveryaddres.pincode',
+				'tbl_deliveryaddres.area',
+				'tbl_deliveryaddres.area1',
+				'tbl_deliveryaddres.city',
+				'tbl_deliveryaddres.district',
+				'tbl_deliveryaddres.state',
+				'tbl_deliveryaddres.country'
+				)
+			->get();
+		$role=Auth::user()->user_type;
+		return view('sale_order_master',compact('role','markk','saleorder'));
+	    }
+
+
+		
+		public function sale_orderinsert(Request $request)
+		{
+			try {
+				\Log::info('Debug: Request data', ['request' => $request->all()]);
+
+				 $shop = Shops::where('shopname', $request->shopname)->first();
+
+				 if (!$shop) {
+					 
+					 dd("Shop with name $request->shopname not found");
+				 }
+				$saleMaster = new Tbl_sale_order_masters;
+				$saleMaster->shop_id = $shop->id;
+				$saleMaster->order_id = is_array($request->orderId) ? $request->orderId[0] : null;
+				$saleMaster->total_amount = $request->total_amount;
+				$saleMaster->discount = $request->discount;
+				$saleMaster->coupen_id = 0;
+				$saleMaster->wallet_redeem_id = 0;
+				$saleMaster->payment_mode = $request->payment;
+				$saleMaster->total_mrp = $request->total_mrp;
+				$saleMaster->shipping_charge = 0;
+				$saleMaster->tax_amount = 0;
+				$saleMaster->payment_status = 0;
+				$saleMaster->delivery_date = $request->delivery_date;
+				$saleMaster->order_date = $request->orderdate;
+		
+				if ($saleMaster->save()) {
+					if (!is_null($request->orderId) && is_array($request->orderId)) {
+						foreach ($request->orderId as $index => $orderId) {
+							\Log::info('Debug: Inside Loop');
+						
+							$product_name = $request->product_name[$index] ?? null;
+							\Log::info('Debug: Product Name', ['product_name' => $product_name]);
+						
+							$product = $product_name ? Tbl_brand_products::where('product_name', $product_name)->first() : null;
+							\Log::info('Debug: Product', ['product' => $product]);
+						
+							$saleTrans = new Tbl_sale_order_trans;
+							$saleTrans->order_id = $orderId;
+							$saleTrans->product_id = $product ? $product->id : 0;
+							$saleTrans->sale_order_id = $saleMaster->id;
+							$saleTrans->qty = $request->qty[$index];
+							$saleTrans->offer_amount = $request->offer_amount[$index];
+							$saleTrans->price = $request->price[$index] ?? 0;
+							$saleTrans->taxable_amount = 0;
+						
+							if (!$saleTrans->save()) {
+								\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+							} 
+						}
+										
+								Tbl_order_masters::where('id', $saleMaster->order_id)->update(['sale_status' => 1]);
+				
+								Session::flash('success', 'Sale Invoice generated successfully!');
+							} else {
+								\Log::info('Debug: Sale transaction saved successfully.');
+								dd("$request->orderId is null");
+							}
+				
+						} else {
+							Session::flash('error', 'Error adding Sale Invoice. Please try again.');
+						}
+				
+						return redirect('order_master');
+					} catch (\Exception $e) {
+						\Log::error($e->getMessage());
+						dd($e->getMessage());
+					}
+				}
+		
+
+				
 		public function product_order(Request $request)
-{
-    $role = Auth::user()->user_type;
+        {
+			$role = Auth::user()->user_type;
 
-    // Get the list of brands for the filter dropdown
-    $brands = DB::table('tbl_rm_products')->get();
+			// Get the list of brands for the filter dropdown
+			$brands = DB::table('tbl_rm_products')->get();
 
-    // Check if a brand filter is applied
-    $selectedBrand = $request->input('brand');
+			// Check if a brand filter is applied
+			$selectedBrand = $request->input('brand');
 
-    $ordersQuery = DB::table('tbl_order_trans')
-        ->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
+			$ordersQuery = DB::table('tbl_order_trans')
+				->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id');
 
-    // Apply brand filter if selected
-    if ($selectedBrand) {
-        $ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
-    }
+			// Apply brand filter if selected
+			if ($selectedBrand) {
+				$ordersQuery->where('tbl_brand_products.brand_id', $selectedBrand);
+			}
 
-    $orders = $ordersQuery
-        ->where('order_status', 0)
-        ->select(
-            'tbl_order_trans.*',
-            'tbl_brand_products.product_name'
-        )->get();
+			$orders = $ordersQuery
+				->where('order_status', 0)
+				->select(
+					'tbl_order_trans.*',
+					'tbl_brand_products.product_name'
+				)->get();
 
-    return view('product_order', compact('orders', 'role', 'brands', 'selectedBrand'));
-}
-
-
+			return view('product_order', compact('orders', 'role', 'brands', 'selectedBrand'));
+		}
 
 
-public function updateOrderStatus(Request $request)
-{
-    $productId = $request->input('productId');
-    \Log::info("Update Order Status called with productId: " . $productId);
+		public function updateOrderStatus(Request $request)
+		{
+			$productId = $request->input('productId');
+			\Log::info("Update Order Status called with productId: " . $productId);
 
-    $ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
+			$ordersToUpdate = Tbl_order_trans::where('product_id', $productId)->get();
 
-    foreach ($ordersToUpdate as $order) {
-        $order->order_status = ($order->order_status == 0);
-        $order->save();
+			foreach ($ordersToUpdate as $order) {
+				$order->order_status = ($order->order_status == 0);
+				$order->save();
 
-    }
+			}
 
-    return response()->json(['success' => true]);
-}
+			return response()->json(['success' => true]);
+		}
 
 
 
@@ -4262,11 +4406,13 @@ public function order_history()
 	$hs->save();
     return redirect('hsn')->with('success', 'Added successfully');	
 	}
+
     public function hsnfetch(Request $request){
 	$id=$request->id;
 	$hs=Tbl_hsncodes::find($id);
 	print_r(json_encode($hs));
     }
+
 	public function hsnedit(Request $request){
 	$id=$request->id;
 	$hs=Tbl_hsncodes::find($id);
@@ -4441,6 +4587,7 @@ public function order_history()
 		public function productpriority(Request $request){
 			$role = Auth::user()->user_type;
 			$product = DB::table('tbl_brand_products')
+				
 			->leftJoin('tbl_productimages', 'tbl_brand_products.id', '=', 'tbl_productimages.prod_id')
 			->where('tbl_brand_products.priority', 1)
 			->select('tbl_brand_products.*','tbl_productimages.images') 
@@ -4458,6 +4605,7 @@ public function order_history()
 		
 			if ($searchval != '') {
 				$products = DB::table('tbl_brand_products')
+				->where('tbl_brand_products.priority', 0)
 					->where('product_name', 'like', '%' . $searchval . '%')
 					->orderBy('id', 'DESC')
 					->get();
@@ -4481,32 +4629,32 @@ public function order_history()
 		
 			return response()->json(['productList' => $productList]);
 		}
+		public function update_Priority(Request $request)
+		{
+			try {
+				$selectedProductIds = explode(',', $request->input('selected_product_ids'));
+				$currentPriority1Count = DB::table('tbl_brand_products')->where('priority', 1)->count();
+				$availableSlots = 6 - $currentPriority1Count;
+				if ($availableSlots <= 0) {
+					return response()->json(['success' => false, 'message' => 'PRIORITY LIST IS ALREADY FULL']);
+				}
+				if (count($selectedProductIds) > $availableSlots) {
+					return response()->json(['success' => false, 'message' => 'YOU CAN ONLY UPDATE ' . $availableSlots . ' PRODUCTS PRIORITY']);
+				}
+				$recentProducts = DB::table('tbl_brand_products')
+					->whereIn('id', $selectedProductIds)
+					->orderBy('created_at', 'desc')
+					->pluck('id');
 		
-	public function update_Priority(Request $request)
-	{
-		try {
-			$selectedProductIds = explode(',', $request->input('selected_product_ids'));
-	
-			
-			DB::table('tbl_brand_products')->update(['priority' => 0]);
-
-			$recentProducts = DB::table('tbl_brand_products')
-				->whereIn('id', $selectedProductIds)
-				->orderBy('created_at', 'desc') 
-				->take(6)
-				->pluck('id');
-	
-			DB::table('tbl_brand_products')
-				->whereIn('id', $recentProducts)
-				->update(['priority' => 1]);
-	
-			return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
-		} catch (\Exception $e) {
-			\Log::error($e);
-			return response()->json(['success' => false, 'message' => 'Error updating priority']);
+				DB::table('tbl_brand_products')
+					->whereIn('id', $recentProducts)
+					->update(['priority' => 1]);
+	   	return response()->json(['success' => true, 'message' => 'Priority updated successfully']);
+			} catch (\Exception $e) {
+				\Log::error($e);
+				return response()->json(['success' => false, 'message' => 'Error updating priority']);
+			}
 		}
-	}
-	
 	public function removePriority($productId)
     {
         DB::table('tbl_brand_products')

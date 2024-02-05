@@ -74,6 +74,13 @@ Route::post('/timeslotfetch', [
     'uses' => 'HomeController@timeslotfetch'
 ])->name('timeslotfetch');
 
+
+Route::post('/createaccount', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@createaccount'
+])->name('createaccount');
+
+
 Route::get('timeslotdelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@timeslotdelete'
@@ -89,6 +96,9 @@ Route::get('/executive', [
     'middleware' => 'auth',
     'uses' => 'HomeController@executive'
 ])->name('executive');
+
+
+
 
 
 Route::get('/franchises', [
@@ -1308,6 +1318,11 @@ Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, '
 Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
 
 Route::post('/statusedit/{id}', 'HomeController@statusedit')->name('statusedit');
+
+Route::get('/sale_order_master/{orderId}', 'HomeController@sale_order_master')->name('sale_order_master');
+
+// Route::post('/sale_orderinsert', [App\Http\Controllers\HomeController::class, 'sale_orderinsert'])->name('sale_orderinsert');
+Route::post('/sale_orderinsert', 'HomeController@sale_orderinsert');
 
 
 Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompress');

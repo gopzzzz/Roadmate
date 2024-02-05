@@ -211,11 +211,23 @@
                         <button type="submit" class="print-button">Bill</button>
                     </form>
                 </td> -->
+                
                 <td style="width: 50px;">
                     <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Invoice</button>
                     </form>
                 </td>
+                <td>
+    @if($key->sale_status == 0)
+        <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
+            <button type="submit" class="btn btn-primary sale">Generate Sale Invoice</button>
+        </form>
+    @else
+        <span class="text-success">Sale Invoice Generated</span>
+    @endif
+</td>
+
+                
                 <td>
     <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
         style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">

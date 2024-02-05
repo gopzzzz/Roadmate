@@ -348,7 +348,7 @@
             </thead>
             <tbody>
             @foreach($invoice as $key)
-                <tr>
+                <tr> 
               
                     <td>{{$key->product_name}}</td>
                     <td>{{$key->offer_amount}}</td>

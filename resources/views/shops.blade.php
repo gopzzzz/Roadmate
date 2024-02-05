@@ -70,7 +70,7 @@
 
 
 
-            <div class="card">
+            <div class="card"  id="franchiseDetailsContainer">
 
               <div class="card-header">
 
@@ -186,7 +186,7 @@
 
 
                 </div>
-                <div class="modal-body row" id="franchiseDetailsContainer">
+                <div class="modal-body row">
                            <div id="franchise-details-section_1">
                               <div class="row">
                 <div class="form-group col-sm-6">
@@ -211,7 +211,7 @@
                                        <option value="1">Panchayath</option>
                                        <option value="2">Muncipality</option>
                                        <option value="3">Coperation</option>
-                                       <option value="4">District</option>
+                                       <!-- <option value="4">District</option> -->
                                     </select>
                                  </div>
                                  <div class="form-group col-sm-6">
@@ -221,7 +221,7 @@
                                     </select>
                                  </div>
                                  <div class="form-group col-sm-6" id="typediv_1">
-                                    <label class="exampleModalLabel">Muncipality/Corporation/Panchayat/District</label>
+                                    <label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
                                     <select name="place_id[]" id="place_id_1" class="form-control" data-order="1">
                                        <option value="0">Select District</option>
                                     </select>
@@ -435,7 +435,7 @@
 
                 @endif
 
-                <table  class="table table-bordered table-striped" id="example1">
+                <table  class="table table-bordered table-striped" >
 
                   <thead>
 
@@ -474,8 +474,8 @@
 
                   @endphp
 
-                  @foreach($shops as $itemkey)
-                    @foreach($itemkey as $key)
+                  @foreach($shops as $key)
+                  
 
                   <tr>
 
@@ -494,7 +494,7 @@
 
                     <td>
 							
-                @if($role==1)
+                @if($role==1 || $role==7)
                 <i class="fa fa-edit edit_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                     <i class="fa fa-eye view_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                     <a href="#" onclick="confirmDelete('{{ $key->id }}')">
@@ -516,7 +516,7 @@
 
                   @endphp
 
-                  @endforeach
+                  
 
                   @endforeach
 
@@ -555,6 +555,14 @@
                   </tfoot>
 
                 </table>
+
+                <div class="row">
+        <div class="col-12">
+            <div class="float-left">
+                {{ $shops->links() }}
+            </div>
+        </div>
+    </div>
 
           
 				
@@ -789,7 +797,7 @@
                     </div>
                     <form method="POST" action="{{url('shopedit')}}" enctype="multipart/form-data">
                                  @csrf
-                    <div class="modal-body row">
+                    <div class="modal-body row" id="franchise-details-section_2">
 
 
                       <input type="hidden" name="id" id="edit_id">
@@ -847,7 +855,48 @@
 
 
                       </div>
+                      
+
                       <div class="form-group col-sm-6">
+                                    <label class="exampleModalLabel">Country</label>
+                                    <select name="country" class="form-control statefetchadd" data-order="2" id="country_2">
+                                       <option value="0">Select country</option>
+                                       @foreach($con as $country)
+                                       <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+                                       @endforeach
+                                    </select>
+                                 </div>
+                                 <div class="form-group col-sm-6" >
+                                    <label class="exampleModalLabel">States</label>
+                                    <select name="states" class="form-control districtfetchadd" data-order="2" id="state_2">
+                                       <option value="0">Select state</option>
+                                    </select>
+                                 </div>
+                                 <div class="form-group col-sm-6" >
+                                    <label class="exampleModalLabel">Type</label>
+                                    <select name="type[]" class="form-control selecttype" data-order="2" id="type_2" required>
+                                       <option value="0">Select Type</option>
+                                       <option value="1">Panchayath</option>
+                                       <option value="2">Muncipality</option>
+                                       <option value="3">Coperation</option>
+                                       <!-- <option value="4">District</option> -->
+                                    </select>
+                                 </div>
+                                 <div class="form-group col-sm-6">
+                                    <label class="exampleModalLabel">District</label>
+                                    <select name="district[]" class="form-control districtadd" data-order="2" id="district_2">
+                                       <option value="0">Select District</option>
+                                    </select>
+                                 </div>
+                                 <div class="form-group col-sm-6" id="typediv_1">
+                                    <label class="exampleModalLabel">Muncipality/Corporation/Panchayat</label>
+                                    <select name="place_id" id="place_id_2" class="form-control" data-order="2">
+                                       <option value="0">Select District</option>
+                                    </select>
+                                </div>
+ 
+
+                                 <div class="form-group col-sm-6">
 
 
                       <label class="exampleModalLabel">Phone Number 1</label>
@@ -858,6 +907,7 @@
 
 
                       </div>
+                      
 					  <div class="form-group col-sm-6">
 
 
