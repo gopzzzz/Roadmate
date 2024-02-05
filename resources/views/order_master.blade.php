@@ -1,7 +1,9 @@
 @extends('layout.mainlayout')
 @section('content')
 <head>
-  <!-- Add these lines in your HTML layout -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
  <style>
         .print-button {
             background: linear-gradient(45deg, #007bff, #007bff); /* Use a gradient background with a mix of two colors */
@@ -88,7 +90,7 @@
 </style>
 
 </head>
-<div class="content-wrapper">
+<div class="content-wrapper" style="background-color: #fff;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -136,7 +138,7 @@
                                         </div>
                                 </div>
                             </p>
-                        </div>
+                       
                   <!-- /.card-header -->
   <div class="card-body">
   <table id="example1" class="table table-bordered table-striped table-sm">
@@ -209,11 +211,11 @@
                 <td>{{ $key->delivery_date }}</td>
                 <td>{{ $key->order_date }}</td>
               
-                <td>
+                <!-- <td>
                     <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
                         <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}">↓</span>
                     </div>
-                </td>
+                </td> -->
                 <!-- <td style="width: 50px;">
                     <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Bill</button>
@@ -221,14 +223,19 @@
                 </td> -->
                 
                 <td style="width: 50px;">
-                    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
-                        <button type="submit" class="print-button">Invoice</button>
-                    </form>
-                </td>
-                <td>
+    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
+        <button type="submit" class="print-button">
+            <i class="fas fa-file-invoice"></i> 
+        </button>
+    </form>
+</td>
+
+<td>
     @if($key->sale_status == 0)
         <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
-            <button type="submit" class="btn btn-primary sale">Generate Sale Invoice</button>
+            <button type="submit" class="btn btn-primary sale">
+                <i class="material-icons">&#xe8ad;</i>
+            </button>
         </form>
     @else
         <span class="text-success">Sale Invoice Generated</span>
@@ -305,7 +312,7 @@
             </div>
         </div>
     </div>
-</div>  
+  
 </div>
 </div>
 </div>

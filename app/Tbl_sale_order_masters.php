@@ -8,8 +8,9 @@ class Tbl_sale_order_masters extends Model
 {
     public function saleOrderTrans()
     {
-        return $this->hasMany(Tbl_sale_order_trans::class, 'sale_order_id');
+        return $this->hasMany(Tbl_sale_order_trans::class, 'sale_order_id', 'id');
     }
+    
     protected $fillable = [
         'shop_id', // Add the missing field 'shop_id' to the fillable array
         'order_id',

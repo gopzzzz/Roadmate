@@ -72,7 +72,7 @@
 
     <div>
         <div>
-            <h2 class="modal-title" id="exampleModalLabel">Sale Order</h2>
+            <h2 class="modal-title" id="exampleModalLabel">Sale Invoice</h2>
             <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button> -->
@@ -86,14 +86,14 @@
                                                     <label class="exampleModalLabel">ORDER ID:</label>
                                                     </div>
                                                     <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="orderId[]" value="{{ $order->order_id }}" required>
+                                                    <input class="form-control" name="orderId[]" value="{{ $order->order_id }}" required readonly>
                                                 </div>
                                                    
                                                 <div>
                                                     <label class="exampleModalLabel">ORDER DATE:</label>
                                                     </div>
                                                     <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="orderdate" value="{{ $order->order_date }}" required>
+                                                    <input class="form-control" name="orderdate" value="{{ $order->order_date }}" required readonly>
                                                 </div>
                                                 <div>
                                                     <label class="exampleModalLabel">BILL NUMBER</label>
@@ -105,14 +105,14 @@
                                                     <label class="exampleModalLabel">DELIVERY DATE:</label>
                                                     </div>
                                                     <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="delivery_date" value="{{ $order->delivery_date }}" required>
+                                                    <input class="form-control" name="delivery_date" value="{{ $order->delivery_date }}" required readonly>
                                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <div>
                                                 <input type="hidden" id="shopId" name="id">
                                                     <label class="exampleModalLabel">SHOP <br>NAME:</label>
                                                 </div>
                                                 <div class="form-group col-sm-3">
-                                                <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required>
+                                                <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
 
                                                     
                                                 </div>
@@ -120,19 +120,19 @@
                                                     <label class="exampleModalLabel">PHONE <br>NUMBER:</label>
                                                     </div>
                                                     <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="phone" value="{{ $order->phone }}" required>
+                                                    <input class="form-control" name="phone" value="{{ $order->phone }}" required readonly>
                                                 </div>
                                                 <div>
                                                     <label class="exampleModalLabel">ADDRESS:</label>
                                                 </div>
                                                 <div class="form-group col-sm-2">
-                                                    <textarea class="form-control" name="address" placeholder="Enter igst" required>{{ $order->address }}</textarea>
+                                                    <textarea class="form-control" name="address" placeholder="Enter igst" required readonly>{{ $order->address }}</textarea>
                                                 </div>
                                                 <div>
                                                     <label class="exampleModalLabel">DELIVERY <br> ADDRESS:</label>
                                                 </div>
                                                     <div class="form-group col-sm-2">
-                                                    <textarea class="form-control" name="deliveryaddress" placeholder="Enter igst" required>Area : {{ $order->area }} ,  {{ $order->area1 }} {{ $order->district }},{{ $order->state }} {{ $order->country }},{{ $order->pincode }}</textarea>
+                                                    <textarea class="form-control" name="deliveryaddress" placeholder="Enter igst" required readonly>Area : {{ $order->area }} ,  {{ $order->area1 }} {{ $order->district }},{{ $order->state }} {{ $order->country }},{{ $order->pincode }}</textarea>
                                                 </div><br><br><br><br><br><br><br>
                                                 
                                                 <table class="table table-bordered table-striped" id="editableTable">
@@ -153,7 +153,7 @@
         <tr>
         <input type="hidden" id="productId" name="id">
             <!-- <td contenteditable="true" name="productId[]" data-field="product_name">{{$order->product_name}}</td> -->
-            <td><input class="form-control" name="product_name[]" value="{{ $product->product_name }}" required></td>
+            <td><input class="form-control" name="product_name[]" value="{{ $product->product_name }}" required readonly    ></td>
             <!-- <td contenteditable="true" name="qty" data-field="qty">{{$order->qty}}</td> -->
             <td><input class="form-control" name="qty[]" value="{{ $product->qty }}" required></td>
             <!-- <td contenteditable="true" name="offer" data-field="offer_amount">{{$order->offer_amount}}</td> -->
