@@ -278,7 +278,7 @@
     <img src="{{ asset('img/RMLOGO.png') }}" alt="Company Logo">
 </div> <br><br>
 <div class="invoice-header">
-            <div class="invoice-title">Invoice</div>
+            <div class="invoice-title">Sale Bill</div>
         </div>
 <br>
 
@@ -300,14 +300,14 @@
             
               <!-- <div>9995723014<br><p style="color:#007bff">info@roadmate.in <br>www.RoadMate.in</p></div> -->
            
-@foreach($invoice as $key)
+@foreach($salebill as $key)
             @endforeach
             <div class="right-details">
             
     <p class="details-label"></p><br><br>   
     <div class="details-item"><strong>Date:</strong> <span class="highlight-background">{{ now()->format('d-m-Y') }}</span></div>
-    <!-- <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->order_id}}/{{ date('y') }}</span></div> -->
-    <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->order_id}}/{{ date('y') }}</span></div>
+    <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->order_id}}/{{ date('y') }}</span></div>
+    <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->sale_order_id}}/{{ date('y') }}</span></div>
     <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">00003</span></div>
     <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ $key->delivery_date }}</span></div>
 
@@ -349,7 +349,7 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach($invoice as $key)
+            @foreach($salebill as $key)
                 <tr> 
               
                     <td>{{$key->product_name}}</td>

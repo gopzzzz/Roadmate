@@ -96,12 +96,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Orders</h1>
+                    <h1>Sale List</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Orders</li>
+                        <li class="breadcrumb-item active">Sale List</li>
                     </ol>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                 <div class="col-12">
                     <div class="card">
                     <div class="card-header">
-                            <h3 class="card-title">Order</h3>
+                            <h3 class="card-title">Sale List</h3>
                             <p align="right">
                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -125,7 +125,7 @@
                                     <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Order</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Sale List</h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
@@ -155,7 +155,7 @@
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
-                <th>Order Status</th>
+                <!-- <th>Order Status</th> -->
                 <th>Delivery Date</th>
                 <th>Order Date</th>
                 <th></th>
@@ -168,129 +168,43 @@
             </tr>
         </thead>
         <tbody>
-            @php 
+        @php 
            
-                $i = 1;
-                
-            @endphp
-            @foreach($order as $key)
-            <tr>
-                <td>{{ $i++ }}</td>
-                <td>{{ $key->order_id }}</td>
-                <td>{{ $key->shopname }}</td>
-               
-                <td>{{ $key->phone }}</td>
-                <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
-                <td>{{ $key->total_amount }}</td>
-                <td>{{ $key->discount }}</td>
-                
-                <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
-                </td>
-                
-              
-               
-                <td>
-                    @if($key->payment_status==0) Unpaid @else Paid @endif
-                </td>         
-                <td>
-                    @if ($key->order_status == 0)
-                        Pending
-                    @elseif ($key->order_status == 1)
-                        Confirmed
-                    @elseif ($key->order_status == 2)
-                        Shipped
-                    @elseif ($key->order_status == 3)
-                        Delivered
-                    @elseif ($key->order_status == 4)
-                        Cancel
-                    @elseif ($key->order_status == 5)
-                       Return
-                    @else
-                    @endif
-                </td>
-                <td>{{ $key->delivery_date }}</td>
-                <td>{{ $key->order_date }}</td>
-              
-                <!-- <td>
-                    <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
-                        <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}">↓</span>
-                    </div>
-                </td> -->
-                <!-- <td style="width: 50px;">
-                    <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
-                        <button type="submit" class="print-button">Bill</button>
-                    </form>
-                </td> -->
-               
-
-<td>
-    @if($key->sale_status == 0)
-        <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
-            <button type="submit" class="btn btn-primary sale">
-                <i class="material-icons">&#xe8ad;</i>
-            </button>
-        </form>
-    @else
-        <span class="text-success">Sale Invoice Generated</span>
-    @endif
-</td>
- 
-<td style="width: 50px;">
-    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
-        <button type="submit" class="print-button">
-            <i class="fas fa-file-invoice"></i> 
-        </button>
-    </form>
-</td>
-                
-                <td>
-    <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
-        style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
-        Update 
-    </button>
-</td>
-
-
-
+           $i = 1;
+           
+       @endphp
+       @foreach($sale as $key)
+       <tr>
+           <td>{{ $i++ }}</td>
+           <td>{{ $key->order_id }}</td>
+           <td>{{ $key->shopname }}</td>
+          
+           <td>{{ $key->phone }}</td>
+           <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
+           <td>{{ $key->total_amount }}</td>
+           <td>{{ $key->discount }}</td>
+           
+           <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
+           </td>
+           
+         
+          
+           <td>
+               @if($key->payment_status==0) Unpaid @else Paid @endif
+           </td>         
+          
+           <td>{{ $key->delivery_date }}</td>
+           <td>{{ $key->order_date }}</td>
+           <td style="width: 50px;">
+            <form method="get" action="{{ route('sale_bill', ['orderId' => $key->id]) }}">
+                <button type="submit" class="print-button">
+                    <i class="fas fa-file-invoice"></i> 
+                </button>
+            </form>
+          </td>
             </tr>
 
-            <tr id="orderDetailsRow{{ $key->id }}" style="display: none;">
-                <td colspan="16">
-                    <div class="order-details-container">
-                        <div id="tableContainer{{ $key->id }}" style="display: none;">
-                        <input type="hidden" name="order_id" value="{{ $key->id }}">
-                            <div class="invoice-details">
-                                <div class="card-body">
-                                    <div class="invoice-table">
-                                        <div class="invoice-header">
-                                            <div class="invoice-title"></div>
-                                        </div>
-                                        <table id="example1{{ $key->id }}" class="table table-bordered table-striped">
-                                            <thead>
-                                                <tr>
-                                                    @if($role==1)
-                                                       
-                                                    @endif
-                                                </tr>
-                                            </thead>
-                                            <tbody id="productDetailsBody{{ $key->id }}">
-                                               
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                   
-                                                    @if($role==1)
-                                                    @endif
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+          
             @endforeach
 
             @if($role==1) 
@@ -305,13 +219,7 @@
             
         </tfoot>
     </table>
-    <div class="row">
-        <div class="col-12">
-            <div class="float-left">
-                {{ $order->links() }}
-            </div>
-        </div>
-    </div>
+   
   
 </div>
 </div>
