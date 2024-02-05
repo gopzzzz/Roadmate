@@ -134,7 +134,7 @@
 
 
 
-                        <form method="POST" action="{{url('marketinsert')}}" enctype="multipart/form-data">
+                        <form id="form-id" method="POST" action="{{url('marketinsert')}}" enctype="multipart/form-data">
 
 
 
@@ -521,6 +521,20 @@
 
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Reset form fields when modal is hidden
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            // Assuming 'form-id' is the ID of your form
+            $('#form-id')[0].reset();
+        });
+    });
+</script>
+
+
+
 
 
 
