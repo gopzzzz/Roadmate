@@ -557,11 +557,7 @@ class HomeController extends Controller
 	
     return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 }
-
-	
-	
-	
-	public function crm(){
+public function crm(){
 		$cr = tbl_crms::with('user')->get();
 		
 		$crr = DB::table('tbl_crms')

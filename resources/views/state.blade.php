@@ -134,7 +134,7 @@
 
 
 
-                        <form method="POST" action="{{url('stateinsert')}}" enctype="multipart/form-data">
+                        <form method="POST" id="form1" action="{{url('stateinsert')}}" enctype="multipart/form-data">
 
 
 
@@ -215,7 +215,7 @@
 
 
 
-                                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                    <button type="submit" class="btn btn-primary form1-submit">Add</button>
 
 
 
@@ -267,7 +267,7 @@
 
          <th>Country</th>
          <th>State</th>
-         <th>Deleted status</th>
+         <th>Status</th>
 
 
        
@@ -378,7 +378,7 @@
 
          <th>Country</th>
          <th>State</th>
-         <th>Deleted status</th>
+         <th>Status</th>
 
 
        
@@ -619,6 +619,16 @@
             }
         });
     });
+    $(document).ready(function() {
+      $("#form1").submit(function(event) {
+        var country = $("select[name='country']").val(); 
+        if (country === "0" ) {
+            alert("Please fill out all required fields.");
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+});
+
 </script>
 
 @endsection
