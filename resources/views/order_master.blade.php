@@ -1,7 +1,9 @@
 @extends('layout.mainlayout')
 @section('content')
 <head>
-  <!-- Add these lines in your HTML layout -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
  <style>
         .print-button {
             background: linear-gradient(45deg, #007bff, #007bff); /* Use a gradient background with a mix of two colors */
@@ -88,7 +90,7 @@
 </style>
 
 </head>
-<div class="content-wrapper">
+<div class="content-wrapper" style="background-color: #fff;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -114,13 +116,13 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                    <div class="card-header">
                             <h3 class="card-title">Order</h3>
                             <p align="right">
                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                   
-                                        <div class="modal-dialog" role="document" style="width:80%;">
+                                    <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Order</h5>
@@ -136,10 +138,10 @@
                                         </div>
                                 </div>
                             </p>
-                        </div>
+                       
                   <!-- /.card-header -->
   <div class="card-body">
-    <table id="example1" class="table table-bordered table-striped">
+  <table id="example1" class="table table-bordered table-striped table-sm">
         <thead>
             
             <tr>
@@ -157,6 +159,9 @@
                 <th>Delivery Date</th>
                 <th>Order Date</th>
                 <th></th>
+                <th></th>
+                <th></th>
+
                 @if($role==1)
                     <!-- Add your header content for role 1 if needed -->
                 @endif
@@ -201,11 +206,11 @@
                 <td>{{ $key->delivery_date }}</td>
                 <td>{{ $key->order_date }}</td>
               
-                <td>
+                <!-- <td>
                     <div class="additional-data-container" onclick="toggleTable(event,'{{ $key->id }}')">
                         <span class="additional-data-arrow" aria-hidden="true" data-toggle="modal" data-id="{{ $key->id }}">↓</span>
                     </div>
-                </td>
+                </td> -->
                 <!-- <td style="width: 50px;">
                     <form method="get" action="{{ route('order_trans', ['orderId' => $key->id]) }}">
                         <button type="submit" class="print-button">Bill</button>
@@ -213,14 +218,19 @@
                 </td> -->
                 
                 <td style="width: 50px;">
-                    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
-                        <button type="submit" class="print-button">Invoice</button>
-                    </form>
-                </td>
-                <td>
+    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
+        <button type="submit" class="print-button">
+            <i class="fas fa-file-invoice"></i> 
+        </button>
+    </form>
+</td>
+
+<td>
     @if($key->sale_status == 0)
         <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
-            <button type="submit" class="btn btn-primary sale">Generate Sale Invoice</button>
+            <button type="submit" class="btn btn-primary sale">
+                <i class="material-icons">&#xe8ad;</i>
+            </button>
         </form>
     @else
         <span class="text-success">Sale Invoice Generated</span>
@@ -283,28 +293,11 @@
             @endif
         </tbody>
         <tfoot>
-            <tr>
-                <th>id</th>
-                <th>OrderId</th>
-                <th>Shop Name</th>
-                <th>Phone Number</th>
-                <th>Address</th>
-                <th>Total Amount</th>
-                <th>Discount</th>
-             
-                <th>Payment Mode</th>
-              
-               
-             
-                <th>Payment Status</th>
-                <th>Order Status</th>
-                <th>Delivery Date</th>
-                <th>Order Date</th>
-                <th></th>
+          
                 @if($role==1)
                   
                 @endif
-            </tr>
+            
         </tfoot>
     </table>
     <div class="row">
@@ -314,7 +307,7 @@
             </div>
         </div>
     </div>
-</div>  
+  
 </div>
 </div>
 </div>

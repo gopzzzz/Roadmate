@@ -186,7 +186,7 @@
 
 
 
-                                       <input type="text"  class="form-control" name="country_name" placeholder="Enter country name" required>
+                                       <input type="text" class="form-control" name="country_name" placeholder="Enter country name" autocomplete="off" required>
 
 
 

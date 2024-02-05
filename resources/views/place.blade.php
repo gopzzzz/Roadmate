@@ -134,7 +134,7 @@
 
 
 
-                        <form method="POST" action="{{url('placeinsert')}}" enctype="multipart/form-data">
+                        <form method="POST" id="form1" action="{{url('placeinsert')}}" enctype="multipart/form-data">
 
 
 
@@ -212,7 +212,7 @@
 
 	<option value="2">Muncipality</option>
 
-	<option value="3">Coperation</option>
+	<option value="3">Corperation</option>
 	
 
 
@@ -246,9 +246,10 @@
 
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
+                                    <button type="submit" class="btn btn-primary form1-submit">Add</button>
 
 
-                                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                    <!-- <button type="submit" name="submit" class="btn btn-primary">Add</button> -->
 
 
 
@@ -497,7 +498,7 @@
 
 
 
-                              <form method="POST" action="{{url('placeedit')}}" enctype="multipart/form-data">
+                              <form method="POST" id="form2" action="{{url('placeedit')}}" enctype="multipart/form-data">
 
 
 
@@ -555,7 +556,7 @@
 
 	<option value="2">Muncipality</option>
 
-	<option value="3">Coperatiion</option>
+	<option value="3">Corperation</option>
 	
 
 
@@ -604,7 +605,8 @@
 
 
 
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                    <!-- <button type="submit" class="btn btn-primary">Save changes</button> -->
+                                    <button type="submit" class="btn btn-primary form2-submit">Save changes</button>
 
 
 
@@ -751,6 +753,26 @@
             });
         }
     });
+
+    
+
+    $(document).ready(function() {
+      $("#form1").submit(function(event) {
+        var country = $("#country").val();
+        var state_1 = $("#state_1").val();
+        var district_1 = $("#district_1").val();
+        var type = $("select[name='type']").val(); // Corrected the selector for type
+
+        // Check if the values are empty or have default values
+        if (country === "0" || state_1 === "0" || district_1 === "0" || type === "0") {
+            alert("Please fill out all required fields.");
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+});
+
+
+
 
 </script>
 
