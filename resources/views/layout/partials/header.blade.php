@@ -201,12 +201,12 @@ $name=Auth::user()->name;
                                  <p>Orders</p>
                               </a>
                            </li>
-                           <!-- <li class="nav-item">
-                              <a href="{{ url('product_order') }}" class="nav-link">
+                           <li class="nav-item">
+                              <a href="{{ url('sale_list') }}" class="nav-link">
                                  <i class="far fa-circle nav-icon"></i>
-                                 <p>Product Orders</p>
+                                 <p>Sale List</p>
                               </a>
-                           </li> -->
+                           </li>
 
                            <li class="nav-item">
                         <a href="{{ url('purchase_order') }}" class="nav-link">

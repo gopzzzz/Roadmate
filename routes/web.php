@@ -1315,6 +1315,15 @@ Route::get('/sale_order_master/{orderId}', 'HomeController@sale_order_master')->
 Route::post('/sale_orderinsert', 'HomeController@sale_orderinsert');
 
 
+
+Route::get('/sale_list', 'HomeController@sale_list')->name('sale_list');
+
+Route::get('/sale_bill/{orderId}', 'HomeController@sale_bill')->name('sale_bill');
+
+
+
+
+
 Route::post('/imagecompress', 'HomeController@imagecompress')->name('imagecompress');
 
 // Route::get('orderdelete/{id}', [

@@ -3988,7 +3988,64 @@ function sendNotification1($msg1,$title)
 			}
 		}
 		
-		
+	
+		public function sale_list()
+		{
+			$sale = DB::table('tbl_sale_order_masters')
+			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+			->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
+			->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+			
+			->orderBy('tbl_sale_order_masters.id', 'DESC')
+			
+			->paginate(10);
+
+		//	echo "<pre>";print_r($order);exit;
+	
+			$mark = DB::table('shops')->get();
+			$orderr = DB::table('tbl_coupens')->get();
+			$role=Auth::user()->user_type;
+			return view('sale_list',compact('sale','mark','orderr','role'));
+		 }
+
+
+		 public function sale_bill($orderId) {
+
+			$markk=DB::table('tbl_sale_order_trans')
+				->get();
+			$salebill=DB::table('tbl_sale_order_masters')
+			->leftJoin('tbl_sale_order_trans', 'tbl_sale_order_masters.id', '=', 'tbl_sale_order_trans.order_id')
+			->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id') 
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+			->where('tbl_sale_order_masters.id',$orderId)
+				->select(
+					'tbl_sale_order_masters.*',
+					
+					'tbl_sale_order_trans.sale_order_id',
+					'tbl_sale_order_trans.qty',
+					'tbl_sale_order_trans.offer_amount',
+					'shops.shopname',
+					'shops.address' ,
+					'shops.delivery_id' ,
+					'tbl_brand_products.product_name',
+					'tbl_deliveryaddres.area',
+					'tbl_deliveryaddres.area1',
+					'tbl_deliveryaddres.city',
+					'tbl_deliveryaddres.district',
+					'tbl_deliveryaddres.state',
+					'tbl_deliveryaddres.pincode',
+					'tbl_deliveryaddres.country'
+					)
+				->get();
+			$role=Auth::user()->user_type;
+			return view('sale_bill',compact('role','markk','salebill'));
+			}
+
+
+
+
 
 		public function product_order(Request $request)
         {
