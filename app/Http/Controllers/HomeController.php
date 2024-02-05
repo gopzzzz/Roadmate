@@ -104,7 +104,9 @@ class HomeController extends Controller
 	    $tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
 		$customers=DB::table('user_lists')->count();
 		$shops=DB::table('shops')->count();
-        return view('dashboard',compact('role','tbookings','customers','shops'));
+		$franchise=DB::table('tbl_franchises')->count();
+		
+        return view('dashboard',compact('role','tbookings','customers','shops','franchise'));
     }
 	
 	public function customerlistfetch(Request $request){
@@ -1408,7 +1410,7 @@ public function shop_categoriesdelete($id){
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',1)
-			->where('shops.place_id',$singleFranlist->place_id)
+			->where('shops.place_id',$singleFranlist->place_id ?? null)
 			->paginate(12);
 		
 		}
@@ -1469,6 +1471,7 @@ public function shop_categoriesdelete($id){
 	public function shopfetch(Request $request){
 		$id=$request->id;
 		$shop=Shops::find($id);
+		
 		print_r(json_encode($shop));
 	}
 	public function shopedit(Request $request){
@@ -3828,40 +3831,30 @@ function sendNotification1($msg1,$title)
 		{
 			\Log::info('Received ID for statusedit: ' . $id);
 		
-			// Retrieve total_amount from the request
 			$total_amount = $request->input('total_amount');
 		
 			\Log::info('Received total_amount for statusedit: ' . $total_amount);
 		
-			// Ensure total_amount is a valid number
 			if (!is_numeric($total_amount)) {
 				\Log::error('Invalid total_amount received: ' . $total_amount);
 				return redirect('order_master')->with('error', 'Invalid total_amount received.');
 			}
 		
-			// Find the order by ID
 			$order = Tbl_order_masters::find($id);
 		
-			// Check if the order exists
 			if ($order) {
-				// Update the order status
 				$order->order_status = $request->order_status;
 				$order->payment_status = $request->paystatus;
 		
-				// Check if the order status is "Cash Received" (assuming '5' is the code for 'Cash Received')
 				if ($request->paystatus == '1') {
-					// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
 					$percentage = ($total_amount * 10) / 100;
 					\Log::info('Calculated Percentage: ' . $percentage);
 		
-					// Update the wallet_amount in tbl_wallets table based on shop_id
 					$shop_id = $order->shop_id;
 		
-					// Find the corresponding wallet record
 					$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
 		
 					if ($wallet) {
-						// Update the wallet_amount
 						$wallet->wallet_amount += $wallet->amount+$percentage;
 						$wallet->save();
 						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
@@ -3878,13 +3871,10 @@ function sendNotification1($msg1,$title)
 
 				}
 		
-				// Save the order
 				$order->save();
 		
-				// Redirect to the appropriate page
 				return redirect('order_master')->with('success', 'Order status updated successfully.');
 			} else {
-				// If the order is not found, redirect with an error message
 				return redirect('order_master')->with('error', 'Order not found.');
 			}
 		}
