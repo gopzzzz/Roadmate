@@ -78,9 +78,9 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>0</h3>
+                <h3>{{$franchise}}</h3>
 
-                <p>Total Franchise</p>
+                <p>Total Franchises</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>

@@ -125,7 +125,7 @@
 													</select> -->
 													<input type="hidden" class="form-control" name="shop" id="shopid">
 
-													<input type="text" class="form-control searchshops" id="shopname">
+													<input type="text" class="form-control searchshops" id="shopname" required>
 
 													<div id="shoplist"></div>
 
@@ -201,7 +201,7 @@
 @if($role==1)
 
 <td>
-<a href="{{url('deletegiveawayshops')}}/{{$shops->id}}"><i class="fa fa-trash"></i></a>
+<a href="{{url('deletegiveawayshops')}}/{{$shops->id}}" style="color: red;"><i class="fa fa-trash"></i></a>
 
 </td>
 
