@@ -4508,6 +4508,7 @@ public function order_history()
 		$role=Auth::user()->user_type;
 		return view('purchase_order',compact('role','ordersQuery'));
 	}
+	
 	public function view_bill($id){
 		$role=Auth::user()->user_type;
 		$ordersQuery = DB::table('tbl_order_trans')

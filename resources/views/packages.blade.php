@@ -368,6 +368,9 @@
                                           <option value="0">Inactive</option>
                                        </select>
                                     </div>
+                                    </div>
+                                    
+                                    
                                     <div class="modal-footer">
                                        <button type="submit" class="btn btn-primary">Save changes</button>
                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -383,7 +386,7 @@
                            <div class="modal-dialog" role="document" style="width:80%;">
                               <div class="modal-content">
                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Fetaures</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Features</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
                                     </button>
                                  </div>
@@ -391,10 +394,10 @@
                                     <input type="hidden"  name="packg" class="form-control" id="packagefeatureid">
                                     <div class="form-group col-sm-12">
                                        <label class="exampleModalLabel">Feature</label>
-                                       <select name="feature" class="form-control">
-                                          <option value="0">select Feature</option>
+                                       <select name="feature" class="form-control" required>
+                                          <option value="">Select Feature</option>
                                           @foreach($ftre as $key3)
-                                          <option value="{{$key3->id}}">{{$key3->feature}}</option>
+                                             <option value="{{$key3->id}}">{{$key3->feature}}</option>
                                           @endforeach
                                        </select>
                                     </div>
