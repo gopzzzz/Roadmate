@@ -186,7 +186,7 @@
                                                 </div>
 
                                                 <div>
-                                                    <label class="exampleModalLabel">PAYMENT METHODE</label>
+                                                    <label class="exampleModalLabel">PAYMENT METHOD</label>
                                                     </div>
                                                     <div class="form-group col-sm-2">
                                                     <input class="form-control" name="payment" value="{{ $order->payment_mode }}" required>
