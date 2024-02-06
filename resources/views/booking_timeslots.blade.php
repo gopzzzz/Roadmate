@@ -621,11 +621,22 @@
 </select>
 </div>
 
+
+
 <div class="col-sm-12">
-            <input type="text" name="amount" id="amount">
-           
+
+
+
+<label class="exampleModalLabel">Amount</label>
+
+
+<input type="text"  class="form-control" name="amount" id="amount">
+
+
+
 </div>
-       
+
+
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Save changes</button>

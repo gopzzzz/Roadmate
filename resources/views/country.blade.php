@@ -261,7 +261,7 @@
                               <th>Countrys</th>
 
                             
-                              <th>Deleted status</th>
+                              <th>Status</th>
 
                               <th>Action</th>
 
@@ -368,7 +368,7 @@
                               <th>Countrys</th>
 
                             
-                              <th>Deletes status</th>
+                              <th>Status</th>
 
                               <th>Action</th>
 

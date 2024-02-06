@@ -158,9 +158,7 @@
                 <!-- <th>Order Status</th> -->
                 <th>Delivery Date</th>
                 <th>Order Date</th>
-                <th></th>
-                <th></th>
-                <th></th>
+               
 
                 @if($role==1)
                     <!-- Add your header content for role 1 if needed -->

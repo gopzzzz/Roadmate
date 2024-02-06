@@ -66,7 +66,7 @@
 
 								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-									<form method="POST" action="{{url('giveshopinsert')}}" enctype="multipart/form-data">@csrf
+									<form id="form1" method="POST" action="{{url('giveshopinsert')}}" enctype="multipart/form-data">@csrf
 
 										<div class="modal-dialog" role="document" style="width:80%;">
 
@@ -103,10 +103,7 @@
 </select>
 
 </div>
-
-
-
-												<div class="form-group col-sm-12">
+	<div class="form-group col-sm-12">
 
 													<label class="exampleModalLabel">Shops</label>
 
@@ -130,18 +127,13 @@
 													<div id="shoplist"></div>
 
 												</div>
-
-												
-
-												
-
-												</div>
+	</div>
 
 												<div class="modal-footer">
 
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-													<button type="submit" name="submit" class="btn btn-primary">Add</button>
+													<button type="submit" class="btn btn-primary form1-submit">Add</button>
 
 												</div>
 
@@ -207,12 +199,6 @@
 
 										@endif
 
-
-                                       
-                                     
-								
-										
-
 									</tr>@php $i++; @endphp @endforeach</tbody>
 
 								<tfoot>
@@ -238,13 +224,6 @@
 								</tfoot>
 
 							</table>
-
-							
-
-							
-
-							
-
 						</div>
 
 						<!-- /.card-body -->
@@ -269,4 +248,6 @@
 
 	<!-- /.content -->
 
-</div>@endsection
+</div>
+
+@endsection
