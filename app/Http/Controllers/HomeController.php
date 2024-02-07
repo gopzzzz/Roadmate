@@ -1412,9 +1412,12 @@ public function shop_categoriesdelete($id){
 			->select('shops.*', 'shiop_categories.category','executives.name')
 			->orderBy('shops.id','DESC')
 			->where('shops.authorised_status',1)
-			->where('shops.place_id',null)
+			->where(function ($query) {
+				$query->where('shops.place_id', 0)
+					  ->orWhereNull('shops.place_id');
+			})
 			->where('shops.exeid',$eid->id)
-		//	->where('shops.place_id',$singleFranlist->place_id)
+		
 			->paginate(12);
 		}
 		elseif($role==1){
