@@ -228,6 +228,7 @@
         <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
             <button type="submit" class="btn btn-primary sale">
                 <i class="fas fa-file-invoice"></i>
+                
             </button>
         </form>
     @else
@@ -244,12 +245,12 @@
     </form>
 </td>
                 
-                <td>
+                <!-- <td>
     <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
         style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
         Update 
     </button>
-</td>
+</td> -->
 
 
 
@@ -320,7 +321,7 @@
 </section>
 </div>
 
-<div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
+<!-- <div class="modal" id="editstatusmodal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -363,7 +364,8 @@
             </form>
         </div>
     </div>
-</div>
+</div>  -->
+
 <script>
     function toggleTable(event, orderId) {
         event.stopPropagation();

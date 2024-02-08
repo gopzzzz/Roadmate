@@ -155,6 +155,7 @@
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
+                <th>Order Status</th>
                 <th>Delivery Date</th>
                 <th>Order Date</th>
                
@@ -189,7 +190,22 @@
            <td>
                @if($key->payment_status==0) Unpaid @else Paid @endif
            </td>         
-          
+           <td>
+                    @if ($key->order_status == 0)
+                        Pending
+                    @elseif ($key->order_status == 1)
+                        Confirmed
+                    @elseif ($key->order_status == 2)
+                        Shipped
+                    @elseif ($key->order_status == 3)
+                        Delivered
+                    @elseif ($key->order_status == 4)
+                        Cancel
+                    @elseif ($key->order_status == 5)
+                       Return
+                    @else
+                    @endif
+                </td>
            <td>{{ $key->delivery_date }}</td>
            <td>{{ $key->order_date }}</td>
            <td style="width: 50px;">
@@ -199,6 +215,14 @@
                 </button>
             </form>
           </td>
+          
+        <td>
+            <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->order_id }}"
+                style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
+                Update 
+            </button>
+        </td>
+
             </tr>
 
           
@@ -268,63 +292,6 @@
         </div>
     </div>
 </div>
-<script>
-    function toggleTable(event, orderId) {
-        event.stopPropagation();
-
-        // Toggle display of the order details row
-        $('#orderDetailsRow' + orderId).toggle();
-
-        if (orderId) {
-            $.ajax({
-                type: "POST",
-                url: "{{ route('order_masterfetch') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    id: orderId
-                },
-                success: function (res) {
-                    console.log(res);
-                    var orderDetails = JSON.parse(res);
-
-                    // Update HTML content
-                    $('#shopName').text(orderDetails[0].shopname);
-
-                    // Clear existing product details
-                    $('#productDetailsBody' + orderId).empty();
-
-                    // Append details for each product
-                    $('#productDetailsBody' + orderId).append(`
-                        <tr>
-                            <th>Brand Name</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <!-- Add more headings as needed -->
-                        </tr>
-                    `);
-                    orderDetails.forEach(function (product) {
-                        $('#productDetailsBody' + orderId).append(`
-                            <tr>
-                                <td>${product.brand_name}</td>
-                                <td>${product.product_name}</td>
-                                <td>${product.qty}</td>
-                                <td>${product.offer_amount}</td>
-                                <!-- Add more columns as needed -->
-                            </tr>
-                        `);
-                    });
-
-                    // Toggle display of the order details container
-                    $('#tableContainer' + orderId).toggle();
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-    }
-</script>
 
 
 @endsection

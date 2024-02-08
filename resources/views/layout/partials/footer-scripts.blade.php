@@ -2110,6 +2110,7 @@ $('.edit_fran').click(function(){
 		}
 		$('#editstrquryanswermodal').modal('show');
 	});
+
     $('.editcompackage').click(function(){
 		var id=$(this).data('id');
 	

@@ -368,6 +368,9 @@
                                           <option value="0">Inactive</option>
                                        </select>
                                     </div>
+                                    </div>
+                                    
+                                    
                                     <div class="modal-footer">
                                        <button type="submit" class="btn btn-primary">Save changes</button>
                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -391,10 +394,10 @@
                                     <input type="hidden"  name="packg" class="form-control" id="packagefeatureid">
                                     <div class="form-group col-sm-12">
                                        <label class="exampleModalLabel">Feature</label>
-                                       <select name="feature" class="form-control">
-                                          <option value="0">select Feature</option>
+                                       <select name="feature" class="form-control" required>
+                                          <option value="">Select Feature</option>
                                           @foreach($ftre as $key3)
-                                          <option value="{{$key3->id}}">{{$key3->feature}}</option>
+                                             <option value="{{$key3->id}}">{{$key3->feature}}</option>
                                           @endforeach
                                        </select>
                                     </div>
