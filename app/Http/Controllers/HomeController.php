@@ -4228,6 +4228,7 @@ public function order_history()
 			  $brandprod->hsncode = $request->hsncode;
 			  $brandprod->priority = 0;
 
+			  $brandprod->prate = $request->prate;
 			  $brandprod->status = 0;
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
@@ -4273,6 +4274,7 @@ public function order_history()
             $brandprod->offer_price = $request->offer_price;
 			$brandprod->price = $request->original_amount;
 			$brandprod->hsncode = $request->hsncode;
+			$brandprod->prate = $request->prate;
 			$brandprod->status = $request->status;
 			$brandprod->save();
 			return back()->with('success', 'Product Edited successfully!');;

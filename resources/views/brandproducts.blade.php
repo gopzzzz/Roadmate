@@ -63,10 +63,24 @@
 <label class="exampleModalLabel">Offer Price</label>
 <input class="form-control" name="offer_price" placeholder="Enter offer price" required>
 </div>
-<div class="form-group col-sm-12">
+<div class="form-group col-sm-7">
     <label class="exampleModalLabel">Description</label>
     <textarea class="form-control" name="description" placeholder="Enter Description" required></textarea>
 </div>
+
+<div class="form-group col-sm-5">
+
+
+
+<label class="exampleModalLabel">P rate</label>
+
+
+
+<input class="form-control" name="prate" placeholder="Enter P rate" required>
+
+
+</div>
+
 <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Image</label>
 
@@ -107,6 +121,7 @@
                              <th>Description</th>
 
                              <th>HSN Code</th>
+                             <th>P Rate</th>
                              <th>Status</th>
 
                        <th>Action</th>
@@ -161,6 +176,7 @@ $i=1;
    <td>{{$key->price}}</td>
    <td>{{$key->description}}</td>
    <td>{{ $key->hsncode }} ({{ $key->tax }}%)</td>
+   <td>{{$key->prate}}</td>
    <td>@if($key->status==0) Active @else Inactive @endif</td>
    @if($role==1)
   <td>
@@ -219,6 +235,7 @@ $i++;
                              <th>Description</th>
 
                              <th>HSN Code</th>
+                             <th>P Rate</th>
                              <th>Status</th>
 
                               @if($role==1)
@@ -359,6 +376,18 @@ $i++;
     <textarea class="form-control" name="description" id="description"  placeholder="Enter Description" required></textarea>
 </div>
 
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">P rate</label>
+
+
+
+<input class="form-control" name="prate" id="prate" placeholder="Enter P rate" required>
+
+
+</div>
 
 <div class="form-group col-sm-6">
 
