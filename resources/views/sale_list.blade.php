@@ -155,7 +155,6 @@
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
-                <!-- <th>Order Status</th> -->
                 <th>Delivery Date</th>
                 <th>Order Date</th>
                
