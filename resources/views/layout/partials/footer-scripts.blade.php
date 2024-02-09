@@ -3540,6 +3540,7 @@ $('#category_name').on('change', function () {
 
             if (res.id) {
                 $('#order_status').val(res.order_status);
+				$('#paystatus').val(res.payment_status);
                 $('#total_amount').val(res.total_amount);
 
                 $('#editstatusmodal').modal('show');

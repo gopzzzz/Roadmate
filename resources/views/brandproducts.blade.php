@@ -28,6 +28,7 @@
 
 
 
+
    <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
 
 
@@ -68,12 +69,7 @@
 
                      <p align="right">
 
-
-
-
-
-
-                     <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
+           <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
 
 
 
