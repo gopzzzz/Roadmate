@@ -227,7 +227,7 @@
     @if($key->sale_status == 0)
         <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
             <button type="submit" class="btn btn-primary sale">
-            <i class="fas fa-file-invoice"></i> 
+                <i class="fas fa-file-invoice"></i>
                 
             </button>
         </form>
@@ -239,7 +239,8 @@
 <td style="width: 50px;">
     <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
         <button type="submit" class="print-button">
-        <i class="material-icons">&#xe8ad;</i>
+            <i class="material-icons">&#xe8ad;</i>
+ 
         </button>
     </form>
 </td>

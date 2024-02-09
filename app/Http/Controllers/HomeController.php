@@ -4227,6 +4227,7 @@ public function order_history()
 			  $brandprod->price = $request->original_amount;
 			  $brandprod->hsncode = $request->hsncode;
 			  $brandprod->priority = 0;
+
 			  $brandprod->prate = $request->prate;
 			  $brandprod->status = 0;
 			  $brandprod->save();

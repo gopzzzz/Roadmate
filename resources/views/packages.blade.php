@@ -529,6 +529,10 @@
             }
         });
     }
+  
 </script>
+
+
+
 
 @endsection
