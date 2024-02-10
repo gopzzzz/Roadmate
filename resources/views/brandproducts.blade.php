@@ -17,90 +17,30 @@
  </div>
 </div>
 <!-- /.container-fluid -->
-
-
-
    </section>
-
-
-
-   @if(session('success'))
-
-
-
-   <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
-
-
-
-   @endif
-
-
-
-   <!-- Main content -->
-
-
-
-   <section class="content">
+  @if(session('success'))
+<h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
+ @endif
+ <!-- Main content -->
+<section class="content">
      <div class="container-fluid">
          <div class="row">
-
-
-
-            <div class="col-12">
-
-
-
-               <!-- /.card -->
-
-
-
-               <div class="card">
-
-
-
-                  <div class="card-header">
-
-
-
-                     <h3 class="card-title">Products</h3>
-
-
-
-                     <p align="right">
-
-
-
-
-
-
-                     <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
-
-
-
-                     <form method="POST" action="{{ route('brandproductsinsert', ['Id' => $Id]) }}" enctype="multipart/form-data">
+  <div class="col-12">
+ <!-- /.card -->
+  <div class="card">
+ <div class="card-header">
+ <h3 class="card-title">Products</h3>
+ <p align="right">
+     <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
+<form method="POST" action="{{ route('brandproductsinsert', ['Id' => $Id]) }}" enctype="multipart/form-data">
 
                            @csrf
+  <div class="modal-dialog modal-lg" role="document" style="width:80%;">
+  <div class="modal-content">
+  <div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">BRAND : {{ $BrandName }}</h5>
 
-
-
-                           <div class="modal-dialog modal-lg" role="document" style="width:80%;">
-
-
-
-                              <div class="modal-content">
-
-
-
-                                 <div class="modal-header">
-
-
-
-                                    <h5 class="modal-title" id="exampleModalLabel">BRAND : {{ $BrandName }}</h5>
-
- </div>
-
-
-
+</div>
                                  <div class="modal-body row">
 
                                  <div class="form-group col-sm-12">
@@ -116,122 +56,75 @@
 
 
 <label class="exampleModalLabel">Original Amount</label>
-
-
-
 <input class="form-control" name="original_amount" placeholder="Enter original amount" required>
-
-
 </div>
 
 <div class="form-group col-sm-6">
-
-
-
 <label class="exampleModalLabel">Offer Price</label>
-
-
-
 <input class="form-control" name="offer_price" placeholder="Enter offer price" required>
-
-
 </div>
-<div class="form-group col-sm-12">
+<div class="form-group col-sm-7">
     <label class="exampleModalLabel">Description</label>
     <textarea class="form-control" name="description" placeholder="Enter Description" required></textarea>
 </div>
 
+<div class="form-group col-sm-5">
+
+
+
+<label class="exampleModalLabel">P rate</label>
+
+
+
+<input class="form-control" name="prate" placeholder="Enter P rate" required>
+
+
+</div>
+
 <div class="form-group col-sm-6">
-                    
-                    <label class="exampleModalLabel">Image</label>
+                                        <label class="exampleModalLabel">Image</label>
 
                     <input class="form-control" type="file" name="images[]" accept="image/*" multiple required>
                 </div>
               
 
                 <div class="form-group col-sm-6">
-
-
-
 <label class="exampleModalLabel">HSN Code</label>
-
-
-
 <select name="hsncode" id="hsncode" class="form-control">
-
 <option value="0">Select HSN Code</option>
 @foreach($hsn as $hsncode)
             <option value="{{ $hsncode->id }}">{{ $hsncode->hsncode }} ( {{ $hsncode->tax }} %)</option>
         @endforeach
 </select>
-
-
 </div>
                                  </div>
     <div class="modal-footer">
        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-
-
-
                                  </div>
-
-
-
-                              </div>
-
-
-
-                           </div>
-
-
-
-                        </form>
-
-
-
-                     <!-- </div>
-
-
-
-                  </div> -->
+                                 </div>
+ </div>
+ </form> <!-- </div>
+  </div> -->
 
 
 
                   <!-- /.card-header -->
  <div class="card-body">
-
-
-
-                     <table id="example1" class="table table-bordered table-striped">
-
-
-
-                        <thead>
-
-
-
-                           <tr>
-
-
-
-                              <th>id</th>
-
-                              <th>Images</th>
-
-
-                              <th>Produt Name</th>
-                             
-                              <th>Offer Price</th>
-
-                             <th>Original Amount</th>
+    <table id="example1" class="table table-bordered table-striped">
+ <thead>
+   <tr>
+   <th>id</th>
+ <th>Images</th>
+<th>Produt Name</th>
+<th>Offer Price</th>
+<th>Original Amount</th>
                              <th>Description</th>
 
                              <th>HSN Code</th>
+                             <th>P Rate</th>
                              <th>Status</th>
 
-                              
-
-                              <th>Action</th>
+                       <th>Action</th>
 
                             
 
@@ -283,6 +176,7 @@ $i=1;
    <td>{{$key->price}}</td>
    <td>{{$key->description}}</td>
    <td>{{ $key->hsncode }} ({{ $key->tax }}%)</td>
+   <td>{{$key->prate}}</td>
    <td>@if($key->status==0) Active @else Inactive @endif</td>
    @if($role==1)
   <td>
@@ -341,6 +235,7 @@ $i++;
                              <th>Description</th>
 
                              <th>HSN Code</th>
+                             <th>P Rate</th>
                              <th>Status</th>
 
                               @if($role==1)
@@ -481,6 +376,18 @@ $i++;
     <textarea class="form-control" name="description" id="description"  placeholder="Enter Description" required></textarea>
 </div>
 
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">P rate</label>
+
+
+
+<input class="form-control" name="prate" id="prate" placeholder="Enter P rate" required>
+
+
+</div>
 
 <div class="form-group col-sm-6">
 

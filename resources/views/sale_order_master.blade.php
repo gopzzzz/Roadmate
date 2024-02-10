@@ -81,166 +81,184 @@
         @foreach($saleorder as $order)
         @endforeach
                                             
-                                          
-                                                <div>
-                                                    <label class="exampleModalLabel">ORDER ID:</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="orderId[]" value="{{ $order->order_id }}" required readonly>
-                                                </div>
-                                                   
-                                                <div>
-                                                    <label class="exampleModalLabel">ORDER DATE:</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="orderdate" value="{{ $order->order_date }}" required readonly>
-                                                </div>
-                                                <div>
-                                                    <label class="exampleModalLabel">BILL NUMBER</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="bill" value="{{ $order->order_id }}" required>
-                                                </div>
-                                                <div>
-                                                    <label class="exampleModalLabel">DELIVERY DATE:</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="delivery_date" value="{{ $order->delivery_date }}" required readonly>
-                                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <div>
-                                                <input type="hidden" id="shopId" name="id">
-                                                    <label class="exampleModalLabel">SHOP <br>NAME:</label>
-                                                </div>
-                                                <div class="form-group col-sm-3">
-                                                <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
-
-                                                    
-                                                </div>
-                                                <div>
-                                                    <label class="exampleModalLabel">PHONE <br>NUMBER:</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="phone" value="{{ $order->phone }}" required readonly>
-                                                </div>
-                                                <div>
-                                                    <label class="exampleModalLabel">ADDRESS:</label>
-                                                </div>
-                                                <div class="form-group col-sm-2">
-                                                    <textarea class="form-control" name="address" placeholder="Enter igst" required readonly>{{ $order->address }}</textarea>
-                                                </div>
-                                                <div>
-                                                    <label class="exampleModalLabel">DELIVERY <br> ADDRESS:</label>
-                                                </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <textarea class="form-control" name="deliveryaddress" placeholder="Enter igst" required readonly>Area : {{ $order->area }} ,  {{ $order->area1 }} {{ $order->district }},{{ $order->state }} {{ $order->country }},{{ $order->pincode }}</textarea>
-                                                </div><br><br><br><br><br><br><br>
-                                                
+        
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">ORDER ID:</label>
+                        <input class="form-control" name="orderId[]" value="{{ $order->order_id }}" required readonly>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">ORDER DATE:</label>
+                        <input class="form-control" name="orderdate" value="{{ $order->order_date }}" required readonly>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">BILL NUMBER:</label>
+                        <input class="form-control" name="bill" value="{{ $order->order_id }}" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">DELIVERY DATE:</label>
+                        <input class="form-control" name="delivery_date" value="{{ $order->delivery_date }}" required readonly>
+                    </div>
+                </div>
+            
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <input type="hidden" id="shopId" name="id">
+                        <label class="exampleModalLabel">SHOP NAME:</label>
+                        <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">PHONE NUMBER:</label>
+                        <input class="form-control" name="phone" value="{{ $order->phone }}" required readonly>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">ADDRESS:</label>
+                        <textarea class="form-control" name="address" placeholder="Enter igst" required readonly>{{ $order->address }}</textarea>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="exampleModalLabel">DELIVERY ADDRESS:</label>
+                        <textarea class="form-control" name="deliveryaddress" placeholder="Enter igst" required readonly>Area : {{ $order->area }} ,  {{ $order->area1 }} {{ $order->district }},{{ $order->state }} {{ $order->country }},{{ $order->pincode }}</textarea>
+                    </div>
+                </div> <br><br><br><br><br><br><br>
+                                                <!-- <input type="hidden" id="orderidd" name="order_status" value="1"> -->
                                                 <table class="table table-bordered table-striped" id="editableTable">
-    <thead>
+                                                <thead>
         <tr>
-            <!-- <th>Id</th> -->
             <th>Product Name</th>
             <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>MRP</th>
+            <th>Offer Amount</th>
+            <th>Total MRP</th>
             <th>Tax</th>
-            <th>Total</th>
+            <th>Total Amount</th>
+           
         </tr>
     </thead>
     <tbody>
-    @foreach($saleorder as $index => $product)
-    
+        @foreach($saleorder as $index => $product)
         <tr>
-        <input type="hidden" id="productId" name="id">
-            <!-- <td contenteditable="true" name="productId[]" data-field="product_name">{{$order->product_name}}</td> -->
-            <td><input class="form-control" name="product_name[]" value="{{ $product->product_name }}" required readonly    ></td>
-            <!-- <td contenteditable="true" name="qty" data-field="qty">{{$order->qty}}</td> -->
-            <td><input class="form-control" name="qty[]" value="{{ $product->qty }}" required></td>
-            <!-- <td contenteditable="true" name="offer" data-field="offer_amount">{{$order->offer_amount}}</td> -->
-            <td><input class="form-control" name="offer_amount[]" value="{{ $product->offer_amount }}" required></td>
-            <!-- <td contenteditable="true" name="mrp" data-field="mrp">0</td> -->
-            <td><input class="form-control" name="total_mrp" value="{{ $product->total_mrp }}" required></td>
-            <!-- <td contenteditable="true" name="tax" data-field="tax">0</td> -->
-            <td><input class="form-control" name="tax" value="0" required></td>
-
-            <!-- <td contenteditable="true" name="total" data-field="total_amount">{{$order->total_amount}}</td> -->
-            <td><input class="form-control" name="total_amount" value="{{ $product->total_amount }}" required></td>
+            <input type="hidden" id="productId" name="id">
+            <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
+            <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required></td>
+            <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required></td>
+            <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required></td>
+            <td><input class="form-control tax" name="tax" value="0" required></td>
+            <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required></td>
         </tr>
         @endforeach
-        
     </tbody>
-</table>
-
-                    <div>
-                                                    <label class="exampleModalLabel">DELIVERY CHARGE</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="deliverycharge" value="{{ $order->shipping_charge }}" required>
-                                                </div>
-
-<div>
-                                                    <label class="exampleModalLabel">DISCOUNT</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="discount" value="{{ $order->discount }}" required>
-                                                </div>
-
-                                                <div>
-                                                    <label class="exampleModalLabel">PAYMENT METHOD</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="payment" value="{{ $order->payment_mode }}" required>
-                                                </div>
-                                                <div>
-                                                    <label class="exampleModalLabel">TOTAL AMOUNT</label>
-                                                    </div>
-                                                    <div class="form-group col-sm-2">
-                                                    <input class="form-control" name="price[]" value="{{ $order->price }}" required>
-                                                </div>
-
-                                        </div>
-                                       
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                                        </div>
-                                        
-    </div>
-</form>
-
-
-</div>
-              
-
-                </p>
-
-               
-
+                
+                </table>
                 </div>
+                            <div style="margin-left: 950px;">
+                            <div class="form-group">
+                    <label class="exampleModalLabel">DELIVERY CHARGE</label>
+                    <input class="form-control" name="shipping_charge" value="{{ $order->shipping_charge }}" required readonly>
+                </div>
+                <div class="form-group">
+                    <label class="exampleModalLabel">DISCOUNT</label>
+                    <input class="form-control" name="discount" value="{{ $order->discount }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="exampleModalLabel">PAYMENT METHOD</label>
+                    <input class="form-control" name="payment" value="{{ $order->payment_mode }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="exampleModalLabel">TOTAL AMOUNT</label>
+                    <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required>
+                </div>
+            </div>
+            </div>
+                                       
+                                       <div class="modal-footer">
+                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                           <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                                       </div>                      
+                                        
+               
+            </form>
 
-<!-- /.card-body -->
 
-</div>
+            </div>
+                        
 
-<!-- /.card -->
+                            </p>
 
-</div>
+                        
 
-<!-- /.col -->
+                            </div>
 
-</div>
+            <!-- /.card-body -->
 
-<!-- /.row -->
+            </div>
 
-</div>
+            <!-- /.card -->
 
-<!-- /.container-fluid -->
+            </div>
 
-</section>
+            <!-- /.col -->
 
-<!-- /.content -->
+            </div>
 
-</div>
+            <!-- /.row -->
+
+            </div>
+
+            <!-- /.container-fluid -->
+
+            </section>
+
+            <!-- /.content -->
+
+            </div>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Function to update total amount and total column
+        function updateTotal(inputField) {
+            var row = inputField.closest('tr');
+            var qty = parseFloat(row.find('.qty').val());
+            var offerAmount = parseFloat(row.find('.offer-amount').val());
+            var total = qty * offerAmount;
+            row.find('.total-amount').val(total.toFixed(2)); // Update the total amount input field
+            row.find('.total-column').text(total.toFixed(2)); // Update the content of the "Total" column
+        }
+
+        // Trigger updateTotal function when quantity input field changes
+        $('input.qty').on('input', function() {
+            updateTotal($(this));
+        });
+
+        // Trigger updateTotal function when offer amount input field changes
+        $('input.offer-amount').on('input', function() {
+            updateTotal($(this));
+        });
+
+        // Initial calculation for each row
+        $('input.qty, input.offer-amount').each(function() {
+            updateTotal($(this));
+        });
+    });
+</script>
+
+
+
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -252,5 +270,7 @@
         });
     });
 </script>
+
+
 
 @endsection

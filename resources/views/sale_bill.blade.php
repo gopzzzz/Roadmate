@@ -387,7 +387,7 @@
     </div>
     <div class="right-details">
     
-            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">{{ $key->total_amount }}</span></p>
+            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">{{ $key->total_mrp }}</span></p>
             <p><strong><span style="color: grey;"><b>DISCOUNT:</b></span></strong><span class="highlight-back" >{{ $key->discount }}</span></p>
             <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">0</span></p>
             <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back">0</span></p>

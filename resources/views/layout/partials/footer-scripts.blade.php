@@ -3405,6 +3405,7 @@ $(window).on('load', function(){
 		  $('#offer_price').val(obj.offer_price);
 		  $('#original_amount').val(obj.price);
 		  $('#hsncode1').val(obj.hsncode);
+		  $('#prate').val(obj.prate);
 		  $('#status').val(obj.status);
          
 					},
@@ -3548,6 +3549,7 @@ $('#category_name').on('change', function () {
 
             if (res.id) {
                 $('#order_status').val(res.order_status);
+				$('#paystatus').val(res.payment_status);
                 $('#total_amount').val(res.total_amount);
 
                 $('#editstatusmodal').modal('show');

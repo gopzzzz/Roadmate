@@ -3946,14 +3946,14 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		
 			if (!is_numeric($total_amount)) {
 				\Log::error('Invalid total_amount received: ' . $total_amount);
-				return redirect('order_master')->with('error', 'Invalid total_amount received.');
-			}
+				return redirect('sale_list')->with('error', 'Invalid total_amount received.');
+		}
 		
 			$order = Tbl_order_masters::find($id);
 		
 			if ($order) {
 				$order->order_status = $request->order_status;
-				$order->payment_status = $request->paystatus;
+				$order->payment_status = $request->input('paystatus');
 		
 				if ($request->paystatus == '1') {
 					$percentage = ($total_amount * 10) / 100;
@@ -3982,12 +3982,13 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		
 				$order->save();
 		
-				return redirect('order_master')->with('success', 'Order status updated successfully.');
+				return redirect('sale_list')->with('success', 'Order status updated successfully.');
 			} else {
-				return redirect('order_master')->with('error', 'Order not found.');
+				return redirect('sale_list')->with('error', 'Order not found.');
 			}
 		}
 	
+		
 		public function sale_order_master($orderId) {
 
 			$markk=DB::table('tbl_order_trans')
@@ -4047,27 +4048,28 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->wallet_redeem_id = 0;
 				$saleMaster->payment_mode = $request->payment;
 				$saleMaster->total_mrp = $request->total_mrp;
-				$saleMaster->shipping_charge = 0;
+				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
 				$saleMaster->payment_status = 0;
+				// $saleMaster->order_status = $request->order_status;
 				$saleMaster->delivery_date = $request->delivery_date;
 				$saleMaster->order_date = $request->orderdate;
 		
 				if ($saleMaster->save()) {
-					// Iterate through the products submitted in the request
+					
 					foreach ($request->product_name as $index => $productName) {
 						\Log::info('Debug: Inside Loop');
 		
-						// Retrieve values directly from arrays
+						
 						$qty = $request->qty[$index];
 						$offer_amount = $request->offer_amount[$index];
 						$price = $request->price[$index] ?? 0;
 		
-						// Find the product by name in the Tbl_brand_products table
+						
 						$product = Tbl_brand_products::where('product_name', $productName)->first();
 						\Log::info('Debug: Product', ['product' => $product]);
 		
-						// Create a new sale transaction record
+						
 						$saleTrans = new Tbl_sale_order_trans;
 						$saleTrans->order_id = $saleMaster->id;
 						$saleTrans->product_id = $product ? $product->id : 0;
@@ -4077,20 +4079,22 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 						$saleTrans->price = 0;
 						$saleTrans->taxable_amount = 0;
 		
-						// Save the sale transaction
+						
 						if (!$saleTrans->save()) {
 							\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
-							break; // Stop processing if an error occurs
+							break; 
 						}
 					}
 		
-					// Update the sale_status in Tbl_order_masters table (if needed)
-					Tbl_order_masters::where('id', $saleMaster->order_id)->update(['sale_status' => 1]);
+					
+					Tbl_order_masters::where('id', $saleMaster->order_id)->update(['sale_status' => 1,
+					'order_status' => 1
+				]);
 		
-					// Flash a success message
+					
 					Session::flash('success', 'Sale Invoice generated successfully!');
 				} else {
-					// Flash an error message if saleMaster save fails
+					
 					Session::flash('error', 'Error adding Sale Invoice. Please try again.');
 				}
 		
@@ -4104,23 +4108,24 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 	
 		public function sale_list()
 		{
-			$sale = DB::table('tbl_sale_order_masters')
-			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
-			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-			->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-			->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
-			
-			->orderBy('tbl_sale_order_masters.id', 'DESC')
-			
-			->paginate(10);
+			try {
+				$sale = DB::table('tbl_sale_order_masters')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+					->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
+					->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
+					->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status','tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+					->orderBy('tbl_sale_order_masters.id', 'DESC')
+					->paginate(10);
 
-		//	echo "<pre>";print_r($order);exit;
-	
-			$mark = DB::table('shops')->get();
-			$orderr = DB::table('tbl_coupens')->get();
-			$role=Auth::user()->user_type;
-			return view('sale_list',compact('sale','mark','orderr','role'));
-		 }
+				$role = Auth::user()->user_type;
+				return view('sale_list', compact('sale', 'role'));
+			} catch (\Exception $e) {
+				\Log::error($e->getMessage());
+				dd($e->getMessage());
+			}
+		}
+
 
 
 		 public function sale_bill($orderId) {
@@ -4334,6 +4339,9 @@ public function order_history()
               $brandprod->description = $request->description;
 			  $brandprod->price = $request->original_amount;
 			  $brandprod->hsncode = $request->hsncode;
+			  $brandprod->priority = 0;
+
+			  $brandprod->prate = $request->prate;
 			  $brandprod->status = 0;
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
@@ -4379,6 +4387,7 @@ public function order_history()
             $brandprod->offer_price = $request->offer_price;
 			$brandprod->price = $request->original_amount;
 			$brandprod->hsncode = $request->hsncode;
+			$brandprod->prate = $request->prate;
 			$brandprod->status = $request->status;
 			$brandprod->save();
 			return back()->with('success', 'Product Edited successfully!');;

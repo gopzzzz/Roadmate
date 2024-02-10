@@ -204,7 +204,7 @@ $name=Auth::user()->name;
                            <li class="nav-item">
                               <a href="{{ url('sale_list') }}" class="nav-link">
                                  <i class="far fa-circle nav-icon"></i>
-                                 <p>Sale List</p>
+                                 <p>Sales List</p>
                               </a>
                            </li>
 
@@ -232,6 +232,12 @@ $name=Auth::user()->name;
                                   <a href="{{ url('productpriority') }}" class="nav-link">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>product priority</p>
+                                  </a>
+                              </li>
+                              <li class="nav-item">
+                                  <a href="{{ url('salesreturn') }}" class="nav-link">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>Sales Return</p>
                                   </a>
                               </li>
                         </ul>
