@@ -29,7 +29,7 @@ $name=Auth::user()->name;
                <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
                <li class="nav-item has-treeview menu-open">
-                  <a href="#" class="nav-link active">
+                  <a href="{{url('home')}}" class="nav-link active">
                      <i class="nav-icon fas fa-tachometer-alt"></i>
                      <p>
                         Dashboard
@@ -201,12 +201,12 @@ $name=Auth::user()->name;
                                  <p>Orders</p>
                               </a>
                            </li>
-                           <!-- <li class="nav-item">
-                              <a href="{{ url('product_order') }}" class="nav-link">
+                           <li class="nav-item">
+                              <a href="{{ url('sale_list') }}" class="nav-link">
                                  <i class="far fa-circle nav-icon"></i>
-                                 <p>Product Orders</p>
+                                 <p>Sale List</p>
                               </a>
-                           </li> -->
+                           </li>
 
                            <li class="nav-item">
                         <a href="{{ url('purchase_order') }}" class="nav-link">

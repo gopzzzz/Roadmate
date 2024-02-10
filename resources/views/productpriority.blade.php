@@ -36,7 +36,7 @@
                <!-- /.card -->
  <div class="card">
  <div class="card-header">
-                     <h3 class="card-title">Product Priority</h3>
+                     <h3 class="card-title">Product Priority (The most products you wish to add are six.)</h3>
   <p align="right">
 
  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Product Priority</button>

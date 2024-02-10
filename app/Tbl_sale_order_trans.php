@@ -13,6 +13,7 @@ class Tbl_sale_order_trans extends Model
     {
         return $this->belongsTo(Tbl_sale_order_masters::class, 'sale_order_id', 'id');
     }
+    
 
     protected $fillable = [
         'order_id',

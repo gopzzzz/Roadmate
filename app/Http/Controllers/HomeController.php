@@ -104,7 +104,9 @@ class HomeController extends Controller
 	    $tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
 		$customers=DB::table('user_lists')->count();
 		$shops=DB::table('shops')->count();
-        return view('dashboard',compact('role','tbookings','customers','shops'));
+		$franchise=DB::table('tbl_franchises')->count();
+		
+        return view('dashboard',compact('role','tbookings','customers','shops','franchise'));
     }
 	
 	public function customerlistfetch(Request $request){
@@ -555,11 +557,7 @@ class HomeController extends Controller
 	
     return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 }
-
-	
-	
-	
-	public function crm(){
+public function crm(){
 		$cr = tbl_crms::with('user')->get();
 		
 		$crr = DB::table('tbl_crms')
@@ -1371,37 +1369,50 @@ public function shop_categoriesdelete($id){
 		
 			$shops="";
 
-		if($role==3){
-			$fran=DB::table('tbl_franchase_details')
+		if($role==3){ $fran = DB::table('tbl_franchase_details')
 			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
-			->where('tbl_franchises.user_id',$userid)
+			->where('tbl_franchises.user_id', $userid)
 			->select('tbl_franchase_details.*')
 			->get();
-			foreach($fran as $singleFranlist){
-				if($singleFranlist->type==4){
-					$shops = DB::table('shops')
+		
+		$shops = collect();
+		
+		foreach ($fran as $singleFranlist) {
+			if ($singleFranlist->type == 4) {
+				$shopsQuery = DB::table('shops')
 					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
-					->select('shops.*', 'shiop_categories.category','executives.name')
-					->orderBy('shops.id','DESC')
-					->where('shops.authorised_status',1)
-					->where('tbl_places.district_id',$singleFranlist->district_id)
-					->paginate(12);
-				}else{
-					$shops= DB::table('shops')
+					->select('shops.*', 'shiop_categories.category', 'executives.name')
+					->orderBy('shops.id', 'DESC')
+					->where('shops.authorised_status', 1)
+					->where('tbl_places.district_id', $singleFranlist->district_id);
+			} else {
+				$shopsQuery = DB::table('shops')
 					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 					->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 					->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
-					->select('shops.*', 'shiop_categories.category','executives.name')
-					->orderBy('shops.id','DESC')
-					->where('shops.authorised_status',1)
-					->where('tbl_places.id',$singleFranlist->place_id)
-					->paginate(12);
-				}
-
+					->select('shops.*', 'shiop_categories.category', 'executives.name')
+					->orderBy('shops.id', 'DESC')
+					->where('shops.authorised_status', 1)
+					->where('tbl_places.id', $singleFranlist->place_id);
 			}
-			
+		
+			$shops = $shops->merge($shopsQuery->get());
+		}
+		
+		// Pagination
+		$perPage = 12;
+		$page = request()->get('page', 1);
+		
+		// Convert $shops collection to a paginator instance
+		$shops = new \Illuminate\Pagination\LengthAwarePaginator(
+			$shops->forPage($page, $perPage),
+			$shops->count(),
+			$perPage,
+			$page,
+			['path' => request()->url(), 'query' => request()->query()]
+		);
 		
 		}elseif($role==7){
 		    $eid=DB::table('executives')->where('user_id',$userid)->first();
@@ -1488,6 +1499,7 @@ public function shop_categoriesdelete($id){
 	public function shopfetch(Request $request){
 		$id=$request->id;
 		$shop=Shops::find($id);
+		
 		print_r(json_encode($shop));
 	}
 	public function createaccount(Request $request){
@@ -3792,8 +3804,10 @@ function sendNotification1($msg1,$title)
 		}
 		public function order_master() {
 			$role = Auth::user()->user_type;
-		
-			$order = DB::table('tbl_order_masters')
+			$userid=Auth::user()->id;
+			
+			if($role==1){
+			    	$order = DB::table('tbl_order_masters')
 				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
@@ -3803,7 +3817,69 @@ function sendNotification1($msg1,$title)
 				
 				->paginate(10);
 
-			//	echo "<pre>";print_r($order);exit;
+			}else if($role==3){
+			    
+				
+			
+		    
+		 $fran = DB::table('tbl_franchase_details')
+    ->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+    ->where('tbl_franchises.user_id', $userid)
+    ->select('tbl_franchase_details.*')
+    ->get();
+    
+ 
+
+$order = collect();
+
+foreach ($fran as $singleFranlist) {
+    if ($singleFranlist->type == 4) {
+      
+            
+            	$shopsQuery = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+				 ->where('tbl_places.district_id', $singleFranlist->district_id);
+			
+				
+				
+    } else {
+      
+            	$shopsQuery = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+				 ->where('tbl_places.id', $singleFranlist->place_id);
+    }
+
+    $order = $order->merge($shopsQuery->get());
+}
+
+// Pagination
+$perPage = 12;
+$page = request()->get('page', 1);
+
+// Convert $shops collection to a paginator instance
+$order = new \Illuminate\Pagination\LengthAwarePaginator(
+    $order->forPage($page, $perPage),
+    $order->count(),
+    $perPage,
+    $page,
+    ['path' => request()->url(), 'query' => request()->query()]
+);
+
+
+			}else{
+			    $order="";
+			}
+		
+		
+			
 		
 			$mark = DB::table('shops')->get();
 			$orderr = DB::table('tbl_coupens')->get();
@@ -3864,40 +3940,30 @@ function sendNotification1($msg1,$title)
 		{
 			\Log::info('Received ID for statusedit: ' . $id);
 		
-			// Retrieve total_amount from the request
 			$total_amount = $request->input('total_amount');
 		
 			\Log::info('Received total_amount for statusedit: ' . $total_amount);
 		
-			// Ensure total_amount is a valid number
 			if (!is_numeric($total_amount)) {
 				\Log::error('Invalid total_amount received: ' . $total_amount);
 				return redirect('order_master')->with('error', 'Invalid total_amount received.');
 			}
 		
-			// Find the order by ID
 			$order = Tbl_order_masters::find($id);
 		
-			// Check if the order exists
 			if ($order) {
-				// Update the order status
 				$order->order_status = $request->order_status;
 				$order->payment_status = $request->paystatus;
 		
-				// Check if the order status is "Cash Received" (assuming '5' is the code for 'Cash Received')
 				if ($request->paystatus == '1') {
-					// Calculate the percentage using the formula: percentage = (total_amount * percentage_rate) / 100
 					$percentage = ($total_amount * 10) / 100;
 					\Log::info('Calculated Percentage: ' . $percentage);
 		
-					// Update the wallet_amount in tbl_wallets table based on shop_id
 					$shop_id = $order->shop_id;
 		
-					// Find the corresponding wallet record
 					$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
 		
 					if ($wallet) {
-						// Update the wallet_amount
 						$wallet->wallet_amount += $wallet->amount+$percentage;
 						$wallet->save();
 						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
@@ -3914,13 +3980,10 @@ function sendNotification1($msg1,$title)
 
 				}
 		
-				// Save the order
 				$order->save();
 		
-				// Redirect to the appropriate page
 				return redirect('order_master')->with('success', 'Order status updated successfully.');
 			} else {
-				// If the order is not found, redirect with an error message
 				return redirect('order_master')->with('error', 'Order not found.');
 			}
 		}
@@ -4038,7 +4101,64 @@ function sendNotification1($msg1,$title)
 			}
 		}
 		
-		
+	
+		public function sale_list()
+		{
+			$sale = DB::table('tbl_sale_order_masters')
+			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+			->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
+			->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+			
+			->orderBy('tbl_sale_order_masters.id', 'DESC')
+			
+			->paginate(10);
+
+		//	echo "<pre>";print_r($order);exit;
+	
+			$mark = DB::table('shops')->get();
+			$orderr = DB::table('tbl_coupens')->get();
+			$role=Auth::user()->user_type;
+			return view('sale_list',compact('sale','mark','orderr','role'));
+		 }
+
+
+		 public function sale_bill($orderId) {
+
+			$markk=DB::table('tbl_sale_order_trans')
+				->get();
+			$salebill=DB::table('tbl_sale_order_masters')
+			->leftJoin('tbl_sale_order_trans', 'tbl_sale_order_masters.id', '=', 'tbl_sale_order_trans.order_id')
+			->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id') 
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+			->where('tbl_sale_order_masters.id',$orderId)
+				->select(
+					'tbl_sale_order_masters.*',
+					
+					'tbl_sale_order_trans.sale_order_id',
+					'tbl_sale_order_trans.qty',
+					'tbl_sale_order_trans.offer_amount',
+					'shops.shopname',
+					'shops.address' ,
+					'shops.delivery_id' ,
+					'tbl_brand_products.product_name',
+					'tbl_deliveryaddres.area',
+					'tbl_deliveryaddres.area1',
+					'tbl_deliveryaddres.city',
+					'tbl_deliveryaddres.district',
+					'tbl_deliveryaddres.state',
+					'tbl_deliveryaddres.pincode',
+					'tbl_deliveryaddres.country'
+					)
+				->get();
+			$role=Auth::user()->user_type;
+			return view('sale_bill',compact('role','markk','salebill'));
+			}
+
+
+
+
 
 		public function product_order(Request $request)
         {
@@ -4497,6 +4617,7 @@ public function order_history()
 		$role=Auth::user()->user_type;
 		return view('purchase_order',compact('role','ordersQuery'));
 	}
+	
 	public function view_bill($id){
 		$role=Auth::user()->user_type;
 		$ordersQuery = DB::table('tbl_order_trans')

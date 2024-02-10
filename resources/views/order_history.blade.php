@@ -92,7 +92,7 @@
     <tr>
    <th>id</th>
    <th>Product Name</th>
-         <th>Qunatity</th>
+         <th>Quantity</th>
          <th>Total Price</th>
     
          <th></th>
@@ -115,7 +115,7 @@ $i=1;
               <td>{{$i}}</td>
                   <td>{{ $product_name }}</td>
                   <td>{{ $groupedOrder->sum('qty') }}</td>
-                  <td>{{ $groupedOrder->sum('price') }}</td>
+                  <td>{{ $groupedOrder->sum('amount') }}</td>
                   <!-- -->
                   </tr>
                   @php 
@@ -138,7 +138,7 @@ $i++;
  <th>id</th>
  
    <th>Product Name</th>
-         <th>Qunatity</th>
+         <th>Quantity</th>
          <th>Total Price</th>         
          
          <th></th>

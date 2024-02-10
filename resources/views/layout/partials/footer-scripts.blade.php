@@ -1104,7 +1104,7 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
 					var html_each ="";
 					$i=1;
 					$.each(data, function (index, itemData) {
-						html_each +='<tr><td>'+$i+'</td><td>'+itemData.featuredel+'</td><td><a href="{{ URL::asset('/packfeaturesdelete/') }}/'+itemData.id +'"><li class="fa fa-trash"></li></a></td></tr>'
+						html_each += '<tr><td>' + $i + '</td><td>' + itemData.featuredel + '</td><td><a href="{{ URL::asset('/packfeaturesdelete/') }}/' + itemData.id + '"><li class="fa fa-trash" style="color: red;"></li></a></td></tr>';
 						$i++;
 					});
 					$("#featurelistedit").append(html_each);
@@ -2119,6 +2119,7 @@ $('.edit_fran').click(function(){
 		}
 		$('#editstrquryanswermodal').modal('show');
 	});
+
     $('.editcompackage').click(function(){
 		var id=$(this).data('id');
 	

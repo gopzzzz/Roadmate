@@ -575,11 +575,8 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    
                     <div class="modal-body row">
-
-
-                      <input type="hidden" name="id" id="id">
+                     <input type="hidden" name="id" id="id">
                       <input type="hidden" name="image" id="image">
 
                       <div class="form-group col-sm-6">
@@ -597,40 +594,18 @@
                       </select>
 
 
-                      </div>
-                      
-
-                      
-                      
+                      </div>     
                       <div class="form-group col-sm-6">
-
-
-                      <label class="exampleModalLabel">Shop Name</label>
-
-
-
-                      <input class="form-control" name="shopname" id="shopname" required>
-
-
+                  <label class="exampleModalLabel">Shop Name</labe>
+                   <input class="form-control" name="shopname" id="shopname" required>
                       </div>
                       <div class="form-group col-sm-6">
-
-
-                      <label class="exampleModalLabel">Address</label>
-
-
-                      <textarea class="form-control" name="address" id="address" required></textarea>
-
-
-                      </div>
+                    <label class="exampleModalLabel">Address</label>
+                    <textarea class="form-control" name="address" id="address" required></textarea>
+                  </div>
                       <div class="form-group col-sm-6">
-
-
-                      <label class="exampleModalLabel">Phone Number 1</label>
-
-
-
-                      <input class="form-control" name="phone1" id="phone1" required>
+                    <label class="exampleModalLabel">Phone Number 1</label>
+                    <input class="form-control" name="phone1" id="phone1" required>
 
 
                       </div>
@@ -804,35 +779,29 @@
                       <input type="hidden" name="image" id="image">
 
                       <div class="form-group col-sm-6">
-                      <label class="exampleModalLabel">Category</label>
+    <label class="exampleModalLabel">Category</label>
+    <select name="category" id="category1" class="form-control">
+        <option value="0">Select Category</option>
+        @foreach($shop_categories as $key)
+            <option value="{{$key->id}}">{{$key->category}}</option>
+        @endforeach
+    </select>
+</div>
 
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Existing Image</label>
+    @foreach($shops as $itemkey)
+        @foreach($itemkey as $key)
+            <img src="{{ asset('/img/'.$key->image) }}" alt="" width="75"/>
+        @endforeach
+    @endforeach
+</div>
 
-                      <select name="category" id="category1" class="form-control">
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">New Image</label>
+    <input type="file" name="image" accept="image/*">
+</div>
 
-                      <option value="0">Select Category</option>
-                      @foreach($shop_categories as $key)
-
-                      <option value="{{$key->id}}">{{$key->category}}</option>
-
-                      @endforeach
-                      </select>
-
-
-                      </div>
-                      
-
-                      <div class="form-group col-sm-6">
-
-
-
-                      <label class="exampleModalLabel">Image</label><br>
-
-
-
-                      <input type="file"  name="image" accept="image/*" >
-
-
-                      </div>
                       
                       <div class="form-group col-sm-6">
 

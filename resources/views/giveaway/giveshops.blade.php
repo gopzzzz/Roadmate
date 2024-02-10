@@ -66,7 +66,7 @@
 
 								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-									<form method="POST" action="{{url('giveshopinsert')}}" enctype="multipart/form-data">@csrf
+									<form id="form1" method="POST" action="{{url('giveshopinsert')}}" enctype="multipart/form-data">@csrf
 
 										<div class="modal-dialog" role="document" style="width:80%;">
 
@@ -103,10 +103,7 @@
 </select>
 
 </div>
-
-
-
-												<div class="form-group col-sm-12">
+	<div class="form-group col-sm-12">
 
 													<label class="exampleModalLabel">Shops</label>
 
@@ -125,23 +122,18 @@
 													</select> -->
 													<input type="hidden" class="form-control" name="shop" id="shopid">
 
-													<input type="text" class="form-control searchshops" id="shopname">
+													<input type="text" class="form-control searchshops" id="shopname" required>
 
 													<div id="shoplist"></div>
 
 												</div>
-
-												
-
-												
-
-												</div>
+	</div>
 
 												<div class="modal-footer">
 
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-													<button type="submit" name="submit" class="btn btn-primary">Add</button>
+													<button type="submit" class="btn btn-primary form1-submit">Add</button>
 
 												</div>
 
@@ -201,17 +193,11 @@
 @if($role==1)
 
 <td>
-<a href="{{url('deletegiveawayshops')}}/{{$shops->id}}"><i class="fa fa-trash"></i></a>
+<a href="{{url('deletegiveawayshops')}}/{{$shops->id}}" style="color: red;"><i class="fa fa-trash"></i></a>
 
 </td>
 
 										@endif
-
-
-                                       
-                                     
-								
-										
 
 									</tr>@php $i++; @endphp @endforeach</tbody>
 
@@ -238,13 +224,6 @@
 								</tfoot>
 
 							</table>
-
-							
-
-							
-
-							
-
 						</div>
 
 						<!-- /.card-body -->
@@ -269,4 +248,6 @@
 
 	<!-- /.content -->
 
-</div>@endsection
+</div>
+
+@endsection

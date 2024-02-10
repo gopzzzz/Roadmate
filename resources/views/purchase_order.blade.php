@@ -151,9 +151,9 @@ $i++;
   <tr>
  <th>id</th>
  
-   <th>Product Name</th>
-         <th>Qunatity</th>
-         <th>Total Price</th>         
+ <th>Vendor Name </th>
+         <th>Number Of Items</th>
+         <th>Total Price</th>        
          
          <th></th>
  @if($role==1)

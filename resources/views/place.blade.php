@@ -306,7 +306,7 @@
          <th>Type</th>
 
 
-         <th>Deleted status</th>
+         <th>Status</th>
 
 
         
@@ -440,7 +440,7 @@
          <th>Place</th>
          <th>Type</th>
 
-         <th>Deleted status</th>
+         <th>Status</th>
 
 
         

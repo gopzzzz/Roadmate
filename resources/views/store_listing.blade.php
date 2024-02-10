@@ -107,15 +107,18 @@
                                                    </select>
 
                                     </div>
-								  <div class="form-group col-sm-6">
-                                        <label class="exampleModalLabel">Customer</label>
-                                        <select name="cust" class="form-control">
-                                        <option value="0">select Customer</option>
-                                        @foreach($custmr1 as $key1)
-                                        <option value="{{$key1->id}}">{{$key1->name}}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
+                                    <div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Customer</label>
+    <select name="cust" class="form-control">
+        <option value="" label="Select Customer">Select Customer</option>
+        @foreach($custmr1 as $key1)
+            <option value="{{$key1->name}}">{{$key1->name}}</option>
+        @endforeach
+    </select>
+  
+</div>
+
+
 								  <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Product Category</label>
                                         <select name="prod_cat" class="form-control">
