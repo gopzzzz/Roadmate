@@ -4534,6 +4534,8 @@ public function order_history()
 	
 		return view('view_bill',compact('role','ordersQuery'));
 	}
+
+	
 	public function updatepo($id){
 		
 		

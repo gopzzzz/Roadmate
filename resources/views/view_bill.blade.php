@@ -149,7 +149,7 @@ $i++;
  <th></th>
  
    <th><a href="{{url('updatepo/'.$key->vendor_id)}}"><button type="button" class="btn btn-sm btn-success">Place Order</button></th>
-         <th>Qunatity</th>
+         <th>Quantity</th>
          <th>Total Price</th>         
       
          
