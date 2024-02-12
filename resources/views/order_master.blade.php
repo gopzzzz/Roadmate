@@ -190,22 +190,17 @@
               
                
                 <td>
-                    @if($key->payment_status==0) Unpaid @else Paid @endif
+                    @if($key->payment_status==0) <strong style="background-color:yellow;">Unpaid </strong>@else <strong style="background-color:lightgreen;">Paid</a> @endif
                 </td>         
                 <td>
                     @if ($key->order_status == 0)
-                        Pending
+                       <strong class="bg-warning"> Pending </strong>
                     @elseif ($key->order_status == 1)
-                        Confirmed
+                    <strong class="bg-info"> Confirmed </strong>
                     @elseif ($key->order_status == 2)
-                        Shipped
-                    @elseif ($key->order_status == 3)
-                        Delivered
-                    @elseif ($key->order_status == 4)
-                        Cancel
-                    @elseif ($key->order_status == 5)
-                       Return
+                    <strong class="bg-primary"> Shipped</strong>
                     @else
+                    <strong class="bg-success"> Delivered </strong>
                     @endif
                 </td>
                 <td>{{ $key->delivery_date }}</td>
@@ -237,7 +232,7 @@
 </td>
  
 <td style="width: 50px;">
-    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}">
+    <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}" target="_blank">
         <button type="submit" class="print-button">
             <i class="material-icons">&#xe8ad;</i>
  
@@ -339,12 +334,13 @@
                     <div class="form-group col-sm-12">
                         <label class="exampleModalLabel">Order Status</label>
                         <select name="order_status" id="order_status" class="form-control" required>
+                       
                         <option value="0">Pending</option>
                             <option value="1">Confirmed</option>
                             <option value="2">Shipped</option>
                             <option value="3">Delivered</option>
-                            <option value="4">Cancel</option>
-                            <option value="5">Return</option>
+                            <!-- <option value="4">Cancel</option>
+                            <option value="5">Return</option> -->
                         </select>
                     </div>
                     <div class="form-group col-sm-12">

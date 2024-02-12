@@ -55,10 +55,10 @@
   $(function () {
     var table = $("#example1").DataTable({
 					"searching": true,
-					dom: 'Bfrtip',
-						buttons: [
-							'copy', 'csv', 'excel', 'pdf', 'print'
-						]
+					//dom: 'Bfrtip',
+					//	buttons: [
+					//		'copy', 'csv', 'excel', 'pdf', 'print'
+					//	]
     			});
     $('#example2').DataTable({
       "paging": true,
@@ -483,6 +483,15 @@ $('.edit_district').click(function(){
 	});
 	
 
+                  $('#executives').on('click','.createaccount',function(){
+                     var id=$(this).data('id');
+					 var email=$(this).data('email');
+					 $('#email').val(email);
+					 $('#exeid').val(id);
+					// alert(email);
+                     $('#editexecutivemodal').modal('show');
+                  });
+                
 
 $('#franchiseDetailsContainer').on('change','.statefetchadd', function () {
     var countryId = $(this).val();
@@ -3540,6 +3549,7 @@ $('#category_name').on('change', function () {
 
             if (res.id) {
                 $('#order_status').val(res.order_status);
+				$('#paystatus').val(res.payment_status);
                 $('#total_amount').val(res.total_amount);
 
                 $('#editstatusmodal').modal('show');

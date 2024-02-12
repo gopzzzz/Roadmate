@@ -304,7 +304,7 @@
 
                   </thead>
 
-                  <tbody>
+                  <tbody id="executives">
 
                   @php 
 
@@ -329,7 +329,12 @@
                     <td>{{$key->email}}</td>
 					
 					<td>{{$key->addrress}}</td>
-          <td><button type="button" class="btn btn-sm btn-success visitedshop" data-id="{{$key->id}}" ><i class="fa fa-eye"></i>Visited Shop</button></td>
+          <td>
+            @if($key->user_id==null)
+            <button type="button" class="btn btn-success btn-sm createaccount" data-email="{{$key->email}}" data-id="{{$key->id}}">Create Account</button>
+            @endif
+            <!-- <button type="button" class="btn btn-sm btn-success visitedshop" data-id="{{$key->id}}" ><i class="fa fa-eye"></i>Visited Shop</button> -->
+          </td>
           <td><button type="button" class="btn btn-sm btn-primary addedshop" data-id="{{$key->id}}" ><i class="fa fa-eye"></i>Added Shop</button></td>
 					
 					@if($role==1)
@@ -382,6 +387,139 @@
                   </tfoot>
 
                 </table>
+
+
+
+                <div class="modal" id="editexecutivemodal" tabindex="-1" role="dialog">
+
+
+
+<div class="modal-dialog" role="document">
+
+
+
+   <div class="modal-content">
+
+
+
+      <div class="modal-header">
+
+
+
+         <h5 class="modal-title">Create Account </h5>
+
+
+
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+
+
+         <span aria-hidden="true">&times;</span>
+
+
+
+         </button>
+
+
+
+      </div>
+
+
+
+      <form method="POST" action="{{url('createaccount')}}" enctype="multipart/form-data">
+
+
+
+         @csrf
+
+
+
+         <div class="modal-body row">
+
+
+
+            <div class="form-group col-sm-12">
+
+
+
+               <input type="hidden" name="id" id="countryid">
+
+
+
+               <label class="exampleModalLabel">Email</label>
+
+
+
+               <input type="email" class="form-control" name="email" id="email" required>
+               <input type="hidden" id="exeid" name="id">
+
+               
+
+            </div>
+
+
+
+         </div>
+
+
+
+         <div class="modal-footer">
+
+
+
+            <button type="submit" class="btn btn-primary">Save changes</button>
+
+
+
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+
+         </div>
+
+
+
+      </form>
+
+
+
+   </div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+      
+
+
+
+    
+
+
+      </form>
+
+
+
+   </div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
 				
 				<div class="modal" id="editexecutive_modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">

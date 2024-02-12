@@ -74,6 +74,13 @@ Route::post('/timeslotfetch', [
     'uses' => 'HomeController@timeslotfetch'
 ])->name('timeslotfetch');
 
+
+Route::post('/createaccount', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@createaccount'
+])->name('createaccount');
+
+
 Route::get('timeslotdelete/{id}', [
     'middleware' => 'auth',
     'uses' => 'HomeController@timeslotdelete'
@@ -89,6 +96,9 @@ Route::get('/executive', [
     'middleware' => 'auth',
     'uses' => 'HomeController@executive'
 ])->name('executive');
+
+
+
 
 
 Route::get('/franchises', [
