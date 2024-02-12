@@ -4038,6 +4038,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				if (!$shop) {
 					dd("Shop with name $request->shopname not found");
 				}
+
+				
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
