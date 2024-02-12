@@ -664,7 +664,7 @@ $name=Auth::user()->name;
 </ul>
 </li>
             @elseif($role==3)
-            <li class="nav-item has-treeview {{ request()->is('ashops) ? 'menu-open' : '' }}">
+            <li class="nav-item has-treeview {{ request()->is('ashops') ? 'menu-open' : '' }}">
                <a href="#" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-university"></i>
                   <p>
@@ -780,7 +780,7 @@ $name=Auth::user()->name;
                </li>
             @elseif($role==5)
             <li class="nav-item has-treeview {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'order_master']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'order_master') ? 'active' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'order_master']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Market Place
