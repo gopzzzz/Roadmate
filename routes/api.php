@@ -820,10 +820,17 @@ Route::post('searchproduct','ShopmarketingController@searchproduct');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::post('product','ShopmarketingController@product');
+Route::post('cancelorder','ShopmarketingController@cancelorder');
+Route::post('productrating','ShopmarketingController@productrating');
+Route::get('priorityproducts','ShopmarketingController@priorityproducts');
+Route::post('getproductorderdetails','ShopmarketingController@getproductorderdetails');
+
 
 
 Route::post('bulkupdate','ShopmobController@bulkupdate');
 
 Route::get('bulkdataupload','ShopmobController@bulkdataupload');
+
+
 Route::get('testrun','ShopmobController@testrun');
 
