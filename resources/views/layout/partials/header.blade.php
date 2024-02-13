@@ -605,8 +605,8 @@ $name=Auth::user()->name;
             </ul>
             </li>
             @elseif($role==2)
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
+            <li class="nav-item has-treeview {{ request()->is('timeslot') ? 'menu-open' : '' }}">
+               <a href="#" class="nav-link {{ request()->is('timeslot') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-briefcase"></i>
                   <p>
                      Bookings
@@ -615,7 +615,7 @@ $name=Auth::user()->name;
                </a>
                <ul class="nav nav-treeview">
                   <li class="nav-item">
-                     <a href="{{url('timeslot')}}" class="nav-link">
+                     <a href="{{url('timeslot')}}" class="nav-link {{ request()->is('timeslot') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Book Timeslots</p>
                      </a>
@@ -645,32 +645,9 @@ $name=Auth::user()->name;
                      </li>
                   </ul>
                </li>
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-user"></i>
-                  <p>
-                     Customers Manager
-                     <i class="right fas fa-angle-left"></i>
-                  </p>
-               </a>
-               <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                     <a href="{{url('customers')}}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Customers</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{url('uservehcle')}}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Customers Vehicles</p>
-                     </a>
-                  </li>
-               </ul>
-            </li>
-
-            <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
+         
+            <li class="nav-item has-treeview  {{ request()->is('order_master') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('order_master') ? 'active' : '' }}">
                            <i class="nav-icon fas fa-briefcase"></i>
                            <p>
                               Market Orders
@@ -679,7 +656,7 @@ $name=Auth::user()->name;
                         </a>
                         <ul class="nav nav-treeview">
                            <li class="nav-item">
-                              <a href="{{ url('order_master') }}" class="nav-link">
+                              <a href="{{ url('order_master') }}" class="nav-link {{ request()->is('order_master') ? 'active' : '' }}">
                                  <i class="far fa-circle nav-icon"></i>
                                  <p>Orders</p>
                               </a>
@@ -687,8 +664,8 @@ $name=Auth::user()->name;
 </ul>
 </li>
             @elseif($role==3)
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
+            <li class="nav-item has-treeview {{ request()->is('ashops') ? 'menu-open' : '' }}">
+               <a href="#" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-university"></i>
                   <p>
                      Shops
@@ -703,15 +680,15 @@ $name=Auth::user()->name;
                      </a>
                      </li> -->
                   <li class="nav-item">
-                     <a href="{{ url('ashops') }}" class="nav-link">
+                     <a href="{{ url('ashops') }}" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Added Shops</p>
                      </a>
                   </li>
                </ul>
             </li>
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
+            <li class="nav-item has-treeview {{ request()->is('timeslot') ? 'menu-open' : '' }}">
+               <a href="#" class="nav-link {{ request()->is('timeslot') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-briefcase"></i>
                   <p>
                      Bookings
@@ -720,7 +697,7 @@ $name=Auth::user()->name;
                </a>
                <ul class="nav nav-treeview">
                   <li class="nav-item">
-                     <a href="{{url('timeslot')}}" class="nav-link">
+                     <a href="{{url('timeslot')}}" class="nav-link {{ request()->is('timeslot') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Book Timeslots</p>
                      </a>
@@ -736,7 +713,7 @@ $name=Auth::user()->name;
                </a>
             </li>
             <li class="nav-item">
-               <a href="#" class="nav-link">
+               <a href="#" class="nav-link {{ request()->is('#') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-id-card "></i>
                   <p>
                      Revenue
@@ -744,7 +721,7 @@ $name=Auth::user()->name;
                </a>
             </li>
             <li class="nav-item">
-               <a href="#" class="nav-link">
+               <a href="#" class="nav-link {{ request()->is('#') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-id-card "></i>
                   <p>
                      Expense
@@ -752,7 +729,7 @@ $name=Auth::user()->name;
                </a>
             </li>
             <li class="nav-item">
-               <a href="#" class="nav-link">
+               <a href="#" class="nav-link {{ request()->is('#') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-id-card "></i>
                   <p>
                      Monthly Reports
@@ -760,77 +737,77 @@ $name=Auth::user()->name;
                </a>
             </li>
             @elseif($role==4)
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-briefcase"></i>
-                  <p>
-                     Franchise Module
-                     <i class="right fas fa-angle-left"></i>
-                  </p>
-               </a>
-               <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                     <a href="{{ url('country') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Country</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('state') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>State</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('district') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>District</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('place') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Place</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('franchises') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Franchise List</p>
-                     </a>
-                  </li>
-               </ul>
-            </li>
+            <li class="nav-item has-treeview {{ request()->is(['country', 'district','state', 'place','franchises']) ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ request()->is(['country', 'district','state', 'place','franchises']) ? 'active' : '' }}">
+                     <i class="nav-icon fas fa-briefcase"></i>
+                     <p>
+                        Franchise Module
+                        <i class="right fas fa-angle-left"></i>
+                     </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                     <li class="nav-item">
+                        <a href="{{ url('country') }}" class="nav-link  {{ request()->is('country') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Country</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('state') }}" class="nav-link  {{ request()->is('state') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>State</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('district') }}" class="nav-link  {{ request()->is('district') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>District</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('place') }}" class="nav-link  {{ request()->is('place') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Place</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('franchises') }}" class="nav-link  {{ request()->is('franchises') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Franchise List</p>
+                        </a>
+                     </li>
+                  </ul>
+               </li>
             @elseif($role==5)
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-briefcase"></i>
-                  <p>
-                     Market Place
-                     <i class="right fas fa-angle-left"></i>
-                  </p>
-               </a>
-               <ul class="nav nav-treeview">
+            <li class="nav-item has-treeview {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'order_master']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'order_master']) ? 'active' : '' }}">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <p>
+         Market Place
+         <i class="right fas fa-angle-left"></i>
+      </p>
+   </a>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('market_category') }}" class="nav-link {{ request()->is('market_category') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Categories</p>
+         </a>
+      </li>
+      <li class="nav-item">
+         <a href="{{ url('marketproducts') }}" class="nav-link {{ request()->is('marketproducts') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Brands</p>
+         </a>
+      </li>
+                     <li class="nav-item">
+                        <a href="{{ url('vouchers') }}" class="nav-link {{ request()->is('vouchers') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Vouchers</p>
+                        </a>
+                     </li>
                   <li class="nav-item">
-                     <a href="{{ url('market_category') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Categories</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('marketproducts') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Brands</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('vouchers') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Vouchers</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('order_master') }}" class="nav-link">
+                     <a href="{{ url('order_master') }}" class="nav-link {{ request()->is('order_master') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>orders</p>
                      </a>
@@ -838,43 +815,44 @@ $name=Auth::user()->name;
                </ul>
             </li>
             @elseif($role==6)
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-briefcase"></i>
-                  <p>
-                     Franchise Module
-                     <i class="right fas fa-angle-left"></i>
-                  </p>
-               </a>
-               <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                     <a href="{{ url('country') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Country</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('state') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>State</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('district') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>District</p>
-                     </a>
-                  </li>
-                  <li class="nav-item">
-                     <a href="{{ url('place') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Place</p>
-                     </a>
-                  </li>
-               </ul>
-            </li>
-            <li class="nav-item has-treeview">
-               <a href="#" class="nav-link">
+            <li class="nav-item has-treeview {{ request()->is(['country', 'district','state', 'place']) ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ request()->is(['country', 'district','state', 'place']) ? 'active' : '' }}">
+                     <i class="nav-icon fas fa-briefcase"></i>
+                     <p>
+                        Franchise Module
+                        <i class="right fas fa-angle-left"></i>
+                     </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                     <li class="nav-item">
+                        <a href="{{ url('country') }}" class="nav-link  {{ request()->is('country') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Country</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('state') }}" class="nav-link  {{ request()->is('state') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>State</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('district') }}" class="nav-link  {{ request()->is('district') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>District</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('place') }}" class="nav-link  {{ request()->is('place') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Place</p>
+                        </a>
+                     </li>
+                    
+                  </ul>
+               </li>
+            <li class="nav-item has-treeview {{ request()->is(['vshops', 'ashops']) ? 'menu-open' : '' }}">
+               <a href="#" class="nav-link {{ request()->is(['vshops', 'ashops']) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-university"></i>
                   <p>
                      Shops
@@ -883,13 +861,13 @@ $name=Auth::user()->name;
                </a>
                <ul class="nav nav-treeview">
                   <li class="nav-item">
-                     <a href="{{ url('vshops') }}" class="nav-link">
+                     <a href="{{ url('vshops') }}" class="nav-link {{ request()->is('vshops') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Visited Shops</p>
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="{{ url('ashops') }}" class="nav-link">
+                     <a href="{{ url('ashops') }}" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Added Shops</p>
                      </a>
