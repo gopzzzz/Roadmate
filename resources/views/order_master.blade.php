@@ -339,9 +339,9 @@
                             <option value="1">Confirmed</option>
                             <option value="2">Shipped</option>
                             <option value="3">Delivered</option>
-                            <!-- <option value="4">Cancel</option>
+                             <option value="4">Cancel</option>
                             <option value="5">Return</option> -->
-                        </select>
+                        <!-- </select>
                     </div>
                     <div class="form-group col-sm-12">
                         <label class="exampleModalLabel">Pay Status</label>

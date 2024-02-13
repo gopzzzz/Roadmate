@@ -321,7 +321,7 @@
 
                     <td>@if($key->book_type==1) Eworkshop @elseif($key->book_type==2) Offer ({{$key->offertitle}}) @else Normal Service @endif </td>
                     @if($role==1 || $role==2)
-					<td>{{$key->phnum}} </td>
+					<td>{{$key->phnum}} </td> 
           @endif
                     <td>{{$key->category}}</td>
 

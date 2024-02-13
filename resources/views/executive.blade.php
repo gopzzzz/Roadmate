@@ -320,7 +320,7 @@
 
                     <td>{{$key->name}}
 
-                     
+                      
 
                     </td>
 
@@ -424,37 +424,21 @@
 
       </div>
 
-
-
       <form method="POST" action="{{url('createaccount')}}" enctype="multipart/form-data">
-
-
 
          @csrf
 
-
-
          <div class="modal-body row">
-
-
 
             <div class="form-group col-sm-12">
 
-
-
                <input type="hidden" name="id" id="countryid">
-
-
 
                <label class="exampleModalLabel">Email</label>
 
-
-
                <input type="email" class="form-control" name="email" id="email" required>
                <input type="hidden" id="exeid" name="id">
-
-               
-
+              
             </div>
 
 
@@ -493,14 +477,6 @@
 
 </div>
 
-
-
-
-      
-
-
-
-    
 
 
       </form>

@@ -455,13 +455,13 @@
             numericValue = numericValue.substring(0, 10);
 
             // Ensure the number starts with 7, 8, or 9
-            if (/^[789]/.test(numericValue)) {
+            if (/^[6789]/.test(numericValue)) {
                 // Update the input value with the cleaned numeric value
                 phoneInput.value = numericValue;
             } else {
                 // Clear the input if it doesn't meet the criteria
                 phoneInput.value = '';
-                alert('Please enter a valid 10-digit phone number starting with 7, 8, or 9.');
+                alert('Please enter a valid 10-digit phone number starting with 6,7, 8, or 9.');
             }
         });
     });

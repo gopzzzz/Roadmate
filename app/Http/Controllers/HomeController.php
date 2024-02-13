@@ -275,13 +275,13 @@ class HomeController extends Controller
 		DB::delete('delete from booktimemasters where id = ?', [$id]);
 		return redirect('timeslot')->with('success', 'Deleted Successfully');
 	}
-	
+
 	public function executive(){
-		$exe=DB::table('executives')->orderBy('id', 'DESC')->get();
-		$role=Auth::user()->user_type;
-		return view('executive',compact('exe','role'));
+		$exe = DB::table('executives')->orderBy('id', 'DESC')->get();
+		$role = Auth::user()->user_type;
+		return view('executive', compact('exe', 'role'));
 	}
-	
+
 	public function visitedshop(Request $request){
 		$id=$request->id;
 		$visit=DB::table('shops')
@@ -317,6 +317,8 @@ class HomeController extends Controller
         return redirect('executive')->with('success', 'Executive Inserted Successfully');
     }
    }
+
+   
     public function executivenew(){
 		$exe=Executives::all();
 		
@@ -1481,10 +1483,15 @@ public function shop_categoriesdelete($id){
 		$shop->status = 1;
 	
 		if ($files = $request->file('image')) {
-			$name = $files->getClientOriginalName();
-			$files->move('img/', $name);
-			$shop->image = $name;
+			foreach ($files as $file) {
+				$name = $file->getClientOriginalName();
+				$file->move('img/', $name);
+				// You may want to store each filename in an array or process them accordingly
+				// For example:
+				$shop->images[] = $name; // Assuming you have an 'images' column in your database
+			}
 		}
+		
 	
 		if ($shop->save()) {
 			$shopcat = new shop_provide_categories;
@@ -1502,6 +1509,8 @@ public function shop_categoriesdelete($id){
 		
 		print_r(json_encode($shop));
 	}
+
+	
 	public function createaccount(Request $request){
 	    $id=$request->id;
 		$account=new User;
@@ -1518,6 +1527,8 @@ public function shop_categoriesdelete($id){
 		return redirect()->back();
 		
 	}
+
+
 	public function shopedit(Request $request){
 		$id=$request->id;
 		$shop=Shops::find($id);
@@ -2299,37 +2310,40 @@ public function shop_categoriesdelete($id){
 		$vehmodel=Brand_models::all();
 		return view('packageforvehicle',compact('packageveh','fueltype','fueltype1','vehtype','vehtype1','vehmodel'));
 	}
+
+
 	public function compackageinsert(Request $request){
-		$com=new Packages;
-		if($files=$request->file('image')){  
-			$name=$files->getClientOriginalName();  
-			$files->move('img/',$name);  
+		$com = new Packages;
+		if($files = $request->file('image')) {  
+			$name = $files->getClientOriginalName();  
+			$files->move('img/', $name);  
 			
-			$com->image=$name; 
-			$com->package_type=$request->package_type;
-			$com->title=$request->title;
-			$com->description=$request->desc;
-			$com->fuel=$request->fueltype;
-			$com->amount=$request->amount;
-			$com->offer_amount=$request->offeramount;
-			$com->shop_amount=$request->shopamount;
-			$com->vehmodel=$request->vehmodel;
-			$com->status=$request->status;
-			if($com->save()){
-				$package_id=$com->id;
+			$com->image = $name; 
+			$com->package_type = $request->package_type;
+			$com->title = $request->title;
+			$com->description = $request->desc;
+			$com->fuel = $request->fueltype;
+			$com->amount = $request->amount;
+			$com->offer_amount = $request->offeramount;
+			$com->shop_amount = $request->shopamount;
+			$com->vehmodel = $request->vehmodel;
+			$com->status = $request->status;			
+			$com->shop_category_id = $request->shop_category_id;
+	
+			if($com->save()) {
+				$package_id = $com->id;
 				$package = new Packages_forvehmodels;
-				$package->package_id=$package_id;
-				$package->model_id=$request->vehmodel;
-				$package->fuel_type=$request->fueltype;
+				$package->package_id = $package_id;
+				$package->model_id = $request->vehmodel;
+				$package->fuel_type = $request->fueltype;
 				$package->save();
 				return redirect('common')->with('success', 'Data inserted successfully.');
-			}
-			
-		
-		}  
-		
-		
+			}               
+		}           
 	}
+	
+
+
 	public function packagefetch(Request $request){
 		$id=$request->id;
 		$package=Packages::find($id);
