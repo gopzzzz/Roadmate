@@ -174,7 +174,7 @@
        @foreach($sale as $key)
        <tr>
            <td>{{ $i++ }}</td>
-           <td>{{ $key->order_id }}</td>
+           <td>{{ $key->invoice_number }}</td>
            <td>{{ $key->shopname }}</td>
           
            <td>{{ $key->phone }}</td>

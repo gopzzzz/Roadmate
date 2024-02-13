@@ -4039,11 +4039,21 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					dd("Shop with name $request->shopname not found");
 				}
 
+
+				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
+				if($check==null){
+                 $invoice=1000;
+				}else{
+					$invoice=$check->invoice_number+1;
+				}
+
+
 				
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
 				$saleMaster->order_id = is_array($request->orderId) ? $request->orderId[0] : null;
+				$saleMaster->invoice_number=$invoice;
 				$saleMaster->total_amount = $request->total_amount;
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
