@@ -161,10 +161,11 @@
 
 
 
-                <input type="file"  name="image" accept="image/*" required>
+                <input type="file" name="image[]" accept="image/*" required multiple>
 
 
                 </div>
+
                 <div class="form-group col-sm-6">
 
 
@@ -789,11 +790,9 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label class="exampleModalLabel">Existing Image</label>
-    @foreach($shops as $itemkey)
-        @foreach($itemkey as $key)
-            <img src="{{ asset('/img/'.$key->image) }}" alt="" width="75"/>
-        @endforeach
+    <label class="exampleModalLabel">Existing Images</label>
+    @foreach($shops as $shop)
+        <img src="{{ asset('/img/'.$shop->image) }}" alt="" width="75"/>
     @endforeach
 </div>
 

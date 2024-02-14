@@ -90,7 +90,7 @@
 									 <input type="hidden" name="id" id="wallid">
 									<div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Customer</label>
-                                        <select name="cust" class="form-control" id="cust">
+                                        <select name="cust" class="form-control" id="cust" readonly>
                                         <option value="0">select Customer</option>
                                         @foreach($custmr1 as $key)
                                         <option value="{{$key->id}}">{{$key->name}}</option>
@@ -100,7 +100,7 @@
 									 <div class="form-group col-sm-6">
                                     
                                        <label class="exampleModalLabel">Amount</label>
-                                       <input type="text" class="form-control" name="amount" id="amount" required>
+                                       <input type="text" class="form-control" name="amount" id="amount" required readonly>
                                     </div>
                                  </div>
                                  <div class="modal-footer">

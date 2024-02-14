@@ -208,14 +208,15 @@
                 </td>
            <td>{{ $key->delivery_date }}</td>
            <td>{{ $key->order_date }}</td>
-           <td style="width: 50px;">
-            <form method="get" action="{{ route('sale_bill', ['orderId' => $key->id]) }}">
-                <button type="submit" class="print-button">
-                    <i class="fas fa-file-invoice"></i> 
+           
+          <td style="width: 50px;">
+    <form method="get" action="{{ route('sale_bill', ['orderId' => $key->id]) }}" target="_blank">
+        <button type="submit" class="print-button">
+            <i class="material-icons">&#xe8ad;</i>
+        
                 </button>
             </form>
-          </td>
-          
+        </td>
         <td>
         @if($role!=3)
         <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->order_id }}"

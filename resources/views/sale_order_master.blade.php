@@ -173,7 +173,7 @@
                 </div>
                 <div class="form-group">
                     <label class="exampleModalLabel">PAYMENT METHOD</label>
-                    <input class="form-control" name="payment" value="{{ $order->payment_mode }}" required>
+                    <input class="form-control" name="payment" value=" @if($order->payment_mode==0) Cash on Delivery @else Online @endif" required readonly>
                 </div>
                 <div class="form-group">
                     <label class="exampleModalLabel">TOTAL AMOUNT</label>
@@ -183,7 +183,7 @@
             </div>
                                        
                                        <div class="modal-footer">
-                                          <a href="{{url('order_master')}}"> <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a>
+                                          <a href="{{url('order_master')}}"> <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a> -->
                                            <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                                        </div>                      
                                         
@@ -225,33 +225,43 @@
             </div>
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            
 <script>
-    $(document).ready(function() {
-        // Function to update total amount and total column
-        function updateTotal(inputField) {
-            var row = inputField.closest('tr');
-            var qty = parseFloat(row.find('.qty').val());
-            var offerAmount = parseFloat(row.find('.offer-amount').val());
-            var total = qty * offerAmount;
-            row.find('.total-amount').val(total.toFixed(2)); // Update the total amount input field
-            row.find('.total-column').text(total.toFixed(2)); // Update the content of the "Total" column
+  $(document).ready(function() {
+    // Function to update total amount and total column
+    function updateTotal(inputField) {
+        var row = inputField.closest('tr');
+        var qty = parseFloat(row.find('.qty').val());
+        var offerAmount = parseFloat(row.find('.offer-amount').val());
+        var total = qty * offerAmount;
+        row.find('.total-amount').val(total.toFixed(2)); // Update the total amount input field
+        row.find('.total-column').text(total.toFixed(2)); // Update the content of the "Total" column
+        
+        // Show or hide the total amount text area based on presence of both quantity and offer amount
+        if (!isNaN(qty) && !isNaN(offerAmount) && qty > 0 && offerAmount > 0) {
+            row.find('.total-amount').show();
+        } else {
+            row.find('.total-amount').hide();
         }
+    }
 
-        // Trigger updateTotal function when quantity input field changes
-        $('input.qty').on('input', function() {
-            updateTotal($(this));
-        });
-
-        // Trigger updateTotal function when offer amount input field changes
-        $('input.offer-amount').on('input', function() {
-            updateTotal($(this));
-        });
-
-        // Initial calculation for each row
-        $('input.qty, input.offer-amount').each(function() {
-            updateTotal($(this));
-        });
+    // Trigger updateTotal function when quantity input field changes
+    $('input.qty').on('input', function() {
+        updateTotal($(this));
     });
+
+    // Trigger updateTotal function when offer amount input field changes
+    $('input.offer-amount').on('input', function() {
+        updateTotal($(this));
+    });
+
+    // Initial calculation for each row
+    $('input.qty, input.offer-amount').each(function() {
+        updateTotal($(this));
+    });
+});
+
+
 </script>
 
 
