@@ -226,31 +226,34 @@
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             
-<script>
+            <script>
   $(document).ready(function() {
     // Function to update total amount and total column
     function updateTotal(inputField) {
         var row = inputField.closest('tr');
         var qty = parseFloat(row.find('.qty').val());
         var offerAmount = parseFloat(row.find('.offer-amount').val());
-        var total = qty * offerAmount;
+
+        // Set total amount to 0 if quantity is 0
+        var total = (qty === 0) ? 0 : (isNaN(qty) || isNaN(offerAmount)) ? 0 : qty * offerAmount;
+
         row.find('.total-amount').val(total.toFixed(2)); // Update the total amount input field
         row.find('.total-column').text(total.toFixed(2)); // Update the content of the "Total" column
-        
-        // Show or hide the total amount text area based on presence of both quantity and offer amount
-        if (!isNaN(qty) && !isNaN(offerAmount) && qty > 0 && offerAmount > 0) {
+
+        // Show or hide the total amount text area based on the presence of both quantity and offer amount
+        if (!isNaN(qty) && !isNaN(offerAmount) && qty >= 0 && offerAmount >= 0) {
             row.find('.total-amount').show();
         } else {
             row.find('.total-amount').hide();
         }
     }
 
-    // Trigger updateTotal function when quantity input field changes
+    // Trigger updateTotal function when the quantity input field changes
     $('input.qty').on('input', function() {
         updateTotal($(this));
     });
 
-    // Trigger updateTotal function when offer amount input field changes
+    // Trigger updateTotal function when the offer amount input field changes
     $('input.offer-amount').on('input', function() {
         updateTotal($(this));
     });
@@ -259,10 +262,14 @@
     $('input.qty, input.offer-amount').each(function() {
         updateTotal($(this));
     });
+
+    // Make the total amount input fields readonly
+    $('.total-amount').prop('readonly', true);
 });
-
-
 </script>
+
+
+
 
 
 
