@@ -115,7 +115,7 @@
    <tr>
    <th>id</th>
  <th>Images</th>
-<th>Produt Name</th>
+<th>Product Name</th>
 <th>Offer Price</th>
 <th>Original Amount</th>
                              <th>Description</th>

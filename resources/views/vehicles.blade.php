@@ -51,7 +51,7 @@
                               <div class="modal-body row">
                                  <div class="form-group col-sm-12">
                                     <label class="exampleModalLabel">Brand</label>
-                                    <select name="brand" class="form-control">
+                                    <select name="brand" class="form-control" required>
                                        <option value="0">Select Brand</option>
                                        @foreach($brand as $key)                                   
                                        <option value="{{$key->id}}">{{$key->brand}}</option>
@@ -60,7 +60,7 @@
                                  </div>
                                  <div class="form-group col-sm-12">
                                     <label class="exampleModalLabel">Fuel Type</label>                      
-                                    <select name="fuel" class="form-control" >
+                                    <select name="fuel" class="form-control" required>
                                        <option value="0">Select Fuel type</option>
                                        @foreach($fuel as $key1)                                 
                                        <option value="{{$key1->id}}">{{$key1->fuel_type}}</option>
@@ -69,7 +69,7 @@
                                  </div>
                                  <div class="form-group col-sm-12">
                                     <label class="exampleModalLabel">Model</label>
-                                    <input type="text" name="models" class="form-control" >
+                                    <input type="text" name="models" class="form-control" required>
                                  </div>
                               </div>
                               <div class="modal-footer">
