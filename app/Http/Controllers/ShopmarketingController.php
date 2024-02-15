@@ -1012,7 +1012,7 @@ public function orderhistory(){
     ->where('shop_id',$shop_id)
     ->offset($offset) 
       ->limit($limit) 
-   // ->where('status',0)
+      ->orderBy('id', 'DESC')
     ->get();
 
         if($order_list == null){

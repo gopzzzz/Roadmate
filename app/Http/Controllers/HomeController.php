@@ -4129,7 +4129,7 @@ $saleMaster->payment_mode = $paymentMode;
 						$saleTrans->price = 0;
 						$saleTrans->taxable_amount = 0;
 		
-						
+				
 						if (!$saleTrans->save()) {
 							\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
 							break; 
