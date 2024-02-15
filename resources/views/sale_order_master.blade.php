@@ -96,8 +96,8 @@
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label class="exampleModalLabel">BILL NUMBER:</label>
-                        <input class="form-control" name="bill" value="{{ $order->order_id }}" required>
+                        <label class="exampleModalLabel">E-Way BILL NUMBER:</label>
+                        <input class="form-control" name="bill" required>
                     </div>
                 </div>
                 <div class="col-sm-3">

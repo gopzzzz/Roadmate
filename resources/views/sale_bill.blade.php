@@ -357,7 +357,7 @@
                     <td>{{$key->qty}}</td>
                     <td>0</td>
                     <td>0</td>
-                    <td>{{$key->offer_amount}}</td>
+                    <td>{{$key->offer_amount*$key->qty}}</td>
                    
                 </tr>
                 @endforeach

@@ -4038,7 +4038,6 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			->select( 
 				'tbl_order_masters.*',
 				'tbl_order_trans.product_id',
-				'tbl_order_trans.order_id',
 				'tbl_order_trans.qty',
 				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
@@ -4094,7 +4093,9 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
 				$saleMaster->wallet_redeem_id = 0;
-				$saleMaster->payment_mode = $request->payment;
+				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
+$saleMaster->payment_mode = $paymentMode;
+
 				$saleMaster->total_mrp = $request->total_mrp;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
@@ -4136,7 +4137,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					}
 		
 					
-					Tbl_order_masters::where('id', $saleMaster->order_id)->update(['sale_status' => 1,
+					Tbl_order_masters::where('order_id', $saleMaster->order_id)->update(['sale_status' => 1,
 					'order_status' => 1
 				]);
 		
