@@ -175,7 +175,7 @@
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Discount</label>
     <div class="input-group">
-        <input type="text" class="form-control" name="discount" placeholder="Enter discount" required pattern="[1-9]\d*(\.\d{1,2})?" title="Enter a valid percentage (e.g., 10 or 10.5)">
+    <input class="form-control" name="discount"  required pattern="[1-9]\d*(\.\d{1,2})?%" title="Enter a valid percentage (e.g., 10% or 10.5%)" placeholder="Enter discount percentage (%)" />
         <!-- <div class="input-group-append">
             <span class="input-group-text">%</span>
         </div> -->
@@ -441,7 +441,7 @@
 
 <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Discount</label>
-                                        <input class="form-control" name="discount" id="discount" required  pattern="[1-9]\d*(\.\d{1,2})?" title="Enter a valid percentage (e.g., 10 or 10.5)">
+                                        <input class="form-control" name="discount" id="discount" required pattern="[1-9]\d*(\.\d{1,2})?%" title="Enter a valid percentage (e.g., 10% or 10.5%)" placeholder="Enter discount percentage (%)" />
                                       <!-- <textarea  name="discount" class="form-control" id="discount" ></textarea> -->
                                     </div>
 
@@ -542,24 +542,7 @@
     <!-- /.content -->
 
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var discountInput = document.querySelector('input[name="discount"]');
-        var discountHelp = document.getElementById('discountHelp');
-
-        discountInput.addEventListener('input', function () {
-            // Check if the discount is a valid percentage
-            if (!/^\d+(\.\d{0,2})?$/.test(discountInput.value) && discountInput.value !== '') {
-                discountInput.setCustomValidity('Enter a valid percentage (e.g., 10 or 10.5)');
-                discountHelp.style.color = 'red';
-            } else {
-                discountInput.setCustomValidity('');
-                discountHelp.style.color = 'inherit';
-            }
-        });
-    });
-</script>
-
+  
 
 
 

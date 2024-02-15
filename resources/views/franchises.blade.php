@@ -440,17 +440,18 @@
        }
    }
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var phoneInput = document.getElementById('phone_number_input');
 
-        phoneInput.addEventListener('input', function () {
-            var value = phoneInput.value;
+    phoneInput.addEventListener('input', function () {
+        var value = phoneInput.value;
 
-            // Remove non-numeric characters
-            var numericValue = value.replace(/\D/g, '');
+        // Remove non-numeric characters
+        var numericValue = value.replace(/\D/g, '');
 
+        // Ensure the number starts with 6, 7, 8, or 9
+        if (/^[6789]/.test(numericValue)) {
             // Limit to exactly 10 digits
             numericValue = numericValue.substring(0, 10);
 
@@ -483,8 +484,20 @@
             }
         });
     });
-</script>
 
+    form.addEventListener('submit', function (event) {
+        var numericValue = phoneInput.value.replace(/\D/g, '');
+
+        // Check if the numeric value has at least 10 digits before submitting the form
+        if (numericValue.length < 10) {
+            event.preventDefault(); // Prevent form submission
+            alert('Please enter a valid 10-digit phone number starting with 6, 7, 8, or 9 and containing at least 10 digits.');
+        }
+    });
+});
+
+
+</script>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
