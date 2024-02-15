@@ -250,12 +250,12 @@ $name=Auth::user()->name;
                                       <p>product priority</p>
                                   </a>
                               </li>
-                              <li class="nav-item">
+                              <!-- <li class="nav-item">
                                   <a href="{{ url('salesreturn') }}" class="nav-link {{ request()->is('salesreturn') ? 'active' : '' }}">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>Sales Return</p>
                                   </a>
-                              </li>
+                              </li> -->
                         </ul>
                      </li>
                      <li class="nav-item has-treeview {{ request()->is('timeslot') ? 'menu-open' : '' }}">
