@@ -184,7 +184,7 @@
            
            <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
            </td>
-           
+          
          
           
            <td>
@@ -199,10 +199,7 @@
                         Shipped
                     @elseif ($key->order_status == 3)
                         Delivered
-                    @elseif ($key->order_status == 4)
-                        Cancel
-                    @elseif ($key->order_status == 5)
-                       Return
+                   
                     @else
                     @endif
                 </td>
@@ -266,12 +263,12 @@
                     <div class="form-group col-sm-12">
                         <label class="exampleModalLabel">Order Status</label>
                         <select name="order_status" id="order_status" class="form-control" required>
-                        <option value="0">Pending</option>
+                            <option value="0">Pending</option>
                             <option value="1">Confirmed</option>
                             <option value="2">Shipped</option>
                             <option value="3">Delivered</option>
-                            <option value="4">Cancel</option>
-                            <option value="5">Return</option>
+                            <!-- <option value="4">Cancel</option>
+                            <option value="5">Return</option> -->
                         </select>
                     </div>
                     <div class="form-group col-sm-12">

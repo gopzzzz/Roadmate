@@ -3776,7 +3776,7 @@ function sendNotification1($msg1,$title)
 		->where('tbl_order_masters.id',$orderId)
 			->select(
 				'tbl_order_masters.*',
-				'tbl_order_trans.order_id',
+				
 				'tbl_order_trans.qty',
 				'tbl_order_trans.offer_amount',
 				'shops.shopname',
@@ -4038,7 +4038,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			->select( 
 				'tbl_order_masters.*',
 				'tbl_order_trans.product_id',
-				'tbl_order_trans.order_id',
+				
 				'tbl_order_trans.qty',
 				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
@@ -4075,20 +4075,33 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					dd("Shop with name $request->shopname not found");
 				}
 
-				
+
+				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
+				if($check==null){
+                 $invoice=1000;
+				}else{
+					$invoice=$check->invoice_number+1;
+				}
+
+
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
 				$saleMaster->order_id = is_array($request->orderId) ? $request->orderId[0] : null;
+				$saleMaster->invoice_number=$invoice;
 				$saleMaster->total_amount = $request->total_amount;
+				$saleMaster->bill_number = $request->billnumber 	;
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
 				$saleMaster->wallet_redeem_id = 0;
-				$saleMaster->payment_mode = $request->payment;
+				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
+                $saleMaster->payment_mode = $paymentMode;
+
 				$saleMaster->total_mrp = $request->total_mrp;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
-				$saleMaster->payment_status = 0;
+				
+				
 				// $saleMaster->order_status = $request->order_status;
 				$saleMaster->delivery_date = $request->delivery_date;
 				$saleMaster->order_date = $request->orderdate;
@@ -4117,7 +4130,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 						$saleTrans->price = 0;
 						$saleTrans->taxable_amount = 0;
 		
-				
+						
 						if (!$saleTrans->save()) {
 							\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
 							break; 
@@ -4125,7 +4138,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					}
 		
 					
-					Tbl_order_masters::where('id', $saleMaster->order_id)->update(['sale_status' => 1,
+					Tbl_order_masters::where('order_id', $saleMaster->order_id)->update(['sale_status' => 1,
 					'order_status' => 1
 				]);
 		
@@ -4137,7 +4150,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				}
 		
 				return redirect('order_master');
-			} catch (\Exception $e) {
+			}
+			catch (\Exception $e) {
 				\Log::error($e->getMessage());
 				dd($e->getMessage());
 			}
@@ -4152,7 +4166,21 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 					->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
 					->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
-					->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status','tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+					->select('tbl_sale_order_masters.*', 
+					'shops.shopname', 
+					'shops.address', 
+					
+					'tbl_order_masters.order_status',
+					'tbl_order_masters.payment_status', 
+					'tbl_coupens.coupencode', 
+					'tbl_deliveryaddres.area', 
+					'tbl_deliveryaddres.area1', 
+					'tbl_deliveryaddres.country', 
+					'tbl_deliveryaddres.state', 
+					'tbl_deliveryaddres.district', 
+					'tbl_deliveryaddres.city', 
+					'tbl_deliveryaddres.phone', 
+					'tbl_deliveryaddres.pincode')
 					->orderBy('tbl_sale_order_masters.id', 'DESC')
 					->paginate(10);
 
