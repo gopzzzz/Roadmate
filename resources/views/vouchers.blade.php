@@ -159,32 +159,12 @@
 
 
 
-<!-- <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">Discount</label>
-
-
-
-<input class="form-control" name="discount" placeholder="Enter discount" required>
-
-
-</div> -->
-
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-12">
     <label class="exampleModalLabel">Discount</label>
     <div class="input-group">
-    <input class="form-control" name="discount"  required pattern="[1-9]\d*(\.\d{1,2})?%" title="Enter a valid percentage (e.g., 10% or 10.5%)" placeholder="Enter discount percentage (%)" />
-        <!-- <div class="input-group-append">
-            <span class="input-group-text">%</span>
-        </div> -->
+        <input class="form-control" name="discount" required pattern="[1-9]\d*(\.\d{1,2})?%" title="Enter a valid percentage (e.g., 10% or 10.5%)" placeholder="Enter a valid percentage (e.g.,&nbsp;10%&nbsp;or&nbsp;10.5%)" />
     </div>
-    <small id="discountHelp" class="form-text text-muted">Enter a valid percentage (e.g., 10 or 10.5)</small>
 </div>
-
-
-
 
 
 <div class="form-group col-sm-6">
@@ -441,8 +421,7 @@
 
 <div class="form-group col-sm-6">
                                         <label class="exampleModalLabel">Discount</label>
-                                        <input class="form-control" name="discount" id="discount" required pattern="[1-9]\d*(\.\d{1,2})?%" title="Enter a valid percentage (e.g., 10% or 10.5%)" placeholder="Enter discount percentage (%)" />
-                                      <!-- <textarea  name="discount" class="form-control" id="discount" ></textarea> -->
+                                        <input class="form-control" name="discount" id="discount" required pattern="[1-9]\d*(\.\d{1,2})?%" title="Enter a valid percentage (e.g., 10% or 10.5%)" placeholder="Enter a valid percentage (e.g., 10% or 10.5%)" />
                                     </div>
 
 

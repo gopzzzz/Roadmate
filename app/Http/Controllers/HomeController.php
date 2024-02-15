@@ -4089,6 +4089,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
 				$saleMaster->payment_status = 0;
+				
 				// $saleMaster->order_status = $request->order_status;
 				$saleMaster->delivery_date = $request->delivery_date;
 				$saleMaster->order_date = $request->orderdate;
@@ -4137,7 +4138,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				}
 		
 				return redirect('order_master');
-			} catch (\Exception $e) {
+			}
+			catch (\Exception $e) {
 				\Log::error($e->getMessage());
 				dd($e->getMessage());
 			}
@@ -4836,15 +4838,15 @@ public function order_history()
 				return response()->json(['success' => false, 'message' => 'Error updating priority']);
 			}
 		}
-	public function removePriority($productId)
-    {
-        DB::table('tbl_brand_products')
-            ->where('id', $productId)
-            ->update(['priority' => 0]);
-
-        return redirect()->back()->with('success', 'Priority removed successfully.');
-    }
-
+		public function removePriority($productId)
+		{
+			DB::table('tbl_brand_products')
+				->where('id', $productId)
+				->update(['priority' => 0]);
+		
+			return redirect()->back();
+		}
+		
 }
 	
 
