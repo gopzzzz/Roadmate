@@ -158,7 +158,7 @@
             <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required></td>
         </tr>
         @endforeach
-    </tbody>
+    </tbody> 
                 
                 </table>
                 </div>
@@ -183,7 +183,7 @@
             </div>
                                        
                                        <div class="modal-footer">
-                                           <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                                          <a href="{{url('order_master')}}"> <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a> -->
                                            <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                                        </div>                      
                                         

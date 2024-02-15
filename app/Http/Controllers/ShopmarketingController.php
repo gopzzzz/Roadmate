@@ -1001,12 +1001,17 @@ public function orderhistory(){
   $data1 = json_decode($json);
 
   $shop_id=$data1->shop_id;
+  $index=$data1->index;
+  $offset=($index*10);
+  $limit=10;
 
 
   try{	
 
     $order_list=DB::table('tbl_order_masters')
     ->where('shop_id',$shop_id)
+    ->offset($offset) 
+      ->limit($limit) 
    // ->where('status',0)
     ->get();
 

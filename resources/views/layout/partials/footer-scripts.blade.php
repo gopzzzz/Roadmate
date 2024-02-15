@@ -3547,6 +3547,11 @@ $('#category_name').on('change', function () {
         success: function (res) {
             console.log('AJAX Response:', res);
 
+			if(res.payment_status==1){
+				
+				$("#paystatus").prop("disabled", true);
+			}
+
             if (res.id) {
                 $('#order_status').val(res.order_status);
 				$('#paystatus').val(res.payment_status);
