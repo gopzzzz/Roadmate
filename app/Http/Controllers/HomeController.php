@@ -1852,13 +1852,35 @@ public function shop_categoriesdelete($id){
 		$brands->save();
 		return redirect('brand')->with('success','Brand edited successfully');
 	}
-	public function brandinsert(Request $request){
-		$brand=new Brand_lists;
-		$brand->vehicle=$request->vehtype;
-		$brand->brand=$request->brand;
+	
+	public function brandinsert(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+			'vehtype' => 'required|integer|not_in:0', // Check that vehtype is required, an integer, and not equal to 0
+			'brand' => 'required|string', // Validate that brand is required and a string
+		], [
+			'vehtype.required' => 'Please select a vehicle type.', // Custom error message for required vehtype
+			'vehtype.integer' => 'The vehicle type must be an integer.', // Custom error message for integer type vehtype
+			'vehtype.not_in' => 'Please select a valid vehicle type.', // Custom error message for not_in rule
+			'brand.required' => 'The brand field is required.', // Custom error message for required brand
+			'brand.string' => 'The brand must be a string.', // Custom error message for string type brand
+		]);
+		
+		if ($validator->fails()) {
+			return response()->json(['errors' => $validator->errors()], 422); // HTTP status code 422 for Unprocessable Entity
+		}
+		
+		$brand = new Brand_lists;
+		$brand->vehicle = $request->vehtype;
+		$brand->brand = $request->brand;
 		$brand->save();
-		return redirect('brand')->with('success','Brand inserted successfully');
+	
+		return redirect('brand')->with('success', 'Brand inserted successfully');
 	}
+	
+
+
+
 	public function branddelete($id){
 		DB::delete('delete from brand_lists where id = ?', [$id]);
 		return redirect('brand')->with('success','Brand deleted successfully');
@@ -4312,13 +4334,15 @@ public function order_history()
 			 $role=Auth::user()->user_type;
 			return view('brands',compact('brand','role'));
 		 }
+		 
 		 public function brandsinsert(Request $request)
 		 {  
 			$brand= new Tbl_brands;
 			$brand->brand_name=$request->brand_name;
 		    $brand->save();
-			return redirect('brands');
+			return redirect('brands')->with('success', 'Brand Added successfully!');
 		 }
+
 		 public function brandsfetch(Request $request){
 			 $id=$request->id;
 			 $brand = Tbl_brands::find($id);
@@ -4386,7 +4410,7 @@ public function order_history()
 
 
 			  }
-		      return back()->with('success', 'Product Added successfully!');;
+		      return back()->with('success', 'Product Added successfully!');
 		  }
 
 

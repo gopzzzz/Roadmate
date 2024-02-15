@@ -234,8 +234,7 @@
 <td style="width: 50px;">
     <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}" target="_blank">
         <button type="submit" class="print-button">
-            <i class="material-icons">&#xe8ad;</i>
- 
+            <i class="material-icons">&#xe8ad;</i> 
         </button>
     </form>
 </td>

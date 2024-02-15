@@ -49,7 +49,7 @@
                            </div>
                            <div class="form-group col-sm-6">
                               <label class="exampleModalLabel">Phone Number</label>
-                              <input class="form-control" name="phone_number" placeholder="Enter Phone Number" required>
+                              <input class="form-control" id="phone_number_input" name="phone_number" placeholder="Enter Phone Number" required>
                            </div>
                            <div class="form-group col-sm-6">
                               <label class="exampleModalLabel">Area Name</label>
@@ -441,9 +441,8 @@
    }
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var phoneInput = document.querySelector('input[name="phone_number"]');
-    var form = document.querySelector('form'); // Adjust the form selector based on your actual HTML structure
+    document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.getElementById('phone_number_input');
 
     phoneInput.addEventListener('input', function () {
         var value = phoneInput.value;
@@ -456,13 +455,34 @@ document.addEventListener('DOMContentLoaded', function () {
             // Limit to exactly 10 digits
             numericValue = numericValue.substring(0, 10);
 
-            // Update the input value with the cleaned numeric value
-            phoneInput.value = numericValue;
-        } else {
-            // Clear the input if it doesn't meet the criteria
-            phoneInput.value = '';
-            alert('Please enter a valid 10-digit phone number starting with 6, 7, 8, or 9 and containing at least 10 digits.');
+            // Ensure the number starts with 6, 7, 8, or 9
+            if (/^[6789]/.test(numericValue)) {
+                // Update the input value with the cleaned numeric value
+                phoneInput.value = numericValue;
+            } else {
+                // Clear the input if it doesn't meet the criteria
+                phoneInput.value = '';
+                alert('Please enter a valid 10-digit phone number starting with 6, 7, 8, or 9.');
+            }
+        });
+
+        // Function to validate form before submission
+        function validateForm() {
+            var phoneValue = phoneInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (phoneValue.length !== 10) {
+                alert('Please enter a valid 10-digit phone number.');
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
         }
+
+        // Attach event listener to form submission
+        var form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            if (!validateForm()) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
     });
 
     form.addEventListener('submit', function (event) {

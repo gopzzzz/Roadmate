@@ -38,38 +38,42 @@
                      <p align="right">
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Brands</button>
                      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <form method="POST" action="{{url('brandinsert')}}" enctype="multipart/form-data">
-                           @csrf
-                           <div class="modal-dialog" role="document" style="width:80%;">
-                              <div class="modal-content">
-                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Brands</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                 </div>
-                                 <div class="modal-body row">
-                                 <div class="form-group col-sm-12">
-                                        <label class="exampleModalLabel">Vehicle Type</label>
-                                       <select name="vehtype" class="form-control">
-                                       <option value="0">select vehicle type</option>
-                                       @foreach($vehtype as $vehtype)
-                                       <option value="{{$vehtype->id}}">{{$vehtype->veh_type}}</option>
-                                       @endforeach
-                                       </select>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="exampleModalLabel">Brand</label>
-                                      <input type="text" name="brand" class="form-control" >
-                                    </div>
-                                 </div>
-                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
-                                 </div>
-                              </div>
-                           </div>
-                        </form>
+                     <form method="POST" action="{{ url('brandinsert') }}" enctype="multipart/form-data">
+    @csrf
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Brands</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="form-group col-sm-12">
+                    <label class="exampleModalLabel">Vehicle Type</label>
+                    <select name="vehtype" class="form-control" required>
+                        <option value="0">Select vehicle type</option>
+                        @foreach($vehtype as $vehtype)
+                        <option value="{{ $vehtype->id }}">{{ $vehtype->veh_type }}</option>
+                        @endforeach
+                    </select>
+                    @error('vehtype')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror    
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="exampleModalLabel">Brand</label>
+                    <input type="text" name="brand" class="form-control" placeholder="Enter Brand Names" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" name="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</form>
+
                      </div>
                   </div>
                   <!-- /.card-header -->
@@ -216,4 +220,40 @@
     }
 </script>
 
+<script>
+// Handle form submission
+$('form').submit(function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    var formData = $(this).serialize(); // Serialize form data
+    var url = $(this).attr('action'); // Get form action URL
+
+    // Submit form data via AJAX
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        success: function(response) {
+            // Check if there are any validation errors
+            if (response.errors) {
+                // Clear previous error messages
+                $('.text-danger').remove();
+
+                // Display validation errors next to form fields
+                $.each(response.errors, function(field, errorMessage) {
+                    $('[name="' + field + '"]').after('<span class="text-danger">' + errorMessage + '</span>');
+                });
+            } else {
+                // No validation errors, close the modal or take appropriate action
+                $('#exampleModal').modal('hide');
+                // Additional success handling
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handle AJAX errors
+        }
+    });
+});
+
+</script>
 @endsection
