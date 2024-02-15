@@ -4027,8 +4027,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		
 		public function sale_order_master($orderId) {
 
-			$markk=DB::table('tbl_order_trans')
-			->get();
+		$markk=DB::table('tbl_order_trans')->get();
+
 		$saleorder=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -4038,7 +4038,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			->select( 
 				'tbl_order_masters.*',
 				'tbl_order_trans.product_id',
-				'tbl_order_trans.order_id',
+				'tbl_order_trans.id',
+				'tbl_order_trans.id',
 				'tbl_order_trans.qty',
 				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
@@ -4075,21 +4076,11 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					dd("Shop with name $request->shopname not found");
 				}
 
-
-				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
-				if($check==null){
-                 $invoice=1000;
-				}else{
-					$invoice=$check->invoice_number+1;
-				}
-
-
 				
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
 				$saleMaster->order_id = is_array($request->orderId) ? $request->orderId[0] : null;
-				$saleMaster->invoice_number=$invoice;
 				$saleMaster->total_amount = $request->total_amount;
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
@@ -4098,7 +4089,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->total_mrp = $request->total_mrp;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
-				$saleMaster->payment_status = 0;
+				// $saleMaster->payment_status = 0;
 				// $saleMaster->order_status = $request->order_status;
 				$saleMaster->delivery_date = $request->delivery_date;
 				$saleMaster->order_date = $request->orderdate;
