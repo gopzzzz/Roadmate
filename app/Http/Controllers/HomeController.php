@@ -4027,8 +4027,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		
 		public function sale_order_master($orderId) {
 
-		$markk=DB::table('tbl_order_trans')->get();
-
+			$markk=DB::table('tbl_order_trans')
+			->get();
 		$saleorder=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -4038,8 +4038,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			->select( 
 				'tbl_order_masters.*',
 				'tbl_order_trans.product_id',
-				'tbl_order_trans.id',
-				'tbl_order_trans.id',
+				'tbl_order_trans.order_id',
 				'tbl_order_trans.qty',
 				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
@@ -4075,8 +4074,6 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				if (!$shop) {
 					dd("Shop with name $request->shopname not found");
 				}
-
-				
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
@@ -4089,7 +4086,6 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->total_mrp = $request->total_mrp;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
-				$saleMaster->payment_status = 0;
 				
 				// $saleMaster->order_status = $request->order_status;
 				$saleMaster->delivery_date = $request->delivery_date;
@@ -4139,8 +4135,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				}
 		
 				return redirect('order_master');
-			}
-			catch (\Exception $e) {
+			} catch (\Exception $e) {
 				\Log::error($e->getMessage());
 				dd($e->getMessage());
 			}
@@ -4839,15 +4834,15 @@ public function order_history()
 				return response()->json(['success' => false, 'message' => 'Error updating priority']);
 			}
 		}
-		public function removePriority($productId)
-		{
-			DB::table('tbl_brand_products')
-				->where('id', $productId)
-				->update(['priority' => 0]);
-		
-			return redirect()->back();
-		}
-		
+	public function removePriority($productId)
+    {
+        DB::table('tbl_brand_products')
+            ->where('id', $productId)
+            ->update(['priority' => 0]);
+
+        return redirect()->back()->with('success', 'Priority removed successfully.');
+    }
+
 }
 	
 
