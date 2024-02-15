@@ -174,7 +174,7 @@
        @foreach($sale as $key)
        <tr>
            <td>{{ $i++ }}</td>
-           <td>{{ $key->order_id }}</td>
+           <td>{{ $key->invoice_number }}</td>
            <td>{{ $key->shopname }}</td>
           
            <td>{{ $key->phone }}</td>
@@ -218,10 +218,13 @@
             </form>
         </td>
         <td>
-            <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->order_id }}"
+        @if($role!=3)
+        <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->order_id }}"
                 style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
                 Update 
-            </button>
+            </button>     
+                  @endif
+        
         </td>
 
             </tr>
@@ -229,15 +232,11 @@
           
             @endforeach
 
-            @if($role==1) 
-               
-            @endif
+       
         </tbody>
         <tfoot>
           
-                @if($role==1)
-                  
-                @endif
+              
             
         </tfoot>
     </table>
