@@ -160,11 +160,21 @@
 
               
                   
-                    <td>
-                    <button class="btn btn-primary edit_priority" data-toggle="modal" onclick="removePriority('{{$key->id}}')">
-    Remove Priority
-</button>
+                  <td>
+    <button class="btn btn-primary edit_priority" data-toggle="modal" onclick="removePriority('{{$key->id}}')">
+        Remove Priority
+    </button>
+
+    @if(session('refresh'))
+        <script>
+            // Use jQuery to reload only the specific part of the page
+            $(document).ready(function(){
+                location.reload();
+            });
+        </script>
+    @endif
 </td>
+
 	</tr>
 @php 
 $i++;
@@ -208,8 +218,12 @@ $i++;
 <script>
     function removePriority(productId) {
         window.location.href = "{{ route('removePriority', ['productId' => ':productId']) }}".replace(':productId', productId);
+        setTimeout(function () {
+            alert('Priority removed successfully.');
+        }, 1000); // Adjust the time (in milliseconds) as needed
     }
 </script>
+
 
 
 @endsection
