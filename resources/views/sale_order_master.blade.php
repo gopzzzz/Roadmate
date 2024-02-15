@@ -144,18 +144,18 @@
             <th>Tax</th>
             <th>Total Amount</th>
            
-        </tr> 
+        </tr>
     </thead>
     <tbody>
         @foreach($saleorder as $index => $product)
         <tr>
             <input type="hidden" id="productId" name="id">
             <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
-            <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
-            <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required readonly></td>
-            <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required readonly></td>
-            <td><input class="form-control tax" name="tax" value="0" required readonly></td>
-            <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required readonly></td>
+            <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required></td>
+            <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required></td>
+            <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required></td>
+            <td><input class="form-control tax" name="tax" value="0" required></td>
+            <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required></td>
         </tr>
         @endforeach
     </tbody> 
@@ -169,7 +169,7 @@
                 </div>
                 <div class="form-group">
                     <label class="exampleModalLabel">DISCOUNT</label>
-                    <input class="form-control" name="discount" value="{{ $order->discount }}" required readonly>
+                    <input class="form-control" name="discount" value="{{ $order->discount }}" required>
                 </div>
                 <div class="form-group">
                     <label class="exampleModalLabel">PAYMENT METHOD</label>
@@ -177,7 +177,7 @@
                 </div>
                 <div class="form-group">
                     <label class="exampleModalLabel">TOTAL AMOUNT</label>
-                    <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required readonly>
+                    <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required>
                 </div>
             </div>
             </div>

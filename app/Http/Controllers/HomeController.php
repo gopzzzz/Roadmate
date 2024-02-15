@@ -4074,6 +4074,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				if (!$shop) {
 					dd("Shop with name $request->shopname not found");
 				}
+
+				
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
@@ -4086,7 +4088,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->total_mrp = $request->total_mrp;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
-				
+				$saleMaster->payment_status = 0;
 				// $saleMaster->order_status = $request->order_status;
 				$saleMaster->delivery_date = $request->delivery_date;
 				$saleMaster->order_date = $request->orderdate;
