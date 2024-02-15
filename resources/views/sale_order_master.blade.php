@@ -158,7 +158,7 @@
             <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required></td>
         </tr>
         @endforeach
-    </tbody>
+    </tbody> 
                 
                 </table>
                 </div>
