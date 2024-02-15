@@ -98,6 +98,7 @@
                     <div class="form-group">
                         <label class="exampleModalLabel">E-way BILL NUMBER:</label>
                         <input class="form-control" name="billnumber" required>
+                        
                     </div>
                 </div>
                 <div class="col-sm-3">

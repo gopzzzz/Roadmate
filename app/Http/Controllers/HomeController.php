@@ -3951,78 +3951,84 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 		}
 
-		public function orderfetch(Request $request){
-			$id = $request->id;
-			$order = Tbl_order_masters::find($id);
+		public function orderfetch(Request $request)
+		{
+			$order_id = $request->id; // assuming id in the request is the order_id
+			$order = Tbl_order_masters::where('order_id', $order_id)->first();
 		
 			if ($order) {
-		
 				$orderArray = $order->toArray();
-				
 				return response()->json($orderArray);
 			} else {
-			
 				return response()->json(['error' => 'Order details not found'], 404);
 			}
 		}
+		
 		public function orderstatus() {
 			$order = Tbl_order_masters::orderBy('order_status')->get();
 		
 			return view('order_master', compact('order'));
 		}
-		
+		public function statusedit(Request $request, $order_id)
+{
+    \Log::info('Received order_id for statusedit: ' . $order_id);
 
-		public function statusedit(Request $request, $id)
-		{
-			\Log::info('Received ID for statusedit: ' . $id);
-		
-			$total_amount = $request->input('total_amount');
-		
-			\Log::info('Received total_amount for statusedit: ' . $total_amount);
-		
-			if (!is_numeric($total_amount)) {
-				\Log::error('Invalid total_amount received: ' . $total_amount);
-				return redirect('sale_list')->with('error', 'Invalid total_amount received.');
-		}
-		
-			$order = Tbl_order_masters::find($id);
-		
-			if ($order) {
-				$order->order_status = $request->order_status;
-				$order->payment_status = $request->input('paystatus');
-		
-				if ($request->paystatus == '1') {
-					$percentage = ($total_amount * 10) / 100;
-					\Log::info('Calculated Percentage: ' . $percentage);
-		
-					$shop_id = $order->shop_id;
-		
-					$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
-		
-					if ($wallet) {
-						$wallet->wallet_amount += $wallet->amount+$percentage;
-						$wallet->save();
-						\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
-					} else {
-						$w=new Tbl_wallets;
-						$w->shop_id=$shop_id;
-						$w->wallet_amount += $percentage;
-						$w->save();
-					}
-					    $wh=new Tbl_wallet_transactions;
-						$wh->amount=$percentage;
-						$wh->type = 1;
-						$wh->shop_id =$shop_id = $percentage;
+    $total_amount = $request->input('total_amount');
 
-				}
+    \Log::info('Received total_amount for statusedit: ' . $total_amount);
+
+    if (!is_numeric($total_amount)) {
+        \Log::error('Invalid total_amount received: ' . $total_amount);
+        return redirect('sale_list')->with('error', 'Invalid total_amount received.');
+    }
+
+    $order = Tbl_order_masters::where('order_id', $order_id)->first();
+
+    if ($order) {
+        $order->order_status = $request->order_status;
+        
+        // Ensure payment_status is properly set
+        if ($request->has('paystatus') && $request->paystatus !== null) {
+            $order->payment_status = $request->paystatus;
+        } elseif ($order->payment_status === null) {
+            // If payment_status is null, set it to its current value
+            $order->payment_status = $order->payment_status;
+        }
+
+        if ($request->paystatus == '1') {
+            $percentage = ($total_amount * 10) / 100;
+            \Log::info('Calculated Percentage: ' . $percentage);
+
+            $shop_id = $order->shop_id;
+
+            $wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+
+            if ($wallet) {
+                $wallet->wallet_amount += $wallet->amount + $percentage;
+                $wallet->save();
+                \Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+            } else {
+                $w = new Tbl_wallets;
+                $w->shop_id = $shop_id;
+                $w->wallet_amount += $percentage;
+                $w->save();
+            }
+
+            $wh = new Tbl_wallet_transactions;
+            $wh->amount = $percentage;
+            $wh->type = 1;
+            $wh->shop_id = $shop_id;
+        }
+
+        $order->save();
+
+        return redirect('sale_list')->with('success', 'Order status updated successfully.');
+    } else {
+        return redirect('sale_list')->with('error', 'Order not found.');
+    }
+}
+
 		
-				$order->save();
-		
-				return redirect('sale_list')->with('success', 'Order status updated successfully.');
-			} else {
-				return redirect('sale_list')->with('error', 'Order not found.');
-			}
-		}
 	
 		
 		public function sale_order_master($orderId) {
@@ -4038,8 +4044,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			->select( 
 				'tbl_order_masters.*',
 				'tbl_order_trans.product_id',
-				
 				'tbl_order_trans.qty',
+
 				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
 				'shops.id',
@@ -4165,22 +4171,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
 					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 					->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-					->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
-					->select('tbl_sale_order_masters.*', 
-					'shops.shopname', 
-					'shops.address', 
-					
-					'tbl_order_masters.order_status',
-					'tbl_order_masters.payment_status', 
-					'tbl_coupens.coupencode', 
-					'tbl_deliveryaddres.area', 
-					'tbl_deliveryaddres.area1', 
-					'tbl_deliveryaddres.country', 
-					'tbl_deliveryaddres.state', 
-					'tbl_deliveryaddres.district', 
-					'tbl_deliveryaddres.city', 
-					'tbl_deliveryaddres.phone', 
-					'tbl_deliveryaddres.pincode')
+					->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
+					->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status','tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
 					->orderBy('tbl_sale_order_masters.id', 'DESC')
 					->paginate(10);
 

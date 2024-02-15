@@ -309,7 +309,7 @@
     <!-- <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->order_id}}/{{ date('y') }}</span></div> -->
     <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->order_id}}/{{ date('y') }}</span></div>
     <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">00000</span></div>
-    <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">00000</span></div>
+   
     <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ $key->delivery_date }}</span></div>
 
 </div>
@@ -358,7 +358,7 @@
                     <td>{{$key->qty}}</td>
                     <td>0</td>
                     <td>0</td>
-                    <td>{{$key->offer_amount}}</td>
+                    <td>{{$key->offer_amount*$key->qty}}</td>
                    
                 </tr>
                 @endforeach
