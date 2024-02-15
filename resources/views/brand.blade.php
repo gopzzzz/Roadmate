@@ -52,18 +52,21 @@
                 <div class="form-group col-sm-12">
                     <label class="exampleModalLabel">Vehicle Type</label>
                     <select name="vehtype" class="form-control" required>
-                        <option value="0">Select vehicle type</option>
-                        @foreach($vehtype as $vehtype)
-                        <option value="{{ $vehtype->id }}">{{ $vehtype->veh_type }}</option>
+                        <option value="" disabled selected>Select vehicle type</option>
+                        @foreach($vehtype as $veh)
+                        <option value="{{ $veh->id }}">{{ $veh->veh_type }}</option>
                         @endforeach
                     </select>
                     @error('vehtype')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror    
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group col-sm-12">
                     <label class="exampleModalLabel">Brand</label>
                     <input type="text" name="brand" class="form-control" placeholder="Enter Brand Names" required>
+                    @error('brand')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
             <div class="modal-footer">
@@ -73,6 +76,7 @@
         </div>
     </div>
 </form>
+
 
                      </div>
                   </div>

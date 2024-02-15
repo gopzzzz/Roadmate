@@ -38,47 +38,48 @@
                   <p align="right">
                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Vehicles</button>
                   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                     <form method="POST" action="{{url('vehcleinsert')}}">
-                        @csrf
-                        <div class="modal-dialog" role="document" style="width:80%;">
-                           <div class="modal-content">
-                              <div class="modal-header">
-                                 <h5 class="modal-title" id="exampleModalLabel">Add Vehicle</h5>
-                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                 <span aria-hidden="true">&times;</span>
-                                 </button>
-                              </div>
-                              <div class="modal-body row">
-                                 <div class="form-group col-sm-12">
-                                    <label class="exampleModalLabel">Brand</label>
-                                    <select name="brand" class="form-control" required>
-                                       <option value="0">Select Brand</option>
-                                       @foreach($brand as $key)                                   
-                                       <option value="{{$key->id}}">{{$key->brand}}</option>
-                                       @endforeach
-                                    </select>
-                                 </div>
-                                 <div class="form-group col-sm-12">
-                                    <label class="exampleModalLabel">Fuel Type</label>                      
-                                    <select name="fuel" class="form-control" required>
-                                       <option value="0">Select Fuel type</option>
-                                       @foreach($fuel as $key1)                                 
-                                       <option value="{{$key1->id}}">{{$key1->fuel_type}}</option>
-                                       @endforeach                           
-                                    </select>
-                                 </div>
-                                 <div class="form-group col-sm-12">
-                                    <label class="exampleModalLabel">Model</label>
-                                    <input type="text" name="models" class="form-control" required>
-                                 </div>
-                              </div>
-                              <div class="modal-footer">
-                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                 <button type="submit" name="submit" class="btn btn-primary">Add</button>
-                              </div>
-                           </div>
-                        </div>
-                     </form>
+                  <form method="POST" action="{{url('vehcleinsert')}}">
+    @csrf
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Vehicle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="form-group col-sm-12">
+                    <label class="exampleModalLabel">Brand</label>
+                    <select name="brand" class="form-control" required>
+                        <option value="" disabled selected>Select Brand</option>
+                        @foreach($brand as $key)                                   
+                        <option value="{{$key->id}}">{{$key->brand}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="exampleModalLabel">Fuel Type</label>                      
+                    <select name="fuel" class="form-control" required>
+                        <option value="" disabled selected>Select Fuel type</option>
+                        @foreach($fuel as $key1)                                 
+                        <option value="{{$key1->id}}">{{$key1->fuel_type}}</option>
+                        @endforeach                           
+                    </select>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="exampleModalLabel">Model</label>
+                    <input type="text" name="models" class="form-control" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" name="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</form>
+
                   </div>
                </div>
                <!-- /.card-header -->
