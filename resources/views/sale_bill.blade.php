@@ -65,7 +65,7 @@
 
         .company-logo img {
        
-            max-width: 210px; /* Adjust the size of the logo */
+            max-width: 250px; /* Adjust the size of the logo */
             height: 85px;
         }
 
@@ -275,14 +275,14 @@
 <button class="print-button" onclick="printPage()">Print Page</button>
     <div class="invoice">
     <div class="company-logo" style="float: left">
-    <img src="{{ asset('img/RMLOGO.png') }}" alt="Company Logo">
+    <img src="{{ asset('market/RoadMateLogo.png') }}" alt="Company Logo">
 </div> <br><br>
 <div class="invoice-header">
             <div class="invoice-title">Sale Bill</div>
         </div>
 <br>
 
-        
+         
 
         <div class="invoice-details">
             <div class="left-details">
