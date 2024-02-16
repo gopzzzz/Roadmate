@@ -226,7 +226,11 @@
                                      <td>{{$key->phone_number}}</td>
                                      <td>{{$key->ios_code}}</td>
                                      <td>{{$key->security_code}}</td>
-                                     <td>{{$key->app_type}}</td>
+                                     <td>@if($key->app_type==1)Customer
+                                       @elseif($key->app_type==2)Partner
+                                       @else Executive
+                                     @endif
+                                     </td>
 
 
                                      <td>
