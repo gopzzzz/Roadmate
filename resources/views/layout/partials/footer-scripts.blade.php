@@ -1133,11 +1133,12 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
                 console.log(res);
                 var obj = JSON.parse(res);
                 $('#name').val(obj.name);
-                $('#email').val(obj.email);
+                $('#gemail').val(obj.email);
                 $('#phnum').val(obj.phonenum);
                 $('#district').val(obj.district);
                 $('#location').val(obj.location);
                 $('#address').val(obj.addrress);
+				$('#status').val(obj.exestatus);
                 $('#exeid').val(obj.id);
                 
                 // Set the image preview or update the image input as needed
@@ -3656,4 +3657,32 @@ $(document).ready(function () {
         });
     });
 });
+
+$('.edit_purchaseorder').click(function(){
+    var id = $(this).data('id');
+    
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('purchaseorderfetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#venname').val(obj.vendor_id);
+                $('#ponumber').val(obj.bill_num);
+               
+                $('#requestby').val(obj.request_by);
+               
+                $('#purchaseid').val(obj.id);
+                
+            },
+        });
+    }
+    $('#editpurcaseorder_modal').modal('show');
+}); 
+
 </script>

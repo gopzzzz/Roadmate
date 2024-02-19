@@ -1366,6 +1366,9 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
+Route::post('/purchaseorderedit', [App\Http\Controllers\HomeController::class, 'purchaseorderedit'])->name('purchaseorderedit');
+Route::post('/purchaseorderfetch', [App\Http\Controllers\HomeController::class, 'purchaseorderfetch'])->name('purchaseorderfetch');
+
 Route::get('/bill/{id}', 'HomeController@bill')->name('bill');
 Route::get('/productpriority', 'HomeController@productpriority')->name('productpriority');
 Route::post('/search_product', [

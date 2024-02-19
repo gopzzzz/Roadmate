@@ -290,7 +290,8 @@
 
                    
 
-                    <th>Addrress</th>
+                    <th>Address</th>
+                    <th>Status</th>
 
                     <th></th>
 
@@ -329,6 +330,11 @@
                     <td>{{$key->email}}</td>
 					
 					<td>{{$key->addrress}}</td>
+          <td>@if($key->exestatus==0) Active
+            @else Inactive 
+            @endif
+          </td>
+
           <td>
             @if($key->user_id==null)
             <button type="button" class="btn btn-success btn-sm createaccount" data-email="{{$key->email}}" data-id="{{$key->id}}">Create Account</button>
@@ -374,7 +380,9 @@
 
                     <th>Email</th>
 
-                    <th>Addrress</th>
+                    <th>Address</th>
+                    <th>Status</th>
+
                     <th></th>
 
                     <th></th> 
@@ -520,7 +528,7 @@
 
 
 
-<input class="form-control" name="exename" id="name" required>
+<input class="form-control" name="name" id="name" required>
 
 
 </div>
@@ -533,7 +541,7 @@
 
 
 
-<input class="form-control" name="email" id="email" required>
+<input class="form-control" name="email" id="gemail" required>
 
 
 </div>
@@ -580,7 +588,7 @@
 
 
 
-<input class="form-control" id="location" name="location"  required>
+<input class="form-control" id="location" name="location" >
 
 
 </div>
@@ -611,7 +619,16 @@
 
 
                       </div>
+                      <div class="form-group col-sm-6">
 
+                      <label class="exampleModalLabel">Status</label>
+
+<select name="status" id="status" class="form-control"  required>
+
+	<option value="0">Active</option>
+<option value="1">In Active</option>
+</select>
+</div>
       </div>
       
       <div class="modal-footer">

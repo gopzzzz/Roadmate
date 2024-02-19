@@ -106,7 +106,7 @@
      <td>{{$key->vendor_name}}
      </td>
 	 <td>{{$key->address}}</td>
-     <td>{{$key->phone_number}}</td>
+     <td>{{$key->phone_number}}</td>           
      <td>{{$key->email}}</td>
 	 <td>{{$key->vendor_code}}</td>
      <td>{{$key->Gst_number}}</td>

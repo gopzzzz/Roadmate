@@ -312,7 +312,9 @@ class HomeController extends Controller
         $exe->email = $request->email;
         $exe->addrress = $request->address;
         $exe->district = $request->district;
-        $exe->location = $request->location;
+		
+		$exe->exestatus =0;
+
         $exe->save();
         return redirect('executive')->with('success', 'Executive Inserted Successfully');
     }
@@ -333,12 +335,12 @@ class HomeController extends Controller
 		$id=$request->id;
 		$exeedit=executives::find($id);
 	
-		$exeedit->name=$request->exename;
+		$exeedit->name=$request->name;
 		$exeedit->phonenum=$request->phonenumber;
 		$exeedit->email=$request->email;
 		$exeedit->addrress=$request->address;
 		$exeedit->district=$request->district;
-		$exeedit->location=$request->location;
+		$exeedit->exestatus=$request->status;
 		if($files=$request->file('image')){  
 			$name=$files->getClientOriginalName();  
 			$files->move('img/',$name);  
@@ -349,6 +351,7 @@ class HomeController extends Controller
 		return redirect('executive')->with('success', 'Executive Edited Successfully');
 
 	}
+	
 	
 	public function exedelete($id){
 		DB::delete('delete from executives where id = ?', [$id]);
@@ -4759,13 +4762,32 @@ public function order_history()
 
 	
 	public function purchaseorder_bill(){
+		$vendor=DB::table('tbl_vendors')->get();
+		$user=DB::table('users')->get();
 		$ordersQuery=DB::table('tbl_place_order_masters')
 		->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
 		->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
 		->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
 		->get();
 		$role=Auth::user()->user_type;
-		return view('purchaseorder_bill',compact('role','ordersQuery'));
+		return view('purchaseorder_bill',compact('role','ordersQuery','vendor','user'));
+	}
+	public function purchaseorderfetch(request $request){
+		
+		$id=$request->id;
+	$purchaseorder=Tbl_place_order_masters::find($id);
+	print_r(json_encode($purchaseorder));
+	}
+	public function purcaseorderedit(request $request)
+	{
+		$id=$request->id;
+		$puredit=Tbl_place_order_masters::find($id);
+		$puredit->vendor_id=$request->venname;
+		$puredit->bill_num	=$request->ponumber;
+		$puredit->request_by=$request->requestby;
+		$puredit->save();
+		return redirect()->back()->with("edited successfully");
+
 	}
 	public function bill($id){
 		$role=Auth::user()->user_type;

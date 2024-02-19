@@ -102,7 +102,8 @@
    <th>Vendor Name </th>
          <th>PO Number</th>
          <th>Requested BY</th>
-    
+         <th></th>
+
          <th></th>
   
 </tr>
@@ -124,6 +125,8 @@
                     <td>{{ $key->vendor_name }}</td>
                     <td>{{ $key->bill_num }}</td>
                     <td>{{ $key->name }}</td>
+                    <td><i class="fa fa-edit edit_purchaseorder"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+	</td>
                     <td>
                     <a href="{{url('bill/'.$key->id)}}" target="_blank"><button type="button" class="btn btn-success btn-sm" >PO print</button></a>
                 </td>
@@ -153,14 +156,54 @@ $i++;
  <th>Vendor Name </th>
          <th>PO Number</th>
          <th>Requested BY</th>
-           
-         
+      
+         <th></th>
+
          <th></th>
  @if($role==1)
  @endif
  </tr>
 </tfoot>
-</table>
+</table><div class="modal" id="editpurcaseorder_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Purchase Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+<form method="POST" action="{{ route('purchaseorderedit') }}" enctype="multipart/form-data" name="exeedit">
+@csrf
+<div class="modal-body row">
+ <div class="form-group col-sm-12">
+    <input type="hidden" name="id" id="purchaseid">
+    <select name="venname" id="venname" class="form-control" required>
+                    <option value="" disabled selected>Select vendor name</option>
+                    @foreach($vendor as $key)
+                        <option value="{{ $key->id }}">{{ $key->vendor_name }}</option>
+                    @endforeach
+                </select>
+</div>
+<div class="form-group col-sm-12">
+ <label class="exampleModalLabel">PO Number</label>
+  <textarea class="form-control" name="ponumber" id="ponumber" placeholder="Enter PO Number" required></textarea>
+</div>
+<div class="form-group col-sm-12">
+ <label class="exampleModalLabel">Requested By</label>
+  <select name="requestby" id="requestby" class="form-control" required>
+                    <option value="" disabled selected>Select Requested By</option>
+                    @foreach($user as $key)
+                        <option value="{{ $key->id }}">{{ $key->name }}</option>
+                    @endforeach
+                </select>
+</div>
+</div>
+<div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      </form>
 <!-- /.card-body -->
  </div>  <!-- /.card -->
 </div>
