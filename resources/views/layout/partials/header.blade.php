@@ -880,6 +880,30 @@ $name=Auth::user()->name;
                   </li>
                </ul>
             </li>
+            @elseif($role==7)
+            <li class="nav-item has-treeview {{ request()->is('ashops') ? 'menu-open' : '' }}">
+               <a href="#" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-university"></i>
+                  <p>
+                     Shops
+                     <i class="fas fa-angle-left right"></i>
+                  </p>
+               </a>
+               <ul class="nav nav-treeview">
+                  <!-- <li class="nav-item">
+                     <a href="{{ url('vshops') }}" class="nav-link">
+                         <i class="far fa-circle nav-icon"></i>
+                         <p>Visited Shops</p>
+                     </a>
+                     </li> -->
+                  <li class="nav-item">
+                     <a href="{{ url('ashops') }}" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Added Shops</p>
+                     </a>
+                  </li>
+               </ul>
+            </li>
             @endif
             </ul>
          </nav>
