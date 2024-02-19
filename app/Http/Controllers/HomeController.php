@@ -561,7 +561,7 @@ class HomeController extends Controller
     return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 }
 public function crm(){
-		$cr = tbl_crms::with('user')->get();
+		$cr = Tbl_crms::with('user')->get();
 		
 		$crr = DB::table('tbl_crms')
         ->leftJoin('users', 'tbl_crms.user_id', '=', 'users.id')
@@ -3795,6 +3795,7 @@ function sendNotification1($msg1,$title)
 		$invoice=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 		->where('tbl_order_masters.id',$orderId)
@@ -3813,7 +3814,10 @@ function sendNotification1($msg1,$title)
 				'tbl_deliveryaddres.district',
 				'tbl_deliveryaddres.state',
 				'tbl_deliveryaddres.pincode',
-				'tbl_deliveryaddres.country'
+				'tbl_deliveryaddres.country',
+				'tbl_hsncodes.tax',
+				'tbl_hsncodes.cgst',
+				'tbl_hsncodes.igst',
 				)
 			->get();
 		$role=Auth::user()->user_type;
@@ -3935,7 +3939,16 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 
 			}else{
-			    $order="";
+				$order = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+				
+				->orderBy('tbl_order_masters.id', 'DESC')
+				
+				->paginate(10);
+
 			}
 		
 		
@@ -4217,6 +4230,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			$salebill=DB::table('tbl_sale_order_masters')
 			->leftJoin('tbl_sale_order_trans', 'tbl_sale_order_masters.id', '=', 'tbl_sale_order_trans.order_id')
 			->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id') 
 			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 			->where('tbl_sale_order_masters.id',$orderId)
@@ -4236,7 +4250,10 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					'tbl_deliveryaddres.district',
 					'tbl_deliveryaddres.state',
 					'tbl_deliveryaddres.pincode',
-					'tbl_deliveryaddres.country'
+					'tbl_deliveryaddres.country',
+					'tbl_hsncodes.tax',
+					'tbl_hsncodes.cgst',
+					'tbl_hsncodes.igst',
 					)
 				->get();
 			$role=Auth::user()->user_type;

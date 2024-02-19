@@ -341,36 +341,57 @@
         <table class="invoice-items">
             <thead>
                 <tr>
+                <th>#</th>
                     <th>Description</th>
                     <th>Unit Price</th>
                     <th>Quantity</th>
                     <th>SGST</th>
                     <th>CGST</th>
+                    <th>Tax.Amt</th>
                     <th>Amount</th>
                 </tr>
             </thead>
             <tbody>
+            @php  
+$i=1;
+$sum=0;
+$taxableamount=0;
+$subtotal=0;
+@endphp
+
             @foreach($invoice as $key)
                 <tr> 
-              
+                <td>{{$i}}</td>
                     <td>{{$key->product_name}}</td>
-                    <td>{{$key->offer_amount}}</td>
-                    <td>{{$key->qty}}</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>{{$key->offer_amount*$key->qty}}</td>
+                    <td>{{($key->offer_amount)-(($key->offer_amount)*($key->cgst))/100}}</td>
+                    <td>{{$key->qty}} </td>
+                    <td>{{$key->cgst}} %</td>
+                    <td>{{$key->igst}} %</td>
+                    <td>{{(($key->qty*$key->offer_amount)*($key->cgst))/100}} </td>
+                    <td>{{$key->qty*$key->offer_amount*$key->qty}}</td>
                    
                 </tr>
+
+                @php 
+                $sum += $key->qty*$key->offer_amount;
+$taxableamount += ($key->offer_amount*$key->tax/100)*$key->qty;
+$subtotal+= $key->qty*($key->offer_amount - ($key->offer_amount*$key->tax/100));
+$i++;
+
+                @endphp
+                
                 @endforeach
                 <!-- Add more rows as needed -->
             </tbody>
             <tfoot>
                 <tr class="total-row">
+                <td></td>
                     <td style="border: 2px solid #000000;">Total</td>
                     <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000";>Total SGST</td>
                     <td style="border: 2px solid #000000";>Total CGST</td>
+                    <td></td>
                     <td></td>
                 </tr>
             </tfoot>
@@ -388,12 +409,12 @@
     </div>
     <div class="right-details">
     
-            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">{{ $key->total_amount }}</span></p>
-            <p><strong><span style="color: grey;"><b>DISCOUNT:</b></span></strong><span class="highlight-back" >{{ $key->discount }}</span></p>
-            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">0</span></p>
-            <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back">0</span></p>
-            <br><br>
-            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">{{ $key->total_amount }}</span></p>
+            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p>
+            <!-- <p><strong><span style="color: grey;"><b>DISCOUNT:</b></span></strong><span class="highlight-back" >{{ $key->discount }}</span></p> -->
+            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{$taxableamount}}</span></p>
+            <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->
+            <!-- <br><br> -->
+            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ $sum }}</span></p>
         
     </div>
          

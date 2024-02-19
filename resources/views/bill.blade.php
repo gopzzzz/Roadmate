@@ -178,7 +178,7 @@
     <th style="text-align: center; width: 15%;">ITEM #</th>
     <th style="text-align: center; width: 40%;">DESCRIPTION</th>
     <th style="text-align: center; width: 10%;">QTY</th>
-    <th style="text-align: center; width: 20%;">UNIT PRICE (Including GST)</th>
+    <th style="text-align: center; width: 20%;">UNIT PRICE </th>
     <th style="text-align: center; width: 20%;">TAX %</th>
     <th style="text-align: center; width: 20%;">TAXABLE AMOUNT</th>
     <th style="text-align: center; width: 20%;">TOTAL</th>
