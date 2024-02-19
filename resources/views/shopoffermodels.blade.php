@@ -4,8 +4,6 @@
 
 <div class="content-wrapper">
 
-   <!-- Content Header (Page header) -->
-
    <section class="content-header">
 
       <div class="container-fluid">
@@ -32,8 +30,6 @@
 
       </div>
 
-      <!-- /.container-fluid -->
-
    </section>
 
    @if(session('success'))
@@ -42,8 +38,6 @@
 
    @endif
 
-   <!-- Main content -->
-
    <section class="content">
 
       <div class="container-fluid">
@@ -51,8 +45,6 @@
          <div class="row">
 
             <div class="col-12">
-
-               <!-- /.card -->
 
                <div class="card">
 
@@ -138,14 +130,9 @@
 									   <option value="{{$key3->id}}">{{$key3->brand}}</option>              
 
 									   @endforeach
-
-                                      
-
-                                       </select>
+                                    </select>
 
                                     </div>								
-
-									
 
 									<div class="form-group col-sm-12">                            
 
@@ -169,17 +156,13 @@
 
 									<label class="exampleModalLabel">Offers</label>               
 
-									<select name="offr" class="form-control" >                      
-
-									<option value="0">Select Offers</option>                        
-
-									@foreach($shopoffr as $key4)                                 
-
-									<option value="{{$key4->id}}">{{$key4->title}}</option>            
-
-									@endforeach                               
-
-									</select>                           
+									<select name="offr" class="form-control">
+                                    <option value="0">Select Offers</option>
+                                    @foreach($shopoffr as $key4)
+                                        <option value="{{$key4->id}}">{{$key4->title}}</option>
+                                    @endforeach
+                                </select>
+                         
 
 									</div>
 
@@ -202,11 +185,7 @@
                      </div>
 
                   </div>
-
-                 
-
-                  <!-- /.card-header -->
-
+   
                   <div class="card-body">
 
                      <table id="example354" class="table table-bordered table-striped">
@@ -220,11 +199,7 @@
                               <th>Shop</th>	
 
                               <th>Vehicle Type</th>							  
-
-             
-
 							  <th>Brand</th>
-
                               <th>Model</th>
 
                               <th>Offer</th>
@@ -291,8 +266,6 @@
 
                               <th>Vehicle Type</th>							  
 
-             
-
 							  <th>Brand</th>
 
                               <th>Model</th>
@@ -311,8 +284,6 @@
     {!! $offrmodl->render( "pagination::bootstrap-4") !!}
 
 </div>
-                     
-
                      <div class="modal" id="viewoffrmodl_modal" tabindex="-1" role="dialog">
 
                         <div class="modal-dialog" role="document">
@@ -330,8 +301,6 @@
                                  </button>
 
                               </div>
-
-                             
 
                                  <div class="modal-body row">
 
@@ -374,8 +343,6 @@
                                        </select>
 
                                     </div>
-
-								
 
                                  <div class="form-group col-sm-12">                
 
@@ -433,14 +400,9 @@
 
                                  <div class="modal-footer">
 
-                                   
-
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
                                  </div>
-
-                              
-
                            </div>
 
                         </div>
@@ -475,8 +437,6 @@
 
                                  <input type="hidden" name="id" id="edit_id" class="form-control" >
 
-								 
-
 								<div class="form-group col-sm-12">
 
                                         <label class="exampleModalLabel">Shop</label>
@@ -497,8 +457,6 @@
 
 								 <div class="form-group col-sm-12">
 
-                                       
-
                                        <label class="exampleModalLabel">Vehicle Type</label>
 
                                        <select name="vehtype" class="form-control" id="vehtype_view1">
@@ -515,13 +473,11 @@
 
                                     </div>
 
-								
-
                                  <div class="form-group col-sm-12">                
 
 								 <label class="exampleModalLabel">Brand</label>             
 
-								 <select name="brand_edit" class="form-control" id="brand1">            
+								 <select name="brand" class="form-control" id="brand1">            
 
 								 <option value="0">Select Brand</option>                        
 
@@ -589,27 +545,15 @@
 
                   </div>
 
-                  <!-- /.card-body -->
-
                </div>
-
-               <!-- /.card -->
 
             </div>
 
-            <!-- /.col -->
-
          </div>
-
-         <!-- /.row -->
 
       </div>
 
-      <!-- /.container-fluid -->
-
    </section>
-
-   <!-- /.content -->
 
 </div>
 
