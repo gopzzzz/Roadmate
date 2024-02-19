@@ -3408,6 +3408,7 @@ $(window).on('load', function(){
 		  $('#original_amount').val(obj.price);
 		  $('#hsncode1').val(obj.hsncode);
 		  $('#prate').val(obj.prate);
+		  $('#no_return_days').val(obj.no_return_days);
 		  $('#status').val(obj.status);
          
 					},

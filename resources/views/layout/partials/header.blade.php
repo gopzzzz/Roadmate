@@ -146,8 +146,8 @@ $name=Auth::user()->name;
                      </li>
                   </ul>
                </li>
-               <li class="nav-item has-treeview {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'marketwallet', 'marketvendor', 'imgcompress', 'hsn']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'marketwallet', 'marketvendor', 'imgcompress', 'hsn']) ? 'active' : '' }}">
+               <li class="nav-item has-treeview {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'marketwallet', 'marketvendor', 'imgcompress', 'hsn', 'productpriority']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['market_category', 'marketproducts', 'vouchers', 'marketwallet', 'marketvendor', 'imgcompress', 'hsn', 'productpriority']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Market Place
@@ -198,12 +198,18 @@ $name=Auth::user()->name;
                            <p>HSN</p>
                         </a>
                      </li>
-                     
+                     <li class="nav-item">
+                                  <a href="{{ url('productpriority') }}" class="nav-link {{ request()->is('productpriority') ? 'active' : '' }}">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>product priority</p>
+                                  </a>
+                              </li>
+                              </li>
                   </ul>
                </li>
-          
-<li class="nav-item has-treeview {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'purchaseorder_bill', 'order_history', 'productpriority', 'salesreturn']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'purchaseorder_bill', 'order_history', 'productpriority', 'salesreturn']) ? 'active' : '' }}">
+               
+<li class="nav-item has-treeview {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'purchaseorder_bill', 'order_history', 'salesreturn']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'purchaseorder_bill', 'order_history', 'salesreturn']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Market Orders
@@ -238,18 +244,13 @@ $name=Auth::user()->name;
                         </a>
                      </li>
                            
-                           <li class="nav-item">
+                           <!-- <li class="nav-item">
                               <a href="{{ url('order_history') }}" class="nav-link {{ request()->is('order_history') ? 'active' : '' }}">
                                  <i class="far fa-circle nav-icon"></i>
                                  <p>Order History</p>
                               </a>
-                           </li>
-                              <li class="nav-item">
-                                  <a href="{{ url('productpriority') }}" class="nav-link {{ request()->is('productpriority') ? 'active' : '' }}">
-                                      <i class="far fa-circle nav-icon"></i>
-                                      <p>product priority</p>
-                                  </a>
-                              </li>
+                           </li> -->
+                             
                               <!-- <li class="nav-item">
                                   <a href="{{ url('salesreturn') }}" class="nav-link {{ request()->is('salesreturn') ? 'active' : '' }}">
                                       <i class="far fa-circle nav-icon"></i>
@@ -258,6 +259,25 @@ $name=Auth::user()->name;
                               </li> -->
                         </ul>
                      </li>
+
+                     <li class="nav-item has-treeview {{ request()->is('godown') ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <p>
+         Stock Management
+         <i class="right fas fa-angle-left"></i>
+      </p>
+   </a>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('godown') }}" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Godown</p>
+         </a>
+      </li>
+   </ul>
+</li>
+
                      <li class="nav-item has-treeview {{ request()->is('timeslot') ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is('timeslot') ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>

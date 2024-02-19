@@ -313,6 +313,7 @@ class HomeController extends Controller
         $exe->addrress = $request->address;
         $exe->district = $request->district;
         $exe->location = $request->location;
+		$exe->user_id = 0;
         $exe->save();
         return redirect('executive')->with('success', 'Executive Inserted Successfully');
     }
@@ -4425,6 +4426,7 @@ public function order_history()
 			  $brandprod->priority = 0;
 
 			  $brandprod->prate = $request->prate;
+			  $brandprod->no_return_days = $request->no_return_days;
 			  $brandprod->status = 0;
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
@@ -4471,6 +4473,7 @@ public function order_history()
 			$brandprod->price = $request->original_amount;
 			$brandprod->hsncode = $request->hsncode;
 			$brandprod->prate = $request->prate;
+			$brandprod->no_return_days = $request->no_return_days;
 			$brandprod->status = $request->status;
 			$brandprod->save();
 			return back()->with('success', 'Product Edited successfully!');;
@@ -4478,7 +4481,7 @@ public function order_history()
 	      public function imgcompress()
 		{
 			$role = Auth::user()->user_type;
-			$imagePath = public_path('Amith/');
+			$imagePath = public_path('products/');
 			$images = File::allFiles($imagePath);
 		    return view('imgcompress', compact('role', 'images'));
 		}
@@ -4489,7 +4492,7 @@ public function order_history()
 			for($i=0;$i<count($image);$i++){
 				$image[$i] = $request->file('image')[$i];
 				$image_name[$i] =$image[$i]->getClientOriginalName();
-				$path[$i] = public_path('Amith/') . "/" . $image_name[$i];
+				$path[$i] = public_path('products/') . "/" . $image_name[$i];
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
 			return back();
@@ -4498,7 +4501,7 @@ public function order_history()
 		{
 			$imageNames = $request->input('images', []);
 		    foreach ($imageNames as $imageName) {
-			$imagePath = public_path('Amith/') . $imageName;
+			$imagePath = public_path('products/') . $imageName;
 		    if (File::exists($imagePath)) {
 					File::delete($imagePath);
 				}

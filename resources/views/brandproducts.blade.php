@@ -63,12 +63,12 @@
 <label class="exampleModalLabel">Offer Price</label>
 <input class="form-control" name="offer_price" placeholder="Enter offer price" required>
 </div>
-<div class="form-group col-sm-7">
+<div class="form-group col-sm-12">
     <label class="exampleModalLabel">Description</label>
     <textarea class="form-control" name="description" placeholder="Enter Description" required></textarea>
 </div>
 
-<div class="form-group col-sm-5">
+<div class="form-group col-sm-6">
 
 
 
@@ -97,6 +97,19 @@
         @endforeach
 </select>
 </div>
+
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">Number of Return days</label>
+
+
+
+<input class="form-control" name="no_return_days" placeholder="Enter no return days" required>
+
+
+</div>
                                  </div>
     <div class="modal-footer">
        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
@@ -122,6 +135,7 @@
 
                              <th>HSN Code</th>
                              <th>P Rate</th>
+                             <th>Number of return days</th>
                              <th>Status</th>
 
                        <th>Action</th>
@@ -177,6 +191,7 @@ $i=1;
    <td>{{$key->description}}</td>
    <td>{{ $key->hsncode }} ({{ $key->tax }}%)</td>
    <td>{{$key->prate}}</td>
+   <td>{{$key->no_return_days}}</td>
    <td>@if($key->status==0) Active @else Inactive @endif</td>
    @if($role==1)
   <td>
@@ -236,6 +251,7 @@ $i++;
 
                              <th>HSN Code</th>
                              <th>P Rate</th>
+                             <th>Number of return days</th>
                              <th>Status</th>
 
                               @if($role==1)
@@ -376,18 +392,7 @@ $i++;
     <textarea class="form-control" name="description" id="description"  placeholder="Enter Description" required></textarea>
 </div>
 
-<div class="form-group col-sm-6">
 
-
-
-<label class="exampleModalLabel">P rate</label>
-
-
-
-<input class="form-control" name="prate" id="prate" placeholder="Enter P rate" required>
-
-
-</div>
 
 <div class="form-group col-sm-6">
 
@@ -403,6 +408,31 @@ $i++;
 
 </div>
 
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">P rate</label>
+
+
+
+<input class="form-control" name="prate" id="prate" placeholder="Enter P rate" required>
+
+
+</div>
+
+<div class="form-group col-sm-6">
+
+
+
+<label class="exampleModalLabel">Number of Return days</label>
+
+
+
+<input class="form-control" name="no_return_days" id="no_return_days" placeholder="Enter no return days" required>
+
+
+</div>
 
 <div class="form-group col-sm-6">
 
