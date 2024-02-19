@@ -422,15 +422,16 @@
               <!-- /.card-header -->
 
               <div class="card-body">
-              <form>
+             
+
+                @if($role==1)
+                <form>
                    <div class="col-md-4">
                       <div class="form-group">
                         <input type="text" name="search_shop" class="form-control" id="search_shop" placeholder="Search" value="">
                       </div>
                     </div>
                 </form>
-
-                @if($role==1)
 
                 <a href="{{url('exportshop')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
 
