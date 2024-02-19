@@ -115,6 +115,7 @@
                         <thead>
                            <tr>
                               <th>id</th>
+                              <th>id</th>
                               <th>Customer</th>	
                               <th>Vehicle Type</th>							  
                               <th>Fuel Type</th>
@@ -165,6 +166,10 @@
                            </tr>
                         </tfoot>
                      </table>
+                     <div class="card-footer clearfix">
+                        {{ $usrvehcl->links() }}
+                     </div>
+
                      <div class="modal" id="editcustvehl_modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                            <div class="modal-content">

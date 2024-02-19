@@ -563,7 +563,7 @@ class HomeController extends Controller
     return redirect()->back()->withErrors(['error' => 'Failed to update franchise details']);
 }
 public function crm(){
-		$cr = tbl_crms::with('user')->get();
+		$cr = Tbl_crms::with('user')->get();
 		
 		$crr = DB::table('tbl_crms')
         ->leftJoin('users', 'tbl_crms.user_id', '=', 'users.id')
@@ -992,59 +992,82 @@ public function crm(){
 	return redirect('shop_offers')->with('success','Shop offer deleted successfully');
 	}
 
-	public function shopoffermodels(){
-		$offrmodl=Shop_offer_models::all();
-		$offrmodl = DB::table('shop_offer_models')
-            ->leftJoin('shops', 'shop_offer_models.shop_id', '=', 'shops.id')
-			->leftJoin('vehicle_types', 'shop_offer_models.vehicle_typeid', '=', 'vehicle_types.id')
-			->leftJoin('brand_lists', 'shop_offer_models.brand_id', '=', 'brand_lists.id')
-		    ->leftJoin('brand_models', 'shop_offer_models.model_id', '=', 'brand_models.id')
-			->leftJoin('tbl_shop_offers', 'shop_offer_models.offer_id', '=', 'tbl_shop_offers.id')
-			->where('shops.shopname','!=',null)
-			->select('shop_offer_models.*', 'shops.shopname','brand_lists.brand','brand_models.brand_model','tbl_shop_offers.title','vehicle_types.veh_type')
-			->paginate(20);
+	public function shopoffermodels()
+    {
+		$offrmodl = Shop_offer_models::leftJoin('shops', 'shop_offer_models.shop_id', '=', 'shops.id')
+		->leftJoin('vehicle_types', 'shop_offer_models.vehicle_typeid', '=', 'vehicle_types.id')
+		->leftJoin('brand_lists', 'shop_offer_models.brand_id', '=', 'brand_lists.id')
+		->leftJoin('brand_models', 'shop_offer_models.model_id', '=', 'brand_models.id')
+		->leftJoin('tbl_shop_offers', 'shop_offer_models.offer_id', '=', 'tbl_shop_offers.id')
+		->whereNotNull('shops.shopname')
+		->select('shop_offer_models.*', 'shops.shopname', 'brand_lists.brand', 'brand_models.brand_model', 'tbl_shop_offers.title', 'vehicle_types.veh_type')
+		->paginate(20);
+	
 
-		$shops=Shops::all();
-		$shopoffr=Tbl_shop_offers::all();
-		$brand=Brand_lists::all();
-		$vehtype=Vehicle_types::all();
-		$models=Brand_models::all();
-		$role=Auth::user()->user_type;
-		return view('shopoffermodels',compact('offrmodl','shopoffr','shops','brand','vehtype','models','role'));
-	}
-	
-	public function shopoffermodelsinsert(Request $request){
-		$offr_model=new Shop_offer_models;
-		$offr_model->shop_id=$request->shop;
-		$offr_model->offer_id=$request->offr;
-		$offr_model->vehicle_type_id=$request->vehtyp;
-		$offr_model->brand_id=$request->brand;
-		$offr_model->model_id=$request->model;
-		$offr_model->save();
-		return redirect('shopoffermodels');
-	}
-	
+        $shops = Shops::all();
+        $shopoffr = Tbl_shop_offers::all();
+        $brand = Brand_lists::all();
+        $vehtype = Vehicle_types::all();
+        $models = Brand_models::all();
+        $role = Auth::user()->user_type;
+        
+        return view('shopoffermodels', compact('offrmodl', 'shopoffr', 'shops', 'brand', 'vehtype', 'models', 'role'));
+    }
+    public function shopoffermodelsinsert(Request $request)
+{
+    $request->validate([
+        'shop' => 'required',
+        'offr' => 'required',
+        'vehtyp' => 'required',
+        'brand' => 'required',
+        'model' => 'required',
+    ]);
+
+   
+    if ($request->has('offr')) {
+        Shop_offer_models::create([
+            'shop_id' => $request->shop,
+            'offer_id' => $request->offr,
+            'vehicle_typeid' => $request->vehtyp,
+            'brand_id' => $request->brand,
+            'model_id' => $request->model,
+            'fuel_type' => 0 
+        ]);
+
+        return redirect('shopoffermodels')->with('success', 'Shop offer inserted successfully');
+    } else {
+        return redirect('shopoffermodels')->with('error', 'Please select an offer');
+    }
+}
+
+
 	public function shopoffermodelsfetch(Request $request){
 		$id=$request->id;
 		$offr_model=Shop_offer_models::find($id);
 		print_r(json_encode($offr_model));
 	}
-	public function shopoffermodels_edit(Request $request){
-		$id=$request->id;
-		$offrm=Shop_offer_models::find($id);
-		$offrm->shop_id=$request->shop;
-		$offrm->offer_id=$request->offr;
-		$offrm->vehicle_type_id=$request->vehtype;
-		$offrm->brand_id=$request->brand_edit;
-		$offrm->model_id=$request->model;
-		$offrm->save();
-		return redirect('shopoffermodels');
-	}
-	public function shopoffermodelsdelete($id){
-		DB::delete('delete from shop_offer_models where id = ?',[$id]);
-		return redirect('shopoffermodels');
-	}
 
+	public function shopoffermodels_edit(Request $request)
+{
+    $id = $request->id;
+    $offrm = Shop_offer_models::find($id);
+    $offrm->shop_id = $request->shop;
+    $offrm->offer_id = $request->offr;
+    $offrm->vehicle_typeid = $request->vehtype; // Corrected variable name here
+    $offrm->brand_id = $request->brand;
+    $offrm->model_id = $request->model;
+    $offrm->save();
+    
+    return redirect('shopoffermodels')->with('success','Shop offer edited successfully');
+}
+
+	
+	public function shopoffermodelsdelete($id){
+		DB::delete('delete from shop_offer_models where id = ?', [$id]);
+		return redirect('shopoffermodels')->with('success','Shop offer deleted successfully');
+	}
+	
+	
 
 
 public function shopservices(){
@@ -1683,10 +1706,10 @@ public function shop_categoriesdelete($id){
        if($request->ajax())
 		{
 		   $status=$request->status;
-		   $customers=DB::table('user_lists')->orderBy('id', 'DESC')->where('status',$status)->get();
+		   $customers=DB::table('user_lists')->orderBy('id', 'DESC')->where('status',$status)->paginate(10);
 		   return view('customer_filter',compact('customers'));
 		}
-		$customers=DB::table('user_lists')->orderBy('id', 'DESC')->get();
+		$customers=DB::table('user_lists')->orderBy('id', 'DESC')->paginate(10);
 		
 		return view('customers',compact('customers'));
 	}
@@ -2014,7 +2037,7 @@ public function shop_categoriesdelete($id){
 		->leftJoin('brand_models', 'user_vehicles.vehicle_model', '=', 'brand_models.id')
 		->select('user_vehicles.*', 'brand_lists.brand','fuel_types.fuel_type','brand_models.brand_model','vehicle_types.veh_type','user_lists.name')
 		->orderBy('user_vehicles.id', 'DESC')
-		->get();
+		->paginate(10);
 		$fuel=Fuel_types::all();
 		$brand=Brand_lists::all();
 		$vehtype=Vehicle_types::all();
@@ -3774,6 +3797,7 @@ function sendNotification1($msg1,$title)
 		$invoice=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 		->where('tbl_order_masters.id',$orderId)
@@ -3792,7 +3816,10 @@ function sendNotification1($msg1,$title)
 				'tbl_deliveryaddres.district',
 				'tbl_deliveryaddres.state',
 				'tbl_deliveryaddres.pincode',
-				'tbl_deliveryaddres.country'
+				'tbl_deliveryaddres.country',
+				'tbl_hsncodes.tax',
+				'tbl_hsncodes.cgst',
+				'tbl_hsncodes.igst',
 				)
 			->get();
 		$role=Auth::user()->user_type;
@@ -3914,7 +3941,16 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 
 			}else{
-			    $order="";
+				$order = DB::table('tbl_order_masters')
+				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+				
+				->orderBy('tbl_order_masters.id', 'DESC')
+				
+				->paginate(10);
+
 			}
 		
 		
@@ -4196,6 +4232,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			$salebill=DB::table('tbl_sale_order_masters')
 			->leftJoin('tbl_sale_order_trans', 'tbl_sale_order_masters.id', '=', 'tbl_sale_order_trans.order_id')
 			->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id') 
 			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 			->where('tbl_sale_order_masters.id',$orderId)
@@ -4215,7 +4252,10 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					'tbl_deliveryaddres.district',
 					'tbl_deliveryaddres.state',
 					'tbl_deliveryaddres.pincode',
-					'tbl_deliveryaddres.country'
+					'tbl_deliveryaddres.country',
+					'tbl_hsncodes.tax',
+					'tbl_hsncodes.cgst',
+					'tbl_hsncodes.igst',
 					)
 				->get();
 			$role=Auth::user()->user_type;

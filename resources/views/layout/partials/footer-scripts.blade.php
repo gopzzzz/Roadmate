@@ -2721,39 +2721,41 @@ $('.edit_fran').click(function(){
 		  $('#model').val(obj.model_id);
 		  $('#offr').val(obj.offer_id);
 		  $('#shop').val(obj.shop_id);
-		  $('#vehtype_view').val(obj.vehicle_type_id);
+		  $('#vehtype_view').val(obj.vehicle_typeid);
 		 
 					},
 					});	
 		}
 		$('#viewoffrmodl_modal').modal('show');
 	});
-	$('.editoffrmodel').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
 
-					url: "{{ route('shopoffermodelsfetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          $('#edit_id').val(obj.id);
-         // $('#vehtype').val(obj.vehicle);
-          $('#brand1').val(obj.brand_id);
-		  $('#model1').val(obj.model_id);
-		  $('#offr1').val(obj.offer_id);
-		  $('#shop1').val(obj.shop_id);
-		  $('#vehtype_view1').val(obj.vehicle_type_id);
-		 
-					},
-					});	
-		}
-		$('#editoffrmodl_modal').modal('show');
-	});
+	$('.editoffrmodel').click(function(){
+    var id = $(this).data('id');
+    if(id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('shopoffermodelsfetch') }}",
+            data: {  
+                "_token": "{{ csrf_token() }}",
+                id: id 
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#edit_id').val(obj.id);
+                $('#shop1').val(obj.shop_id);
+                $('#offr1').val(obj.offer_id);
+                $('#vehtype_view1').val(obj.vehicle_typeid); // Corrected ID here
+                $('#brand1').val(obj.brand_id);
+                $('#model1').val(obj.model_id);
+            },
+        }); 
+    }
+    $('#editoffrmodl_modal').modal('show');
+});
+
+
+
 	$(document).on('click','.viewshopserv',function(){
 		var id=$(this).data('id');
 	

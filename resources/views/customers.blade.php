@@ -1,4 +1,7 @@
-@extends('layout.mainlayout') @section('content') <div class="content-wrapper">
+@extends('layout.mainlayout') 
+@section('content') 
+
+<div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
@@ -75,6 +78,10 @@
                     </tfoot>
                   </table>
                 </div>
+                <div class="card-footer clearfix">
+    {{ $customers->links() }}
+</div>
+
                 <div id="customer_table2"></div>
               </div>
               <!-- /.card-body -->
