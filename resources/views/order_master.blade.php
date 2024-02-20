@@ -141,6 +141,13 @@
                        
                   <!-- /.card-header -->
   <div class="card-body">
+  <form>
+     <div class="col-md-4 mx-auto">
+        <div class="form-group">
+         <input type="text" id="search_order" class="form-control" name="search_order" placeholder="Search" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+        </div>
+    </div>
+</form>
   <table id="example1" class="table table-bordered table-striped table-sm">
         <thead>
             
@@ -160,14 +167,14 @@
                 <th>Order Date</th>
                 <th></th>
                 <th></th>
-                <th></th>
+             
 
                 @if($role==1)
                     <!-- Add your header content for role 1 if needed -->
                 @endif
             </tr>
         </thead>
-        <tbody>
+        <tbody id="searchorderlist">
             @php 
            
                 $i = 1;

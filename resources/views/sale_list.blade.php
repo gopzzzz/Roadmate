@@ -135,13 +135,23 @@
                                                   
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>       
                                 </div>
                             </p>
                        
                   <!-- /.card-header -->
   <div class="card-body">
-  <table id="example1" class="table table-bordered table-striped table-sm">
+  
+   
+    <form>
+     <div class="col-md-4 mx-auto">
+        <div class="form-group">
+         <input type="text" id="search_sale" class="form-control" name="search_sale" placeholder="Search" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+        </div>
+    </div>
+</form>
+
+  <table class="table table-bordered table-striped table-sm">
         <thead>
             
             <tr>
@@ -165,7 +175,7 @@
                 @endif
             </tr>
         </thead>
-        <tbody>
+        <tbody id="salelist">
         @php 
            
            $i = 1;
@@ -232,8 +242,8 @@
        
         </tbody>
         <tfoot>
-          
-              
+      
+   
             
         </tfoot>
     </table>

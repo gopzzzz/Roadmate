@@ -3686,5 +3686,71 @@ $('.edit_purchaseorder').click(function(){
     }
     $('#editpurcaseorder_modal').modal('show');
 }); 
+$('#search_sale').keyup(function () {
+    var searchval = $(this).val();
+
+    if (searchval === '') {
+        // If search bar is empty, refresh the sale list to show all items
+        location.reload();
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_sale') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
+
+            if (res.salelistHTML) {
+                $('#salelist').html(res.salelistHTML);
+            } else {
+                $('#salelist').html('No Results Found');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+});
+
+		$('#search_order').keyup(function () {
+    var searchval = $(this).val();
+
+    if (searchval === '') {
+        // Refresh or perform any action when the search bar is empty
+        location.reload(); // This will refresh the page
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_order') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
+
+            if (res && res.orderList) {
+                $('#non-searchorderlist').hide();
+                $('#order_pagination').hide();
+                $('#searchorderlist').html(res.orderList);
+
+            } else {
+                $('#searchorderlist').html('');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+});
 
 </script>

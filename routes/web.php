@@ -1377,3 +1377,7 @@ Route::post('/search_product', [
 ])->name('search_product');
 Route::post('/update_Priority', [App\Http\Controllers\HomeController::class, 'update_Priority'])->name('update_Priority');
 Route::get('/remove-priority/{productId}', 'HomeController@removePriority')->name('removePriority');
+Route::post('/search_sale',['middleware' => 'auth',
+'uses' => 'HomeController@search_sale'])->name('search_sale');
+Route::post('/search_order',['middleware' => 'auth',
+'uses' => 'HomeController@search_order'])->name('search_order');

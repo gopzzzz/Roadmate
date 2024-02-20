@@ -528,7 +528,7 @@
 
 
 
-<input class="form-control" name="name" id="name" required>
+<input class="form-control" name="exename" id="name" required>
 
 
 </div>
