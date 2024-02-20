@@ -424,16 +424,18 @@
               <div class="card-body">
              
 
-                @if($role==1)
-                <form>
+              @if($role==1 || $role==9)
+                 <form>
                    <div class="col-md-4">
                       <div class="form-group">
                         <input type="text" name="search_shop" class="form-control" id="search_shop" placeholder="Search" value="">
                       </div>
                     </div>
                 </form>
+                @if($role==1)
 
                 <a href="{{url('exportshop')}}"><button type="button" class="btn btn-secondary btn-sm">Export</button></a>
+                @endif
 
                 @endif
 
@@ -496,7 +498,7 @@
 
                     <td>
 							
-                @if($role==1 || $role==7)
+                @if($role==1 || $role==7 || $role==9)
                 <i class="fa fa-edit edit_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                     <i class="fa fa-eye view_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                     <a href="#" onclick="confirmDelete('{{ $key->id }}')">

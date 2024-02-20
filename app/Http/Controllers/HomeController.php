@@ -1456,7 +1456,7 @@ public function shop_categoriesdelete($id){
 		
 			->paginate(12);
 		}
-		elseif($role==1){
+		elseif($role==1 || $role==9){
 			$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
