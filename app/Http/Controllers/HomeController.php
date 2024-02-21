@@ -74,6 +74,7 @@ use App\Tbl_vendors;
 use App\Tbl_place_order_masters;
 use App\Tbl_sale_order_masters;
 use App\Tbl_sale_order_trans;
+use App\Tbl_godowns;
 use DB;
 use Hash;
 use Auth;
@@ -579,8 +580,8 @@ public function crm(){
 	public function crminsert(Request $request) {
 		
 	
-		$user = new User;
-		$user->name=$request->crm_name;
+	$user = new User;
+	$user->name=$request->crm_name;
     $user->email = $request->email;
     $user->password = Hash::make($request->password);
 	
@@ -1512,7 +1513,7 @@ public function shop_categoriesdelete($id){
 				$file->move('img/', $name);
 				// You may want to store each filename in an array or process them accordingly
 				// For example:
-				$shop->images[] = $name; // Assuming you have an 'images' column in your database
+				// $shop->images[] = $name; // Assuming you have an 'images' column in your database
 			}
 		}
 		
@@ -4908,6 +4909,10 @@ public function order_history()
         return redirect()->back()->with('success', 'Priority removed successfully.');
     }
 
+
+	
+
+	
 }
 	
 

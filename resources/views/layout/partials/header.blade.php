@@ -260,8 +260,8 @@ $name=Auth::user()->name;
                         </ul>
                      </li>
 
-                     <li class="nav-item has-treeview {{ request()->is('godown') ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
+                     <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Stock Management
@@ -273,6 +273,22 @@ $name=Auth::user()->name;
          <a href="{{ url('godown') }}" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Godown</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('physical_stock') }}" class="nav-link {{ request()->is('physical_stock') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Physical Stock</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Inventory Transfer</p>
          </a>
       </li>
    </ul>
