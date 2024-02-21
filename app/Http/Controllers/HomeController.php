@@ -74,6 +74,7 @@ use App\Tbl_vendors;
 use App\Tbl_place_order_masters;
 use App\Tbl_sale_order_masters;
 use App\Tbl_sale_order_trans;
+use App\Tbl_godowns;
 use DB;
 use Hash;
 use Auth;
@@ -318,6 +319,8 @@ class HomeController extends Controller
 
 		$exe->exestatus =0;
 
+        $exe->location = $request->location;
+		$exe->user_id = 0;
         $exe->save();
         return redirect('executive')->with('success', 'Executive Inserted Successfully');
     }
@@ -614,8 +617,8 @@ public function crm(){
 	public function crminsert(Request $request) {
 		
 	
-		$user = new User;
-		$user->name=$request->crm_name;
+	$user = new User;
+	$user->name=$request->crm_name;
     $user->email = $request->email;
     $user->password = Hash::make($request->password);
 	
@@ -1547,7 +1550,7 @@ public function shop_categoriesdelete($id){
 				$file->move('img/', $name);
 				// You may want to store each filename in an array or process them accordingly
 				// For example:
-				$shop->images[] = $name; // Assuming you have an 'images' column in your database
+				// $shop->images[] = $name; // Assuming you have an 'images' column in your database
 			}
 		}
 		
@@ -4473,6 +4476,7 @@ public function order_history()
 			  $brandprod->priority = 0;
 
 			  $brandprod->prate = $request->prate;
+			  $brandprod->no_return_days = $request->no_return_days;
 			  $brandprod->status = 0;
 			  $brandprod->save();
 			  $prod_id = $brandprod->id;
@@ -4519,6 +4523,7 @@ public function order_history()
 			$brandprod->price = $request->original_amount;
 			$brandprod->hsncode = $request->hsncode;
 			$brandprod->prate = $request->prate;
+			$brandprod->no_return_days = $request->no_return_days;
 			$brandprod->status = $request->status;
 			$brandprod->save();
 			return back()->with('success', 'Product Edited successfully!');;
@@ -4526,7 +4531,7 @@ public function order_history()
 	      public function imgcompress()
 		{
 			$role = Auth::user()->user_type;
-			$imagePath = public_path('Amith/');
+			$imagePath = public_path('products/');
 			$images = File::allFiles($imagePath);
 		    return view('imgcompress', compact('role', 'images'));
 		}
@@ -4537,7 +4542,7 @@ public function order_history()
 			for($i=0;$i<count($image);$i++){
 				$image[$i] = $request->file('image')[$i];
 				$image_name[$i] =$image[$i]->getClientOriginalName();
-				$path[$i] = public_path('Amith/') . "/" . $image_name[$i];
+				$path[$i] = public_path('products/') . "/" . $image_name[$i];
 				Image::make($image[$i]->getRealPath())->resize(300, 300)->save($path[$i]);
 			}
 			return back();
@@ -4546,7 +4551,7 @@ public function order_history()
 		{
 			$imageNames = $request->input('images', []);
 		    foreach ($imageNames as $imageName) {
-			$imagePath = public_path('Amith/') . $imageName;
+			$imagePath = public_path('products/') . $imageName;
 		    if (File::exists($imagePath)) {
 					File::delete($imagePath);
 				}
@@ -5118,6 +5123,9 @@ public function search_sale(Request $request)
     }
 
     return response()->json(['salelistHTML' => $salelistHTML]);
+	
+
+	
 }
 
 

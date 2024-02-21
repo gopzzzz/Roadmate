@@ -95,7 +95,7 @@
                                     <select name="states" class="form-control districtfetchadd" data-order="1" id="state_1">
                                        <option value="0">Select state</option>
                                     </select>
-                                 </div>
+                                 </div>  
                                  <div class="form-group col-sm-6" >
                                     <label class="exampleModalLabel">Type</label>
                                     <select name="type[]" class="form-control selecttype" data-order="1" id="type_1" required>

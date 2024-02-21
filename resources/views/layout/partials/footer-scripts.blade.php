@@ -3409,6 +3409,7 @@ $(window).on('load', function(){
 		  $('#original_amount').val(obj.price);
 		  $('#hsncode1').val(obj.hsncode);
 		  $('#prate').val(obj.prate);
+		  $('#no_return_days').val(obj.no_return_days);
 		  $('#status').val(obj.status);
          
 					},
@@ -3528,6 +3529,96 @@ $('#category_name').on('change', function () {
 		}
 		$('#editvendor_modal').modal('show');
 	});
+
+
+
+	$('.edit_godown').click(function(){
+	var id=$(this).data('id');
+	if(id){
+    $.ajax({
+					type: "POST",
+                    url: "{{ route('godownfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#name').val(obj.name);
+		  $('#landmark').val(obj.landmark);
+		  $('#phone_number').val(obj.phone_number);
+		  $('#GST_Num').val(obj.GST_Num);
+		  
+          $('#godown_id').val(obj.id);
+                    },
+					});	
+		}
+		$('#editgodown_modal').modal('show');
+	});
+
+// Variable to track if the product list should be shown
+var showProductList = true;
+
+// Update the event listener for the product search input
+$('#product_search').on('keyup', function() {
+    var alphabet = $(this).val().trim().charAt(0).toUpperCase(); // Extract the first character and convert to uppercase
+
+    if (alphabet != '') {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('product_search') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                alphabet: alphabet
+            },
+            success: function(response) {
+                var productList = '';
+                if (response.length > 0) {
+                    $.each(response, function(index, product) {
+                        productList += '<option value="' + product.id + '">' + product.product_name + '</option>';
+                    });
+                } else {
+                    productList = '<option value="">No products found</option>'; // Display message for no products found
+                }
+                $('#product_list').html(productList);
+                
+                // Show the product list if it should be shown
+                if (showProductList) {
+                    $('#product_list').show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Log any errors to console
+            }
+        });
+    } else {
+        $('#product_list').html(''); // Clear the search results if the input is empty
+        
+        // Show the product list if it should be shown
+        if (showProductList) {
+            $('#product_list').show();
+        }
+    }
+});
+
+// Add click event listener for product list options
+$(document).on('click', '#product_list option', function() {
+    var productName = $(this).text(); // Get the text of the selected option
+    $('#product_search').val(productName); // Set the value of the search input field to the selected product name
+    
+    // Hide the product list container
+    $('#product_list').hide();
+    
+    // Set the flag to false to prevent showing the product list again
+    showProductList = false;
+});
+
+// Show the product list again when the input field is clicked
+$('#product_search').on('click', function() {
+    showProductList = true;
+});
+
+
 
 	$(document).on('click', '.editstatus', function () {
     var id = $(this).data('id');
@@ -3752,5 +3843,6 @@ $('#search_sale').keyup(function () {
         }
     });
 });
+
 
 </script>
