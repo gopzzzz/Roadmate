@@ -279,7 +279,10 @@ class HomeController extends Controller
 	public function executive(){
 		$exe = DB::table('executives')->orderBy('id', 'DESC')->get();
 		$role = Auth::user()->user_type;
-		return view('executive', compact('exe', 'role'));
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
+		return view('executive', compact('exe', 'role','con','cond','dis'));
 	}
 
 	public function visitedshop(Request $request){
@@ -312,7 +315,7 @@ class HomeController extends Controller
         $exe->email = $request->email;
         $exe->addrress = $request->address;
         $exe->district = $request->district;
-		
+
 		$exe->exestatus =0;
 
         $exe->save();
@@ -5059,6 +5062,7 @@ public function search_sale(Request $request)
             ->orderBy('tbl_sale_order_masters.id', 'DESC')
             ->get();
     }
+	$role=Auth::user()->user_type;
 
     $i = 1;
     if (count($sales) > 0) {
@@ -5100,11 +5104,14 @@ public function search_sale(Request $request)
                     <i class="material-icons">&#xe8ad;</i>
                 </button>
             </form></td>';
+			if($role!=3){
             $salelistHTML .= '<td><button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="' . $key->order_id . '" style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
                 Update 
             </button></td>';
+			}else{
 			$salelistHTML .= '</tr>';
             $i++;
+			}
         }
     } else {
         $salelistHTML = 'No Results Found';

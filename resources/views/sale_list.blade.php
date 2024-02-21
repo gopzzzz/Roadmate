@@ -248,7 +248,14 @@
         </tfoot>
     </table>
    
-  
+    <div class="row">
+        <div class="col-12">
+            <div class="float-left">
+                {{ $sale->links() }}
+            </div>
+        </div>
+    </div>
+
 </div>
 </div>
 </div>
@@ -299,6 +306,5 @@
         </div>
     </div>
 </div>
-
 
 @endsection

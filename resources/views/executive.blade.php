@@ -154,6 +154,7 @@
         <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
     </div>
 
+    <div class="modal-body row" id="franchiseDetailsContainer">
 
 <div class="form-group col-sm-6">
 
@@ -164,29 +165,35 @@
 
 
 <input class="form-control" name="phonenumber" placeholder="Enter Phone Number" required>
-
-
-</div>
-
-<div class="form-group col-sm-6">
+</div> 
 
 
 
-<label class="exampleModalLabel">District</label>
+            <div class="form-group col-sm-6">
+                <label for="country">Country</label>
+                <select name="country" class="form-control statefetchadd" data-order="1"  id="country">
+                    <option value=" "disabled selected>Select country</option>
+                    @foreach($con as $country)
+                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
+            <div class="form-group col-sm-6">
+                <label for="state">State</label>
+                <select name="state" class="form-control districtfetchadd" data-order="1" id="state_1">
+                    <option value=" " disabled selected>Select state</option>
+                </select>
+            </div>
 
-
-<select name="district" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
-
-
-</div>
-
+            <div class="form-group col-sm-6">
+                <label for="district">District</label>
+                <select name="district" class="form-control" data-order="1" id="district_1">
+                    <option value=" "disabled selected>Select district</option>
+                </select>
+            </div> 
+            </div> 
+         
 
 <div class="form-group col-sm-6">
 
