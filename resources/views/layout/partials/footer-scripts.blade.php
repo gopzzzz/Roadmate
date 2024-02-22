@@ -3618,9 +3618,7 @@ $('#product_search').on('click', function() {
     showProductList = true;
 });
 
-
-
-	$(document).on('click', '.editstatus', function () {
+$(document).on('click', '.editstatus', function () {
     var id = $(this).data('id');
     console.log('Clicked on editstatus with id:', id);
 
@@ -3641,15 +3639,16 @@ $('#product_search').on('click', function() {
         success: function (res) {
             console.log('AJAX Response:', res);
 
-			if(res.payment_status==1){
-				
-				$("#paystatus").prop("disabled", true);
-			}
-
             if (res.id) {
                 $('#order_status').val(res.order_status);
-				$('#paystatus').val(res.payment_status);
+                $('#paystatus').val(res.payment_status);
                 $('#total_amount').val(res.total_amount);
+
+                if (res.payment_status == 1) {
+                    $("#paystatus").prop("disabled", true);
+                } else {
+                    $("#paystatus").prop("disabled", false);
+                }
 
                 $('#editstatusmodal').modal('show');
                 console.log('Modal shown');
@@ -3662,6 +3661,7 @@ $('#product_search').on('click', function() {
         }
     });
 });
+
 
 $(document).ready(function () {
     var selectedProductIds = [];
