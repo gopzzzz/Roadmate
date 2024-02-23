@@ -29,71 +29,22 @@
 </div>
 </div>
  </div>
-
-
-
-      <!-- /.container-fluid -->
-
-
-
-   </section>
-
-
-
-   @if(session('success'))
-
-
-
-   <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
-
-
-
-   @endif
-
-
-
-   <!-- Main content -->
-
-
-
-   <section class="content">
-
-
-
-      <div class="container-fluid">
-
-
-
-         <div class="row">
-
-
-
-            <div class="col-12">
-
-
-
-               <!-- /.card -->
-
-
-
-               <div class="card">
-
-
-
-                  <div class="card-header">
-
-
-
-                     <h3 class="card-title">Purchase Order</h3>
-
-
-
-                
-                  </div>
-
-
-
-                  <!-- /.card-header -->
+ <!-- /.container-fluid -->
+</section>
+@if(session('success'))
+<h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
+@endif
+ <!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+  <div class="row">
+  <div class="col-12">
+<!-- /.card -->
+ <div class="card">
+  <div class="card-header">
+ <h3 class="card-title">Purchase Order</h3>
+ </div>
+ <!-- /.card-header -->
                   <div class="card-body">
 <table id="example1" class="table table-bordered table-striped">
    <thead>
@@ -109,17 +60,10 @@
 </tr>
    </thead>
    <tbody id="non-searchshoplist">
-
 @php 
-
   $i=1;
-
   @endphp
-
- 
-              
-
-            @foreach($ordersQuery as $key)
+   @foreach($ordersQuery as $key)
                 <tr>
                 <td>{{$i}}</td>
                     <td>{{ $key->vendor_name }}</td>
@@ -131,35 +75,19 @@
                     <a href="{{url('bill/'.$key->id)}}" target="_blank"><button type="button" class="btn btn-success btn-sm" >PO print</button></a>
                 </td>
 </tr>
- 
-
-
-@php 
-
-
-
+ @php 
 $i++;
-
-
-
 @endphp
-
-
-
 @endforeach
-
 </tbody>
   <tfoot>
   <tr>
  <th>id</th>
- 
  <th>Vendor Name </th>
          <th>PO Number</th>
          <th>Requested BY</th>
-      
-         <th></th>
-
-         <th></th>
+      <th></th>
+ <th></th>
  @if($role==1)
  @endif
  </tr>
@@ -209,31 +137,10 @@ $i++;
 </div>
  <!-- /.col -->
 </div>
-
-
-
          <!-- /.row -->
-
-
-
       </div>
-
-
-
       <!-- /.container-fluid -->
-     
-
-   
-   </section>
-
-
-
-   <!-- /.content -->
-
-
-
+        </section>
+<!-- /.content -->
 </div>
-
-
-
 @endsection

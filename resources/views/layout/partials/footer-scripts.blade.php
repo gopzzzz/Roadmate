@@ -1124,7 +1124,7 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
     if (id) {
         $.ajax({
             type: "POST",
-            url: "{{ route('executivefetch') }}",
+            url: "{{ route('executivefetch') }}",   
             data: {
                 "_token": "{{ csrf_token() }}",
                 id: id
@@ -1135,11 +1135,13 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
                 $('#name').val(obj.name);
                 $('#gemail').val(obj.email);
                 $('#phnum').val(obj.phonenum);
-                $('#district').val(obj.district);
+				$('#country_name').val(obj.country_id);
+                $('#state_name').val(obj.state_id);
+                $('#district_name').val(obj.district);
                 $('#location').val(obj.location);
                 $('#address').val(obj.addrress);
 				$('#status').val(obj.exestatus);
-                $('#exeid').val(obj.id);
+                $('#exedid').val(obj.id);
                 
                 // Set the image preview or update the image input as needed
                 // Example assuming you have an image preview element with id 'image-preview':
@@ -1271,6 +1273,8 @@ $('.edit_fran').click(function(){
 		 // $('#image').val(obj.image);
           $('#email1').val(obj.email);
           $('#phnum1').val(obj.phonenum);
+		  $('#country1').val(obj.country_id);
+                $('#state1').val(obj.state_id);
           $('#district1').val(obj.district);
           $('#location1').val(obj.location);
           $('#address1').val(obj.addrress);

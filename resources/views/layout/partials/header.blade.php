@@ -719,7 +719,7 @@ $name=Auth::user()->name;
                      <a href="{{ url('ashops') }}" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Added Shops</p>
-                     </a>
+                     </a>  
                   </li>
                </ul>
             </li>
@@ -741,7 +741,7 @@ $name=Auth::user()->name;
                </ul>
             </li>
             <li class="nav-item">
-               <a href="#" class="nav-link">
+               <a href="{{url('#')}}" class="nav-link">
                   <i class="nav-icon fas fa-id-card "></i>
                   <p>
                      Product Order

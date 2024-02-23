@@ -839,7 +839,7 @@
                                     </select>
                                  </div>
                                  <div class="form-group col-sm-6" >
-                                    <label class="exampleModalLabel">States</label>
+                                    <label class="exampleModalLabel">States</label>  
                                     <select name="states" class="form-control districtfetchadd" data-order="2" id="state_2">
                                        <option value="0">Select state</option>
                                     </select>

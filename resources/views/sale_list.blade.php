@@ -140,9 +140,37 @@
                             </p>
                        
                   <!-- /.card-header -->
-  <div class="card-body">
-  
-   
+                
+                  <form id="filterForm" method="GET" action="{{ route('sale_list') }}">
+    <div class="float-right">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="orderStatusFilter">
+                    <i class="fas fa-filter"></i>
+                </label>
+            </div>
+            <select id="orderStatusFilter" class="custom-select" name="order_status">
+                <option value="" @if($selectedOrderStatus === null) selected @endif>All Status</option>
+                @foreach([0 => 'Pending', 1 => 'Confirmed', 2 => 'Shipped', 3 => 'Delivered'] as $status => $label)
+                    <option value="{{ $status }}" @if($status == $selectedOrderStatus && $selectedOrderStatus !== null) selected @endif>{{ $label }}</option>
+                @endforeach
+            </select>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
     <form>
      <div class="col-md-4 mx-auto">
         <div class="form-group">
@@ -153,7 +181,8 @@
 
   <table class="table table-bordered table-striped table-sm">
         <thead>
-            
+      
+
             <tr>
                 <th>id</th>
                 <th>OrderId</th>
@@ -221,7 +250,7 @@
         <button type="submit" class="print-button">
             <i class="material-icons">&#xe8ad;</i>
         
-                </button>
+                </button>     
             </form>
         </td>
         <td>
@@ -251,7 +280,7 @@
     <div class="row">
         <div class="col-12">
             <div class="float-left">
-                {{ $sale->links() }}
+            {{ $sale->appends(['order_status' => $selectedOrderStatus])->links() }}
             </div>
         </div>
     </div>
@@ -306,5 +335,6 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 @endsection

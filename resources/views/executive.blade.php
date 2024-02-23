@@ -195,6 +195,8 @@
             </div> 
          
 
+            
+
 <div class="form-group col-sm-6">
 
 
@@ -353,7 +355,6 @@
 					@if($role==1)
 <td><i class="fa fa-edit edit_exe"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 					<i class="fa fa-eye view_execu"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-					  <i class="fa fa-view view_execu"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
             <a href="#" onclick="confirmDelete('{{ $key->id }}')">
     <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
 </a>
@@ -528,7 +529,7 @@
 
 
       <div class="form-group col-sm-6">
-<input type="hidden" name="id" id="exeid">
+<input type="hidden" name="id" id="exedid">
 
 
 <label class="exampleModalLabel">Name</label>
@@ -567,23 +568,33 @@
 
 </div>
 
+
 <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-
-
-<select name="district" id="district" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
-
-
+    <label class="exampleModalLabel">Country</label>
+    <select name="country" id="country_name" class="form-control countrylist">
+        <option value="0">Select Country</option>
+        @foreach($con as $country)
+            <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">State</label>
+    <select name="state" id="state_name" class="form-control districtfetchadd">
+        <option value="0">Select State</option>
+        @foreach($cond as $state)
+            <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">District</label>
+    <select name="district" id="district_name" class="form-control">
+        <option value="0">Select District</option>
+        @foreach($dis as $district)
+            <option value="{{ $district->id }}">{{ $district->district_name }}</option>
+        @endforeach
+    </select>
 </div>
 
 
@@ -700,23 +711,33 @@
 </div>
 
 <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-
-
-<select name="district" id="district1" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
-
-
+    <label class="exampleModalLabel">Country</label>
+    <select name="country" id="country1" class="form-control countrylist">
+        <option value="0">Select Country</option>
+        @foreach($con as $country)
+            <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+        @endforeach
+    </select>
 </div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">State</label>
+    <select name="state" id="state1" class="form-control districtfetchadd">
+        <option value="0">Select State</option>
+        @foreach($cond as $state)
+            <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">District</label>
+    <select name="district" id="district1" class="form-control">
+        <option value="0">Select District</option>
+        @foreach($dis as $district)
+            <option value="{{ $district->id }}">{{ $district->district_name }}</option>
+        @endforeach
+    </select>
+</div>
+
 
 
 <div class="form-group col-sm-6">
