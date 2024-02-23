@@ -339,7 +339,7 @@
                     <td>{{$key->email}}</td>
 					
 					<td>{{$key->addrress}}</td>
-          <td>@if($key->exestatus==0) Active
+          <td>@if($key->status==0) Active
             @else Inactive 
             @endif
           </td>
@@ -776,9 +776,19 @@
 
 
                       <input type="file"  name="image"  >
-
-
                       </div>
+
+                      <div class="form-group col-sm-6">
+
+<label class="exampleModalLabel">Status</label>
+
+<select name="status" id="status2" class="form-control"  required>
+
+<option value="0">Active</option>
+<option value="1">In Active</option>
+</select>
+</div>
+
 
       </div>
       

@@ -1140,7 +1140,7 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
                 $('#district_name').val(obj.district);
                 $('#location').val(obj.location);
                 $('#address').val(obj.addrress);
-				$('#status').val(obj.exestatus);
+				$('#status').val(obj.status);
                 $('#exedid').val(obj.id);
                 
                 // Set the image preview or update the image input as needed
@@ -1278,6 +1278,8 @@ $('.edit_fran').click(function(){
           $('#district1').val(obj.district);
           $('#location1').val(obj.location);
           $('#address1').val(obj.addrress);
+		  $('#status2').val(obj.status);
+
           $('#exeviewid').val(obj.id);
          
 					},
