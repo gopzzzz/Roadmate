@@ -3553,6 +3553,7 @@ $('#category_name').on('change', function () {
 				
 				$("#paystatus").prop("disabled", true);
 			}
+			
 
             if (res.id) {
                 $('#order_status').val(res.order_status);
