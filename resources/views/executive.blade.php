@@ -154,6 +154,7 @@
         <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com.</small>
     </div>
 
+    <div class="modal-body row" id="franchiseDetailsContainer">
 
 <div class="form-group col-sm-6">
 
@@ -164,29 +165,37 @@
 
 
 <input class="form-control" name="phonenumber" placeholder="Enter Phone Number" required>
-
-
-</div>
-
-<div class="form-group col-sm-6">
+</div> 
 
 
 
-<label class="exampleModalLabel">District</label>
+            <div class="form-group col-sm-6">
+                <label for="country">Country</label>
+                <select name="country" class="form-control statefetchadd" data-order="1"  id="country">
+                    <option value=" "disabled selected>Select country</option>
+                    @foreach($con as $country)
+                        <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
+            <div class="form-group col-sm-6">
+                <label for="state">State</label>
+                <select name="state" class="form-control districtfetchadd" data-order="1" id="state_1">
+                    <option value=" " disabled selected>Select state</option>
+                </select>
+            </div>
 
+            <div class="form-group col-sm-6">
+                <label for="district">District</label>
+                <select name="district" class="form-control" data-order="1" id="district_1">
+                    <option value=" "disabled selected>Select district</option>
+                </select>
+            </div> 
+            </div> 
+         
 
-<select name="district" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
-
-
-</div>
-
+            
 
 <div class="form-group col-sm-6">
 
@@ -290,7 +299,8 @@
 
                    
 
-                    <th>Addrress</th>
+                    <th>Address</th>
+                    <th>Status</th>
 
                     <th></th>
 
@@ -329,6 +339,11 @@
                     <td>{{$key->email}}</td>
 					
 					<td>{{$key->addrress}}</td>
+          <td>@if($key->exestatus==0) Active
+            @else Inactive 
+            @endif
+          </td>
+
           <td>
             @if($key->user_id==null)
             <button type="button" class="btn btn-success btn-sm createaccount" data-email="{{$key->email}}" data-id="{{$key->id}}">Create Account</button>
@@ -340,7 +355,6 @@
 					@if($role==1)
 <td><i class="fa fa-edit edit_exe"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
 					<i class="fa fa-eye view_execu"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-					  <i class="fa fa-view view_execu"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
             <a href="#" onclick="confirmDelete('{{ $key->id }}')">
     <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
 </a>
@@ -374,7 +388,9 @@
 
                     <th>Email</th>
 
-                    <th>Addrress</th>
+                    <th>Address</th>
+                    <th>Status</th>
+
                     <th></th>
 
                     <th></th> 
@@ -513,7 +529,7 @@
 
 
       <div class="form-group col-sm-6">
-<input type="hidden" name="id" id="exeid">
+<input type="hidden" name="id" id="exedid">
 
 
 <label class="exampleModalLabel">Name</label>
@@ -533,7 +549,7 @@
 
 
 
-<input class="form-control" name="email" id="email" required>
+<input class="form-control" name="email" id="gemail" required>
 
 
 </div>
@@ -552,23 +568,33 @@
 
 </div>
 
+
 <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-
-
-<select name="district" id="district" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
-
-
+    <label class="exampleModalLabel">Country</label>
+    <select name="country" id="country_name" class="form-control countrylist">
+        <option value="0">Select Country</option>
+        @foreach($con as $country)
+            <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">State</label>
+    <select name="state" id="state_name" class="form-control districtfetchadd">
+        <option value="0">Select State</option>
+        @foreach($cond as $state)
+            <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">District</label>
+    <select name="district" id="district_name" class="form-control">
+        <option value="0">Select District</option>
+        @foreach($dis as $district)
+            <option value="{{ $district->id }}">{{ $district->district_name }}</option>
+        @endforeach
+    </select>
 </div>
 
 
@@ -580,7 +606,7 @@
 
 
 
-<input class="form-control" id="location" name="location"  required>
+<input class="form-control" id="location" name="location" >
 
 
 </div>
@@ -611,7 +637,16 @@
 
 
                       </div>
+                      <div class="form-group col-sm-6">
 
+                      <label class="exampleModalLabel">Status</label>
+
+<select name="status" id="status" class="form-control"  required>
+
+	<option value="0">Active</option>
+<option value="1">In Active</option>
+</select>
+</div>
       </div>
       
       <div class="modal-footer">
@@ -676,23 +711,33 @@
 </div>
 
 <div class="form-group col-sm-6">
-
-
-
-<label class="exampleModalLabel">District</label>
-
-
-
-<select name="district" id="district1" class="form-control">
-
-<option value="0">Select Disrtict</option>
-<option value="1">Ernakulam</option>
-<option value="2">Malappuram</option>
-<option value="3">Palakkad</option>
-</select>
-
-
+    <label class="exampleModalLabel">Country</label>
+    <select name="country" id="country1" class="form-control countrylist">
+        <option value="0">Select Country</option>
+        @foreach($con as $country)
+            <option value="{{ $country->id }}">{{ $country->country_name }}</option>
+        @endforeach
+    </select>
 </div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">State</label>
+    <select name="state" id="state1" class="form-control districtfetchadd">
+        <option value="0">Select State</option>
+        @foreach($cond as $state)
+            <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+        @endforeach
+    </select>
+</div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">District</label>
+    <select name="district" id="district1" class="form-control">
+        <option value="0">Select District</option>
+        @foreach($dis as $district)
+            <option value="{{ $district->id }}">{{ $district->district_name }}</option>
+        @endforeach
+    </select>
+</div>
+
 
 
 <div class="form-group col-sm-6">

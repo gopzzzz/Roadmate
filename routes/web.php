@@ -120,6 +120,7 @@ Route::post('/getfranchisedetails', [
     'middleware' => 'auth',
     'uses' => 'HomeController@getfranchisedetails'
 ])->name('getfranchisedetails');
+
 Route::post('/getfranchisedetailsdistrict', [
     'middleware' => 'auth',
     'uses' => 'HomeController@getfranchisedetailsdistrict'
@@ -1366,6 +1367,9 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
+Route::post('/purchaseorderedit', [App\Http\Controllers\HomeController::class, 'purchaseorderedit'])->name('purchaseorderedit');
+Route::post('/purchaseorderfetch', [App\Http\Controllers\HomeController::class, 'purchaseorderfetch'])->name('purchaseorderfetch');
+
 Route::get('/bill/{id}', 'HomeController@bill')->name('bill');
 Route::get('/productpriority', 'HomeController@productpriority')->name('productpriority');
 Route::post('/search_product', [
@@ -1374,3 +1378,25 @@ Route::post('/search_product', [
 ])->name('search_product');
 Route::post('/update_Priority', [App\Http\Controllers\HomeController::class, 'update_Priority'])->name('update_Priority');
 Route::get('/remove-priority/{productId}', 'HomeController@removePriority')->name('removePriority');
+Route::post('/search_sale',['middleware' => 'auth',
+'uses' => 'HomeController@search_sale'])->name('search_sale');
+Route::post('/search_order',['middleware' => 'auth',
+'uses' => 'HomeController@search_order'])->name('search_order');
+
+
+
+Route::get('/godown', [App\Http\Controllers\stockController::class, 'godown'])->name('godown');
+
+Route::post('/godowninsert', [App\Http\Controllers\stockController::class, 'godowninsert'])->name('godowninsert');
+
+Route::post('/godownfetch', [App\Http\Controllers\stockController::class, 'godownfetch'])->name('godownfetch');
+
+Route::post('/godownedit', [App\Http\Controllers\stockController::class, 'godownedit'])->name('godownedit');
+
+Route::get('/physical_stock', [App\Http\Controllers\stockController::class, 'physical_stock'])->name('physical_stock');
+
+Route::post('/product_search', [App\Http\Controllers\stockController::class, 'productSearch'])->name('product_search');
+
+Route::post('/physical_stockinsert', [App\Http\Controllers\stockController::class, 'physical_stockinsert'])->name('physical_stockinsert');
+
+Route::post('/getproductdetails', [App\Http\Controllers\stockController::class, 'getproductdetails'])->name('getproductdetails');

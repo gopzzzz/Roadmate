@@ -501,9 +501,12 @@
                 @if($role==1 || $role==7 || $role==9)
                 <i class="fa fa-edit edit_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                     <i class="fa fa-eye view_shop "  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
-                    <a href="#" onclick="confirmDelete('{{ $key->id }}')">
+
+                   <a href="#" onclick="confirmDelete('{{ $key->id }}')">
     <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
 </a>
+
+
                    @endif
                   </td>
 
@@ -838,7 +841,7 @@
                                     </select>
                                  </div>
                                  <div class="form-group col-sm-6" >
-                                    <label class="exampleModalLabel">States</label>
+                                    <label class="exampleModalLabel">States</label>  
                                     <select name="states" class="form-control districtfetchadd" data-order="2" id="state_2">
                                        <option value="0">Select state</option>
                                     </select>
@@ -1141,9 +1144,17 @@
         });
     </script>
 
-
 <script>
-    function confirmDelete(shopId) {
+    // Event delegation to handle click events for dynamically generated delete buttons
+    document.addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('delete_banner')) {
+            var shopId = event.target.getAttribute('data-id');
+            confirmDelete(shopId, event);
+        }
+    });
+
+    function confirmDelete(shopId, event) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
         Swal.fire({
             title: 'Are you sure?',
             text: 'You won\'t be able to revert this!',
@@ -1160,6 +1171,7 @@
         });
     }
 </script>
+
 
 
   @endsection

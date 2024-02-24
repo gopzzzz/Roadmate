@@ -280,21 +280,7 @@ $i++;
     <span style="font-family: 'Montserrat', sans-serif; font-size: 16px;  margin-left: 80px; margin-right: 250px; margin-bottom: 100px;">Approved By</span>
     <span style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-right: 250px; margin-bottom: 100px;">Authorized by:</span>
     <span style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-right: 20px; margin-bottom: 100px;">Checked By</span>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    
-       
-     
+    </div>
 
     </div>
 

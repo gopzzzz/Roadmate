@@ -1124,7 +1124,7 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
     if (id) {
         $.ajax({
             type: "POST",
-            url: "{{ route('executivefetch') }}",
+            url: "{{ route('executivefetch') }}",   
             data: {
                 "_token": "{{ csrf_token() }}",
                 id: id
@@ -1133,12 +1133,15 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
                 console.log(res);
                 var obj = JSON.parse(res);
                 $('#name').val(obj.name);
-                $('#email').val(obj.email);
+                $('#gemail').val(obj.email);
                 $('#phnum').val(obj.phonenum);
-                $('#district').val(obj.district);
+				$('#country_name').val(obj.country_id);
+                $('#state_name').val(obj.state_id);
+                $('#district_name').val(obj.district);
                 $('#location').val(obj.location);
                 $('#address').val(obj.addrress);
-                $('#exeid').val(obj.id);
+				$('#status').val(obj.exestatus);
+                $('#exedid').val(obj.id);
                 
                 // Set the image preview or update the image input as needed
                 // Example assuming you have an image preview element with id 'image-preview':
@@ -1270,6 +1273,8 @@ $('.edit_fran').click(function(){
 		 // $('#image').val(obj.image);
           $('#email1').val(obj.email);
           $('#phnum1').val(obj.phonenum);
+		  $('#country1').val(obj.country_id);
+                $('#state1').val(obj.state_id);
           $('#district1').val(obj.district);
           $('#location1').val(obj.location);
           $('#address1').val(obj.addrress);
@@ -3408,6 +3413,7 @@ $(window).on('load', function(){
 		  $('#original_amount').val(obj.price);
 		  $('#hsncode1').val(obj.hsncode);
 		  $('#prate').val(obj.prate);
+		  $('#no_return_days').val(obj.no_return_days);
 		  $('#status').val(obj.status);
          
 					},
@@ -3528,7 +3534,95 @@ $('#category_name').on('change', function () {
 		$('#editvendor_modal').modal('show');
 	});
 
-	$(document).on('click', '.editstatus', function () {
+
+
+	$('.edit_godown').click(function(){
+	var id=$(this).data('id');
+	if(id){
+    $.ajax({
+					type: "POST",
+                    url: "{{ route('godownfetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#name').val(obj.name);
+		  $('#landmark').val(obj.landmark);
+		  $('#phone_number').val(obj.phone_number);
+		  $('#GST_Num').val(obj.GST_Num);
+		  
+          $('#godown_id').val(obj.id);
+                    },
+					});	
+		}
+		$('#editgodown_modal').modal('show');
+	});
+
+// Variable to track if the product list should be shown
+var showProductList = true;
+
+// Update the event listener for the product search input
+$('#product_search').on('keyup', function() {
+    var alphabet = $(this).val().trim().charAt(0).toUpperCase(); // Extract the first character and convert to uppercase
+
+    if (alphabet != '') {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('product_search') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                alphabet: alphabet
+            },
+            success: function(response) {
+                var productList = '';
+                if (response.length > 0) {
+                    $.each(response, function(index, product) {
+                        productList += '<option value="' + product.id + '">' + product.product_name + '</option>';
+                    });
+                } else {
+                    productList = '<option value="">No products found</option>'; // Display message for no products found
+                }
+                $('#product_list').html(productList);
+                
+                // Show the product list if it should be shown
+                if (showProductList) {
+                    $('#product_list').show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Log any errors to console
+            }
+        });
+    } else {
+        $('#product_list').html(''); // Clear the search results if the input is empty
+        
+        // Show the product list if it should be shown
+        if (showProductList) {
+            $('#product_list').show();
+        }
+    }
+});
+
+// Add click event listener for product list options
+$(document).on('click', '#product_list option', function() {
+    var productName = $(this).text(); // Get the text of the selected option
+    $('#product_search').val(productName); // Set the value of the search input field to the selected product name
+    
+    // Hide the product list container
+    $('#product_list').hide();
+    
+    // Set the flag to false to prevent showing the product list again
+    showProductList = false;
+});
+
+// Show the product list again when the input field is clicked
+$('#product_search').on('click', function() {
+    showProductList = true;
+});
+
+$(document).on('click', '.editstatus', function () {
     var id = $(this).data('id');
     console.log('Clicked on editstatus with id:', id);
 
@@ -3548,17 +3642,18 @@ $('#category_name').on('change', function () {
         },
         success: function (res) {
             console.log('AJAX Response:', res);
-
-			if(res.payment_status==1){
-				
-				$("#paystatus").prop("disabled", true);
-			}
 			
 
             if (res.id) {
                 $('#order_status').val(res.order_status);
-				$('#paystatus').val(res.payment_status);
+                $('#paystatus').val(res.payment_status);
                 $('#total_amount').val(res.total_amount);
+
+                if (res.payment_status == 1) {
+                    $("#paystatus").prop("disabled", true);
+                } else {
+                    $("#paystatus").prop("disabled", false);
+                }
 
                 $('#editstatusmodal').modal('show');
                 console.log('Modal shown');
@@ -3571,6 +3666,7 @@ $('#category_name').on('change', function () {
         }
     });
 });
+
 
 $(document).ready(function () {
     var selectedProductIds = [];
@@ -3659,4 +3755,99 @@ $(document).ready(function () {
         });
     });
 });
+
+$('.edit_purchaseorder').click(function(){
+    var id = $(this).data('id');
+    
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('purchaseorderfetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#venname').val(obj.vendor_id);
+                $('#ponumber').val(obj.bill_num);
+               
+                $('#requestby').val(obj.request_by);
+               
+                $('#purchaseid').val(obj.id);
+                
+            },
+        });
+    }
+    $('#editpurcaseorder_modal').modal('show');
+}); 
+$('#search_sale').keyup(function () {
+    var searchval = $(this).val();
+
+    if (searchval === '') {
+        // If search bar is empty, refresh the sale list to show all items
+        location.reload();
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_sale') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
+
+            if (res.salelistHTML) {
+                $('#salelist').html(res.salelistHTML);
+            } else {
+                $('#salelist').html('No Results Found');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+});
+
+		$('#search_order').keyup(function () {
+    var searchval = $(this).val();
+
+    if (searchval === '') {
+        // Refresh or perform any action when the search bar is empty
+        location.reload(); // This will refresh the page
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_order') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
+
+            if (res && res.orderList) {
+                $('#non-searchorderlist').hide();
+                $('#order_pagination').hide();
+                $('#searchorderlist').html(res.orderList);
+
+            } else {
+                $('#searchorderlist').html('');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+});
+
+
 </script>

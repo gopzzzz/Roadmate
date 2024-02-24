@@ -235,15 +235,11 @@
 
 <label class="exampleModalLabel">Role</label>
 
-
-
-<select name="role" class="form-control">
-
-<option value="0">Select Role</option>
-<option value="2">CRM</option>
-<option value="4">BDM</option>
-<option value="5">PURCHASE MANAGER</option>
-
+<select name="role"  class="form-control" required>
+                    <option value="" disabled selected>Select Role</option>
+                    @foreach($crrr as $key)
+                        <option value="{{ $key->id }}">{{ $key->designation }}</option>
+                    @endforeach
 </select>
 
 
@@ -370,7 +366,7 @@ $(document).ready(function() {
     <td>{{ $key->dob }}</td>
     <td>
         @if ($key->user_type)
-            {{ $key->designation }}
+            {{ $key->designation }}</td>
             <td>{{ $key->email }}</td>
         @else
             User data not available

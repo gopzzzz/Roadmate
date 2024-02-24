@@ -153,11 +153,11 @@
                                                     <div class="image-info-box">
                                                         <p class="image-name">{{ $image->getFilename() }}</p>
                                                     </div>
-                                                    <img src="{{ asset('Amith/' . $image->getFilename()) }}" class="img-thumbnail" alt="{{ $image->getFilename() }}" style="width: 150px; height: auto;">
+                                                    <img src="{{ asset('products/' . $image->getFilename()) }}" class="img-thumbnail" alt="{{ $image->getFilename() }}" style="width: 150px; height: auto;">
                                                     <div class="image-buttons">
                                                     <br>
     <input type="checkbox" name="images[]" value="{{ $image->getFilename() }}"> Delete
-    <button type="button" class="btn btn-success" style="margin-left: 10px;" onclick="openModal('{{ asset('Amith/' . $image->getFilename()) }}')">View</button>
+    <button type="button" class="btn btn-success" style="margin-left: 10px;" onclick="openModal('{{ asset('products/' . $image->getFilename()) }}')">View</button>
 </div>       </div>
 
 

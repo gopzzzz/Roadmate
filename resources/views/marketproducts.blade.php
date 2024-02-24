@@ -222,7 +222,7 @@ $i++;
       <form method="POST" action="{{url('marketproductedit')}}" enctype="multipart/form-data" name="exeedit">
 
 @csrf
-<div class="modal-body row">
+<div class="modal-body row">   
   <input type="hidden" id="marketproid" name="id">
             <div class="form-group col-sm-12">
                 <label class="exampleModalLabel">Main Category</label>
