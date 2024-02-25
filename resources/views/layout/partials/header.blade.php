@@ -280,7 +280,7 @@ $name=Auth::user()->name;
       <li class="nav-item">
          <a href="{{ url('physical_stock') }}" class="nav-link {{ request()->is('physical_stock') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
-            <p>Physical Stock</p>
+            <p>Physical Stock Adjustment</p>
          </a>
       </li>
    </ul>

@@ -3554,68 +3554,8 @@ $('#category_name').on('change', function () {
 		$('#editgodown_modal').modal('show');
 	});
 
-// Variable to track if the product list should be shown
-var showProductList = true;
 
-// Update the event listener for the product search input
-$('#product_search').on('keyup', function() {
-    var alphabet = $(this).val().trim().charAt(0).toUpperCase(); // Extract the first character and convert to uppercase
 
-    if (alphabet != '') {
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "{{ route('product_search') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                alphabet: alphabet
-            },
-            success: function(response) {
-                var productList = '';
-                if (response.length > 0) {
-                    $.each(response, function(index, product) {
-                        productList += '<option value="' + product.id + '">' + product.product_name + '</option>';
-                    });
-                } else {
-                    productList = '<option value="">No products found</option>'; // Display message for no products found
-                }
-                $('#product_list').html(productList);
-                
-                // Show the product list if it should be shown
-                if (showProductList) {
-                    $('#product_list').show();
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText); // Log any errors to console
-            }
-        });
-    } else {
-        $('#product_list').html(''); // Clear the search results if the input is empty
-        
-        // Show the product list if it should be shown
-        if (showProductList) {
-            $('#product_list').show();
-        }
-    }
-});
-
-// Add click event listener for product list options
-$(document).on('click', '#product_list option', function() {
-    var productName = $(this).text(); // Get the text of the selected option
-    $('#product_search').val(productName); // Set the value of the search input field to the selected product name
-    
-    // Hide the product list container
-    $('#product_list').hide();
-    
-    // Set the flag to false to prevent showing the product list again
-    showProductList = false;
-});
-
-// Show the product list again when the input field is clicked
-$('#product_search').on('click', function() {
-    showProductList = true;
-});
 
 
 
@@ -3624,8 +3564,8 @@ $('#product_search').on('click', function() {
     console.log('Clicked on editstatus with id:', id);
 
     var form = $('#statusEditForm');
-    var url = "{{ route('statusedit', '__id__') }}";
-    url = url.replace('__id__', id);
+    var url = "{{ route('statusedit', '_id_') }}";
+    url = url.replace('_id_', id);
     form.attr('action', url);
 
     $('#stat_id').val(id);
@@ -3640,15 +3580,16 @@ $('#product_search').on('click', function() {
         success: function (res) {
             console.log('AJAX Response:', res);
 
-			if(res.payment_status==1){
-				
-				$("#paystatus").prop("disabled", true);
-			}
-
             if (res.id) {
                 $('#order_status').val(res.order_status);
-				$('#paystatus').val(res.payment_status);
+                $('#paystatus').val(res.payment_status);
                 $('#total_amount').val(res.total_amount);
+
+                if (res.payment_status == 1) {
+                    $("#paystatus").prop("disabled", true);
+                } else {
+                    $("#paystatus").prop("disabled", false);
+                }
 
                 $('#editstatusmodal').modal('show');
                 console.log('Modal shown');
@@ -3661,6 +3602,7 @@ $('#product_search').on('click', function() {
         }
     });
 });
+
 
 $(document).ready(function () {
     var selectedProductIds = [];
@@ -3749,7 +3691,196 @@ $(document).ready(function () {
         });
     });
 });
+</script>
 
+
+<script>
+// Event handling for opening the edit modal
+$(document).on('click', '.edit_inventory', function () {
+    var id = $(this).data('id');
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('inventoryTransferFetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (response) {
+                $('#inventory_from').val(response.inventory_from);
+                $('#inventory_to').val(response.inventory_to);
+                $('#transfer_number1').val(response.bill_number);
+                $('#transfer_date').val(response.added_date);
+                $('#transfer_id').val(response.id);
+
+                // Clear existing rows
+                $('#stockTable tbody').empty();
+
+                // Initialize total variables
+                var totalQuantity = 0;
+                var totalAmount = 0;
+
+                // Add rows for each product detail
+                $.each(response.products, function (index, product) {
+                    var row = '<tr>' +
+                        '<td>' + (index + 1) + '</td>' +
+                        '<td>' +
+                        '<input type="text" class="form-control product_search" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '">' +
+                        '<div class="product_list"></div>' +
+                        '</td>' +
+                        '<td><input type="text" class="form-control quantity" name="quantity[]" value="' + product.quantity + '" required></td>' +
+                        '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + product.unitprice + '" required readonly></td>' +
+                        '<td><input type="text" class="form-control total" name="total[]" value="' + product.total_amount + '" required readonly></td>';
+
+                    // Add minus button only for rows beyond the first one
+                    if (index > 0) {
+                        row += '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>';
+                    } else {
+                        row += '<td></td>'; // Empty cell for the first row
+                    }
+
+                    row += '</tr>';
+                    $('#stockTable tbody').append(row);
+
+                    // Update total quantity and total amount
+                    totalQuantity += parseFloat(product.quantity);
+                    totalAmount += parseFloat(product.total_amount);
+                });
+
+                // Set the total quantity and total amount fields
+                $('.total-quantity').val(totalQuantity);
+                $('.total-amount').val(totalAmount);
+
+                $('#editinventory_modal').modal('show');
+            },
+        });
+    }
+});
+
+// Function to update total amount and total quantity
+function updateTotals() {
+    var totalQuantity = 0;
+    var totalAmount = 0;
+
+    // Iterate through each row
+    $('#stockTable tbody tr').each(function () {
+        var quantity = parseFloat($(this).find('.quantity').val()) || 0; // Parse quantity, default to 0 if NaN
+        var unitPrice = parseFloat($(this).find('.unitprice').val()) || 0; // Parse unit price, default to 0 if NaN
+        var totalForRow = quantity * unitPrice; // Calculate total for the row
+        totalQuantity += quantity; // Accumulate total quantity
+        totalAmount += totalForRow; // Accumulate total amount
+    });
+
+    // Set total quantity and total amount fields
+    $('.total-quantity').val(totalQuantity);
+    $('.total-amount').val(totalAmount.toFixed());
+}
+
+// Function to handle row deletion
+$(document).on('click', '.deleteRow', function () {
+    var row = $(this).closest('tr');
+    var quantity = parseFloat(row.find('.quantity').val()) || 0; // Get quantity of the row
+    var unitPrice = parseFloat(row.find('.unitprice').val()) || 0; // Get unit price of the row
+    var totalForRow = quantity * unitPrice; // Calculate total for the row
+
+    row.remove(); // Remove the row
+
+    // Subtract quantity and amount of the deleted row from the totals
+    var totalQuantity = parseFloat($('.total-quantity').val()) || 0;
+    var totalAmount = parseFloat($('.total-amount').val()) || 0;
+    totalQuantity -= quantity;
+    totalAmount -= totalForRow;
+
+    // Set total quantity and total amount fields
+    $('.total-quantity').val(totalQuantity);
+    $('.total-amount').val(totalAmount.toFixed());
+});
+
+// Event listener for quantity change
+$(document).on('input', '.quantity', updateTotals);
+
+// Event listener for dynamically added rows
+$(document).on('click', '.add-row', function () {
+    updateTotals(); // Update totals when adding a new row
+});
+
+// Trigger initial calculation on document ready
+$(document).ready(updateTotals);
 
 
 </script>
+
+
+
+
+<script>
+var showProductList = true;
+
+$('#product_search').on('keyup', function() {
+    var alphabet = $(this).val().trim().charAt(0).toUpperCase(); 
+
+    if (alphabet != '') {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('product_search') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                alphabet: alphabet
+            },
+            success: function(response) {
+                console.log(response); 
+                var productList = '';
+                if (response.length > 0) {
+                    $.each(response, function(index, product) {
+                        productList += '<option value="' + product.id + '" data-offer-price="' + product.offer_price + '">' + product.product_name + '</option>';
+                    });
+                } else {
+                    productList = '<option value="">No products found</option>'; 
+                }
+                $('#product_list').html(productList);
+                
+                if (showProductList) {
+                    $('#product_list').show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); 
+            }
+        });
+    } else {
+        $('#product_list').html(''); 
+        
+        if (showProductList) {
+            $('#product_list').show();
+        }
+    }
+});
+
+$(document).on('click', '#product_list option', function() {
+    var productName = $(this).text(); 
+    var offerPrice = $(this).data('offer-price'); 
+    console.log("Offer Price:", offerPrice); 
+    
+    $('#product_search').val(productName); 
+    $('.unitprice').val(offerPrice); 
+    
+    $('#product_list').hide();
+    
+    showProductList = false;
+});
+
+$('#product_search').on('click', function() {
+    if ($('#product_list option').length > 0) {
+        $('#product_list').show();
+    }
+});
+
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('#product_search').length && !$(e.target).closest('#product_list').length) {
+        $('#product_list').hide();
+    }
+});
+</script>
+
+

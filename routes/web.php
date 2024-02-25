@@ -1392,4 +1392,16 @@ Route::post('/product_search', [App\Http\Controllers\stockController::class, 'pr
 
 Route::post('/physical_stockinsert', [App\Http\Controllers\stockController::class, 'physical_stockinsert'])->name('physical_stockinsert');
 
-Route::post('/getproductdetails', [App\Http\Controllers\stockController::class, 'getproductdetails'])->name('getproductdetails');
+
+Route::post('/get-products/{masterId}', [App\Http\Controllers\stockController::class, 'getProductsByMasterId'])->name('get-products');
+
+Route::get('/inventory_transfer', [App\Http\Controllers\stockController::class, 'inventory_transfer'])->name('inventory_transfer');
+
+Route::post('/inventory_transferinsert', [App\Http\Controllers\stockController::class, 'inventory_transferinsert'])->name('inventory_transferinsert');
+
+Route::post('/get-products/{masterId}', [App\Http\Controllers\stockController::class, 'transfer_products'])->name('get-products');
+
+Route::post('/inventoryTransferEdit', [App\Http\Controllers\stockController::class, 'inventoryTransferEdit'])->name('inventoryTransferEdit');
+
+Route::post('/inventoryTransferFetch', [App\Http\Controllers\stockController::class, 'inventoryTransferFetch'])->name('inventoryTransferFetch');
+
