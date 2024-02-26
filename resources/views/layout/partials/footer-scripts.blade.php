@@ -3794,6 +3794,9 @@ $('#search_sale').keyup(function () {
     });
 });
 
+</script>
+
+<script>
 // Event handling for opening the edit modal
 $(document).on('click', '.edit_inventory', function () {
     var id = $(this).data('id');
@@ -3982,4 +3985,59 @@ $(document).on('click', function(e) {
 });
 </script>
 
+<script>
+$('.edit_ledger').click(function(){
+    var id = $(this).data('id');
+    if(id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ledgerfetch') }}",
+            data: {  
+                "_token": "{{ csrf_token() }}",
+                id: id 
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#ledger_id').val(obj.id);
+                $('#ledger_name').val(obj.ledger_name);
+                
+            },
+        }); 
+    }
+    $('#editledger_modal').modal('show');
+});
+
+
+
+$('.edit_expense').click(function(){
+    var id = $(this).data('id');
+    if(id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('expensefetch') }}",
+            data: {  
+                "_token": "{{ csrf_token() }}",
+                id: id 
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                
+                $('#ledger').val(obj.ledger_id); // Check this line
+                $('#amount').val(obj.amount);
+                $('#staff').val(obj.staff_id);
+                $('#remark').val(obj.remark);
+				$('#expense_id').val(obj.id);
+                
+            },
+        }); 
+    }
+    $('#editexpense_modal').modal('show');
+});
+
+
+
+ 
+</script>
 

@@ -1415,9 +1415,26 @@ Route::get('/inventory_transfer', [App\Http\Controllers\stockController::class, 
 
 Route::post('/inventory_transferinsert', [App\Http\Controllers\stockController::class, 'inventory_transferinsert'])->name('inventory_transferinsert');
 
-Route::post('/get-products/{masterId}', [App\Http\Controllers\stockController::class, 'transfer_products'])->name('get-products');
+Route::post('/transfer_products/{masterId}', [App\Http\Controllers\stockController::class, 'transfer_products'])->name('transfer_products');
 
 Route::post('/inventoryTransferEdit', [App\Http\Controllers\stockController::class, 'inventoryTransferEdit'])->name('inventoryTransferEdit');
 
 Route::post('/inventoryTransferFetch', [App\Http\Controllers\stockController::class, 'inventoryTransferFetch'])->name('inventoryTransferFetch');
 
+Route::get('/ledger_master', [App\Http\Controllers\ledgerController::class, 'ledger_master'])->name('ledger_master');
+
+Route::post('/ledger_masterinsert', [App\Http\Controllers\ledgerController::class, 'ledger_masterinsert'])->name('ledger_masterinsert');
+
+Route::post('/ledger_masteredit', [App\Http\Controllers\ledgerController::class, 'ledger_masteredit'])->name('ledger_masteredit');
+
+Route::post('/ledgerfetch', [App\Http\Controllers\ledgerController::class, 'ledgerfetch'])->name('ledgerfetch');
+
+Route::get('/expense', [App\Http\Controllers\ledgerController::class, 'expense'])->name('expense');
+
+Route::post('/expenseinsert', [App\Http\Controllers\ledgerController::class, 'expenseinsert'])->name('expenseinsert');
+
+Route::post('/expensefetch', [App\Http\Controllers\ledgerController::class, 'expensefetch'])->name('expensefetch');
+
+Route::post('/expensedit', [App\Http\Controllers\ledgerController::class, 'expensedit'])->name('expensedit');
+
+Route::get('/expensedelete/{id}', [App\Http\Controllers\ledgerController::class, 'expensedelete'])->name('expensedelete');
