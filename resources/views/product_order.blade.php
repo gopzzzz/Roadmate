@@ -30,21 +30,10 @@
 </div>
  </div>
 
-
-
-      <!-- /.container-fluid -->
-
-
-
-   </section>
-
-
-
-   @if(session('success'))
-
-
-
-   <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
+ <!-- /.container-fluid -->
+</section>
+  @if(session('success'))
+ <h3 style="margin-left: 19px;color: green;">{{session('success')}}</h3>
 
 
 
@@ -102,25 +91,12 @@
         <option value="{{ $brand->id }}" @if($brand->id == $selectedBrand) selected @endif>{{ $brand->brand_name }}</option>
     @endforeach
 </select>
-
-
-        <div class="input-group-append">
+  <div class="input-group-append">
             <button class="btn btn-primary" onclick="applyBrandFilter()">Apply</button>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-                            </p>
+   </p>
                   </div>
 
 
@@ -145,8 +121,6 @@
 @php 
 
   $i=1;
-
- 
                 $groupedOrders = $orders->groupBy('product_name');
             @endphp
 
@@ -199,22 +173,10 @@ $i++;
 </div>
  <!-- /.col -->
 </div>
-
-
-
          <!-- /.row -->
-
-
-
-      </div>
-
-
-
-      <!-- /.container-fluid -->
-     
-
-   
-   </section>
+  </div>
+   <!-- /.container-fluid -->
+      </section>
 
 
 

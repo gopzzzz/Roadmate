@@ -821,7 +821,9 @@ Route::post('searchproduct','ShopmarketingController@searchproduct');
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 Route::post('product','ShopmarketingController@product');
 Route::post('cancelorder','ShopmarketingController@cancelorder');
+Route::post('returnorder','ShopmarketingController@returnorder');
 Route::post('productrating','ShopmarketingController@productrating');
+Route::post('averagerating','ShopmarketingController@averagerating');
 Route::get('priorityproducts','ShopmarketingController@priorityproducts');
 Route::post('getproductorderdetails','ShopmarketingController@getproductorderdetails');
 

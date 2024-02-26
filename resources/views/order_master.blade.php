@@ -89,6 +89,7 @@
     }
 </style>
 
+
 </head>
 <div class="content-wrapper" style="background-color: #fff;">
     <!-- Content Header (Page header) -->
@@ -140,8 +141,37 @@
                             </p>
                        
                   <!-- /.card-header -->
+                  
+             
+                  <form id="filterForm" method="GET" action="{{ route('order_master') }}">
+    <div class="float-right">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="orderStatusFilter">
+                    <i class="fas fa-filter"></i>
+                </label>
+            </div>
+            <select id="orderStatusFilter" class="custom-select" name="order_status">
+                <option value="" @if($selectedOrderStatus === null) selected @endif>All Status</option>
+                @foreach([0 => 'Pending', 1 => 'Confirmed', 2 => 'Shipped', 3 => 'Delivered'] as $status => $label)
+                    <option value="{{ $status }}" @if($status == $selectedOrderStatus && $selectedOrderStatus !== null) selected @endif>{{ $label }}</option>
+                @endforeach
+            </select>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </div>
+        </div>
+    </div>
+</form>
   <div class="card-body">
-  <table id="example1" class="table table-bordered table-striped table-sm">
+  <form>
+     <div class="col-md-4 mx-auto">
+        <div class="form-group">
+         <input type="text" id="search_order" class="form-control" name="search_order" placeholder="Search" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+        </div>
+    </div>
+</form>
+  <table class="table table-bordered table-striped table-sm">
         <thead>
             
             <tr>
@@ -158,16 +188,18 @@
                 <th>Order Status</th>
                 <th>Delivery Date</th>
                 <th>Order Date</th>
+                @if($role!=3)
                 <th></th>
+                @endif
                 <th></th>
-                <th></th>
+             
 
                 @if($role==1)
                     <!-- Add your header content for role 1 if needed -->
                 @endif
             </tr>
         </thead>
-        <tbody>
+        <tbody id="searchorderlist">
             @php 
            
                 $i = 1;
@@ -217,7 +249,7 @@
                     </form>
                 </td> -->
                
-
+                @if($role!=3)
 <td>
     @if($key->sale_status == 0)
         <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
@@ -230,6 +262,7 @@
         <span class="text-success">Sale Invoice Generated</span>
     @endif
 </td>
+@endif
  
 <td style="width: 50px;">
     <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}" target="_blank">
@@ -304,7 +337,8 @@
     <div class="row">
         <div class="col-12">
             <div class="float-left">
-                {{ $order->links() }}
+                {{ $order->appends(['order_status' => $selectedOrderStatus])->links() }}
+
             </div>
         </div>
     </div>

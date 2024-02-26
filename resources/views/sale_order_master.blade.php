@@ -86,6 +86,7 @@
                     <div class="form-group">
                         <label class="exampleModalLabel">ORDER ID:</label>
                         <input class="form-control" name="orderId[]" value="{{ $order->order_id }}" required readonly>
+                        <input type="hidden" class="form-control" name="idd" value="{{ $order->id }}" required readonly>
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -142,20 +143,23 @@
             <th>Quantity</th>
             <th>Offer Amount</th>
             <th>Total MRP</th>
-            <th>Tax</th>
+            <th>Tax </th>
+            <th>Tax Amt</th>
             <th>Total Amount</th>
            
         </tr>
     </thead>
     <tbody>
         @foreach($saleorder as $index => $product)
+         
         <tr>
             <input type="hidden" id="productId" name="id">
             <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
             <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
             <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required readonly></td>
             <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required readonly></td>
-            <td><input class="form-control tax" name="tax" value="0" required readonly></td>
+            <td><input class="form-control " name="tax" value="{{ $product->tax }} %" required readonly></td>
+            <td><input class="form-control tax" name="tax" value="{{number_format(($product->offer_amount)/(1+(($product->tax)/100))*($product->tax/100), 2)}}" required readonly></td>
             <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required readonly></td>
         </tr>
         @endforeach
@@ -163,7 +167,7 @@
                 
                 </table>
                 </div>
-                            <div style="margin-left: 950px;">
+                            <div style="margin-left: 80%;">
                             <div class="form-group">
                     <label class="exampleModalLabel">DELIVERY CHARGE</label>
                     <input class="form-control" name="shipping_charge" value="{{ $order->shipping_charge }}" required readonly>
@@ -175,6 +179,10 @@
                 <div class="form-group">
                     <label class="exampleModalLabel">PAYMENT METHOD</label>
                     <input class="form-control" name="payment" value=" @if($order->payment_mode==0) Cash on Delivery @else Online @endif" required readonly>
+                </div>
+                <div class="form-group">
+                    <label class="exampleModalLabel">WALLET REDEEM AMOUNT</label>
+                    <input class="form-control" name="walletamount" value="{{ $order->wallet_redeem_id }}" readonly>
                 </div>
                 <div class="form-group">
                     <label class="exampleModalLabel">TOTAL AMOUNT</label>

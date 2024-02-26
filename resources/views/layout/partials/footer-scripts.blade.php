@@ -1124,7 +1124,7 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
     if (id) {
         $.ajax({
             type: "POST",
-            url: "{{ route('executivefetch') }}",
+            url: "{{ route('executivefetch') }}",   
             data: {
                 "_token": "{{ csrf_token() }}",
                 id: id
@@ -1133,12 +1133,15 @@ $('#franchiseDetailsContaineradd').on('change','.districtadd', function () {
                 console.log(res);
                 var obj = JSON.parse(res);
                 $('#name').val(obj.name);
-                $('#email').val(obj.email);
+                $('#gemail').val(obj.email);
                 $('#phnum').val(obj.phonenum);
-                $('#district').val(obj.district);
+				$('#country_name').val(obj.country_id);
+                $('#state_name').val(obj.state_id);
+                $('#district_name').val(obj.district);
                 $('#location').val(obj.location);
                 $('#address').val(obj.addrress);
-                $('#exeid').val(obj.id);
+				$('#status').val(obj.exestatus);
+                $('#exedid').val(obj.id);
                 
                 // Set the image preview or update the image input as needed
                 // Example assuming you have an image preview element with id 'image-preview':
@@ -1270,6 +1273,8 @@ $('.edit_fran').click(function(){
 		 // $('#image').val(obj.image);
           $('#email1').val(obj.email);
           $('#phnum1').val(obj.phonenum);
+		  $('#country1').val(obj.country_id);
+                $('#state1').val(obj.state_id);
           $('#district1').val(obj.district);
           $('#location1').val(obj.location);
           $('#address1').val(obj.addrress);
@@ -3557,9 +3562,7 @@ $('#category_name').on('change', function () {
 
 
 
-
-
-	$(document).on('click', '.editstatus', function () {
+$(document).on('click', '.editstatus', function () {
     var id = $(this).data('id');
     console.log('Clicked on editstatus with id:', id);
 
@@ -3579,6 +3582,7 @@ $('#category_name').on('change', function () {
         },
         success: function (res) {
             console.log('AJAX Response:', res);
+			
 
             if (res.id) {
                 $('#order_status').val(res.order_status);
@@ -3693,6 +3697,98 @@ $(document).ready(function () {
 });
 </script>
 
+$('.edit_purchaseorder').click(function(){
+    var id = $(this).data('id');
+    
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('purchaseorderfetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#venname').val(obj.vendor_id);
+                $('#ponumber').val(obj.bill_num);
+               
+                $('#requestby').val(obj.request_by);
+               
+                $('#purchaseid').val(obj.id);
+                
+            },
+        });
+    }
+    $('#editpurcaseorder_modal').modal('show');
+}); 
+$('#search_sale').keyup(function () {
+    var searchval = $(this).val();
+
+    if (searchval === '') {
+        // If search bar is empty, refresh the sale list to show all items
+        location.reload();
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_sale') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
+
+            if (res.salelistHTML) {
+                $('#salelist').html(res.salelistHTML);
+            } else {
+                $('#salelist').html('No Results Found');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+});
+
+		$('#search_order').keyup(function () {
+    var searchval = $(this).val();
+
+    if (searchval === '') {
+        // Refresh or perform any action when the search bar is empty
+        location.reload(); // This will refresh the page
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('search_order') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            searchval: searchval
+        },
+        success: function (res) {
+            console.log(res);
+
+            if (res && res.orderList) {
+                $('#non-searchorderlist').hide();
+                $('#order_pagination').hide();
+                $('#searchorderlist').html(res.orderList);
+
+            } else {
+                $('#searchorderlist').html('');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+});
 
 <script>
 // Event handling for opening the edit modal

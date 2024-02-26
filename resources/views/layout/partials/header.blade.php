@@ -719,7 +719,7 @@ $name=Auth::user()->name;
                      <a href="{{ url('ashops') }}" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Added Shops</p>
-                     </a>
+                     </a>  
                   </li>
                </ul>
             </li>
@@ -741,7 +741,7 @@ $name=Auth::user()->name;
                </ul>
             </li>
             <li class="nav-item">
-               <a href="#" class="nav-link">
+               <a href="{{url('#')}}" class="nav-link">
                   <i class="nav-icon fas fa-id-card "></i>
                   <p>
                      Product Order
@@ -940,7 +940,103 @@ $name=Auth::user()->name;
                   </li>
                </ul>
             </li>
+            @elseif($role==9)
+            <li class="nav-item has-treeview {{ request()->is('app_version') ? 'menu-open' : '' }}">
+               <a href="{{ url('app_version') }}" class="nav-link {{ request()->is('app_version') ? 'active' : '' }}">
+                     <i class="fa fa-cogs"></i>
+                     <p>
+                        App Version
+                     </p>
+                  </a>
+               </li>
+               <li class="nav-item {{ request()->is('executive') ? 'menu-open' : '' }}">
+   <a href="{{ url('executive') }}" class="nav-link {{ request()->is('executive') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-id-card"></i>
+      <p>
+         Executive
+      </p>
+   </a>
+</li>
+
+<li class="nav-item has-treeview  {{ request()->is(['shop_categories','shops','vshops','ashops','shop_providcat','shopproduct_offers','shop_offers','shopoffermodels','shopservices','shoptimeslot','shopreviews']) ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link  {{ request()->is(['shop_categories','shops','vshops','ashops','shop_providcat','shopproduct_offers','shop_offers','shopoffermodels','shopservices','shoptimeslot','shopreviews']) ? 'active' : '' }}">
+                     <i class="nav-icon fas fa-university"></i>
+                     <p>
+                        Shops
+                        <i class="fas fa-angle-left right"></i>
+                     </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                     <li class="nav-item">
+                        <a href="{{ url('shop_categories') }}" class="nav-link {{ request()->is('shop_categories') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Shop Categories</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shops') }}" class="nav-link {{ request()->is('shops') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Shops</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('vshops') }}" class="nav-link {{ request()->is('vshops') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Visited Shops</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('ashops') }}" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Added Shops</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shop_providcat') }}" class="nav-link {{ request()->is('shop_providcat') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Provided Categories</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shopproduct_offers') }}" class="nav-link {{ request()->is('shopproduct_offers') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Product Offers</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shop_offers') }}" class="nav-link {{ request()->is('shop_offers') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Shop Offers</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shopoffermodels') }}" class="nav-link {{ request()->is('shopoffermodels') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Offer Models</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shopservices') }}" class="nav-link {{ request()->is('shopservices') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Services</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shoptimeslot') }}" class="nav-link {{ request()->is('shoptimeslot') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Timeslots</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('shopreviews') }}" class="nav-link {{ request()->is('shopreviews') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Reviews</p>
+                        </a>
+                     </li>
+                  </ul>
+               </li>
             @endif
+
             </ul>
          </nav>
          <!-- /.sidebar-menu -->
