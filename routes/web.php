@@ -1370,7 +1370,9 @@ Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendore
 Route::post('/purchaseorderfetch', [App\Http\Controllers\HomeController::class, 'purchaseorderfetch'])->name('purchaseorderfetch');
 
 Route::get('/bill/{id}', 'HomeController@bill')->name('bill');
-Route::get('/purchaseedit/{purchaseid}', 'HomeController@purchaseedit')->name('purchaseedit');
+Route::get('/purchaseeditorder/{purchaseid}', 'HomeController@purchaseeditorder')->name('purchaseeditorder');
+Route::post('/editorderpurchase', [App\Http\Controllers\HomeController::class, 'editorderpurchase'])->name('editorderpurchase');
+
 Route::post('/purchaseorderedit', [App\Http\Controllers\HomeController::class, 'purchaseorderedit'])->name('purchaseorderedit');
 
 Route::post('/purchaseorder/{id}', 'HomeController@updatePurchaseOrder')->name('updatePurchaseOrder');
