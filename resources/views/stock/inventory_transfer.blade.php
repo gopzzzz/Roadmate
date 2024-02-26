@@ -364,7 +364,7 @@ $i++;
             </tr>
         </thead>
         <tbody></tbody>
-        <tfoot>
+        <tfoot>      
             <tr>
                 <th colspan="2">Total</th>
                 <th><input type="text" class="form-control total-quantity" name="total_quantity" required readonly></th>

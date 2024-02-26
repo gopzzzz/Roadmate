@@ -3994,6 +3994,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			$order_id = $request->id; // assuming id in the request is the order_id
 			$order = Tbl_order_masters::where('order_id', $order_id)->first();
 		
+		
+		
 			if ($order) {
 				$orderArray = $order->toArray();
 				return response()->json($orderArray);
@@ -4210,7 +4212,20 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 					->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
 					->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
-					->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status','tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+					->select('tbl_sale_order_masters.*', 
+					'shops.shopname', 
+					'shops.address', 
+					'tbl_order_masters.order_status',
+					'tbl_order_masters.payment_status', 
+					'tbl_coupens.coupencode', 
+					'tbl_deliveryaddres.area', 
+					'tbl_deliveryaddres.area1', 
+					'tbl_deliveryaddres.country', 
+					'tbl_deliveryaddres.state', 
+					'tbl_deliveryaddres.district', 
+					'tbl_deliveryaddres.city', 
+					'tbl_deliveryaddres.phone', 
+					'tbl_deliveryaddres.pincode')
 					->orderBy('tbl_sale_order_masters.id', 'DESC')
 					->paginate(10);
 
