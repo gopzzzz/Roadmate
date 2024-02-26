@@ -1367,10 +1367,17 @@ Route::get('/marketvendor', 'HomeController@marketvendor')->name('marketvendor')
 Route::post('/vendorinsert', [App\Http\Controllers\HomeController::class, 'vendorinsert'])->name('vendorinsert');
 Route::post('/vendorfetch', [App\Http\Controllers\HomeController::class, 'vendorfetch'])->name('vendorfetch');
 Route::post('/vendoredit', [App\Http\Controllers\HomeController::class, 'vendoredit'])->name('vendoredit');
-Route::post('/purchaseorderedit', [App\Http\Controllers\HomeController::class, 'purchaseorderedit'])->name('purchaseorderedit');
 Route::post('/purchaseorderfetch', [App\Http\Controllers\HomeController::class, 'purchaseorderfetch'])->name('purchaseorderfetch');
 
 Route::get('/bill/{id}', 'HomeController@bill')->name('bill');
+Route::get('/purchaseedit/{purchaseid}', 'HomeController@purchaseedit')->name('purchaseedit');
+Route::post('/purchaseorderedit', [App\Http\Controllers\HomeController::class, 'purchaseorderedit'])->name('purchaseorderedit');
+
+Route::post('/purchaseorder/{id}', 'HomeController@updatePurchaseOrder')->name('updatePurchaseOrder');
+Route::get('/remove-product/{id}', 'HomeController@removeProduct')->name('remove.product');
+Route::get('/productfetchdetails', 'HomeController@productfetchdetails')->name('productfetchdetails');
+Route::post('/product-search/{vendor_id}', 'HomeController@product-search')->name('product-search');
+
 Route::get('/productpriority', 'HomeController@productpriority')->name('productpriority');
 Route::post('/search_product', [
     'middleware' => 'auth',
