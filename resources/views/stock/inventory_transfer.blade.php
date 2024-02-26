@@ -381,7 +381,7 @@ $i++;
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -618,7 +618,7 @@ $i++;
             
             
             $.ajax({
-                url: '{{ route("get-products", ":masterId") }}'.replace(':masterId', masterId),
+                url: '{{ route("transfer_products", ":masterId") }}'.replace(':masterId', masterId),
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

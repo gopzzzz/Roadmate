@@ -521,47 +521,6 @@ $i++;
     });
 </script>
 
-<script>
-    function confirmDelete(hsnId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // If the user clicks "Yes", proceed with the deletion
-                window.location.href = "{{ url('hsndelete') }}/" + hsnId;
-            }
-        });
-    }
-</script>
 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#country_1').change(function() {
-            var countryId = $(this).val();
-            if (countryId) {
-                $.ajax({
-                    type: "GET",
-                    url: "/get-states/" + countryId, // Replace with your route URL
-                    success: function(data) {
-                        $('#state_1').empty();
-                        $.each(data, function(key, value) {
-                            $('#state_1').append('<option value="' + value.id + '">' + value.state_name + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#state_1').empty();
-            }
-        });
-    });
-</script>
 
   @endsection
