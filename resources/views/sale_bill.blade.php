@@ -344,8 +344,8 @@
                     <th>Description</th>
                     <th>Unit Price</th>
                     <th>Quantity</th>
-                    <th>SGST</th>
-                    <th>CGST</th>
+                    <th>TAX</th>
+                    <th>TAX.Amount</th>
                     <th>Amount</th>
                 </tr>
             </thead>
@@ -357,20 +357,24 @@ $taxableamount=0;
 $subtotal=0;
 @endphp
             @foreach($salebill as $key)
+            @php 
+            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)), 2);
+            $taxamount=number_format($unitprice*($key->tax/100), 2);
+            @endphp
                 <tr> 
                 <td>{{$i}}</td>
                     <td>{{$key->product_name}}</td>
-                    <td>{{($key->offer_amount)-(($key->offer_amount)*($key->cgst))/100}}</td>
-                    <td>{{$key->cgst}} %</td>
-                    <td>{{$key->igst}} %</td>
-                    <td>{{(($key->qty*$key->offer_amount)*($key->cgst))/100}} </td>
-                    <td>{{$key->qty*$key->offer_amount*$key->qty}}</td>
+                    <td>{{$unitprice}}</td>
+                    <td>{{$key->qty}} </td>
+                    <td>{{$key->tax}} %</td>
+                    <td>{{($key->qty*$taxamount)}} </td>
+                    <td>{{$key->qty*$key->offer_amount}}</td>
                    
                 </tr>
                 @php 
                 $sum += $key->qty*$key->offer_amount;
-$taxableamount += ($key->offer_amount*$key->tax/100)*$key->qty;
-$subtotal+= $key->qty*($key->offer_amount - ($key->offer_amount*$key->tax/100));
+$taxableamount += $taxamount*$key->qty;
+$subtotal+= $key->qty*$unitprice;
 $i++;
 
                 @endphp

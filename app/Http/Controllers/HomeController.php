@@ -1477,7 +1477,7 @@ public function shop_categoriesdelete($id){
 		
 			->paginate(12);
 		}
-		elseif($role==1){
+		elseif($role==1 || $role==9){
 			$shops = DB::table('shops')
             ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
 			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
@@ -4000,7 +4000,9 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		public function orderfetch(Request $request)
 		{
 			$order_id = $request->id; // assuming id in the request is the order_id
-			$order = Tbl_order_masters::where('order_id', $order_id)->first();
+			$order = Tbl_order_masters::where('id', $order_id)->first();
+		
+		
 		
 			if ($order) {
 				$orderArray = $order->toArray();
@@ -4028,7 +4030,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
         return redirect('sale_list')->with('error', 'Invalid total_amount received.');
     }
 
-    $order = Tbl_order_masters::where('order_id', $order_id)->first();
+    $order = Tbl_order_masters::where('id',$order_id)->first();
 
     if ($order) {
         $order->order_status = $request->order_status;
@@ -4042,28 +4044,34 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
         }
 
         if ($request->paystatus == '1') {
-            $percentage = ($total_amount * 10) / 100;
-            \Log::info('Calculated Percentage: ' . $percentage);
 
-            $shop_id = $order->shop_id;
+			if($order->wallet_redeem_id==0){
+				$percentage = ($total_amount * 10) / 100;
+				\Log::info('Calculated Percentage: ' . $percentage);
+	
+				$shop_id = $order->shop_id;
+	
+				$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+	
+				if ($wallet) {
+					$wallet->wallet_amount += $wallet->amount + $percentage;
+					$wallet->save();
+					\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+				} else {
+					$w = new Tbl_wallets;
+					$w->shop_id = $shop_id;
+					$w->wallet_amount += $percentage;
+					$w->save();
+				}
+	
+				$wh = new Tbl_wallet_transactions;
+				$wh->amount = $percentage;
+				$wh->type = 1;
+				$wh->shop_id = $shop_id;
+				$wh->save();
+			}
 
-            $wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
-
-            if ($wallet) {
-                $wallet->wallet_amount += $wallet->amount + $percentage;
-                $wallet->save();
-                \Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
-            } else {
-                $w = new Tbl_wallets;
-                $w->shop_id = $shop_id;
-                $w->wallet_amount += $percentage;
-                $w->save();
-            }
-
-            $wh = new Tbl_wallet_transactions;
-            $wh->amount = $percentage;
-            $wh->type = 1;
-            $wh->shop_id = $shop_id;
+           
         }
 
         $order->save();
@@ -4081,6 +4089,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		$saleorder=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 		->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id') 
 		->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 		->where('tbl_order_masters.id',$orderId)
@@ -4088,14 +4097,13 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				'tbl_order_masters.*',
 				'tbl_order_trans.product_id',
 				'tbl_order_trans.qty',
-
 				'tbl_order_trans.price',
 				'tbl_order_trans.offer_amount',
-				'shops.id',
+				'shops.id as shop_id',
 				'shops.shopname',
 				'shops.address' ,
 				'shops.delivery_id' ,
-				'tbl_brand_products.id',
+				'tbl_brand_products.id as proid',
 				'tbl_brand_products.product_name',
 				'tbl_deliveryaddres.phone',
 				'tbl_deliveryaddres.pincode',
@@ -4104,9 +4112,12 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				'tbl_deliveryaddres.city',
 				'tbl_deliveryaddres.district',
 				'tbl_deliveryaddres.state',
-				'tbl_deliveryaddres.country'
+				'tbl_deliveryaddres.country',
+				'tbl_hsncodes.tax'
 				)
 			->get();
+
+			//echo "<pre>";print_r($saleorder);exit;
 		$role=Auth::user()->user_type;
 		return view('sale_order_master',compact('role','markk','saleorder'));
 	    }
@@ -4132,17 +4143,20 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					$invoice=$check->invoice_number+1;
 				}
 
+				//$ordermaster=DB::table('')->where('',$request->idd)->first();
+
 
 		
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
-				$saleMaster->order_id = is_array($request->orderId) ? $request->orderId[0] : null;
+				$saleMaster->order_id = $request->idd;
+				$saleMaster->payment_status=0;
 				$saleMaster->invoice_number=$invoice;
 				$saleMaster->total_amount = $request->total_amount;
 				$saleMaster->bill_number = $request->billnumber 	;
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
-				$saleMaster->wallet_redeem_id = 0;
+				$saleMaster->wallet_redeem_id = $request->walletamount;
 				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
                 $saleMaster->payment_mode = $paymentMode;
 
@@ -4185,7 +4199,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					}
 		
 					
-					Tbl_order_masters::where('order_id', $saleMaster->order_id)->update(['sale_status' => 1,
+					Tbl_order_masters::where('id', $request->idd)->update(['sale_status' => 1,
 					'order_status' => 1
 				]);
 		
@@ -4213,7 +4227,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
+				->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
 				->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
 				->orderBy('tbl_sale_order_masters.id', 'DESC');
 		

@@ -343,7 +343,7 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
-                    <th>Unit Price</th>
+                    <th>Unit Price(Ex)</th>
                     <th>Quantity</th>
                     <th>SGST</th>
                     <th>CGST</th>
@@ -360,22 +360,26 @@ $subtotal=0;
 @endphp
 
             @foreach($invoice as $key)
+            @php 
+            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)), 2);
+            $taxamount=number_format($unitprice*($key->tax/100), 2);
+            @endphp
                 <tr> 
                 <td>{{$i}}</td>
                     <td>{{$key->product_name}}</td>
-                    <td>{{($key->offer_amount)-(($key->offer_amount)*($key->cgst))/100}}</td>
+                    <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
                     <td>{{$key->cgst}} %</td>
                     <td>{{$key->igst}} %</td>
-                    <td>{{(($key->qty*$key->offer_amount)*($key->cgst))/100}} </td>
-                    <td>{{$key->qty*$key->offer_amount*$key->qty}}</td>
+                    <td>{{$taxamount * $key->qty}} </td>
+                    <td>{{$key->qty*$key->offer_amount}}</td>
                    
                 </tr>
 
                 @php 
                 $sum += $key->qty*$key->offer_amount;
-$taxableamount += ($key->offer_amount*$key->tax/100)*$key->qty;
-$subtotal+= $key->qty*($key->offer_amount - ($key->offer_amount*$key->tax/100));
+$taxableamount += $taxamount*$key->qty;
+$subtotal+= $key->qty*$unitprice;
 $i++;
 
                 @endphp
@@ -409,12 +413,12 @@ $i++;
     </div>
     <div class="right-details">
     
-            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p>
+            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($subtotal,2) }}</span></p>
             <!-- <p><strong><span style="color: grey;"><b>DISCOUNT:</b></span></strong><span class="highlight-back" >{{ $key->discount }}</span></p> -->
-            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{$taxableamount}}</span></p>
+            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{number_format($taxableamount,2)}}</span></p>
             <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->
             <!-- <br><br> -->
-            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ $sum }}</span></p>
+            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($sum,2)}}</span></p>
         
     </div>
          

@@ -34,7 +34,7 @@
 
               <li class="breadcrumb-item"><a href="home">Home</a></li>
 
-              <li class="breadcrumb-item active">Physical Stock</li>
+              <li class="breadcrumb-item active">Physical Stock Adjustment</li>
 
             </ol>
 
@@ -74,7 +74,7 @@
 
             <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Physical Stock</h3>
+        <h3 class="card-title">Physical Stock Adjustment</h3>
         <p align="right">
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Physical Stock</button>
         </p>
@@ -87,7 +87,7 @@
         <div class="modal-dialog modal-lg" role="document" style="width:80%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Physical Stock</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Physical Stock Adjustment</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -217,6 +217,7 @@ $i++;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Physical Stock Details</h5>
+                <h5 class="modal-title">Products in Godown</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -233,6 +234,16 @@ $i++;
                     </thead>
                     <tbody id="physicalStockDetailsBody">
                         <!-- Data will be dynamically inserted here -->
+                <table id="productTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Product rows will be dynamically populated here -->
                     </tbody>
                 </table>
             </div>
@@ -355,6 +366,45 @@ $i++;
         $(this).closest('.product_list').hide(); 
     });
 });
+</script>
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.view-products').click(function() {
+            var masterId = $(this).data('id');
+            $('#master_id').val(masterId);
+            $('#productsModal').modal('show'); // Show modal after setting masterId
+            
+            // Fetch products via AJAX when modal is opened
+            $.ajax({
+                url: '{{ route("get-products", ":masterId") }}'.replace(':masterId', masterId),
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    var tbody = $('#productTable tbody');
+                    tbody.empty(); // Clear existing rows
+                    
+                    // Populate product data in table
+                    $.each(response, function(index, product) {
+                        var row = '<tr>' +
+                                  '<td>' + (index + 1) + '</td>' +
+                                  '<td>' + product.product_name + '</td>' +
+                                  '<td>' + product.quantity + '</td>' +
+                                  '</tr>';
+                        tbody.append(row);
+                    });
+                },
+                error: function(xhr) {
+                    // Handle error
+                }
+            });
+        });
+    });
 </script>
 
   @endsection
