@@ -188,7 +188,9 @@
                 <th>Order Status</th>
                 <th>Delivery Date</th>
                 <th>Order Date</th>
+                @if($role!=3)
                 <th></th>
+                @endif
                 <th></th>
              
 
@@ -247,7 +249,7 @@
                     </form>
                 </td> -->
                
-
+                @if($role!=3)
 <td>
     @if($key->sale_status == 0)
         <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
@@ -260,6 +262,7 @@
         <span class="text-success">Sale Invoice Generated</span>
     @endif
 </td>
+@endif
  
 <td style="width: 50px;">
     <form method="get" action="{{ route('order_invoice', ['orderId' => $key->id]) }}" target="_blank">
