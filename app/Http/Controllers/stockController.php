@@ -109,42 +109,30 @@ class stockController extends Controller
 			return redirect('godown')->with('success', 'Data edited successfully.');
 		}
 
-
+    
 		public function physical_stock() {
 		
 			$physical = DB::table('tbl_physicalstock_masters')
 				->leftJoin('tbl_godowns', 'tbl_physicalstock_masters.godown_id', '=', 'tbl_godowns.id')
 				->select(
 					'tbl_physicalstock_masters.*',
-					'tbl_godowns.name'
-				)
+					'tbl_godowns.name'  
+				)     
 				
 				->groupBy('tbl_physicalstock_masters.id')
 				->get();
-		
+		   
 			$role = Auth::user()->user_type;
 		
-			$stock = DB::table('tbl_godowns')->get();
+			$stock = DB::table('tbl_godowns')->get();   
 			$prod = DB::table('tbl_brand_products')->get();
 		
-			$physical_trans = DB::table('tbl_physicalstock_trans')
-				->leftJoin('tbl_brand_products', 'tbl_physicalstock_trans.product_id', '=', 'tbl_brand_products.id')
-				
-				->select(
-					'tbl_physicalstock_trans.master_id',
-					'tbl_brand_products.product_name',
-					'tbl_physicalstock_trans.quantity'
-				)
-				->orderBy('tbl_physicalstock_trans.id', 'DESC')
-				->get();
 		
 
-			return view('stock.physical_stock', compact('physical', 'stock', 'prod', 'role', 'physical_trans'));
+			return view('stock.physical_stock', compact('physical', 'stock', 'prod', 'role'));
 		}
-		
 	
 		
-
 		public function productSearch(Request $request) {
 			$alphabet = $request->input('alphabet');
 		

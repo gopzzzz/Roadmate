@@ -317,7 +317,7 @@ class HomeController extends Controller
         $exe->addrress = $request->address;
         $exe->district = $request->district;
 
-		$exe->exestatus =0;
+		$exe->status =0;
 
         $exe->location = $request->location;
         $exe->save();
@@ -360,7 +360,7 @@ class HomeController extends Controller
 		$exeedit->email = $request->email;
 		$exeedit->addrress = $request->address;
 		$exeedit->district = $request->district;
-		$exeedit->exestatus = $request->status;
+		$exeedit->status = $request->status;
 		
 		// Save the executive model
 		$exeedit->save(); 
@@ -4850,6 +4850,97 @@ public function order_history()
 	
 		return view('bill',compact('role','master','vendor','bills'));
 		}
+		public function purchaseedit($purchaseid){
+			$role = Auth::user()->user_type;
+			$orderDetails = DB::table('tbl_place_order_masters')
+			->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
+			->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+			->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
+			->where('tbl_place_order_masters.id', $purchaseid)
+			->first();
+			$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->get();
+			$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
+			$user=DB::table('users')->get();
+
+			return view('purchaseedit', compact('role', 'orderDetails', 'vendor','user','bills'));
+		}
+		public function removeProduct(Request $request,$id)
+{
+    // Perform server-side logic to remove the product from the database
+    $product = Tbl_placeorders::find($id);
+    if ($product) {
+        $product->delete();
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false]);
+    }
+}
+
+
+
+
+
+		public function updatePurchaseOrder(Request $request, $id){
+			// Validate the request
+		
+		
+			// Update the purchase order in the database
+			DB::table('tbl_place_order_masters')
+				->where('id', $id)
+				->update([
+					'vendor_id' => $request->input('vendor'),
+					'request_by' => $request->input('requestby'),
+					// Add other fields as needed
+				]);
+				DB::table('tbl_placeorders')
+				->where('bill_number', $id)
+				->update([
+					'qty' => $request->input('qty'),
+					// Add other fields as needed
+				]);
+		
+		
+			// Redirect back or to a success page
+			return redirect()->route('purchaseorder_bill');
+		}
+
+		public function productSearch(Request $request, $vendor_id) {
+			Log::info('Received vendor_id: ' . $vendor_id);
+			$alphabet = $request->input('alphabet');
+		
+		
+			if (!empty($alphabet) && !empty($vendorId)) {
+				$ordersToInsert = DB::table('tbl_order_trans')
+				->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+				->where('tbl_rm_products.vendor_id', $vendorId)
+				->where('tbl_order_trans.order_status', 0)
+				->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
+				->select('tbl_order_trans.*', 'tbl_hsncodes.tax','tbl_order_trans.amount');
+			
+			// Log the generated SQL query
+			\Log::info('Generated SQL: ' . $ordersToInsert->toSql());
+			
+			// Execute the query and get the result
+			$orders = $ordersToInsert->get();
+			
+			return response()->json($orders);
+			
+		
+				return response()->json($ordersToInsert);
+			}
+		
+		}
+		
+		
+		
+		
+		
 		public function productpriority(Request $request){
 			$role = Auth::user()->user_type;
 			$product = DB::table('tbl_brand_products')
