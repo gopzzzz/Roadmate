@@ -3698,6 +3698,8 @@ $(document).ready(function () {
     });
 });
 </script>
+<script>
+
 
 $('.edit_purchaseorder').click(function(){
     var id = $(this).data('id');
@@ -3792,7 +3794,6 @@ $('#search_sale').keyup(function () {
     });
 });
 
-<script>
 // Event handling for opening the edit modal
 $(document).on('click', '.edit_inventory', function () {
     var id = $(this).data('id');
