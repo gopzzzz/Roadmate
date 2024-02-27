@@ -3696,6 +3696,7 @@ $(document).ready(function () {
     });
 });
 </script>
+<script>
 
 $('.edit_purchaseorder').click(function(){
     var id = $(this).data('id');
