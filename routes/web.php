@@ -1327,6 +1327,8 @@ Route::post('/sale_orderinsert', 'HomeController@sale_orderinsert');
 
 
 
+Route::get('cancel-order/{orderId}', 'HomeController@cancelorder')->name('cancel-order');
+
 Route::get('/sale_list', 'HomeController@sale_list')->name('sale_list');
 
 Route::get('/sale_bill/{orderId}', 'HomeController@sale_bill')->name('sale_bill');
