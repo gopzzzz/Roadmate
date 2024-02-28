@@ -339,7 +339,7 @@
                     <td>{{$key->email}}</td>
 					
 					<td>{{$key->addrress}}</td>
-          <td>@if($key->exestatus==0) Active
+          <td>@if($key->status==0) Active
             @else Inactive 
             @endif
           </td>
