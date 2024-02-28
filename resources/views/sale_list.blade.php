@@ -208,7 +208,7 @@
         @php 
            
            $i = 1;
-           
+            
        @endphp
        @foreach($sale as $key)
        <tr>

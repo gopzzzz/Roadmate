@@ -192,8 +192,14 @@
             </div>
                                        
                                        <div class="modal-footer">
+                                       <a href="{{ route('cancel-order', ['orderId' => $orderId]) }}">
+                                            <button type="button" class="btn btn-secondary">Cancel Order</button>
+                                        </a>
+
+
                                           <a href="{{url('order_master')}}"> <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a> -->
-                                           <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+ 
+                                          <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                                        </div>                      
                                         
                
