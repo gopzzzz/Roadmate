@@ -698,7 +698,7 @@ public function crm(){
 	//
 
 	public function banner(){
-		$banner=DB::table('banners')->orderBy('id', 'DESC')->get();
+		$banner=DB::table('banners')->orderBy('id', 'DESC')->paginate(10);
 		
 		$role=Auth::user()->user_type;
 		return view('banner',compact('banner','role'));
@@ -717,11 +717,14 @@ public function crm(){
 		
 		return redirect('banner')->with('success', 'Banner inserted successfully.');
 	}
+	
 	public function bannerfetch(Request $request){
 		$id=$request->id;
 		$banner=Banner::find($id);
 		print_r(json_encode($banner));
 	}
+
+
 	public function banneredit(Request $request){
 		$id=$request->id;
 		$banner=Banner::find($id);

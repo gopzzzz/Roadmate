@@ -1315,28 +1315,36 @@ $('.edit_fran').click(function(){
 		$('#viewfranchises_modal').modal('show');
 	});
 
-  $('.edit_banner').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
+	$('.edit_banner').click(function(){
+    var id = $(this).data('id');
 
-					url: "{{ route('bannerfetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          //$('#image').val(obj.name);
-          $('#bannertype').val(obj.banner_type);
-          $('#bannerid').val(obj.id);
-         
-					},
-					});	
-		}
-		$('#editbanner_modal').modal('show');
-	});
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('bannerfetch') }}",
+            data: { "_token": "{{ csrf_token() }}", id: id },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#bannertype').val(obj.banner_type);
+                $('#bannerid').val(obj.id);
+
+                // Check if banner image exists
+                if (obj.banner_image) {
+                    
+                    $('#bannerimage').val(null); // Reset the input field
+                    $('#bannerimage').next('.custom-file-label').html(obj.banner_image);
+                } else {
+                    
+                    $('#bannerimage').val(null); // Reset the input field
+                    $('#bannerimage').next('.custom-file-label').html("Update file");
+                }
+            },
+        });
+    }
+    $('#editbanner_modal').modal('show');
+});
+
 	
 	$('.view_banner').click(function(){
 		var id=$(this).data('id');

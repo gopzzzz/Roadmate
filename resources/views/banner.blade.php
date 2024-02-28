@@ -42,45 +42,46 @@
 							<p align="right">
 								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Banner</button>
 								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-								
-								
-								
-								<form method="POST" action="{{url('bannerinsert')}}" enctype="multipart/form-data">@csrf
-										<div class="modal-dialog" role="document" style="width:80%;">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="exampleModalLabel">Add Banner</h5>
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
-													</button>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="exampleModalLabel">Banner Type</label>
-													<select name="type" class="form-control">
-													    <option value="0">Select Type</option>
-														<option value="1">Customer</option>
-														<option value="2">Shop</option>
-														<option value="3">Package</option>
-														<option value="4">Store</option>
-													</select>
-												</div>
-												<div class="modal-body row">
-													<div class="form-group col-sm-12">
-														<label class="exampleModalLabel">Image</label>
-														<input type="file" name="bannerimage" accept="image/*" required>
-													</div>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-													<button type="submit" name="submit" class="btn btn-primary">Add</button>
-												</div>
-											</div>
-										</div>
-									</form>
-								</div>
-						</div>
+    <form method="POST" action="{{url('bannerinsert')}}" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-dialog" role="document" style="width:80%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Banner</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="exampleModalLabel">Banner Type</label>
+                    <select name="type" class="form-control">
+                        <option value="0">Select Type</option>
+                        <option value="1">Customer</option>
+                        <option value="2">Shop</option>
+                        <option value="3">Package</option>
+                        <option value="4">Store</option>
+                    </select>
+                </div>
+                <div class="modal-body row">
+                    <div class="form-group col-sm-12">
+                        <label class="exampleModalLabel">Image</label>
+                        <input type="file" name="bannerimage" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
 						<!-- /.card-header -->
 						<div class="card-body">
-							<table id="example1" class="table table-bordered table-striped">
+							<table class="table table-bordered table-striped">
 								<thead>
 									<tr>
 										<th>id</th>
@@ -115,7 +116,9 @@
 									</tr>
 								</tfoot>
 							</table>
-							
+							<div class="card-footer clearfix">
+    {{ $banner->links() }}
+</div>	
 				
 							<div class="modal" id="editbanner_modal" tabindex="-1" role="dialog">
 								<div class="modal-dialog" role="document">
@@ -198,7 +201,10 @@
 		<!-- /.container-fluid -->
 	</section>
 	<!-- /.content -->
+	</div>
 
+
+	
 	<script>
     function confirmDelete(bannerId) {
         Swal.fire({
@@ -217,7 +223,13 @@
         });
     }
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+    });
+</script>
 
-
-
-</div>@endsection
+@endsection
