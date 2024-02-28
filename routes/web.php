@@ -1378,7 +1378,7 @@ Route::post('/purchaseorderedit', [App\Http\Controllers\HomeController::class, '
 Route::post('/purchaseorder/{id}', 'HomeController@updatePurchaseOrder')->name('updatePurchaseOrder');
 Route::get('/remove-product/{id}', 'HomeController@removeProduct')->name('remove.product');
 Route::get('/productfetchdetails', 'HomeController@productfetchdetails')->name('productfetchdetails');
-Route::post('/product-search/{vendor_id}', 'HomeController@product-search')->name('product-search');
+Route::post('/search_products', [App\Http\Controllers\HomeController::class, 'productSearch'])->name('search_products');
 
 Route::get('/productpriority', 'HomeController@productpriority')->name('productpriority');
 Route::post('/search_product', [

@@ -64,11 +64,13 @@
 													</select>
 												</div>
 												<div class="modal-body row">
-													<div class="form-group col-sm-12">
-														<label class="exampleModalLabel">Image</label>
-														<input type="file" name="bannerimage" accept="image/*" required>
-													</div>
-												</div>
+    <div class="form-group col-sm-12">
+        <label class="exampleModalLabel">Image</label>
+        <input type="file" name="bannerimage" accept="image/*" required>
+        <small class="text-muted">Accepted formats: JPEG, PNG, GIF</small>
+    </div>
+</div>
+
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 													<button type="submit" name="submit" class="btn btn-primary">Add</button>
@@ -141,6 +143,8 @@
 													<input type="hidden" name="id" id="bannerid">
 													<label class="exampleModalLabel">Image</label>
 													<input type="file" name="bannerimage" accept="image/*" id="bannerimage" required>
+													<small class="text-muted">Accepted formats: JPEG, PNG, GIF</small>
+
 												</div>
 											</div>
 											<div class="modal-footer">
@@ -159,7 +163,8 @@
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
 											</button>
 										</div>
-										
+										<input type="hidden" name="id" id="bannerid">
+
 											<div class="modal-body row">
 											<div class="form-group col-sm-6">
 													<label class="exampleModalLabel">Banner Type</label>
@@ -172,11 +177,11 @@
 													</select>
 												</div>
 												<div class="form-group col-sm-6">
-													<input type="hidden" name="id" id="bannerid">
-													<label class="exampleModalLabel">Image</label>
-													<input type="file" name="bannerimage" accept="image/*" id="bannerimage1" required>
-													<img src="" alt="" width="50" accept="image/*" id="bannerimage1"/>
-												</div>
+    <label class="exampleModalLabel">Images</label>
+    @foreach($banner as $shop)
+        <img src="{{ asset('/img/'.$shop->banner_image) }}" alt="" width="100"/>
+    @endforeach
+</div>
 											</div>
 											<div class="modal-footer">
 	

@@ -1340,28 +1340,34 @@ $('.edit_fran').click(function(){
 		$('#editbanner_modal').modal('show');
 	});
 	
-	$('.view_banner').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
+	$('.view_banner').click(function () {
+    var id = $(this).data('id');
 
-					url: "{{ route('bannerfetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          $('#bannerimage1').val(obj.image);
-          $('#bannertype1').val(obj.banner_type);
-          $('#bannerid').val(obj.id);
-         
-					},
-					});	
-		}
-		$('#viewbanner_modal').modal('show');
-	});
+    if (id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('bannerfetch') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: id
+            },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+
+                // Set the src attribute of the image
+                $('#bannerimage1').attr('src', "{{ asset('/img/') }}/" + obj.banner_image);
+
+                // Set other values as needed
+                $('#bannertype1').val(obj.banner_type);
+                $('#bannerid').val(obj.id);
+
+            },
+        });
+    }
+    $('#viewbanner_modal').modal('show');
+});
+
 
 	$('.edit_marketproduct').click(function(){
 		var cid=$(this).data('cid');
@@ -3713,20 +3719,85 @@ $('.edit_purchaseorder').click(function(){
                 id: id
             },
             success: function (res) {
-                console.log(res);
-                var obj = JSON.parse(res);
-                $('#venname').val(obj.vendor_id);
-                $('#ponumber').val(obj.bill_num);
-               
-                $('#requestby').val(obj.request_by);
-               
-                $('#purchaseid').val(obj.id);
+                console.log('Response:', res);
+
+                // Access the data for Tbl_place_order_masters
+                var purchaseOrderMaster = res.purchaseOrderMaster;
+                console.log('purchaseOrderMaster:', purchaseOrderMaster);
+
+                // Access the data for Tbl_placeorders
+                var purchaseOrderDetails = res.purchaseOrderDetails;
+                console.log('purchaseOrderDetails:', purchaseOrderDetails);
+
+                // Use the data to populate form fields
+                $('#venname').val(purchaseOrderMaster.vendor_id);
+                $('#requestby').val(purchaseOrderMaster.request_by);
+                $('#purchaseid').val(purchaseOrderMaster.id);
+
+                // Clear existing rows in the table
+                $('#stockTable tbody').empty();
                 
+                // Initialize total variables
+                var totalQuantity = 0;
+                var totalAmount = 0;
+                var totalTaxableAmount = 0;
+                var totalTaxAmount = 0;
+                var totalSubtotal = 0;
+
+                // Loop through the products and add rows to the table
+                if (purchaseOrderDetails.length > 0) {
+                    $.each(purchaseOrderDetails, function(index, product) {
+                        var row = '<tr>' +
+                            '<td>' + (index + 1) + '</td>' +
+                            '<td>' +
+							'<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '">' +
+                            '<div class="product_list"></div>' +
+                            '</td>' +
+                            '<td><input type="text" class="form-control quantity" name="quantity[]" value="' + product.qty + '" required></td>' +
+                            '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + (product.amount /(1 + product.tax / 100)).toFixed(2) + '" required readonly></td>' +
+							'<td><input type="text" class="form-control tax" name="tax[]" value="' + product.tax + '%" required readonly></td>' +
+							'<td><input type="text" class="form-control taxableamount" name="taxableamount[]" value="' +((product.amount /(1 + product.tax / 100)).toFixed(2)*(product.tax / 100).toFixed(2)*product.qty).toFixed(2) + '" required readonly></td>' +
+                            '<td><input type="text" class="form-control total" name="total[]" value="' + (product.amount * product.qty).toFixed(2) + '" required readonly></td>';
+							
+                        row += '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>';
+                  
+                        row += '</tr>';
+                        $('#stockTable tbody').append(row);
+						
+
+                        // Update total variables
+						totalQuantity += parseFloat(product.qty);
+                        totalAmount += parseFloat(product.amount * product.qty);
+                        totalTaxAmount += parseFloat(product.amount * product.qty);
+                        totalTaxableAmount += parseFloat((product.amount /(1 + product.tax / 100)).toFixed(2)*(product.tax / 100).toFixed(2) * product.qty);
+                        totalSubtotal += parseFloat((product.amount /(1 + product.tax / 100)).toFixed(2)) * product.qty;
+                    });
+
+                    // Set the total quantity and total amount fields
+                    $('.total-quantity').val(totalQuantity);
+                    $('.total-amount').val(totalAmount.toFixed(2));
+                    $('.total-taxable-amount').val(totalTaxableAmount.toFixed(2));
+                    $('.total-tax-amount').val(totalTaxAmount.toFixed(2));
+                    $('.total-subtotal').val(totalSubtotal.toFixed(2));
+  
+                    // Set the values in the summary row
+                    $('#subtotalValue').text(totalSubtotal.toFixed(2));
+                    $('#taxableAmountValue').text(totalTaxableAmount.toFixed(2));
+                    $('#sumValue').text(totalAmount.toFixed(2));
+                } else {
+                    console.error('No products found in purchaseOrderDetails.');
+                }
             },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
         });
     }
     $('#editpurcaseorder_modal').modal('show');
-}); 
+});
+
+
+
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
 

@@ -83,89 +83,28 @@
 
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Store Product Categories</button>
 
-              
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-
-
-                <form method="POST" action="{{url('store_categoriesinsert')}}" enctype="multipart/form-data">
-
-
-
-                @csrf
-
-
-
-                <div class="modal-dialog" role="document" style="width:80%;">
-
-
-
-                <div class="modal-content">
-
-
-
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form method="POST" id="form-idd" action="{{url('store_categoriesinsert')}}" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-dialog" role="document" style="width:80%;">
+            <div class="modal-content">
                 <div class="modal-header">
-
-
-
-                <h5 class="modal-title" id="exampleModalLabel">Add Store Product Categories</h5>
-
-
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-
-
-
-                <span aria-hidden="true">&times;</span>
-
-
-
-                </button>
-
-
-
+                    <h5 class="modal-title" id="exampleModalLabel">Add Store Product Categories</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-
-
-
                 <div class="modal-body row">
-
-
-
-
-                <div class="form-group col-sm-12">
-
-
-                <label class="exampleModalLabel">Category</label>
-
-
-
-                <input class="form-control" name="category" id="category" required>
-
-
+                    <div class="form-group col-sm-12">
+                        <label class="exampleModalLabel">Category</label>
+                        <input class="form-control" name="category" id="category" required>
+                    </div>
                 </div>
-
-
-                </div>
-
-
-
                 <div class="modal-footer">
-
-
-
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-
-
-                <button type="submit" name="submit" class="btn btn-primary">Add</button>
-
-
-
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
                 </div>
-
-
-
+        
                 </div>
 
 
@@ -381,6 +320,15 @@
             }
         });
     }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            $('#form-idd')[0].reset();
+        });
+    });
 </script>
 
   @endsection

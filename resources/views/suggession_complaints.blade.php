@@ -186,8 +186,7 @@
       
 									<div class="form-group col-sm-12">
                                         <label class="exampleModalLabel">Shop</label>
-                                        <select name="shop" class="form-control" id="shop">
-                                        <option value="0">select Shop</option>
+                                        <select name="shop" class="form-control" id="shop" disabled>
                                         @foreach($shops as $key)
                                         <option value="{{$key->id}}">{{$key->shopname}}</option>
                                         @endforeach
@@ -197,14 +196,14 @@
 
                                        <label class="exampleModalLabel">Suggestions</label>
 
-                                       <textarea  class="form-control" name="sug" id="sug_view" required></textarea>
+                                       <textarea  class="form-control" name="sug" id="sug_view" required readonly></textarea>
 
                                     </div>
 									<div class="form-group col-sm-12">
 
                                        <label class="exampleModalLabel">Complaints</label>
 
-                                       <textarea  class="form-control" name="comp" id="comp_view" required></textarea>
+                                       <textarea  class="form-control" name="comp" id="comp_view" required readonly></textarea>
 
                                     </div>
 

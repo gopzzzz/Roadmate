@@ -153,14 +153,15 @@
         @foreach($saleorder as $index => $product)
          
         <tr>
-            <input type="hidden" id="productId" name="id">
-            <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
-            <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
-            <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required readonly></td>
-            <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required readonly></td>
-            <td><input class="form-control " name="tax" value="{{ $product->tax }} %" required readonly></td>
-            <td><input class="form-control tax" name="tax" value="{{number_format(($product->offer_amount)/(1+(($product->tax)/100))*($product->tax/100), 2)}}" required readonly></td>
-            <td><input class="form-control total-amount" name="total_amount" value="{{ $product->qty * $product->offer_amount }}" required readonly></td>
+        <input type="hidden" id="productId" name="id">
+<td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
+<td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
+<td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required readonly></td>
+<td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required readonly></td>
+<td><input class="form-control" name="tax" value="{{ $product->tax }} %" required readonly></td>
+<td><input class="form-control tax" name="tax" value="{{ number_format(($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100), 2) }}" required readonly></td>
+<td><input class="form-control" name="total_amount" value="{{ $product->qty * $product->offer_amount }}"required readonly></td>
+
         </tr>
         @endforeach
     </tbody> 
@@ -235,7 +236,7 @@
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             
-            <script>
+            <!-- <script>
   $(document).ready(function() {
     // Function to update total amount and total column
     function updateTotal(inputField) {
@@ -296,7 +297,7 @@
         });
     });
 </script>
-
+ -->
 
 
 @endsection
