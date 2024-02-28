@@ -80,9 +80,11 @@
 									</form>
 								</div>
 						</div>
+   
+
 						<!-- /.card-header -->
 						<div class="card-body">
-							<table id="example1" class="table table-bordered table-striped">
+							<table class="table table-bordered table-striped">
 								<thead>
 									<tr>
 										<th>id</th>
@@ -117,7 +119,9 @@
 									</tr>
 								</tfoot>
 							</table>
-							
+							<div class="card-footer clearfix">
+    {{ $banner->links() }}
+</div>	
 				
 							<div class="modal" id="editbanner_modal" tabindex="-1" role="dialog">
 								<div class="modal-dialog" role="document">
@@ -203,7 +207,10 @@
 		<!-- /.container-fluid -->
 	</section>
 	<!-- /.content -->
+	</div>
 
+
+	
 	<script>
     function confirmDelete(bannerId) {
         Swal.fire({
@@ -222,7 +229,13 @@
         });
     }
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+    });
+</script>
 
-
-
-</div>@endsection
+@endsection

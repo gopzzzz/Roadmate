@@ -698,7 +698,7 @@ public function crm(){
 	//
 
 	public function banner(){
-		$banner=DB::table('banners')->orderBy('id', 'DESC')->get();
+		$banner=DB::table('banners')->orderBy('id', 'DESC')->paginate(10);
 		
 		$role=Auth::user()->user_type;
 		return view('banner',compact('banner','role'));
@@ -717,11 +717,14 @@ public function crm(){
 		
 		return redirect('banner')->with('success', 'Banner inserted successfully.');
 	}
+	
 	public function bannerfetch(Request $request){
 		$id=$request->id;
 		$banner=Banner::find($id);
 		print_r(json_encode($banner));
 	}
+
+
 	public function banneredit(Request $request){
 		$id=$request->id;
 		$banner=Banner::find($id);
@@ -4119,7 +4122,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 			//echo "<pre>";print_r($saleorder);exit;
 		$role=Auth::user()->user_type;
-		return view('sale_order_master',compact('role','markk','saleorder'));
+		return view('sale_order_master',compact('role','markk','saleorder','orderId'));
 	    }
 
 
@@ -4150,7 +4153,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
 				$saleMaster->order_id = $request->idd;
-				$saleMaster->payment_status=0;
+				
 				$saleMaster->invoice_number=$invoice;
 				$saleMaster->total_amount = $request->total_amount;
 				$saleMaster->bill_number = $request->billnumber 	;
@@ -4217,6 +4220,28 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				dd($e->getMessage());
 			}
 		}
+
+
+
+		public function cancelorder($orderId) {
+			try {
+				
+				Tbl_order_masters::where('id', $orderId)->update(['order_status' => 4]);
+		
+				
+				Tbl_order_trans::where('order_id', $orderId)->update(['order_status' => 2]);
+		
+				\Session::flash('success', 'Order canceled successfully!');
+			} catch (\Exception $e) {
+				\Log::error('Error canceling order: ' . $e->getMessage());
+				\Session::flash('error', 'Error canceling order. Please try again.');
+			}
+		
+			return redirect('order_master'); 
+		}
+
+
+	
 		public function sale_list(Request $request)
 		{
 			$role = Auth::user()->user_type;
@@ -4282,6 +4307,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			$role=Auth::user()->user_type;
 			return view('sale_bill',compact('role','markk','salebill'));
 			}
+
+
 		public function product_order(Request $request)
         {
 			$role = Auth::user()->user_type;

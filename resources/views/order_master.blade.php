@@ -189,9 +189,9 @@
                 <th>Delivery Date</th>
                 <th>Order Date</th>
                 @if($role!=3)
-                <th></th>
+                <th>Action</th>
                 @endif
-                <th></th>
+                <th>Print</th>
              
 
                 @if($role==1)
@@ -231,8 +231,10 @@
                     <strong class="bg-info"> Confirmed </strong>
                     @elseif ($key->order_status == 2)
                     <strong class="bg-primary"> Shipped</strong>
-                    @else
+                    @elseif ($key->order_status == 3)
                     <strong class="bg-success"> Delivered </strong>
+                    @else
+                    <strong class="bg-success"> Cancel </strong>
                     @endif
                 </td>
                 <td>{{ $key->delivery_date }}</td>
@@ -250,18 +252,22 @@
                 </td> -->
                
                 @if($role!=3)
-<td>
+                <td>
     @if($key->sale_status == 0)
-        <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
-            <button type="submit" class="btn btn-primary sale">
-                <i class="fas fa-file-invoice"></i>
-                
-            </button>
-        </form>
+        @if($key->order_status == 4)
+            <span class="text-danger">Order Canceled</span>
+        @else
+            <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
+                <button type="submit" class="btn btn-primary sale">
+                    <i class="fas fa-file-invoice"></i>
+                </button>
+            </form>
+        @endif
     @else
         <span class="text-success">Sale Invoice Generated</span>
     @endif
 </td>
+
 @endif
  
 <td style="width: 50px;">
