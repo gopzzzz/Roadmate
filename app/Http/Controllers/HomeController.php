@@ -5217,4 +5217,6 @@ public function search_sale(Request $request)
     return response()->json(['salelistHTML' => $salelistHTML]);
 }
 
+
+
 }

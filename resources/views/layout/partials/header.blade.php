@@ -260,7 +260,7 @@ $name=Auth::user()->name;
                         </ul>
                      </li>
 
-<!-- <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
+<li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
@@ -292,7 +292,7 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
-</li> -->
+</li>
 <li class="nav-item has-treeview {{ request()->is(['ledger_master','expense']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['ledger_master','expense']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
@@ -319,7 +319,43 @@ $name=Auth::user()->name;
       </li>
    </ul>
 </li>
-                     <li class="nav-item has-treeview {{ request()->is('timeslot') ? 'menu-open' : '' }}">
+
+<li class="nav-item has-treeview {{ request()->is(['revenue_master','profit','turnover']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['revenue_master','profit','turnover']) ? 'active' : '' }}">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <p>
+         Accounts
+         <i class="right fas fa-angle-left"></i>
+      </p>
+   </a>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('revenue_master') }}" class="nav-link {{ request()->is('revenue_master') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Revenue</p>
+         </a>
+      </li>
+   </ul>
+
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('profit') }}" class="nav-link {{ request()->is('profit') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Profit</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('turnover') }}" class="nav-link {{ request()->is('turnover') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Turn Over</p>
+         </a>
+      </li>
+   </ul>
+</li>
+          
+<li class="nav-item has-treeview {{ request()->is('timeslot') ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is('timeslot') ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
