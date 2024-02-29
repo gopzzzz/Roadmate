@@ -4797,10 +4797,7 @@ public function order_history()
 	}
 
 	
-	public function updatepo($id){
-		
-		
-		 
+	public function updatepo($id){ 
 		$ordersToInsert = DB::table('tbl_order_trans')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
@@ -4886,9 +4883,11 @@ public function order_history()
     $id = $request->id;
 
     $puredit = Tbl_place_order_masters::find($id);
+	if($puredit){
     $puredit->vendor_id = $request->venname;
     $puredit->request_by = $request->requestby;
     $puredit->save();
+	$existingProductIds = []; 
 
     if ($request->has('product_name')) {
         foreach ($request->product_name as $key => $productName) {
@@ -4911,7 +4910,7 @@ public function order_history()
 				if ($product) {
 					$existingProductIds[] = $product->product_id; 
 	
-					$newProduct = Tbl_placeorders::where('bill_number', $id)
+					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
 					->where('product_id', $product->product_id)
 														->first();
 
@@ -4939,12 +4938,13 @@ public function order_history()
     
 	}
 	
+	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
-
+}
 
 	
 	public function bill($id){
@@ -4964,42 +4964,8 @@ public function order_history()
 	
 		return view('bill',compact('role','master','vendor','bills'));
 		}
-		// public function purchaseedit($purchaseid){
-		// 	$role = Auth::user()->user_type;
-		// 	$orderDetails = DB::table('tbl_place_order_masters')
-		// 	->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
-		// 	->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
-		// 	->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
-		// 	->where('tbl_place_order_masters.id', $purchaseid)
-		// 	->first();
-		// 	$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
-		// ->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-		// ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-		// ->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
-		// ->get();
-		// 	$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
-		// 	$user=DB::table('users')->get();
-
-		// 	return view('purchaseedit', compact('role', 'orderDetails', 'vendor','user','bills'));
-		// }
-		public function purchaseeditorder($purchaseid){
-			$role = Auth::user()->user_type;
-			$orderDetails = DB::table('tbl_place_order_masters')
-			->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
-			->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
-			->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
-			->where('tbl_place_order_masters.id', $purchaseid)
-			->first();
-			$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
-		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
-		->get();
-			$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
-			$user=DB::table('users')->get();
-
-			return view('purchaseeditorder', compact('role', 'orderDetails', 'vendor','user','bills'));
-		}
+	
+	
 		public function removeProduct(Request $request,$id)
 {
     // Perform server-side logic to remove the product from the database
@@ -5011,47 +4977,11 @@ public function order_history()
         return response()->json(['success' => false]);
     }
 }
-public function editorderpurchase(request $request)
-	{
-		$id=$request->id;
-		$puredit=Tbl_place_order_masters::find($id);
-		$puredit->vendor_id=$request->venname;
-		$puredit->bill_num	=$request->ponumber;
-		$puredit->request_by=$request->requestby;
-		$puredit->save();
-		return redirect()->back()->with("edited successfully");
-
-	}
 
 
 
 
-		public function updatePurchaseOrder(Request $request, $id){
-			// Validate the request
-		    $product_id = $request->input('product_id');
 
-		
-			// Update the purchase order in the database
-			DB::table('tbl_place_order_masters')
-				->where('id', $id)
-				->update([
-					'vendor_id' => $request->input('vendor'),
-					'request_by' => $request->input('requestby'),
-					// Add other fields as needed
-				]);
-				DB::table('tbl_placeorders')
-				->where('bill_number', $id)
-				->update([
-					'qty' => $request->input('qty'),
-					'product_id' => $product_id ,
-
-					// Add other fields as needed
-				]);
-		
-		
-			// Redirect back or to a success page
-			return redirect()->route('purchaseorder_bill');
-		}
 		
 		
 		public function productSearch(Request $request)

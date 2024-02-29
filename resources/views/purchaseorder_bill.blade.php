@@ -239,6 +239,7 @@ $i++;
         $(document).on('click', '#addRow', function() {
             addRow();
         });
+        
 
         // Event listener for dynamically added deleteRow buttons
         $('#stockTable tbody').on('click', '.deleteRow', function() {
@@ -343,6 +344,9 @@ $('#stockTable tbody').on('keyup', '.search_products', function() {
         productListContainer.html('').hide();
     }
 });
+
+
+
 
 </script>
 

@@ -1393,6 +1393,7 @@ Route::post('/search_sale',['middleware' => 'auth',
 'uses' => 'HomeController@search_sale'])->name('search_sale');
 Route::post('/search_order',['middleware' => 'auth',
 'uses' => 'HomeController@search_order'])->name('search_order');
+Route::post('/delete-product', 'HomeController@deleteProduct')->name('delete_product');
 
 
 
