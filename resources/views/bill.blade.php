@@ -225,19 +225,7 @@ $i++;
 
 @endphp
 
-@endforeach
-
-
-
-
-
-
-
-
-
-       
-      
-      
+@endforeach 
        <div style="margin-top: 20px;">
 
 <!-- Tax Analysis Table -->

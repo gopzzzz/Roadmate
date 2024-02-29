@@ -112,7 +112,7 @@
     <select name="cust" class="form-control">
         <option value="" label="Select Customer">Select Customer</option>
         @foreach($custmr1 as $key1)
-            <option value="{{$key1->name}}">{{$key1->name}}</option>
+            <option value="{{$key1->id}}">{{$key1->name}}</option>
         @endforeach
     </select>
   

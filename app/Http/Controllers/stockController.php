@@ -111,6 +111,7 @@ class stockController extends Controller
 			return redirect('godown')->with('success', 'Data edited successfully.');
 		}
 
+    
 
 
 		public function physical_stock() {
@@ -132,18 +133,19 @@ class stockController extends Controller
 				->groupBy('tbl_physicalstock_masters.id')
 				->get();
 		
-			$role = Auth::user()->user_type;
-		
-			$stock = DB::table('tbl_godowns')->get();
-			$prod = DB::table('tbl_brand_products')->get();
-				
 
-			return view('stock.physical_stock', compact('physical', 'stock', 'prod', 'role'));
-		}
+				$role = Auth::user()->user_type;
 		
+				$stock = DB::table('tbl_godowns')->get();
+				$prod = DB::table('tbl_brand_products')->get();
+					
+	
+				return view('stock.physical_stock', compact('physical', 'stock', 'prod', 'role'));
+			}
+			
+	
 	
 		
-
 		public function productSearch(Request $request) {
 			$alphabet = $request->input('alphabet');
 			

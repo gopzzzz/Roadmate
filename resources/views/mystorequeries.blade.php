@@ -182,7 +182,7 @@
 
                                         <label class="exampleModalLabel">Customer</label>
 
-                                       <select name="cust" class="form-control" id="customer1">
+                                       <select name="cust" class="form-control" id="customer1" disabled>
                                        <option value="0">Select Customer</option>
 
                                        @foreach($custmr1 as $key)
@@ -200,7 +200,7 @@
 
                                         <label class="exampleModalLabel">Question</label>
 
-                                      <input type="text" name="quest" class="form-control" id="question1">
+                                      <input type="text" name="quest" class="form-control" id="question1" readonly>
 
                                     </div>
 

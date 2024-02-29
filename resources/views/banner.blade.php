@@ -64,11 +64,13 @@
 													</select>
 												</div>
 												<div class="modal-body row">
-													<div class="form-group col-sm-12">
-														<label class="exampleModalLabel">Image</label>
-														<input type="file" name="bannerimage" accept="image/*" required>
-													</div>
-												</div>
+    <div class="form-group col-sm-12">
+        <label class="exampleModalLabel">Image</label>
+        <input type="file" name="bannerimage" accept="image/*" required>
+        <small class="text-muted">Accepted formats: JPEG, PNG, GIF</small>
+    </div>
+</div>
+
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 													<button type="submit" name="submit" class="btn btn-primary">Add</button>
@@ -78,9 +80,11 @@
 									</form>
 								</div>
 						</div>
+   
+
 						<!-- /.card-header -->
 						<div class="card-body">
-							<table id="example1" class="table table-bordered table-striped">
+							<table class="table table-bordered table-striped">
 								<thead>
 									<tr>
 										<th>id</th>
@@ -115,7 +119,9 @@
 									</tr>
 								</tfoot>
 							</table>
-							
+							<div class="card-footer clearfix">
+    {{ $banner->links() }}
+</div>	
 				
 							<div class="modal" id="editbanner_modal" tabindex="-1" role="dialog">
 								<div class="modal-dialog" role="document">
@@ -141,6 +147,8 @@
 													<input type="hidden" name="id" id="bannerid">
 													<label class="exampleModalLabel">Image</label>
 													<input type="file" name="bannerimage" accept="image/*" id="bannerimage" required>
+													<small class="text-muted">Accepted formats: JPEG, PNG, GIF</small>
+
 												</div>
 											</div>
 											<div class="modal-footer">
@@ -159,7 +167,8 @@
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
 											</button>
 										</div>
-										
+										<input type="hidden" name="id" id="bannerid">
+
 											<div class="modal-body row">
 											<div class="form-group col-sm-6">
 													<label class="exampleModalLabel">Banner Type</label>
@@ -172,11 +181,11 @@
 													</select>
 												</div>
 												<div class="form-group col-sm-6">
-													<input type="hidden" name="id" id="bannerid">
-													<label class="exampleModalLabel">Image</label>
-													<input type="file" name="bannerimage" accept="image/*" id="bannerimage1" required>
-													<img src="" alt="" width="50" accept="image/*" id="bannerimage1"/>
-												</div>
+    <label class="exampleModalLabel">Images</label>
+    @foreach($banner as $shop)
+        <img src="{{ asset('/img/'.$shop->banner_image) }}" alt="" width="100"/>
+    @endforeach
+</div>
 											</div>
 											<div class="modal-footer">
 	
@@ -198,7 +207,10 @@
 		<!-- /.container-fluid -->
 	</section>
 	<!-- /.content -->
+	</div>
 
+
+	
 	<script>
     function confirmDelete(bannerId) {
         Swal.fire({
@@ -217,7 +229,13 @@
         });
     }
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+    });
+</script>
 
-
-
-</div>@endsection
+@endsection

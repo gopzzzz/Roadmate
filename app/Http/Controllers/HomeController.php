@@ -317,7 +317,7 @@ class HomeController extends Controller
         $exe->addrress = $request->address;
         $exe->district = $request->district;
 
-		$exe->exestatus =0;
+		$exe->status =0;
 
         $exe->location = $request->location;
         $exe->save();
@@ -360,7 +360,7 @@ class HomeController extends Controller
 		$exeedit->email = $request->email;
 		$exeedit->addrress = $request->address;
 		$exeedit->district = $request->district;
-		$exeedit->exestatus = $request->status;
+		$exeedit->status = $request->status;
 		
 		// Save the executive model
 		$exeedit->save(); 
@@ -698,7 +698,7 @@ public function crm(){
 	//
 
 	public function banner(){
-		$banner=DB::table('banners')->orderBy('id', 'DESC')->get();
+		$banner=DB::table('banners')->orderBy('id', 'DESC')->paginate(10);
 		
 		$role=Auth::user()->user_type;
 		return view('banner',compact('banner','role'));
@@ -717,11 +717,14 @@ public function crm(){
 		
 		return redirect('banner')->with('success', 'Banner inserted successfully.');
 	}
+	
 	public function bannerfetch(Request $request){
 		$id=$request->id;
 		$banner=Banner::find($id);
 		print_r(json_encode($banner));
 	}
+
+
 	public function banneredit(Request $request){
 		$id=$request->id;
 		$banner=Banner::find($id);
@@ -4851,26 +4854,99 @@ public function order_history()
 		->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
 		->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
 		->get();
-		$role=Auth::user()->user_type;
-		return view('purchaseorder_bill',compact('role','ordersQuery','vendor','user'));
-	}
-	public function purchaseorderfetch(request $request){
+		$bills=DB::table('tbl_placeorders')
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->get();
 		
-		$id=$request->id;
-	$purchaseorder=Tbl_place_order_masters::find($id);
-	print_r(json_encode($purchaseorder));
+		$role=Auth::user()->user_type;
+		return view('purchaseorder_bill',compact('role','ordersQuery','vendor','user','bills'));
 	}
-	public function purchaseorderedit(request $request)
-	{
-		$id=$request->id;
-		$puredit=Tbl_place_order_masters::find($id);
-		$puredit->vendor_id=$request->venname;
-		$puredit->bill_num	=$request->ponumber;
-		$puredit->request_by=$request->requestby;
-		$puredit->save();
-		return redirect()->back()->with("edited successfully");
+	public function purchaseorderfetch(Request $request) {
+		$id = $request->id;
+	
+		$purchaseOrderMaster = Tbl_place_order_masters::find($id);
+	
+		$purchaseOrderDetails = Tbl_placeorders::where('bill_number',$id)
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->get();
+	
+		$result = [
+			'purchaseOrderMaster' => $purchaseOrderMaster,
+			'purchaseOrderDetails' => $purchaseOrderDetails,
+		];
+	
+		return response()->json($result);
+	}
+	public function purchaseorderedit(Request $request)
+{
+    $id = $request->id;
 
+    $puredit = Tbl_place_order_masters::find($id);
+    $puredit->vendor_id = $request->venname;
+    $puredit->request_by = $request->requestby;
+    $puredit->save();
+
+    if ($request->has('product_name')) {
+        foreach ($request->product_name as $key => $productName) {
+            $quantity = $request->quantity[$key] ?? null;
+
+            $product = DB::table('tbl_order_trans')
+                ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+                ->where('tbl_brand_products.product_name', $productName)
+                ->where('tbl_order_trans.order_status', 0)
+                ->select(
+                    'tbl_order_trans.*',
+                    'tbl_hsncodes.tax',
+                    'tbl_order_trans.offer_amount',
+                    'tbl_order_trans.qty',
+                    'tbl_brand_products.product_name'
+                )
+                ->first();
+				if ($product) {
+					$existingProductIds[] = $product->product_id; 
+	
+					$newProduct = Tbl_placeorders::where('bill_number', $id)
+					->where('product_id', $product->product_id)
+														->first();
+
+            if ($newProduct) {
+              
+				$newProduct->product_id = $product->product_id;
+
+				$newProduct->qty = $quantity;
+				$newProduct->amount = $product->offer_amount;
+				$newProduct->bill_number= $id;
+				$newProduct->save();
+            } else {
+                $newProduct = new Tbl_placeorders;
+                $newProduct->bill_number = $id; 
+                $newProduct->product_id =$product->product_id;
+                $newProduct->qty = $quantity;
+                $newProduct->amount = $product->offer_amount;
+				$newProduct->order_date =date('Y-m-d');
+
+                $newProduct->save();
+				$update = \DB::table('tbl_order_trans') ->where('id', $product->id) ->limit(1) ->update( [ 'order_status' => 1]);
+
+            }
+        }
+    
 	}
+	
+	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
+} else {
+	return redirect()->back()->with('error', 'Purchase Order not found!');
+}
+}
+
+
+	
 	public function bill($id){
 		$role=Auth::user()->user_type;
 		$master=DB::table('tbl_place_order_masters')
@@ -4888,6 +4964,125 @@ public function order_history()
 	
 		return view('bill',compact('role','master','vendor','bills'));
 		}
+		// public function purchaseedit($purchaseid){
+		// 	$role = Auth::user()->user_type;
+		// 	$orderDetails = DB::table('tbl_place_order_masters')
+		// 	->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
+		// 	->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+		// 	->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
+		// 	->where('tbl_place_order_masters.id', $purchaseid)
+		// 	->first();
+		// 	$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
+		// ->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		// ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		// ->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		// ->get();
+		// 	$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
+		// 	$user=DB::table('users')->get();
+
+		// 	return view('purchaseedit', compact('role', 'orderDetails', 'vendor','user','bills'));
+		// }
+		public function purchaseeditorder($purchaseid){
+			$role = Auth::user()->user_type;
+			$orderDetails = DB::table('tbl_place_order_masters')
+			->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
+			->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+			->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
+			->where('tbl_place_order_masters.id', $purchaseid)
+			->first();
+			$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->get();
+			$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
+			$user=DB::table('users')->get();
+
+			return view('purchaseeditorder', compact('role', 'orderDetails', 'vendor','user','bills'));
+		}
+		public function removeProduct(Request $request,$id)
+{
+    // Perform server-side logic to remove the product from the database
+    $product = Tbl_placeorders::find($id);
+    if ($product) {
+        $product->delete();
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false]);
+    }
+}
+public function editorderpurchase(request $request)
+	{
+		$id=$request->id;
+		$puredit=Tbl_place_order_masters::find($id);
+		$puredit->vendor_id=$request->venname;
+		$puredit->bill_num	=$request->ponumber;
+		$puredit->request_by=$request->requestby;
+		$puredit->save();
+		return redirect()->back()->with("edited successfully");
+
+	}
+
+
+
+
+		public function updatePurchaseOrder(Request $request, $id){
+			// Validate the request
+		    $product_id = $request->input('product_id');
+
+		
+			// Update the purchase order in the database
+			DB::table('tbl_place_order_masters')
+				->where('id', $id)
+				->update([
+					'vendor_id' => $request->input('vendor'),
+					'request_by' => $request->input('requestby'),
+					// Add other fields as needed
+				]);
+				DB::table('tbl_placeorders')
+				->where('bill_number', $id)
+				->update([
+					'qty' => $request->input('qty'),
+					'product_id' => $product_id ,
+
+					// Add other fields as needed
+				]);
+		
+		
+			// Redirect back or to a success page
+			return redirect()->route('purchaseorder_bill');
+		}
+		
+		
+		public function productSearch(Request $request)
+		{
+			$vendorId = $request->input('vendor_id');
+			$alphabet = $request->input('alphabet');
+		
+			$products = DB::table('tbl_order_trans')
+				->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+				->where('tbl_rm_products.vendor_id', $vendorId )
+
+				->where('tbl_order_trans.order_status', 0)
+				->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
+				->select(
+					'tbl_order_trans.*',
+					'tbl_hsncodes.tax',
+					'tbl_order_trans.offer_amount',
+					'tbl_order_trans.qty',
+					'tbl_brand_products.product_name'
+				)
+				->get();
+		
+			return response()->json($products);
+		}
+		
+		
+		
+		
+		
 		public function productpriority(Request $request){
 			$role = Auth::user()->user_type;
 			$product = DB::table('tbl_brand_products')

@@ -212,19 +212,28 @@ $i++;
 </div>
 
 
-
-
-
 <div class="modal fade" id="productsModal" tabindex="-1" role="dialog" aria-labelledby="productsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title">Physical Stock Details</h5>
                 <h5 class="modal-title">Products in Godown</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body row">
+                <input type="hidden" id="master_id" name="master_id">
+                <table id="physicalStockTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <!-- Add more headings as needed -->
+                        </tr>
+                    </thead>
+                    <tbody id="physicalStockDetailsBody">
+                        <!-- Data will be dynamically inserted here -->
                 <table id="productTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -352,7 +361,7 @@ $i++;
         var productName = $(this).text(); 
         var productId = $(this).data('product-id'); 
         var inputField = $(this).closest('td').find('.product_search'); 
-        inputField.val(productName);
+        inputField.val(productName);   
         inputField.data('product-id', productId); 
         $(this).closest('.product_list').hide(); 
     });
