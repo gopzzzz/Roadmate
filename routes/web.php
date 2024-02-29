@@ -1314,6 +1314,8 @@ Route::get('/order_trans/{orderId}', 'HomeController@order_trans')->name('order_
 Route::get('/order_invoice/{orderId}', 'HomeController@order_invoice')->name('order_invoice');
 
 Route::get('/order_master', 'HomeController@order_master')->name('order_master');
+
+
 Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
 
 Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
@@ -1441,3 +1443,11 @@ Route::post('/expensefetch', [App\Http\Controllers\ledgerController::class, 'exp
 Route::post('/expensedit', [App\Http\Controllers\ledgerController::class, 'expensedit'])->name('expensedit');
 
 Route::get('/expensedelete/{id}', [App\Http\Controllers\ledgerController::class, 'expensedelete'])->name('expensedelete');
+
+//Accounts Module 
+Route::get('/revenue_master', 'AccountController@revenue_master')->name('revenue_master');
+
+Route::get('/profit', 'AccountController@profit')->name('profit');
+
+Route::get('/turnover', 'AccountController@turnover')->name('turnover');
+

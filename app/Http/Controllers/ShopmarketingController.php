@@ -205,6 +205,20 @@ public function productdetails(){
     ->where('tbl_brand_products.status',0)
     ->first(); 
 
+    $ratings = DB::table('tbl_product_ratings')
+   // ->where('shopid', $shopId)
+    ->where('product_id', $productId)
+    //->where('type', $type)
+    ->avg('rating');
+
+    if($ratings==null){
+        $stars=0;
+    }else{
+        $stars=$ratings;
+    }
+
+    
+
 if ($productDetails) {
     $images = DB::table('tbl_productimages')
         ->select('images')
@@ -217,6 +231,7 @@ $productDetails->images = $images;
     return response()->json([
         'error' => false,
         'productdetails' => [$productDetails],
+        'rating'=>$stars,
         'message' => 'Success'
     ]);
 } else {
@@ -1200,6 +1215,9 @@ public function cancelorder(){
     $masterorder->discount=$data1->discount;
     $masterorder->total_mrp=$data1->total_mrp;
     $masterorder->shipping_charge=$data1->shipping_charge;
+    if($data1->total_amount==0){
+        $masterorder->order_status=4;
+    }
     $masterorder->tax_amount=0;
     $masterorder->save();
    

@@ -3715,6 +3715,7 @@ $(document).ready(function () {
 <script>
 
 
+
 $('.edit_purchaseorder').click(function(){
     var id = $(this).data('id');
     

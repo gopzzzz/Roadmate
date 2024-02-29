@@ -4163,7 +4163,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
                 $saleMaster->payment_mode = $paymentMode;
 
-				$saleMaster->total_mrp = $request->total_mrp;
+				$saleMaster->total_mrp = 0;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
 				
@@ -4191,7 +4191,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 						$saleTrans->sale_order_id = $saleMaster->id;
 						$saleTrans->qty = $qty;
 						$saleTrans->offer_amount = $offer_amount;
-						$saleTrans->price = 0;
+						$saleTrans->price = $request->total_mrp;
 						$saleTrans->taxable_amount = 0;
 		
 						
@@ -5341,5 +5341,7 @@ public function search_sale(Request $request)
 
     return response()->json(['salelistHTML' => $salelistHTML]);
 }
+
+
 
 }
