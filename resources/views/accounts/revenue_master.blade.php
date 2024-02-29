@@ -43,10 +43,11 @@
 							  <th>Product Name</th>
                               <th>Qty</th>
                               <th>Tax</th>
-                              <th>Unit Price(R1)</th>
-                              <th>Tax Amt</th>
-                              <th>Inclusive Rate</th>
+                              <!-- <th>Unit Price</th> -->
+                              <!-- <th>Tax Amt</th> -->
+                              <th>Selling Rate (R1)</th>
                               <th>P.Rate (R2)</th>
+                              <th>Turn Over</th>
                               <th>Revenue<br>(QTY*(R1-R2))</th>
                              
                            </tr>
@@ -63,11 +64,12 @@
                               <td>{{$key->product_name}}</td>
                               <td>{{$key->qty}}</td>
                               <td>{{$key->tax}} %</td>
-                              <td>{{number_format((($key->offer_amount)/(1+$key->tax/100)),2)}}</td>
-                              <td>{{number_format((($key->offer_amount)-($key->offer_amount)/(1+$key->tax/100)),2)}}</td>
+                              <!-- <td>{{number_format((($key->offer_amount)/(1+$key->tax/100)),2)}}</td> -->
+                              <!-- <td>{{number_format((($key->offer_amount)-($key->offer_amount)/(1+$key->tax/100)),2)}}</td> -->
                               <td>{{$key->offer_amount}}</td>
                               <td>{{$key->prate}}</td>
-                              <td>{{number_format(($key->qty)*((($key->offer_amount)/(1+$key->tax/100))-($key->prate)),2)}}</td>
+                              <td>{{$key->offer_amount}}</td>
+                              <td>{{number_format(($key->qty)*((($key->offer_amount))-($key->prate)),2)}}</td>
                            
                            </tr>
                            @php 
@@ -77,14 +79,18 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                              <th>Id</th>
+                        <th>Id</th>
 							  <th>Order Id</th>
                               <th>Shop Name</th>
 							  <th>Product Name</th>
                               <th>Qty</th>
-                              <th>Unit Price</th>
-                              <th>P.Rate</th>
-                              <th>Revenue</th>
+                              <th>Tax</th>
+                              <!-- <th>Unit Price</th> -->
+                              <!-- <th>Tax Amt</th> -->
+                              <th>Selling Rate (R1)</th>
+                              <th>P.Rate (R2)</th>
+                              <th>Turn Over</th>
+                              <th>Revenue<br>(QTY*(R1-R2))</th>
                              
                            </tr>
                         </tfoot>

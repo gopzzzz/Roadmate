@@ -242,8 +242,8 @@ $i++;
         <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹{{$taxableamount}}</th>
     </tr>
     <!-- <tr>
-        <th style="text-align: left; background-color: white; font-weight: normal;">TAX</th>
-        <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹0.00</th>
+        <th style="text-align: left; background-color: white; font-weight: normal;">DELIVERY CHARGE</th>
+        <th style="text-align: right; background-color: white; width: 15%; font-weight: normal;">₹{{$key->shipping_charge}}</th>
     </tr> -->
     <!-- <tr>
         <th style="text-align: left; background-color: white; font-weight: normal;">S & H</th>

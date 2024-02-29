@@ -71,12 +71,17 @@
                      <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                            <thead>
+                            
                               <tr>
                                  <th>Category</th>
                                  <th>Amount</th>
                               </tr>
                            </thead>
                            <tbody>
+                           <tr>
+                                 <td>Turn Over</td>
+                                 <td>{{$turnover}}</td>
+                              </tr>
                               <tr>
                                  <td>Expense</td>
                                  <td>{{$expense}}</td>

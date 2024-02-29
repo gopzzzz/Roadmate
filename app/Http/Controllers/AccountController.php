@@ -34,6 +34,7 @@ class AccountController extends Controller
        ->get();
        $expense=DB::table('tbl_expenses')->sum('amount');
         $totalRevenue = 0;
+        $turnover =0;
 
                 foreach ($order_trans as $order) {
 
@@ -42,13 +43,16 @@ class AccountController extends Controller
                     $rev=$r1-$r2;
                     // Calculate revenue for each order transaction
                     $revenue =$order->qty *  $rev; // Assuming quantity is available in $order_trans
+
+                   
                     
                     // Add revenue from this order transaction to total revenue
+                    $turnover +=$order->offer_amount;
                     $totalRevenue += $revenue;
                 }
 
                 
-        return view('accounts.profit',compact('role','totalRevenue','expense'));
+        return view('accounts.profit',compact('role','totalRevenue','expense','turnover'));
     
     }
     public function turnover(){

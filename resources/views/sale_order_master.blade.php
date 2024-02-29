@@ -141,8 +141,9 @@
         <tr>
             <th>Product Name</th>
             <th>Quantity</th>
-            <th>Offer Amount</th>
-            <th>Total MRP</th>
+           
+            <th> MRP</th>
+            <th>Selling Rate</th>
             <th>Tax </th>
             <th>Tax Amt</th>
             <th>Total Amount</th>
@@ -156,8 +157,9 @@
         <input type="hidden" id="productId" name="id">
 <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
 <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
+
+<td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->price }}" required readonly></td>
 <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required readonly></td>
-<td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->total_mrp }}" required readonly></td>
 <td><input class="form-control" name="tax" value="{{ $product->tax }} %" required readonly></td>
 <td><input class="form-control tax" name="tax" value="{{ number_format(($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100), 2) }}" required readonly></td>
 <td><input class="form-control" name="total_amount" value="{{ $product->qty * $product->offer_amount }}"required readonly></td>
@@ -167,31 +169,53 @@
     </tbody> 
                 
                 </table>
-                </div>
-                            <div style="margin-left: 80%;">
-                            <div class="form-group">
-                    <label class="exampleModalLabel">DELIVERY CHARGE</label>
-                    <input class="form-control" name="shipping_charge" value="{{ $order->shipping_charge }}" required readonly>
-                </div>
-                <div class="form-group">
-                    <label class="exampleModalLabel">DISCOUNT</label>
-                    <input class="form-control" name="discount" value="{{ $order->discount }}" required readonly>
-                </div>
-                <div class="form-group">
+
+              
+              
+              
+                
+            </div>
+
+            
+           
+                       
+            </div>
+            <div class="row">
+                    <div class="col-sm-4">
+                    <div class="form-group">
                     <label class="exampleModalLabel">PAYMENT METHOD</label>
                     <input class="form-control" name="payment" value=" @if($order->payment_mode==0) Cash on Delivery @else Online @endif" required readonly>
                 </div>
-                <div class="form-group">
-                    <label class="exampleModalLabel">WALLET REDEEM AMOUNT</label>
-                    <input class="form-control" name="walletamount" value="{{ $order->wallet_redeem_id }}" readonly>
+              
+</div>
+<div class="col-sm-4">
+</div>
+<div class="col-sm-4" >
+<div class="form-group">
+                    <label class="exampleModalLabel">SUB TOTAL AMOUNT</label>
+                    <input class="form-control" name="price[]" value="{{ $order->total_amount  }}" required readonly>
                 </div>
+                
+<div class="form-group">
+                    <label class="exampleModalLabel">DELIVERY CHARGE</label>
+                    <input class="form-control" name="shipping_charge" value="{{ $order->shipping_charge }}" required readonly>
+                    <input type="hidden" class="form-control" name="discount" value="{{ $order->discount }}" required readonly>
+                    <input type="hidden" class="form-control" name="walletamount" value="{{ $order->wallet_redeem_id }}" readonly>
+                </div>
+                <!-- <div class="form-group">
+                    <label class="exampleModalLabel">DISCOUNT</label>
+                 
+                </div> -->
+                
+             
+               
                 <div class="form-group">
-                    <label class="exampleModalLabel">TOTAL AMOUNT</label>
+                    <label class="exampleModalLabel">GANDTOTAL AMOUNT</label>
                     <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required readonly>
                 </div>
-            </div>
-            </div>
-                                       
+</div>
+
+                </div>
                                        <div class="modal-footer">
                                        <a href="{{ route('cancel-order', ['orderId' => $orderId]) }}">
                                             <button type="button" class="btn btn-secondary">Cancel Order</button>
