@@ -5235,6 +5235,8 @@ public function order_history()
 	
 				$orderList .= '</td>';
 				$orderList .= '<td>' . $key->delivery_date . '</td>';
+				$orderList .= '<td>' . $key->order_date . '</td>';
+
 				$orderList .= '<td>' . ($key->sale_status == 0 ? '<form method="get" action="' . route('sale_order_master', ['orderId' => $key->id]) . '"><button type="submit" class="btn btn-primary sale"><i class="fas fa-file-invoice"></i></button></form>' : '<span class="text-success">Sale Invoice Generated</span>') . '</td>';
 	
 				$orderList .= '<td style="width: 50px;">' .

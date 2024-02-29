@@ -179,6 +179,7 @@
     </div>
 </form>
 
+
   <table class="table table-bordered table-striped table-sm">
         <thead>
       
@@ -238,6 +239,8 @@
                         Shipped
                     @elseif ($key->order_status == 3)
                         Delivered
+                        @elseif ($key->order_status == 4)
+                          Cancelled
                    
                     @else
                     @endif
