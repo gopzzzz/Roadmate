@@ -71,6 +71,8 @@ $limit=20;
       ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
       ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
     ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+    ->where('tbl_rm_products.status',0)
+
       ->where('tbl_brand_products.status',0)
       ->where('tbl_rm_products.cat_id', $categoryId)
       ->orderBy('id', 'DESC')
@@ -198,6 +200,8 @@ public function productdetails(){
      ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_brand_products.*','tbl_rm_products.cat_id')
     ->where('tbl_brand_products.id',$productId) 
+    ->where('tbl_rm_products.status',0)
+
     ->where('tbl_brand_products.status',0)
     ->first(); 
 
@@ -394,6 +398,8 @@ $postdata = file_get_contents("php://input");
     ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
     ->select('tbl_brand_products.*','tbl_hsncodes.tax')
     ->orderBy('id', 'DESC')
+    ->where('tbl_rm_products.status',0)
+
     ->where('tbl_brand_products.status',0)
     ->offset($offset) 
     ->limit($limit) 
