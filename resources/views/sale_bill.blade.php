@@ -342,6 +342,7 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
+                    <th>MRP</th>
                     <th>Unit Price</th>
                     <th>Quantity</th>
                     <th>TAX</th>
@@ -358,12 +359,14 @@ $subtotal=0;
 @endphp
             @foreach($salebill as $key)
             @php 
-            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)), 2);
-            $taxamount=number_format($unitprice*($key->tax/100), 2);
+            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)),2);
+            $taxamount=number_format($unitprice*($key->tax/100),2);
             @endphp
                 <tr> 
                 <td>{{$i}}</td>
+
                     <td>{{$key->product_name}}</td>
+                    <td>{{$unitprice}}</td>
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
                     <td>{{$key->tax}} %</td>
@@ -407,11 +410,11 @@ $i++;
     <div class="right-details">
     
     <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p>
-            <!-- <p><strong><span style="color: grey;"><b>DISCOUNT:</b></span></strong><span class="highlight-back" >{{ $key->discount }}</span></p> -->
+            <p><strong><span style="color: grey;"><b>DELIVERY CHARGE:</b></span></strong><span class="highlight-back" >{{ $key->shipping_charge }}</span></p>
             <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{$taxableamount}}</span></p>
             <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->
             <!-- <br><br> -->
-            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ $sum }}</span></p>
+            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ $sum +$key->shipping_charge }}</span></p>
         
     </div>
          
