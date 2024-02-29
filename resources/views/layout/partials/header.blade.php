@@ -825,7 +825,7 @@ $name=Auth::user()->name;
                </ul>
             </li>
             <li class="nav-item">
-               <a href="{{url('#')}}" class="nav-link">
+               <a href="{{url('order_master')}}" class="nav-link {{ request()->is('order_master') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-id-card "></i>
                   <p>
                      Product Order

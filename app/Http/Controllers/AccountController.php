@@ -16,6 +16,7 @@ class AccountController extends Controller
         ->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
         ->select('tbl_sale_order_trans.*','tbl_sale_order_masters.invoice_number','tbl_brand_products.product_name','tbl_brand_products.offer_price','tbl_brand_products.prate','tbl_hsncodes.tax','shops.shopname')
+        ->orderby('tbl_sale_order_trans.id','desc')
         ->paginate(20);
 
         return view('accounts.revenue_master',compact('role','order_trans'));
