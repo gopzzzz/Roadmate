@@ -197,7 +197,7 @@ public function productdetails(){
   $productId=$data1->productid;
   try{	
     $productDetails = DB::table('tbl_brand_products')
-     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_brand_products.*','tbl_rm_products.cat_id')
     ->where('tbl_brand_products.id',$productId) 
     ->where('tbl_rm_products.status',0)
