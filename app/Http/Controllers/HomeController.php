@@ -4880,82 +4880,54 @@ public function order_history()
 		return response()->json($result);
 	}
 
-	
+    $puredit = Tbl_place_order_masters::find($id);
+	$pure = Tbl_place_order_masters::find($id);
 
-	public function purchaseOrderEdit(Request $request, $id)
-	{
-		try {
-			Log::info('Received purchase order edit request:', $request->all());
+	$existingProductIds = []; 
+
+    if ($request->has('product_name')) {
+        foreach ($request->product_name as $key => $productName) {
+            $quantity = $request->quantity[$key] ?? null;
+
+            $product = DB::table('tbl_brand_products')
+                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+                ->where('tbl_brand_products.product_name', $productName)
+                ->select(
+                    'tbl_brand_products.*',
+                    'tbl_hsncodes.tax',
+                )
+                ->first();
+				if ($product) {
+					$existingProductIds[] = $product->id; 
 	
-			$puredit = Tbl_place_order_masters::find($id);
-	
-			if (!$puredit) {
-				return redirect()->back()->with('error', 'Purchase Order not found!');
-			}
-	
-			$puredit->vendor_id = $request->venname;
-			$puredit->request_by = $request->requestby;
-			$puredit->save();
-	
-			$existingProductIds = [];
-	
-			foreach ($request->product_name as $key => $productName) {
-				$quantity = $request->quantity[$key] ?? null;
-	
-				Log::info('Updating product quantity:', ['productName' => $productName, 'quantity' => $quantity]);
-	
-				$product = DB::table('tbl_order_trans')
-					->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
-					->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-					->where('tbl_brand_products.product_name', $productName)
-					->where('tbl_order_trans.order_status', 0)
-					->select(
-						'tbl_order_trans.*',
-						'tbl_hsncodes.tax',
-						'tbl_order_trans.offer_amount',
-						'tbl_order_trans.qty',
-						'tbl_brand_products.product_name'
-					)
-					->first();
-	
-				if (!$product) {
-					Log::error('Product not found:', ['productName' => $productName]);
-					continue; // Skip processing this product and move to the next one
-				}
-	
-				$existingProductIds[] = $product->product_id;
-	
-				$existingProduct = Tbl_placeorders::where('bill_number', $id)
-					->where('product_id', $product->product_id)
-					->first();
-	
-				if ($existingProduct) {
-					$existingProduct->qty = $quantity;
-					$existingProduct->save();
-				} else {
-					$newProduct = new Tbl_placeorders;
-					$newProduct->bill_number = $id;
-					$newProduct->product_id = $product->product_id;
-					$newProduct->qty = $quantity;
-					$newProduct->amount = $product->offer_amount;
-					$newProduct->order_date = now(); // Using Laravel's helper function to get the current date
-					$newProduct->save();
-	
-					\DB::table('tbl_order_trans')
-						->where('id', $product->id)
-						->limit(1)
-						->update(['order_status' => 1]);
-				}
-			}
-	
-			return redirect()->back()->with('success', 'Purchase Order edited successfully!');
-		} catch (\Exception $e) {
-			Log::error('Error editing purchase order: ' . $e->getMessage());
-			return redirect()->back()->with('error', 'An error occurred while editing the Purchase Order.');
-		}
+					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
+														->first();
+
+            if ($newProduct) {
+              
+			
+                $newProduct = new Tbl_placeorders;
+                $newProduct->bill_number = $id; 
+                $newProduct->product_id =$product->id;
+                $newProduct->qty = $quantity;
+                $newProduct->amount = $product->offer_price;
+				$newProduct->order_date =date('Y-m-d');
+
+                $newProduct->save();
+
+            }
+        }
+    
 	}
 	
+	
+	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
+} else {
+	return redirect()->back()->with('error', 'Purchase Order not found!');
+}
+}
+
 
 	
 	public function bill($id){
@@ -5000,20 +4972,16 @@ public function order_history()
 			$vendorId = $request->input('vendor_id');
 			$alphabet = $request->input('alphabet');
 		
-			$products = DB::table('tbl_order_trans')
-				->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+			$products = DB::table('tbl_brand_products')
 				->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
 				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 				->where('tbl_rm_products.vendor_id', $vendorId )
-
-				->where('tbl_order_trans.order_status', 0)
+				->where('tbl_rm_products.status', 0)
+				->where('tbl_brand_products.status', 0)
 				->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
 				->select(
-					'tbl_order_trans.*',
+					'tbl_brand_products.*',
 					'tbl_hsncodes.tax',
-					'tbl_order_trans.offer_amount',
-					'tbl_order_trans.qty',
-					'tbl_brand_products.product_name'
 				)
 				->get();
 		
