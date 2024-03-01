@@ -4880,6 +4880,12 @@ public function order_history()
 		return response()->json($result);
 	}
 
+
+
+	public function purchaseorderedit(Request $request)
+{
+    $id = $request->id;
+
     $puredit = Tbl_place_order_masters::find($id);
 	$pure = Tbl_place_order_masters::find($id);
 
@@ -4887,7 +4893,7 @@ public function order_history()
 
     if ($request->has('product_name')) {
         foreach ($request->product_name as $key => $productName) {
-            $quantity = $request->quantity[$key] ?? null;
+            $qty = $request->qty[$key] ?? null;
 
             $product = DB::table('tbl_brand_products')
                 ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
@@ -4910,7 +4916,7 @@ public function order_history()
                 $newProduct = new Tbl_placeorders;
                 $newProduct->bill_number = $id; 
                 $newProduct->product_id =$product->id;
-                $newProduct->qty = $quantity;
+                $newProduct->qty = $qty;
                 $newProduct->amount = $product->offer_price;
 				$newProduct->order_date =date('Y-m-d');
 
@@ -4927,7 +4933,6 @@ public function order_history()
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
-
 
 	
 	public function bill($id){
