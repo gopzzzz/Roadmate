@@ -4881,18 +4881,30 @@ public function order_history()
 	
 		return response()->json($result);
 	}
-	public function purchaseorderedit(Request $request)
+
+	
+
+public function purchaseorderedit(Request $request)
 {
-    $id = $request->id;
+    try {
+        Log::info('Received purchase order edit request:', $request->all());
 
-    $puredit = Tbl_place_order_masters::find($id);
-    $puredit->vendor_id = $request->venname;
-    $puredit->request_by = $request->requestby;
-    $puredit->save();
+        $id = $request->id;
 
-    if ($request->has('product_name')) {
+        $puredit = Tbl_place_order_masters::find($id);
+        if (!$puredit) {
+            Log::error('Purchase Order not found!');
+            return redirect()->back()->with('error', 'Purchase Order not found!');
+        }
+
+        $puredit->vendor_id = $request->venname;
+        $puredit->request_by = $request->requestby;
+        $puredit->save();
+
         foreach ($request->product_name as $key => $productName) {
             $quantity = $request->quantity[$key] ?? null;
+
+            Log::info('Updating product quantity:', ['productName' => $productName, 'quantity' => $quantity]);
 
             $product = DB::table('tbl_order_trans')
                 ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -4908,41 +4920,41 @@ public function order_history()
                     'tbl_brand_products.product_name'
                 )
                 ->first();
-				if ($product) {
-					$existingProductIds[] = $product->product_id; 
-	
-					$newProduct = Tbl_placeorders::where('bill_number', $id)
-					->where('product_id', $product->product_id)
-														->first();
 
-            if ($newProduct) {
-              
-				$newProduct->product_id = $product->product_id;
+            if (!$product) {
+                Log::error('Product not found:', ['productName' => $productName]);
+                continue; // Skip processing this product and move to the next one
+            }
 
-				$newProduct->qty = $quantity;
-				$newProduct->amount = $product->offer_amount;
-				$newProduct->bill_number= $id;
-				$newProduct->save();
+            $existingProduct = Tbl_placeorders::where('bill_number', $id)
+                ->where('product_id', $product->product_id)
+                ->first();
+
+            if ($existingProduct) {
+                $existingProduct->qty = $quantity;
+                $existingProduct->save();
             } else {
                 $newProduct = new Tbl_placeorders;
                 $newProduct->bill_number = $id; 
-                $newProduct->product_id =$product->product_id;
+                $newProduct->product_id = $product->product_id;
                 $newProduct->qty = $quantity;
                 $newProduct->amount = $product->offer_amount;
-				$newProduct->order_date =date('Y-m-d');
-
+                $newProduct->order_date = now(); // Using Laravel's helper function to get the current date
                 $newProduct->save();
-				$update = \DB::table('tbl_order_trans') ->where('id', $product->id) ->limit(1) ->update( [ 'order_status' => 1]);
 
+                \DB::table('tbl_order_trans')
+                    ->where('id', $product->id)
+                    ->limit(1)
+                    ->update(['order_status' => 1]);
             }
         }
-    
-	}
-	
-	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
-} else {
-	return redirect()->back()->with('error', 'Purchase Order not found!');
-}
+
+        Log::info('Purchase Order edited successfully!');
+        return redirect()->back()->with('success', 'Purchase Order edited successfully!');
+    } catch (\Exception $e) {
+        Log::error('Error processing purchase order edit request: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'An error occurred while processing the request. Please try again later.');
+    }
 }
 
 

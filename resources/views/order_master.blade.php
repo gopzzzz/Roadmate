@@ -255,7 +255,7 @@
                 <td>
     @if($key->sale_status == 0)
         @if($key->order_status == 4)
-            <span class="text-danger">Order Canceled</span>
+            <span class="text-danger">Order Cancelled</span>
         @else
             <form method="get" action="{{ route('sale_order_master', ['orderId' => $key->id]) }}">
                 <button type="submit" class="btn btn-primary sale">
