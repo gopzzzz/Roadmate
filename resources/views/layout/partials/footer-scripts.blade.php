@@ -3847,8 +3847,11 @@ $('#search_sale').keyup(function () {
     });
 });
 
-		$('#search_order').keyup(function () {
+
+
+$('#search_order').keyup(function () {
     var searchval = $(this).val();
+    var selectedOrderStatus = $('#orderStatusFilter').val();
 
     if (searchval === '') {
         // Refresh or perform any action when the search bar is empty
@@ -3862,7 +3865,8 @@ $('#search_sale').keyup(function () {
         url: "{{ route('search_order') }}",
         data: {
             "_token": "{{ csrf_token() }}",
-            searchval: searchval
+            searchval: searchval,
+            order_status: selectedOrderStatus
         },
         success: function (res) {
             console.log(res);
@@ -3881,6 +3885,7 @@ $('#search_sale').keyup(function () {
         }
     });
 });
+
 
 </script>
 
