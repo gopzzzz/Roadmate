@@ -156,7 +156,7 @@ class AccountController extends Controller
                    
                     
                     // Add revenue from this order transaction to total revenue
-                    $turnover +=$order->offer_amount;
+                    $turnover +=$order->qty*$order->offer_amount;
                     $totalRevenue += $revenue;
                 }
 
