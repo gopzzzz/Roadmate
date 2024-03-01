@@ -3714,11 +3714,9 @@ $(document).ready(function () {
 </script>
 <script>
 
-
-
-$('.edit_purchaseorder').click(function(){
+$('.edit_purchaseorder').click(function () {
     var id = $(this).data('id');
-    
+
     if (id) {
         $.ajax({
             type: "POST",
@@ -3745,7 +3743,7 @@ $('.edit_purchaseorder').click(function(){
 
                 // Clear existing rows in the table
                 $('#stockTable tbody').empty();
-                
+
                 // Initialize total variables
                 var totalQuantity = 0;
                 var totalAmount = 0;
@@ -3755,31 +3753,30 @@ $('.edit_purchaseorder').click(function(){
 
                 // Loop through the products and add rows to the table
                 if (purchaseOrderDetails.length > 0) {
-                    $.each(purchaseOrderDetails, function(index, product) {
+                    $.each(purchaseOrderDetails, function (index, product) {
+                        var disableInput = 'disabled';
+
                         var row = '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
                             '<td>' +
-							'<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '">' +
+                            '<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '" ' + disableInput + '>' +
                             '<div class="product_list"></div>' +
                             '</td>' +
                             '<td><input type="text" class="form-control quantity" name="quantity[]" value="' + product.qty + '" required></td>' +
-                            '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + (product.amount /(1 + product.tax / 100)).toFixed(2) + '" required readonly></td>' +
-							'<td><input type="text" class="form-control tax" name="tax[]" value="' + product.tax + '%" required readonly></td>' +
-							'<td><input type="text" class="form-control taxableamount" name="taxableamount[]" value="' +((product.amount /(1 + product.tax / 100)).toFixed(2)*(product.tax / 100).toFixed(2)*product.qty).toFixed(2) + '" required readonly></td>' +
-                            '<td><input type="text" class="form-control total" name="total[]" value="' + (product.amount * product.qty).toFixed(2) + '" required readonly></td>';
-							
-                        row += '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>';
-                  
-                        row += '</tr>';
+                            '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + (product.amount / (1 + product.tax / 100)).toFixed(2) + '" required readonly></td>' +
+                            '<td><input type="text" class="form-control tax" name="tax[]" value="' + product.tax + '%" required readonly></td>' +
+                            '<td><input type="text" class="form-control taxableamount" name="taxableamount[]" value="' + ((product.amount / (1 + product.tax / 100)).toFixed(2) * (product.tax / 100).toFixed(2) * product.qty).toFixed(2) + '" required readonly></td>' +
+                            '<td><input type="text" class="form-control total" name="total[]" value="' + (product.amount * product.qty).toFixed(2) + '" required readonly></td>' +
+                            '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>' +
+                            '</tr>';
                         $('#stockTable tbody').append(row);
-						
 
                         // Update total variables
-						totalQuantity += parseFloat(product.qty);
+                        totalQuantity += parseFloat(product.qty);
                         totalAmount += parseFloat(product.amount * product.qty);
                         totalTaxAmount += parseFloat(product.amount * product.qty);
-                        totalTaxableAmount += parseFloat((product.amount /(1 + product.tax / 100)).toFixed(2)*(product.tax / 100).toFixed(2) * product.qty);
-                        totalSubtotal += parseFloat((product.amount /(1 + product.tax / 100)).toFixed(2)) * product.qty;
+                        totalTaxableAmount += parseFloat((product.amount / (1 + product.tax / 100)).toFixed(2) * (product.tax / 100).toFixed(2) * product.qty);
+                        totalSubtotal += parseFloat((product.amount / (1 + product.tax / 100)).toFixed(2)) * product.qty;
                     });
 
                     // Set the total quantity and total amount fields
@@ -3788,7 +3785,7 @@ $('.edit_purchaseorder').click(function(){
                     $('.total-taxable-amount').val(totalTaxableAmount.toFixed(2));
                     $('.total-tax-amount').val(totalTaxAmount.toFixed(2));
                     $('.total-subtotal').val(totalSubtotal.toFixed(2));
-  
+
                     // Set the values in the summary row
                     $('#subtotalValue').text(totalSubtotal.toFixed(2));
                     $('#taxableAmountValue').text(totalTaxableAmount.toFixed(2));
@@ -3803,7 +3800,18 @@ $('.edit_purchaseorder').click(function(){
         });
     }
     $('#editpurcaseorder_modal').modal('show');
+
+    // Disable all search inputs except for the new row
+    $('.search_products').prop('disabled', true);
+    $('.search_products:last').prop('disabled', false);
+
+    // Enable the search input only for the new row
+    $('.search_products:last').on('input', function () {
+        // Your existing logic for handling product search
+        // ...
+    });
 });
+
 
 
 
@@ -3839,8 +3847,11 @@ $('#search_sale').keyup(function () {
     });
 });
 
-		$('#search_order').keyup(function () {
+
+
+$('#search_order').keyup(function () {
     var searchval = $(this).val();
+    var selectedOrderStatus = $('#orderStatusFilter').val();
 
     if (searchval === '') {
         // Refresh or perform any action when the search bar is empty
@@ -3854,7 +3865,8 @@ $('#search_sale').keyup(function () {
         url: "{{ route('search_order') }}",
         data: {
             "_token": "{{ csrf_token() }}",
-            searchval: searchval
+            searchval: searchval,
+            order_status: selectedOrderStatus
         },
         success: function (res) {
             console.log(res);
@@ -3873,6 +3885,7 @@ $('#search_sale').keyup(function () {
         }
     });
 });
+
 
 </script>
 
