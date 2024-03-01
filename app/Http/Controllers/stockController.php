@@ -345,7 +345,7 @@ public function inventoryTransferFetch(Request $request){
         ->where('tbl_inventory_masters.id', $id)
         ->select(
             'tbl_inventory_masters.*',
-            'tbl_inventory_trans.product_id',
+            'tbl_inventory_trans.product_id',  
 			'tbl_brand_products.product_name',
             'tbl_inventory_trans.quantity',
             'tbl_inventory_trans.unitprice',
