@@ -179,6 +179,7 @@
     </div>
 </form>
 
+
   <table class="table table-bordered table-striped table-sm">
         <thead>
       
@@ -238,6 +239,8 @@
                         Shipped
                     @elseif ($key->order_status == 3)
                         Delivered
+                        @elseif ($key->order_status == 4)
+                          Cancelled
                    
                     @else
                     @endif
@@ -276,14 +279,19 @@
             
         </tfoot>
     </table>
-   
+
+    
     <div class="row">
         <div class="col-12">
             <div class="float-left">
-            {{ $sale->appends(['order_status' => $selectedOrderStatus])->links() }}
+                {{ $sale->links() }}
             </div>
         </div>
     </div>
+
+   
+   
+    
 
 </div>
 </div>

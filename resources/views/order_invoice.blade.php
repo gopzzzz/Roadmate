@@ -343,7 +343,7 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
-                    <th>Unit Price(Ex)</th>
+                    <th>Unit Price</th>
                     <th>Quantity</th>
                     <th>SGST</th>
                     <th>CGST</th>
@@ -414,11 +414,11 @@ $i++;
     <div class="right-details">
     
             <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($subtotal,2) }}</span></p>
-            <!-- <p><strong><span style="color: grey;"><b>DISCOUNT:</b></span></strong><span class="highlight-back" >{{ $key->discount }}</span></p> -->
+            <p><strong><span style="color: grey;"><b>DELIVERY CHARGE:</b></span></strong><span class="highlight-back" >{{ $key->shipping_charge }}</span></p>
             <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{number_format($taxableamount,2)}}</span></p>
             <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->
             <!-- <br><br> -->
-            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($sum,2)}}</span></p>
+            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($sum + $key->shipping_charge,2)}}</span></p>
         
     </div>
          

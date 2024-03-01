@@ -129,7 +129,7 @@ $i++;
     <input type="hidden" name="id" id="purchaseid">
     <label class="exampleModalLabel">VENDOR</label>
 
-    <select name="venname" id="venname" class="form-control" required>
+    <select name="venname" id="venname" class="form-control" required disabled>
                     <option value="" disabled selected>Select vendor name</option>
                     @foreach($vendor as $key)
                         <option value="{{ $key->id }}">{{ $key->vendor_name }}</option>
@@ -239,6 +239,7 @@ $i++;
         $(document).on('click', '#addRow', function() {
             addRow();
         });
+        
 
         // Event listener for dynamically added deleteRow buttons
         $('#stockTable tbody').on('click', '.deleteRow', function() {
@@ -343,6 +344,9 @@ $('#stockTable tbody').on('keyup', '.search_products', function() {
         productListContainer.html('').hide();
     }
 });
+
+
+
 
 </script>
 

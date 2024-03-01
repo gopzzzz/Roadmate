@@ -38,7 +38,7 @@
                   <p align="right">
                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Expenses</button>
                   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <form method="POST" action="{{url('expenseinsert')}}">
+                  <form method="POST" ID="form-idd" action="{{url('expenseinsert')}}">
     @csrf
     <div class="modal-dialog modal-lg" role="document" style="width:80%;">
         <div class="modal-content">
@@ -224,6 +224,15 @@
             }
         });
     }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            $('#form-idd')[0].reset();
+        });
+    });
 </script>
 
 @endsection

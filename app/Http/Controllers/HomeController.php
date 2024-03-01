@@ -1418,7 +1418,8 @@ public function shop_categoriesdelete($id){
 		
 			$shops="";
 
-		if($role==3){ $fran = DB::table('tbl_franchase_details')
+		if($role==3){ 
+			$fran = DB::table('tbl_franchase_details')
 			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
 			->where('tbl_franchises.user_id', $userid)
 			->select('tbl_franchase_details.*')
@@ -4163,7 +4164,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
                 $saleMaster->payment_mode = $paymentMode;
 
-				$saleMaster->total_mrp = $request->total_mrp;
+				$saleMaster->total_mrp = 0;
 				$saleMaster->shipping_charge = $request->shipping_charge;
 				$saleMaster->tax_amount = 0;
 				
@@ -4191,7 +4192,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 						$saleTrans->sale_order_id = $saleMaster->id;
 						$saleTrans->qty = $qty;
 						$saleTrans->offer_amount = $offer_amount;
-						$saleTrans->price = 0;
+						$saleTrans->price = $request->total_mrp;
 						$saleTrans->taxable_amount = 0;
 		
 						
@@ -4797,10 +4798,7 @@ public function order_history()
 	}
 
 	
-	public function updatepo($id){
-		
-		
-		 
+	public function updatepo($id){ 
 		$ordersToInsert = DB::table('tbl_order_trans')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
@@ -4884,79 +4882,80 @@ public function order_history()
 
 	
 
-public function purchaseorderedit(Request $request)
-{
-    try {
-        Log::info('Received purchase order edit request:', $request->all());
-
-        $id = $request->id;
-
-        $puredit = Tbl_place_order_masters::find($id);
-        if (!$puredit) {
-            Log::error('Purchase Order not found!');
-            return redirect()->back()->with('error', 'Purchase Order not found!');
-        }
-
-        $puredit->vendor_id = $request->venname;
-        $puredit->request_by = $request->requestby;
-        $puredit->save();
-
-        foreach ($request->product_name as $key => $productName) {
-            $quantity = $request->quantity[$key] ?? null;
-
-            Log::info('Updating product quantity:', ['productName' => $productName, 'quantity' => $quantity]);
-
-            $product = DB::table('tbl_order_trans')
-                ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
-                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-                ->where('tbl_brand_products.product_name', $productName)
-                ->where('tbl_order_trans.order_status', 0)
-                ->select(
-                    'tbl_order_trans.*',
-                    'tbl_hsncodes.tax',
-                    'tbl_order_trans.offer_amount',
-                    'tbl_order_trans.qty',
-                    'tbl_brand_products.product_name'
-                )
-                ->first();
-
-            if (!$product) {
-                Log::error('Product not found:', ['productName' => $productName]);
-                continue; // Skip processing this product and move to the next one
-            }
-
-            $existingProduct = Tbl_placeorders::where('bill_number', $id)
-                ->where('product_id', $product->product_id)
-                ->first();
-
-            if ($existingProduct) {
-                $existingProduct->qty = $quantity;
-                $existingProduct->save();
-            } else {
-                $newProduct = new Tbl_placeorders;
-                $newProduct->bill_number = $id; 
-                $newProduct->product_id = $product->product_id;
-                $newProduct->qty = $quantity;
-                $newProduct->amount = $product->offer_amount;
-                $newProduct->order_date = now(); // Using Laravel's helper function to get the current date
-                $newProduct->save();
-
-                \DB::table('tbl_order_trans')
-                    ->where('id', $product->id)
-                    ->limit(1)
-                    ->update(['order_status' => 1]);
-            }
-        }
-
-        Log::info('Purchase Order edited successfully!');
-        return redirect()->back()->with('success', 'Purchase Order edited successfully!');
-    } catch (\Exception $e) {
-        Log::error('Error processing purchase order edit request: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'An error occurred while processing the request. Please try again later.');
-    }
-}
-
+	public function purchaseOrderEdit(Request $request, $id)
+	{
+		try {
+			Log::info('Received purchase order edit request:', $request->all());
+	
+			$puredit = Tbl_place_order_masters::find($id);
+	
+			if (!$puredit) {
+				return redirect()->back()->with('error', 'Purchase Order not found!');
+			}
+	
+			$puredit->vendor_id = $request->venname;
+			$puredit->request_by = $request->requestby;
+			$puredit->save();
+	
+			$existingProductIds = [];
+	
+			foreach ($request->product_name as $key => $productName) {
+				$quantity = $request->quantity[$key] ?? null;
+	
+				Log::info('Updating product quantity:', ['productName' => $productName, 'quantity' => $quantity]);
+	
+				$product = DB::table('tbl_order_trans')
+					->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+					->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+					->where('tbl_brand_products.product_name', $productName)
+					->where('tbl_order_trans.order_status', 0)
+					->select(
+						'tbl_order_trans.*',
+						'tbl_hsncodes.tax',
+						'tbl_order_trans.offer_amount',
+						'tbl_order_trans.qty',
+						'tbl_brand_products.product_name'
+					)
+					->first();
+	
+				if (!$product) {
+					Log::error('Product not found:', ['productName' => $productName]);
+					continue; // Skip processing this product and move to the next one
+				}
+	
+				$existingProductIds[] = $product->product_id;
+	
+				$existingProduct = Tbl_placeorders::where('bill_number', $id)
+					->where('product_id', $product->product_id)
+					->first();
+	
+				if ($existingProduct) {
+					$existingProduct->qty = $quantity;
+					$existingProduct->save();
+				} else {
+					$newProduct = new Tbl_placeorders;
+					$newProduct->bill_number = $id;
+					$newProduct->product_id = $product->product_id;
+					$newProduct->qty = $quantity;
+					$newProduct->amount = $product->offer_amount;
+					$newProduct->order_date = now(); // Using Laravel's helper function to get the current date
+					$newProduct->save();
+	
+					\DB::table('tbl_order_trans')
+						->where('id', $product->id)
+						->limit(1)
+						->update(['order_status' => 1]);
+				}
+			}
+	
+			return redirect()->back()->with('success', 'Purchase Order edited successfully!');
+		} catch (\Exception $e) {
+			Log::error('Error editing purchase order: ' . $e->getMessage());
+			return redirect()->back()->with('error', 'An error occurred while editing the Purchase Order.');
+		}
+	}
+	
 
 	
 	public function bill($id){
@@ -4976,42 +4975,8 @@ public function purchaseorderedit(Request $request)
 	
 		return view('bill',compact('role','master','vendor','bills'));
 		}
-		// public function purchaseedit($purchaseid){
-		// 	$role = Auth::user()->user_type;
-		// 	$orderDetails = DB::table('tbl_place_order_masters')
-		// 	->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
-		// 	->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
-		// 	->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
-		// 	->where('tbl_place_order_masters.id', $purchaseid)
-		// 	->first();
-		// 	$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
-		// ->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-		// ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-		// ->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
-		// ->get();
-		// 	$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
-		// 	$user=DB::table('users')->get();
-
-		// 	return view('purchaseedit', compact('role', 'orderDetails', 'vendor','user','bills'));
-		// }
-		public function purchaseeditorder($purchaseid){
-			$role = Auth::user()->user_type;
-			$orderDetails = DB::table('tbl_place_order_masters')
-			->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
-			->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
-			->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
-			->where('tbl_place_order_masters.id', $purchaseid)
-			->first();
-			$bills=DB::table('tbl_placeorders')->where('bill_number',$purchaseid)
-		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
-		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
-		->get();
-			$vendor = DB::table('tbl_vendors')->get(); // Fetch vendors
-			$user=DB::table('users')->get();
-
-			return view('purchaseeditorder', compact('role', 'orderDetails', 'vendor','user','bills'));
-		}
+	
+	
 		public function removeProduct(Request $request,$id)
 {
     // Perform server-side logic to remove the product from the database
@@ -5023,47 +4988,11 @@ public function purchaseorderedit(Request $request)
         return response()->json(['success' => false]);
     }
 }
-public function editorderpurchase(request $request)
-	{
-		$id=$request->id;
-		$puredit=Tbl_place_order_masters::find($id);
-		$puredit->vendor_id=$request->venname;
-		$puredit->bill_num	=$request->ponumber;
-		$puredit->request_by=$request->requestby;
-		$puredit->save();
-		return redirect()->back()->with("edited successfully");
-
-	}
 
 
 
 
-		public function updatePurchaseOrder(Request $request, $id){
-			// Validate the request
-		    $product_id = $request->input('product_id');
 
-		
-			// Update the purchase order in the database
-			DB::table('tbl_place_order_masters')
-				->where('id', $id)
-				->update([
-					'vendor_id' => $request->input('vendor'),
-					'request_by' => $request->input('requestby'),
-					// Add other fields as needed
-				]);
-				DB::table('tbl_placeorders')
-				->where('bill_number', $id)
-				->update([
-					'qty' => $request->input('qty'),
-					'product_id' => $product_id ,
-
-					// Add other fields as needed
-				]);
-		
-		
-			// Redirect back or to a success page
-			return redirect()->route('purchaseorder_bill');
-		}
 		
 		
 		public function productSearch(Request $request)
@@ -5177,165 +5106,115 @@ public function editorderpurchase(request $request)
     }
 
 	public function search_order(Request $request)
-	{
-		$role = Auth::user()->user_type;
-		$userid = Auth::user()->id;
-		$searchval = $request->searchval;
-		$orderList = '';
-	
-		if ($role == 1) {
-			if ($searchval != '') {
-				$order = DB::table('tbl_order_masters')
-					->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-					->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-					->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
-					->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
-					->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%')
-					->orderBy('tbl_order_masters.id', 'DESC')
-					->paginate(10);
-				} else {
-				$order = DB::table('tbl_order_masters')
-					->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-					->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-					->orderBy('tbl_order_masters.id', 'DESC')
-					->paginate(10);
-				}
-		} else if ($role == 3) {
-			$fran = DB::table('tbl_franchase_details')
-				->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
-				->where('tbl_franchises.user_id', $userid)
-				->select('tbl_franchase_details.*')
-				->get();
-	
-			$order = collect();
-	
-			foreach ($fran as $singleFranlist) {
-				   if ($singleFranlist->type == 4) {
-					$shopsQuery = DB::table('tbl_order_masters')
-						->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-						->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
-						->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-						->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-						->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-						->where('tbl_places.district_id', $singleFranlist->district_id);
-	
-					if ($searchval != '') {
-						$shopsQuery->where(function ($query) use ($searchval) {
-							$query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
-								->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
-								->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
-						});
-					}
-	
-					$shopsQuery->orderBy('tbl_order_masters.id', 'DESC');
-				} else {
-					$shopsQuery = DB::table('tbl_order_masters')
-						->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-						->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
-						->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-						->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-						->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-						->where('tbl_places.id', $singleFranlist->place_id);
-	
-					if ($searchval != '') {
-						$shopsQuery->where(function ($query) use ($searchval) {
-							$query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
-								->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
-								->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
-						});
-					}
-	
-					$shopsQuery->orderBy('tbl_order_masters.id', 'DESC');
-				}
-	
-				$order = $order->merge($shopsQuery->get());
-			}
-	
-			$perPage = 12;
-			$page = request()->get('page', 1);
-	
-			$order = new \Illuminate\Pagination\LengthAwarePaginator(
-				$order->forPage($page, $perPage),
-				$order->count(),
-				$perPage,
-				$page,
-				['path' => request()->url(), 'query' => request()->query()]
-			);
-		} else {
-			$order = DB::table('tbl_order_masters')
-				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
-				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-				->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
-				->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
-				->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%')
-				->orderBy('tbl_order_masters.id', 'DESC')
-				->paginate(10);
-	
-		}
-	
-		$i = 1;
-		if (count($order) > 0) {
-			foreach ($order as $key) {
-				$orderList .= "<tr>";
-				$orderList .= '<td>' . $i . '</td>';
-				$orderList .= '<td>' . $key->order_id . '</td>';
-				$orderList .= '<td>' . $key->shopname . '</td>';
-				$orderList .= '<td>' . $key->phone . '</td>';
-				$orderList .= '<td>' . 'Area: ' . $key->area . ', ' . $key->area1 . '<br>' . $key->district . ', ' . $key->state . '<br>' . $key->country . ', ' . $key->pincode . '</td>';
-				$orderList .= '<td>' . $key->total_amount . '</td>';
-				$orderList .= '<td>' . $key->discount . '</td>';
-				$orderList .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
-				$orderList .= '<td>';
-				$orderList .= $key->payment_status == 0
-					? '<strong style="background-color: yellow; padding: 2px;">Unpaid</strong>'
-					: '<strong style="background-color: lightgreen; padding: 2px;">Paid</strong>';
-				$orderList .= '</td>';
-				$orderList .= '<td>';
-	
-				switch ($key->order_status) {
-					case 0:
-						$orderList .= '<strong class="bg-warning" padding: 2px;">Pending</strong>';
-						break;
-					case 1:
-						$orderList .= '<strong class="bg-info" padding: 2px;">Confirmed</strong>';
-						break;
-					case 2:
-						$orderList .= '<strong class="bg-primary" padding: 2px;">Shipped</strong>';
-						break;
-					case 3:
-						$orderList .= '<strong class="bg-success" padding: 2px;">Delivered</strong>';
-						break;
-					default:
-						break;
-				}
-	
-				$orderList .= '</td>';
-				$orderList .= '<td>' . $key->delivery_date . '</td>';
-				$orderList .= '<td>' . ($key->sale_status == 0 ? '<form method="get" action="' . route('sale_order_master', ['orderId' => $key->id]) . '"><button type="submit" class="btn btn-primary sale"><i class="fas fa-file-invoice"></i></button></form>' : '<span class="text-success">Sale Invoice Generated</span>') . '</td>';
-	
-				$orderList .= '<td style="width: 50px;">' .
-					'<form method="get" action="' . route('order_invoice', ['orderId' => $key->id]) . '" target="_blank">' .
-					'<button type="submit" class="print-button">' .
-					'<i class="material-icons">&#xe8ad;</i>' .
-					'</button>' .
-					'</form>' .
-					'</td>';
-	
-				$orderList .= '</tr>';
-				$i++;
-			}
-		} else {
-			$orderList = 'No Results Found';
-		}
-	
-		return response()->json(['orderList' => $orderList]);
-	}
+{
+    $role = Auth::user()->user_type;
+    $userid = Auth::user()->id;
+    $searchval = $request->searchval;
+    $selectedOrderStatus = $request->order_status; // Get the selected order status filter
+    $orderList = ''; // Initialize the variable to store the order list HTML
+
+    // Query to fetch orders and related shop details
+    $order = DB::table('tbl_order_masters')
+        ->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+        ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+        ->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+        ->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->orderBy('tbl_order_masters.id', 'DESC');
+
+    // Apply filters based on user role
+    if ($role == 1) {
+        if ($searchval != '') {
+            $order->where(function($query) use ($searchval) {
+                $query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
+                    ->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
+                    ->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
+            });
+        }
+    } else if ($role == 3) {
+        $fran = DB::table('tbl_franchase_details')
+            ->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+            ->where('tbl_franchises.user_id', $userid)
+            ->select('tbl_franchase_details.*')
+            ->get();
+
+        $franShopIds = [];
+        foreach ($fran as $singleFranlist) {
+            $franShopIds[] = $singleFranlist->id;
+        }
+
+        $order->whereIn('tbl_order_masters.shop_id', $franShopIds);
+
+        if ($searchval != '') {
+            $order->where(function($query) use ($searchval) {
+                $query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
+                    ->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
+                    ->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
+            });
+        }
+    }
+
+    // Apply additional filter based on selected order status
+    if ($selectedOrderStatus !== null) {
+        $order->where('tbl_order_masters.order_status', $selectedOrderStatus);
+    }
+
+    // Retrieve paginated results
+    $order = $order->paginate(10);
+
+    $i = 1;
+    foreach ($order as $key) {
+        // Construct HTML for each order
+        $orderList .= "<tr>";
+        $orderList .= '<td>' . $i . '</td>';
+        $orderList .= '<td>' . $key->order_id . '</td>';
+        $orderList .= '<td>' . $key->shopname . '</td>';
+        $orderList .= '<td>' . $key->phone . '</td>';
+        $orderList .= '<td>' . 'Area: ' . $key->area . ', ' . $key->area1 . '<br>' . $key->district . ', ' . $key->state . '<br>' . $key->country . ', ' . $key->pincode . '</td>';
+        $orderList .= '<td>' . $key->total_amount . '</td>';
+        $orderList .= '<td>' . $key->discount . '</td>';
+        $orderList .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
+        $orderList .= '<td>' . ($key->payment_status == 0 ? '<strong style="background-color: yellow; padding: 2px;">Unpaid</strong>' : '<strong style="background-color: lightgreen; padding: 2px;">Paid</strong>') . '</td>';
+        $orderList .= '<td>';
+
+        switch ($key->order_status) {
+            case 0:
+                $orderList .= '<strong class="bg-warning" padding: 2px;">Pending</strong>';
+                break;
+            case 1:
+                $orderList .= '<strong class="bg-info" padding: 2px;">Confirmed</strong>';
+                break;
+            case 2:
+                $orderList .= '<strong class="bg-primary" padding: 2px;">Shipped</strong>';
+                break;
+            case 3:
+                $orderList .= '<strong class="bg-success" padding: 2px;">Delivered</strong>';
+                break;
+            default:
+                break;
+        }
+
+        $orderList .= '</td>';
+        $orderList .= '<td>' . $key->delivery_date . '</td>';
+        $orderList .= '<td>' . $key->order_date . '</td>';
+        $orderList .= '<td>' . ($key->sale_status == 0 ? '<form method="get" action="' . route('sale_order_master', ['orderId' => $key->id]) . '"><button type="submit" class="btn btn-primary sale"><i class="fas fa-file-invoice"></i></button></form>' : '<span class="text-success">Sale Invoice Generated</span>') . '</td>';
+        $orderList .= '<td style="width: 50px;">' .
+            '<form method="get" action="' . route('order_invoice', ['orderId' => $key->id]) . '" target="_blank">' .
+            '<button type="submit" class="print-button">' .
+            '<i class="material-icons">&#xe8ad;</i>' .
+            '</button>' .
+            '</form>' .
+            '</td>';
+        $orderList .= '</tr>';
+        $i++;
+    }
+
+    if (empty($orderList)) {
+        $orderList = 'No Results Found';
+    }
+
+    return response()->json(['orderList' => $orderList]);
+}
+
 	
 	
 	
@@ -5423,5 +5302,7 @@ public function search_sale(Request $request)
 
     return response()->json(['salelistHTML' => $salelistHTML]);
 }
+
+
 
 }
