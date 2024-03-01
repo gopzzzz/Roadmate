@@ -212,131 +212,136 @@ $i++;
 
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <script>
-$(document).ready(function() {
-    // Function to add a new row
-    function addRow() {
-        var rowNum = $('#stockTable tbody tr').length + 1;
-        var row = '<tr>' +
-            '<td>' + rowNum + '</td>' +
-            '<td>' +
-            '<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product">' +
-            '<div class="product_list"></div>' +
-            '</td>' +
-            '<td><input type="text" class="form-control quantity" name="quantity[]" required></td>' +
-            '<td><input type="text" class="form-control unitprice" name="unitprice[]" required readonly></td>' +
-            '<td><input type="text" class="form-control tax" name="tax[]" required readonly></td>' +
-            '<td><input type="text" class="form-control taxableamount" name="taxableamount[]" required readonly></td>' +
-            '<td><input type="text" class="form-control total" name="total[]" required readonly></td>' +
-            '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>' +
-            '</tr>';
-        $('#stockTable tbody').append(row);
-    }
+        $(document).ready(function () {
+            // Function to add a new row
+            function addRow() {
+                var rowNum = $('#stockTable tbody tr').length + 1;
+                var row = '<tr>' +
+                    '<td>' + rowNum + '</td>' +
+                    '<td>' +
+                    '<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product">' +
+                    '<div class="product_list"></div>' +
+                    '</td>' +
+                    '<td><input type="text" class="form-control qty" name="qty[]" required></td>' +
+                    '<td><input type="text" class="form-control unitprice" name="unitprice[]" required readonly></td>' +
+                    '<td><input type="text" class="form-control tax" name="tax[]" required readonly></td>' +
+                    '<td><input type="text" class="form-control taxableamount" name="taxableamount[]" required readonly></td>' +
+                    '<td><input type="text" class="form-control total" name="total[]" required readonly></td>' +
+                    '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>' +
+                    '</tr>';
+                $('#stockTable tbody').append(row);
+            }
 
-    // Add row when the plus button is clicked
-    $(document).on('click', '#addRow', function() {
-        addRow();
-    });
+            // Add row when the plus button is clicked
+            $(document).on('click', '#addRow', function () {
+                addRow();
+            });
 
-    // Event listener for dynamically added quantity input fields
-    $('#stockTable tbody').on('input', '.quantity', function() {
-        var row = $(this).closest('tr');
-        updateRowValues(row);
-    });
-    // Event listener for dynamically added deleteRow buttons
-    $('#stockTable tbody').on('click', '.deleteRow', function() {
-        $(this).closest('tr').remove();
-    });
+            // Event listener for dynamically added quantity input fields
+            $('#stockTable tbody').on('input', '.qty', function () {
+                var row = $(this).closest('tr');
+                updateRowValues(row);
+            });
 
-    // Event listener for dynamically added search_products input fields
-    $('#stockTable tbody').on('keyup', '.search_products', function() {
-        var alphabet = $(this).val().trim().charAt(0).toUpperCase();
-        var productListContainer = $(this).siblings('.product_list');
-        var vendorId = $('#venname').val(); // Assuming you have an element with id 'venname'
+            // Event listener for dynamically added deleteRow buttons
+            $('#stockTable tbody').on('click', '.deleteRow', function () {
+                $(this).closest('tr').remove();
+            });
 
-        if (alphabet != '') {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "{{ route('search_products') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    alphabet: alphabet,
-                    vendor_id: vendorId
-                },
-                success: function(response) {
-                    var productList = '';
-                    if (response.length > 0) {
-                        $.each(response, function(index, product) {
-                            productList += '<div class="product_item" data-product-id="' + product.id + '" data-offer-amount="' + (product.offer_price / (1 + product.tax / 100)).toFixed(2) + '" data-taxableamount="' + ((product.offer_price / (1 + product.tax / 100)).toFixed(2) * (product.tax / 100).toFixed(2) * product.qty).toFixed(2) + '" data-total="' + (product.offer_price * product.qty).toFixed(2) + '" data-tax="' + product.tax + '%" data-qty="' + product.qty + '">' + product.product_name + '</div>';
-                        });
-                    } else {
-                        productList = '<div class="product_item">No products found</div>';
-                    }
-                    productListContainer.html(productList).show();
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
+            // Event listener for dynamically added search_products input fields
+            $('#stockTable tbody').on('keyup', '.search_products', function () {
+                var alphabet = $(this).val().trim().charAt(0).toUpperCase();
+                var productListContainer = $(this).siblings('.product_list');
+                var vendorId = $('#venname').val(); // Assuming you have an element with id 'venname'
+
+                if (alphabet != '') {
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "{{ route('search_products') }}",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            alphabet: alphabet,
+                            vendor_id: vendorId
+                        },
+                        success: function (response) {
+                            var productList = '';
+                            if (response.length > 0) {
+                                $.each(response, function (index, product) {
+                                    productList += '<div class="product_item" data-product-id="' + product.id + '" data-offer-amount="' + product.offer_price + '" data-tax="' + product.tax + '%"">' + product.product_name + '</div>';
+                                });
+                            } else {
+                                productList = '<div class="product_item">No products found</div>';
+                            }
+                            productListContainer.html(productList).show();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                } else {
+                    productListContainer.html('').hide();
                 }
             });
-        } else {
-            productListContainer.html('').hide();
-        }
-    });
 
-    // Event listener for dynamically added product_item
-    $(document).on('click', '.product_item', function() {
-        var productName = $(this).text();
-        var productId = $(this).data('product-id');
-        var inputField = $(this).closest('td').find('.search_products');
-        var offerAmount = $(this).data('offer-amount');
-        var total = $(this).data('total');
-        var taxableamount = $(this).data('taxableamount');
-        var tax = $(this).data('tax');
+            // Event listener for dynamically added product_item
+            $(document).on('click', '.product_item', function () {
+                var productName = $(this).text();
+                var productId = $(this).data('product-id');
+                var inputField = $(this).closest('td').find('.search_products');
+                var offerAmount = $(this).data('offer-amount');
+                var tax = $(this).data('tax');
 
-        // Update the input fields
-        inputField.val(productName);
-        inputField.data('product-id', productId);
-        inputField.data('offer-amount', offerAmount);
-        inputField.data('tax', tax);
-        inputField.data('total', total);
-        inputField.data('taxableamount', taxableamount);
+                // Update the input fields
+                inputField.val(productName);
+                inputField.data('product-id', productId);
+                inputField.data('offer-amount', offerAmount);
+                inputField.data('tax', tax);
 
-        // Update the quantity input field
-       
+                // Update the quantity input field
+                var qtyField = inputField.closest('tr').find('.qty');
+                qtyField.val(1); // Assuming you want to set the default quantity to 1, adjust as needed
 
-        // Update the tax input field
-        var taxField = inputField.closest('tr').find('.tax');
-        taxField.val(tax);
+                // Update the tax input field
+                var taxField = inputField.closest('tr').find('.tax');
+                taxField.val(tax);
 
-        // Update the unit price input field
-        var unitPriceField = inputField.closest('tr').find('.unitprice');
-        unitPriceField.val(offerAmount);
-        var totalField = inputField.closest('tr').find('.total');
-        totalField.val(total);
-        var taxableamountField = inputField.closest('tr').find('.taxableamount');
-        taxableamountField.val(taxableamount);
-        $(this).closest('.product_list').hide();
-    });
+                // Update the unit price input field
+                var unitPriceField = inputField.closest('tr').find('.unitprice');
+                unitPriceField.val(offerAmount);
 
-    // Function to update row values based on quantity change
-    function updateRowValues(row) {
-        var quantity = parseFloat(row.find('.quantity').val()) || 0;
-        var unitPrice = parseFloat(row.find('.unitprice').val()) || 0;
-        var tax = parseFloat(row.find('.tax').val()) || 0;
+                // Calculate total and taxable amount
+                updateRowValues(inputField.closest('tr'));
+                $(this).closest('.product_list').hide();
+            });
 
-        // Update the total field
-        var total = (unitPrice * quantity).toFixed(2);
-        row.find('.total').val(total);
+            // Function to update row values based on quantity change
+            function updateRowValues(row) {
+                var qty = parseFloat(row.find('.qty').val()) || 0;
+                var unitPrice = parseFloat(row.find('.unitprice').val()) || 0;
+                var tax = parseFloat(row.find('.tax').val()) || 0;
 
-        // Update the taxable amount field
-        var taxableAmount = ((unitPrice / (1 + tax / 100)).toFixed(2) * (tax / 100).toFixed(2) * quantity).toFixed(2);
-        row.find('.taxableamount').val(taxableAmount);
-    }
-});
+                // Update the total field
+                var total = (unitPrice * qty).toFixed(2);
+                row.find('.total').val(total);
 
-</script>
+                // Update the taxable amount field
+                var taxableAmount = ((unitPrice / (1 + tax / 100)).toFixed(2) * (tax / 100).toFixed(2) * qty).toFixed(2);
+                row.find('.taxableamount').val(taxableAmount);
+            }
 
+            // Event listener for dynamically added rows
+            $(document).on('input', '.qty', function () {
+                updateRowValues($(this).closest('tr')); // Update totals when changing quantity
+            });
+
+            $(document).on('click', '.add-row', function () {
+                updateRowValues($(this).closest('tr')); // Update totals when adding a new row
+            });
+        });
+    </script>
 
 
 @endsection

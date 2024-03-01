@@ -4880,28 +4880,31 @@ public function order_history()
 		return response()->json($result);
 	}
 
-    $puredit = Tbl_place_order_masters::find($id);
-	$pure = Tbl_place_order_masters::find($id);
-
-	$existingProductIds = []; 
-
-    if ($request->has('product_name')) {
-        foreach ($request->product_name as $key => $productName) {
-            $qty = $request->qty[$key] ?? null;
-
-            $product = DB::table('tbl_brand_products')
-                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-                ->where('tbl_brand_products.product_name', $productName)
-                ->select(
-                    'tbl_brand_products.*',
-                    'tbl_hsncodes.tax',
-                )
-                ->first();
-				if ($product) {
-					$existingProductIds[] = $product->id; 
+	public function purchaseorderedit(Request $request)
+	{
+		$id = $request->id;
 	
-					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
+		$puredit = Tbl_place_order_masters::find($id);
+		$pure = Tbl_place_order_masters::find($id);
+	
+		$existingProductIds = []; 
+	
+		if ($request->has('product_name')) {
+			foreach ($request->product_name as $key => $productName) {
+				$qty = $request->qty[$key] ?? null;
+	
+				$product = DB::table('tbl_brand_products')
+					->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+					->where('tbl_brand_products.product_name', $productName)
+					->select(
+						'tbl_brand_products.*',
+						'tbl_hsncodes.tax',
+					)
+					->first();
+					if ($product) {
+						$existingProductIds[] = $product->id;
+						$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
 														->first();
 
             if ($newProduct) {
@@ -4924,11 +4927,9 @@ public function order_history()
 	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
-	return redirect()->back()->with('error', 'Purchase Order not found!');
+	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
-
-
 	
 	public function bill($id){
 		$role=Auth::user()->user_type;
