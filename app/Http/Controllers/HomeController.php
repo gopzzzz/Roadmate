@@ -1418,7 +1418,8 @@ public function shop_categoriesdelete($id){
 		
 			$shops="";
 
-		if($role==3){ $fran = DB::table('tbl_franchase_details')
+		if($role==3){ 
+			$fran = DB::table('tbl_franchase_details')
 			->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
 			->where('tbl_franchises.user_id', $userid)
 			->select('tbl_franchase_details.*')
