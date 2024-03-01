@@ -500,6 +500,8 @@ foreach ($productlist as $proItem) {
     // Add the $cartItem to the $cart array
     $products[] = $proItem;
 }
+
+
  if($productlist == null){
  echo json_encode(array('error' => true, "message" => "Error"));
 
@@ -509,7 +511,7 @@ foreach ($productlist as $proItem) {
 
              $json_data = 0;
 
-            echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+            echo json_encode(array('error' => false,"product"=>$productlist, "message" => "Success"));
 
                 }
 }

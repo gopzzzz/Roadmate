@@ -147,7 +147,7 @@ class AccountController extends Controller
 
                 foreach ($order_trans as $order) {
 
-                    $r1=round(($order->offer_amount));
+                    $r1=$order->offer_amount;
                     $r2=$order->prate;
                     $rev=$r1-$r2;
                     // Calculate revenue for each order transaction
