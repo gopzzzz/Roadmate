@@ -4927,7 +4927,7 @@ public function order_history()
 	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
-	return redirect()->back()->with('error', 'Purchase Order not found!');
+	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
 	
@@ -4986,6 +4986,7 @@ public function order_history()
 				)
 				->get();
 		
+				
 			return response()->json($products);
 		}
 		
