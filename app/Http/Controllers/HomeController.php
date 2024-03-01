@@ -4905,18 +4905,11 @@ public function order_history()
 					$existingProductIds[] = $product->id; 
 	
 					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
-					->where('product_id', $product->id)
 														->first();
 
             if ($newProduct) {
               
-				$newProduct->product_id = $product->id;
-
-				$newProduct->qty = $quantity;
-				$newProduct->amount = $product->offer_price;
-				$newProduct->bill_number= $id;
-				$newProduct->save();
-            } else {
+			
                 $newProduct = new Tbl_placeorders;
                 $newProduct->bill_number = $id; 
                 $newProduct->product_id =$product->id;
