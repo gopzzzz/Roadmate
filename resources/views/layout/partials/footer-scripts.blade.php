@@ -3762,7 +3762,7 @@ $('.edit_purchaseorder').click(function () {
                             '<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '" ' + disableInput + '>' +
                             '<div class="product_list"></div>' +
                             '</td>' +
-                            '<td><input type="text" class="form-control quantity" name="quantity[]" value="' + product.qty + '" required></td>' +
+                            '<td><input type="text" class="form-control qty" name="qty[]" value="' + product.qty + '" required></td>' +
                             '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + (product.amount / (1 + product.tax / 100)).toFixed(2) + '" required readonly></td>' +
                             '<td><input type="text" class="form-control tax" name="tax[]" value="' + product.tax + '%" required readonly></td>' +
                             '<td><input type="text" class="form-control taxableamount" name="taxableamount[]" value="' + ((product.amount / (1 + product.tax / 100)).toFixed(2) * (product.tax / 100).toFixed(2) * product.qty).toFixed(2) + '" required readonly></td>' +
