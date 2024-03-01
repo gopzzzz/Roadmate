@@ -4883,55 +4883,47 @@ public function order_history()
     $id = $request->id;
 
     $puredit = Tbl_place_order_masters::find($id);
-	if($puredit){
-    $puredit->vendor_id = $request->venname;
-    $puredit->request_by = $request->requestby;
-    $puredit->save();
+	$pure = Tbl_place_order_masters::find($id);
+
 	$existingProductIds = []; 
 
     if ($request->has('product_name')) {
         foreach ($request->product_name as $key => $productName) {
             $quantity = $request->quantity[$key] ?? null;
 
-            $product = DB::table('tbl_order_trans')
-                ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+            $product = DB::table('tbl_brand_products')
                 ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
                 ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
                 ->where('tbl_brand_products.product_name', $productName)
-                ->where('tbl_order_trans.order_status', 0)
                 ->select(
-                    'tbl_order_trans.*',
+                    'tbl_brand_products.*',
                     'tbl_hsncodes.tax',
-                    'tbl_order_trans.offer_amount',
-                    'tbl_order_trans.qty',
-                    'tbl_brand_products.product_name'
                 )
                 ->first();
 				if ($product) {
-					$existingProductIds[] = $product->product_id; 
+					$existingProductIds[] = $product->id; 
 	
 					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
-					->where('product_id', $product->product_id)
+					->where('product_id', $product->id)
 														->first();
 
             if ($newProduct) {
               
-				$newProduct->product_id = $product->product_id;
+				$newProduct->product_id = $product->id;
 
 				$newProduct->qty = $quantity;
-				$newProduct->amount = $product->offer_amount;
+				$newProduct->amount = $product->offer_price;
 				$newProduct->bill_number= $id;
 				$newProduct->save();
             } else {
                 $newProduct = new Tbl_placeorders;
                 $newProduct->bill_number = $id; 
-                $newProduct->product_id =$product->product_id;
+                $newProduct->product_id =$product->id;
                 $newProduct->qty = $quantity;
-                $newProduct->amount = $product->offer_amount;
+                $newProduct->amount = $product->offer_price;
 				$newProduct->order_date =date('Y-m-d');
 
                 $newProduct->save();
-				$update = \DB::table('tbl_order_trans') ->where('id', $product->id) ->limit(1) ->update( [ 'order_status' => 1]);
 
             }
         }
@@ -4944,7 +4936,7 @@ public function order_history()
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
-}
+
 
 	
 	public function bill($id){
@@ -4989,20 +4981,16 @@ public function order_history()
 			$vendorId = $request->input('vendor_id');
 			$alphabet = $request->input('alphabet');
 		
-			$products = DB::table('tbl_order_trans')
-				->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
+			$products = DB::table('tbl_brand_products')
 				->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
 				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 				->where('tbl_rm_products.vendor_id', $vendorId )
-
-				->where('tbl_order_trans.order_status', 0)
+				->where('tbl_rm_products.status', 0)
+				->where('tbl_brand_products.status', 0)
 				->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
 				->select(
-					'tbl_order_trans.*',
+					'tbl_brand_products.*',
 					'tbl_hsncodes.tax',
-					'tbl_order_trans.offer_amount',
-					'tbl_order_trans.qty',
-					'tbl_brand_products.product_name'
 				)
 				->get();
 		
