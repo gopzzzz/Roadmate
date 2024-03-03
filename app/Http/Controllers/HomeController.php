@@ -4884,52 +4884,55 @@ public function order_history()
 	{
 		$id = $request->id;
 	
-		$puredit = Tbl_place_order_masters::find($id);
-		$pure = Tbl_place_order_masters::find($id);
-	
+		$purchaseOrderMaster= Tbl_place_order_masters::find($id);
+	if($purchaseOrderMaster){
 		$existingProductIds = []; 
 	
 		if ($request->has('product_name')) {
-			foreach ($request->product_name as $key => $productName) {
-				$qty = $request->qty[$key] ?? null;
-	
-				$product = DB::table('tbl_brand_products')
-					->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-					->where('tbl_brand_products.product_name', $productName)
-					->select(
-						'tbl_brand_products.*',
-						'tbl_hsncodes.tax',
-					)
-					->first();
-					if ($product) {
-						$existingProductIds[] = $product->id;
-						$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
-														->first();
+			foreach ($request->product_name as $index => $productName) {
 
-            if ($newProduct) {
-              
+				$qty = $request->qty[$index] ?? null;
+				
+				Log::info('Original Product Name:', [$productName]);
+
+
+				$product = Tbl_brand_products::where('product_name', $productName)->first();
+		
+				if ($product) {
+					$existingProductIds[] = $product->id;
+					$newProduct = Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
+						->where('product_id', $product->id)
+						->first();
+		
+					if ($newProduct) {
+						$newProduct->qty = $qty;
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+						$newProduct->save();
+					} else {
+						$newProduct = new Tbl_placeorders;
+						$newProduct->bill_number = $id;
+						$newProduct->product_id = $product->id;
+						$newProduct->qty = $qty;
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+		
+						$newProduct->save();
+					}
+				}
+			}
+		
+				Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
+					->whereNotIn('product_id', $existingProductIds)
+					->delete();
 			
-                $newProduct = new Tbl_placeorders;
-                $newProduct->bill_number = $id; 
-                $newProduct->product_id =$product->id;
-                $newProduct->qty = $qty;
-                $newProduct->amount = $product->offer_price;
-				$newProduct->order_date =date('Y-m-d');
-
-                $newProduct->save();
-
-            }
-        }
-    
-	}
-	
-	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
+
+	}
 	
 	public function bill($id){
 		$role=Auth::user()->user_type;
@@ -4949,25 +4952,6 @@ public function order_history()
 		return view('bill',compact('role','master','vendor','bills'));
 		}
 	
-	
-		public function removeProduct(Request $request,$id)
-{
-    // Perform server-side logic to remove the product from the database
-    $product = Tbl_placeorders::find($id);
-    if ($product) {
-        $product->delete();
-        return response()->json(['success' => true]);
-    } else {
-        return response()->json(['success' => false]);
-    }
-}
-
-
-
-
-
-		
-		
 		public function productSearch(Request $request)
 		{
 			$vendorId = $request->input('vendor_id');
@@ -5216,6 +5200,7 @@ public function search_sale(Request $request)
             ->get();
     }
 	$role=Auth::user()->user_type;
+	
 
     $i = 1;
     if (count($sales) > 0) {
@@ -5245,6 +5230,9 @@ public function search_sale(Request $request)
                 case 3:
                     $salelistHTML .= 'Delivered';
                     break;
+					case 4:
+						$salelistHTML .= 'Cancelled';
+						break;
                 default:
                     break;
             }

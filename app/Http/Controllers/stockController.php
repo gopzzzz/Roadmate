@@ -386,7 +386,7 @@ public function inventoryTransferEdit(Request $request){
             $product = Tbl_brand_products::where('product_name', $productName)->first();
 
             if ($product) {
-                $existingProductIds[] = $product->id; // Add existing product id
+                $existingProductIds[] = $product->id; 
 
                 $inventoryTrans = Tbl_inventory_trans::where('master_id', $inventoryTransfer->id)
                                                     ->where('product_id', $product->id)
@@ -409,7 +409,6 @@ public function inventoryTransferEdit(Request $request){
             }
         }
 
-        // Delete entries from Tbl_inventory_trans for removed products
         Tbl_inventory_trans::where('master_id', $inventoryTransfer->id)
                             ->whereNotIn('product_id', $existingProductIds)
                             ->delete();

@@ -3726,70 +3726,70 @@ $('.edit_purchaseorder').click(function () {
                 id: id
             },
             success: function (res) {
-                console.log('Response:', res);
+    console.log('Response:', res);
 
-                // Access the data for Tbl_place_order_masters
-                var purchaseOrderMaster = res.purchaseOrderMaster;
-                console.log('purchaseOrderMaster:', purchaseOrderMaster);
+    // Access the data for Tbl_place_order_masters
+    var purchaseOrderMaster = res.purchaseOrderMaster;
+    console.log('purchaseOrderMaster:', purchaseOrderMaster);
 
-                // Access the data for Tbl_placeorders
-                var purchaseOrderDetails = res.purchaseOrderDetails;
-                console.log('purchaseOrderDetails:', purchaseOrderDetails);
+    // Access the data for Tbl_placeorders
+    var purchaseOrderDetails = res.purchaseOrderDetails;
+    console.log('purchaseOrderDetails:', purchaseOrderDetails);
 
-                // Use the data to populate form fields
-                $('#venname').val(purchaseOrderMaster.vendor_id);
-                $('#requestby').val(purchaseOrderMaster.request_by);
-                $('#purchaseid').val(purchaseOrderMaster.id);
+    // Use the data to populate form fields
+    $('#venname').val(purchaseOrderMaster.vendor_id);
+    $('#requestby').val(purchaseOrderMaster.request_by);
+    $('#purchaseid').val(purchaseOrderMaster.id);
 
-                // Clear existing rows in the table
-                $('#stockTable tbody').empty();
+    // Clear existing rows in the table
+    $('#stockTable tbody').empty();
 
                 // Initialize total variables
-                var totalQuantity = 0;
-                var totalAmount = 0;
-                var totalTaxableAmount = 0;
-                var totalTaxAmount = 0;
-                var totalSubtotal = 0;
+                var total = 0;
+                var taxableamount = 0;
+                var taxamount = 0;
 
                 // Loop through the products and add rows to the table
-                if (purchaseOrderDetails.length > 0) {
-                    $.each(purchaseOrderDetails, function (index, product) {
-                        var disableInput = 'disabled';
+				if (purchaseOrderDetails.length > 0) {
+    $.each(purchaseOrderDetails, function (index, product) {
+		var isDisabled = true;  // Set this variable based on your condition
 
-                        var row = '<tr>' +
-                            '<td>' + (index + 1) + '</td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '" ' + disableInput + '>' +
-                            '<div class="product_list"></div>' +
-                            '</td>' +
-                            '<td><input type="text" class="form-control qty" name="qty[]" value="' + product.qty + '" required></td>' +
-                            '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + (product.amount / (1 + product.tax / 100)).toFixed(2) + '" required readonly></td>' +
-                            '<td><input type="text" class="form-control tax" name="tax[]" value="' + product.tax + '%" required readonly></td>' +
-                            '<td><input type="text" class="form-control taxableamount" name="taxableamount[]" value="' + ((product.amount / (1 + product.tax / 100)).toFixed(2) * (product.tax / 100).toFixed(2) * product.qty).toFixed(2) + '" required readonly></td>' +
-                            '<td><input type="text" class="form-control total" name="total[]" value="' + (product.amount * product.qty).toFixed(2) + '" required readonly></td>' +
-                            '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>' +
-                            '</tr>';
-                        $('#stockTable tbody').append(row);
+		var unitprice = (product.amount / (1 + product.tax / 100)).toFixed(2);
+		
+var taxableamount = (unitprice *( product.tax / 100 * product.qty)).toFixed(2);
 
-                        // Update total variables
-                        totalQuantity += parseFloat(product.qty);
-                        totalAmount += parseFloat(product.amount * product.qty);
-                        totalTaxAmount += parseFloat(product.amount * product.qty);
-                        totalTaxableAmount += parseFloat((product.amount / (1 + product.tax / 100)).toFixed(2) * (product.tax / 100).toFixed(2) * product.qty);
-                        totalSubtotal += parseFloat((product.amount / (1 + product.tax / 100)).toFixed(2)) * product.qty;
-                    });
+        var total = ((product.amount / (1 + product.tax / 100)).toFixed(2) * product.qty).toFixed(2);
+
+		var row = '<tr>' +
+    '<td>' + (index + 1) + '</td>' +
+    '<td>' +
+    '<input type="text" class="form-control search_products" name="product_name[]" placeholder="Search Product" value="' + product.product_name + '"' + 'readonly' + '>' +
+    '<input type="hidden" name="disabled_product_name[]" value="' + product.product_name + '">' +
+    '<div class="product_list"></div>' +
+    '</td>' +
+    '<td><input type="text" class="form-control qty" name="qty[]" value="' + product.qty + '" required></td>' +
+    '<td><input type="text" class="form-control unitprice" name="unitprice[]" value="' + unitprice + '" required readonly></td>' +
+    '<td><input type="text" class="form-control tax" name="tax[]" value="' + product.tax + '%" required readonly></td>' +
+    '<td><input type="text" class="form-control taxableamount" name="taxableamount[]" value="' + taxableamount + '" required readonly></td>' +
+    '<td><input type="text" class="form-control total" name="total[]" value="' + total + '" required readonly></td>';
+   
+
+			if (index > 0) {
+                        row += '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>';
+                    } else {
+                        row += '<td></td>'; // Empty cell for the first row
+                    }
+
+
+            '</tr>';
+
+        $('#stockTable tbody').append(row);
+    });
 
                     // Set the total quantity and total amount fields
-                    $('.total-quantity').val(totalQuantity);
-                    $('.total-amount').val(totalAmount.toFixed(2));
-                    $('.total-taxable-amount').val(totalTaxableAmount.toFixed(2));
-                    $('.total-tax-amount').val(totalTaxAmount.toFixed(2));
-                    $('.total-subtotal').val(totalSubtotal.toFixed(2));
+                  
 
-                    // Set the values in the summary row
-                    $('#subtotalValue').text(totalSubtotal.toFixed(2));
-                    $('#taxableAmountValue').text(totalTaxableAmount.toFixed(2));
-                    $('#sumValue').text(totalAmount.toFixed(2));
+                  
                 } else {
                     console.error('No products found in purchaseOrderDetails.');
                 }
@@ -3801,19 +3801,38 @@ $('.edit_purchaseorder').click(function () {
     }
     $('#editpurcaseorder_modal').modal('show');
 
-    // Disable all search inputs except for the new row
-    $('.search_products').prop('disabled', true);
-    $('.search_products:last').prop('disabled', false);
+   
+  
+});
+// Event listener for quantity change
+$('#stockTable tbody').on('input', '.qty', function () {
+    // Get the parent row of the input field
+    var row = $(this).closest('tr');
 
-    // Enable the search input only for the new row
-    $('.search_products:last').on('input', function () {
-        // Your existing logic for handling product search
-        // ...
-    });
+    // Get the values from the current row
+    var qty = parseFloat($(this).val()) || 0;
+    var unitPrice = parseFloat(row.find('.unitprice').val()) || 0;
+    var tax = parseFloat(row.find('.tax').val()) || 0;
+
+    // Calculate new values
+    var total = (unitPrice * qty).toFixed(2);
+    var taxamount = (unitPrice  * (tax/100)).toFixed(2);
+    var taxableamount = (taxamount*qty).toFixed(2);
+
+    // Update the corresponding input fields in the current row
+    row.find('.taxableamount').val(taxableamount);
+    row.find('.total').val(total);
+
+    // Update total variables
+    updateTotals();
 });
 
+// Trigger initial calculation on document ready
+$(document).ready(updateTotals);
 
 
+</script>
+<script>
 
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
@@ -3847,11 +3866,8 @@ $('#search_sale').keyup(function () {
     });
 });
 
-
-
-$('#search_order').keyup(function () {
+		$('#search_order').keyup(function () {
     var searchval = $(this).val();
-    var selectedOrderStatus = $('#orderStatusFilter').val();
 
     if (searchval === '') {
         // Refresh or perform any action when the search bar is empty
@@ -3865,8 +3881,7 @@ $('#search_order').keyup(function () {
         url: "{{ route('search_order') }}",
         data: {
             "_token": "{{ csrf_token() }}",
-            searchval: searchval,
-            order_status: selectedOrderStatus
+            searchval: searchval
         },
         success: function (res) {
             console.log(res);
@@ -3885,7 +3900,6 @@ $('#search_order').keyup(function () {
         }
     });
 });
-
 
 </script>
 

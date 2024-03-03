@@ -196,8 +196,12 @@ $subtotal=0;
 @foreach($bills as $key)
 
 @php 
-$unitprice=number_format(($key->amount)/(1+(($key->tax)/100)), 2);
-$taxamount=number_format($unitprice*($key->tax/100), 2);
+$unitprice=($key->amount)/(1+(($key->tax)/100));
+$taxamount=$unitprice*($key->tax/100);
+
+$unitprice = number_format($unitprice, 2, '.', '');
+$taxamount = number_format($taxamount, 2, '.', '');
+
 
 @endphp
 
@@ -208,7 +212,7 @@ $taxamount=number_format($unitprice*($key->tax/100), 2);
            <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$unitprice}}</td>
            <td style="border: 2px solid #f2f2f2; text-align: right;">{{$key->tax}} %</td>
            <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$taxamount * $key->qty}}</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{$key->qty*$key->amount}}</td>
+           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{$key->qty*$unitprice}}</td>
        </tr> 
 
 @php 
