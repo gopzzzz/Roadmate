@@ -3855,6 +3855,7 @@ $(document).ready(updateTotals);
 
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
+    var order_status = $('#order_status').val(); // Get the selected order status filter
 
     if (searchval === '') {
         // If search bar is empty, refresh the sale list to show all items
@@ -3868,7 +3869,8 @@ $('#search_sale').keyup(function () {
         url: "{{ route('search_sale') }}",
         data: {
             "_token": "{{ csrf_token() }}",
-            searchval: searchval
+            searchval: searchval,
+            order_status: order_status // Pass the selected order status filter
         },
         success: function (res) {
             console.log(res);
@@ -3885,7 +3887,10 @@ $('#search_sale').keyup(function () {
     });
 });
 
-		$('#search_order').keyup(function () {
+
+
+
+$('#search_order').keyup(function () {
     var searchval = $(this).val();
 
     if (searchval === '') {
