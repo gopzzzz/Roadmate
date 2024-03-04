@@ -678,7 +678,7 @@
 
 
 
-<input class="form-control" name="exename" id="name1" required>
+<input class="form-control" name="exename" id="name1" required readonly>
 
 
 </div>
@@ -691,7 +691,7 @@
 
 
 
-<input class="form-control" name="email" id="email1" required>
+<input class="form-control" name="email" id="email1" required readonly>
 
 
 </div>
@@ -705,14 +705,14 @@
 
 
 
-<input class="form-control" name="phonenumber" id="phnum1" required>
+<input class="form-control" name="phonenumber" id="phnum1" required readonly>
 
 
 </div>
 
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">Country</label>
-    <select name="country" id="country1" class="form-control countrylist">
+    <select name="country" id="country1" class="form-control countrylist" disabled>
         <option value="0">Select Country</option>
         @foreach($con as $country)
             <option value="{{ $country->id }}">{{ $country->country_name }}</option>
@@ -721,7 +721,7 @@
 </div>
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">State</label>
-    <select name="state" id="state1" class="form-control districtfetchadd">
+    <select name="state" id="state1" class="form-control districtfetchadd" disabled>
         <option value="0">Select State</option>
         @foreach($cond as $state)
             <option value="{{ $state->id }}">{{ $state->state_name }}</option>
@@ -730,7 +730,7 @@
 </div>
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">District</label>
-    <select name="district" id="district1" class="form-control">
+    <select name="district" id="district1" class="form-control" disabled>
         <option value="0">Select District</option>
         @foreach($dis as $district)
             <option value="{{ $district->id }}">{{ $district->district_name }}</option>
@@ -748,7 +748,7 @@
 
 
 
-<input class="form-control" id="location1" name="location"  required>
+<input class="form-control" id="location1" name="location"  required disabled>
 
 
 </div>
@@ -763,7 +763,7 @@
 
 
 
-<textarea class="form-control" id="address1" name="address" placeholder="Enter address"></textarea>
+<textarea class="form-control" id="address1" name="address" placeholder="Enter address" disabled></textarea>
 
 
 </div>
@@ -782,7 +782,7 @@
 
 <label class="exampleModalLabel">Status</label>
 
-<select name="status" id="status2" class="form-control"  required>
+<select name="status" id="status2" class="form-control"  required disabled>
 
 <option value="0">Active</option>
 <option value="1">In Active</option>
