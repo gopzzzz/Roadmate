@@ -76,6 +76,23 @@
                            </div>
                         </div>
                         <div class="modal-header">
+                           <h5 class="modal-title" id="exampleModalLabel">EXPENSE DETAILS</h5>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Number of Employees</label>
+                              <input class="form-control"  name="nofstaff" placeholder="Enter Number of Employees" required>
+                           </div>
+                           <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Salary</label>
+                              <input class="form-control" name="salary" placeholder="Enter Salary" required>
+                           </div>
+                           <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Maintanance Cost</label>
+                              <input class="form-control" name="main_cost" placeholder="Enter Maintanance Cost" required>
+                           </div>
+
+                        <div class="modal-header">
                            <h5 class="modal-title" id="exampleModalLabel">FRANCHISE DETAILS</h5>
                         </div>
                         <div class="modal-body row" id="franchiseDetailsContainer">
@@ -302,11 +319,29 @@
                                     <input type="email" class="form-control" id="email"  name="email" placeholder="Enter Email" required readonly>
                                     <small id="emailHelp" class="form-text text-muted">Please enter a valid email with the domain @example.com</small>
                                  </div>
+                                 
                                  <!-- <div class="form-group col-sm-6">
                                     <label class="exampleModalLabel">Password</label>
                                     <input class="form-control" name="password" placeholder="Enter Password" >
                                  </div> -->
                               </div>
+
+                              <div class="modal-header">
+                           <h5 class="modal-title" id="exampleModalLabel">EXPENSE DETAILS</h5>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Number of Employees</label>
+                              <input class="form-control"  id="noem" name="nofstaff" placeholder="Enter Number of Employees" required>
+                           </div>
+                           <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Salary</label>
+                              <input class="form-control" id="salary" name="salary" placeholder="Enter Salary" required>
+                           </div>
+                           <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Maintanance Cost</label>
+                              <input class="form-control" id="mcost" name="main_cost" placeholder="Enter Maintanance Cost" required>
+                           </div>
                              
                              
                               <div class="modal-footer">

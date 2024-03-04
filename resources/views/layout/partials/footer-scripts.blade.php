@@ -1171,6 +1171,9 @@ $('.edit_fran').click(function(){
     $('#area').val(res.area);
     $('#pincode').val(res.pincode);
     $('#id').val(res.id);
+	$('#noem').val(res.staff_count);
+    $('#salary').val(res.salary);
+    $('#mcost').val(res.maintanance_cost);
 
     // Additional fields from Tbl_franchase_details
     $('#type').val(res.type);

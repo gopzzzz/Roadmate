@@ -495,7 +495,9 @@ class HomeController extends Controller
 				$franchise->pincode = $request->pincode;
 				$franchise->phone_number = $request->phone_number;
 				$franchise->user_id = $user->id;
-	
+				$franchise->staff_count = $request->nofstaff;
+				$franchise->salary = $request->salary;
+				$franchise->maintanance_cost = $request->main_cost;
 				if ($franchise->save()) {
 					for ($i = 0; $i < count($type); $i++) {
 					$franchiseDetails = new Tbl_franchase_details;
@@ -572,6 +574,9 @@ class HomeController extends Controller
     $franchise->area = $request->area;
     $franchise->pincode = $request->pincode;
     $franchise->phone_number = $request->phone_number;
+	$franchise->staff_count = $request->nofstaff;
+	$franchise->salary = $request->salary;
+	$franchise->maintanance_cost = $request->main_cost;
 	$franchise->save();
     
 	

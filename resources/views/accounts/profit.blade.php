@@ -82,17 +82,26 @@
                                  <td>Turn Over</td>
                                  <td>{{$turnover}}</td>
                               </tr>
-                              <tr>
-                                 <td>Expense</td>
-                                 <td>{{$expense}}</td>
-                              </tr>
+                            
                               <tr>
                                  <td>Revenue</td>
                                  <td>{{$totalRevenue}}</td>
                               </tr>
                               <tr>
-                                 <td>Profit</td>
-                                 <td>{{$totalRevenue-$expense}}</td>
+                                 <td>Delivery Expense (E1)</td>
+                                 <td>{{$dexpense}}</td>
+                              </tr>
+                              <tr>
+                                 <td>Salary Expense (E2)</td>
+                                 <td>{{$e2}}</td>
+                              </tr>
+                              <tr>
+                                 <td>Maintanance Cost (E3)</td>
+                                 <td>{{$e3}}</td>
+                              </tr>
+                              <tr>
+                                 <td>Profit (Revenue-(E1+E2+E3))</td>
+                                 <td>{{$totalRevenue-($dexpense+$e2+$e3)}}</td>
                               </tr>
                            </tbody>
                         </table>
