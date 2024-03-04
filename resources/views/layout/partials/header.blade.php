@@ -402,24 +402,24 @@ $name=Auth::user()->name;
                   </ul>
                </li>
             
-<li class="nav-item {{ request()->is('crm') ? 'menu-open' : '' }}">
+<!-- <li class="nav-item {{ request()->is('crm') ? 'menu-open' : '' }}">
    <a href="{{ url('crm') }}" class="nav-link {{ request()->is('crm') ? 'active' : '' }}">
       <i class="nav-icon fas fa-id-card"></i>
       <p>
          Staff
       </p>
    </a>
-</li>
-<li class="nav-item {{ request()->is('executive') ? 'menu-open' : '' }}">
+</li> -->
+<!-- <li class="nav-item {{ request()->is('executive') ? 'menu-open' : '' }}">
    <a href="{{ url('executive') }}" class="nav-link {{ request()->is('executive') ? 'active' : '' }}">
       <i class="nav-icon fas fa-id-card"></i>
       <p>
       Executive
       </p>
    </a>
-</li>
-<!-- <li class="nav-item has-treeview {{ request()->is(['rolemenu', 'executive']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['rolemenu', 'executive']) ? 'active' : '' }}">
+</li> -->
+<li class="nav-item has-treeview {{ request()->is(['rolemenu','crm', 'executive']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['rolemenu' ,'crm','executive']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-id-card"></i>
       <p>
       Staffs
@@ -434,13 +434,19 @@ $name=Auth::user()->name;
          </a>
       </li>
       <li class="nav-item">
+         <a href="{{ url('crm') }}" class="nav-link {{ request()->is('crm') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Staff</p>
+         </a>
+      </li>
+      <li class="nav-item">
          <a href="{{ url('executive') }}" class="nav-link {{ request()->is('executive') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Executive</p>
          </a>
       </li>
    </ul>
-</li> -->
+</li>
 <li class="nav-item has-treeview {{ request()->is(['store_listing', 'store_categories']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['store_listing', 'store_categories']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-university"></i>

@@ -74,7 +74,7 @@ use App\Tbl_vendors;
 use App\Tbl_place_order_masters;
 use App\Tbl_sale_order_masters;
 use App\Tbl_sale_order_trans;
-use App\Tbl_godowns;
+use App\Tbl_roles;
 use DB;
 use Hash;
 use Auth;
@@ -4974,8 +4974,37 @@ public function order_history()
 			return response()->json($products);
 		}
 		
+	public function rolemenu(){
+		$role = Auth::user()->user_type;
+		$roles=DB::table('tbl_roles')->get();
+		return view('rolemenu',compact('role','roles'));
+	}	
+		public function roleinsert(Request $request){
+			$roles=new Tbl_roles;
+			$roles->designation=$request->rolename;
+			$roles->save();
+			return redirect('rolemenu')->with('success', 'Added successfully');	
+
+
+		}
+		public function rolefetch(Request $request){
+            $id=$request->id;
+			$roles=Tbl_roles::find($id);
+			
+			print_r(json_encode($roles));
+
+		}
+		public function roleedit(Request $request){
+            $id=$request->id;
+			$roles=Tbl_roles::find($id);
+			$roles->designation=$request->rolename;
+			$roles->save();
+			
+			return redirect('rolemenu')->with('success', 'Edited successfully');	
+
+		}
 		
-		
+	
 		
 		
 		public function productpriority(Request $request){
