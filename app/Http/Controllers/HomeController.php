@@ -4983,7 +4983,10 @@ public function purchaseorderedit(Request $request)
 				
 			return response()->json($products);
 		}
-		
+		public function salesreturn(){
+			$role = Auth::user()->user_type;
+			return view('salesreturn',compact('role'));
+		}	
 	public function rolemenu(){
 		$role = Auth::user()->user_type;
 		$roles=DB::table('tbl_roles')->get();
