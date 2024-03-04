@@ -3893,6 +3893,7 @@ function sendNotification1($msg1,$title)
 			->get();
 		   return view('order_trans',compact('role','mark','markk','order'));
 		}
+		
 		public function order_master(Request $request) {
 			$role = Auth::user()->user_type;
 			$userid=Auth::user()->id;
