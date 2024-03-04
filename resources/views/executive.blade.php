@@ -767,16 +767,10 @@
 
 
 </div>
- <div class="form-group col-sm-6">
-
-
-
-                      <label class="exampleModalLabel">Image</label>
-
-
-
-                      <input type="file"  name="image"  >
-                      </div>
+<div class="form-group col-sm-6">
+    <label class="exampleModalLabel">Image</label>
+    <img src="" alt="" id="executive_image" width="75"/>
+</div>
 
                       <div class="form-group col-sm-6">
 

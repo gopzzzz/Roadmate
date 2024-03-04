@@ -1255,38 +1255,35 @@ $('.edit_fran').click(function(){
 		$('#edit_sup').modal('show');
 	});
 	//
-	
 	$('.view_execu').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
-
-					url: "{{ route('executivefetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          $('#name1').val(obj.name);
-		 // $('#image').val(obj.image);
-          $('#email1').val(obj.email);
-          $('#phnum1').val(obj.phonenum);
-		  $('#country1').val(obj.country_id);
+    var id = $(this).data('id');
+    if(id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('executivefetch') }}",
+            data: {"_token": "{{ csrf_token() }}", id: id },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#name1').val(obj.name);
+                $('#email1').val(obj.email);
+                $('#phnum1').val(obj.phonenum);
+                $('#country1').val(obj.country_id);
                 $('#state1').val(obj.state_id);
-          $('#district1').val(obj.district);
-          $('#location1').val(obj.location);
-          $('#address1').val(obj.addrress);
-		  $('#status2').val(obj.status);
+                $('#district1').val(obj.district);
+                $('#location1').val(obj.location);
+                $('#address1').val(obj.addrress);
+                $('#status2').val(obj.status);
+                $('#exeviewid').val(obj.id);
+                // Set the image URL
+                $('#executive_image').attr('src', '{{ asset('/img/') }}/' + obj.image);
+            },
+        }); 
+    }
+    $('#viewexecutive_modal').modal('show');
+});
 
-          $('#exeviewid').val(obj.id);
-         
-					},
-					});	
-		}
-		$('#viewexecutive_modal').modal('show');
-	});
+
 
 	$('.view_fran').click(function(){
 		var id=$(this).data('id');
@@ -3836,10 +3833,10 @@ $(document).ready(updateTotals);
 
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
-    var order_status = $('#order_status').val(); // Get the selected order status filter
+    var order_status = $('#orderStatusFilter').val(); // Get the selected order status filter
 
-    if (searchval === '') {
-        // If search bar is empty, refresh the sale list to show all items
+    if (searchval === '' && order_status === '') {
+        // If both search bar and order status filter are empty, refresh the sale list to show all items
         location.reload();
         return;
     }
