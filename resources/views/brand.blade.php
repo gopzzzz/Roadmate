@@ -102,6 +102,7 @@
                               <td>{{$key->brand}}</td>
                               @if($role==1) <td>
                                 <i class="fa fa-edit editbrand"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
+                                
                                  <i class="fa fa-eye view_brand"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i>
                                  <a href="#" onclick="confirmDelete('{{ $key->id }}')">
     <i class="fa fa-trash delete_banner text-danger" aria-hidden="true" data-id="{{ $key->id }}"></i>
