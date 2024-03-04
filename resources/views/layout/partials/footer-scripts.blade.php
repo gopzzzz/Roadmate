@@ -3839,12 +3839,9 @@ $('#stockTable tbody').on('input', '.qty', function () {
     row.find('.taxableamount').val(taxableamount);
     row.find('.total').val(total);
 
-    // Update total variables
-    updateTotals();
+   
 });
 
-// Trigger initial calculation on document ready
-$(document).ready(updateTotals);
 
 
 </script>

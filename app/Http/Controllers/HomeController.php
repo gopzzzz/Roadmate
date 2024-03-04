@@ -4889,79 +4889,60 @@ public function order_history()
 	}
 
 	public function purchaseorderedit(Request $request)
-{
-    $id = $request->id;
+	{
+		$id = $request->id;
+	
+		$purchaseOrderMaster= Tbl_place_order_masters::find($id);
+	if($purchaseOrderMaster){
+		$existingProductIds = []; 
+	
+		if ($request->has('product_name')) {
+			foreach ($request->product_name as $index => $productName) {
 
-    $puredit = Tbl_place_order_masters::find($id);
-	$pure = Tbl_place_order_masters::find($id);
+				$qty = $request->qty[$index] ?? null;
+				
+				Log::info('Original Product Name:', [$productName]);
 
-	$existingProductIds = []; 
 
-    if ($request->has('product_name')) {
-        foreach ($request->product_name as $key => $productName) {
-            $qty = $request->qty[$key] ?? null;
-
-            $product = DB::table('tbl_brand_products')
-                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-                ->where('tbl_brand_products.product_name', $productName)
-                ->select(
-                    'tbl_brand_products.*',
-                    'tbl_hsncodes.tax',
-                )
-                ->first();
+				$product = Tbl_brand_products::where('product_name', $productName)->first();
+		
 				if ($product) {
-					$existingProductIds[] = $product->id; 
-	
-					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
-														->first();
-
-            if ($newProduct) {
-              
+					$existingProductIds[] = $product->id;
+					$newProduct = Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
+						->where('product_id', $product->id)
+						->first();
+		
+					if ($newProduct) {
+						$newProduct->qty = $qty;
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+						$newProduct->save();
+					} else {
+						$newProduct = new Tbl_placeorders;
+						$newProduct->bill_number = $id;
+						$newProduct->product_id = $product->id;
+						$newProduct->qty = $qty;
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+		
+						$newProduct->save();
+					}
+				}
+			}
+		
+				Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
+					->whereNotIn('product_id', $existingProductIds)
+					->delete();
 			
-                $newProduct = new Tbl_placeorders;
-                $newProduct->bill_number = $id; 
-                $newProduct->product_id =$product->id;
-                $newProduct->qty = $qty;
-                $newProduct->amount = $product->offer_price;
-				$newProduct->order_date =date('Y-m-d');
-
-                $newProduct->save();
-
-            }
-        }
-    
-	}
-	
-	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
 
-public function deleteProduct(Request $request)
-{
-    $productId = $request->product_id;
-    $billNumber = $request->bill_number;
+	}
 
-    // Assuming Tbl_placeorders is your model for tbl_placeorders table
-    $product = Tbl_placeorders::where('product_id', $productId)
-        ->where('bill_number', $billNumber)
-        ->first();
-
-    if ($product) {
-        $product->delete();
-        return response()->json(['success' => true]);
-    } else {
-        return response()->json(['success' => false, 'message' => 'Product not found']);
-    }
-}
-
-
-
-	
-	public function bill($id){
+public function bill($id){
 		$role=Auth::user()->user_type;
 		$master=DB::table('tbl_place_order_masters')
 		->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
