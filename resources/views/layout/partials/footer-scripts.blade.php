@@ -3849,7 +3849,7 @@ $('#stockTable tbody').on('input', '.qty', function () {
 
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
-    var order_status = $('#orderStatusFilter').val(); // Get the selected order status filter
+    var order_status = $('#orderStatusFilterrs').val(); // Get the selected order status filter
 
     if (searchval === '' && order_status === '') {
         // If both search bar and order status filter are empty, refresh the sale list to show all items
@@ -3882,13 +3882,15 @@ $('#search_sale').keyup(function () {
 });
 
 
+</script>
 
-
+<script>
 $('#search_order').keyup(function () {
     var searchval = $(this).val();
+    var order_status = $('#orderStatusFilter').val(); // Get the selected order status filter
 
-    if (searchval === '') {
-        // Refresh or perform any action when the search bar is empty
+    if (searchval === '' && order_status === '') {
+        // If both search bar and order status filter are empty, refresh the page to show all items
         location.reload(); // This will refresh the page
         return;
     }
@@ -3899,7 +3901,8 @@ $('#search_order').keyup(function () {
         url: "{{ route('search_order') }}",
         data: {
             "_token": "{{ csrf_token() }}",
-            searchval: searchval
+            searchval: searchval,
+            order_status: order_status // Pass the selected order status filter
         },
         success: function (res) {
             console.log(res);
@@ -3908,7 +3911,6 @@ $('#search_order').keyup(function () {
                 $('#non-searchorderlist').hide();
                 $('#order_pagination').hide();
                 $('#searchorderlist').html(res.orderList);
-
             } else {
                 $('#searchorderlist').html('');
             }
@@ -3918,6 +3920,7 @@ $('#search_order').keyup(function () {
         }
     });
 });
+
 
 </script>
 
