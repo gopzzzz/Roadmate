@@ -303,7 +303,7 @@ class HomeController extends Controller
 		print_r(json_encode($visit));
 	}
 	
-	public function exeinsert(Request $request)
+     public function exeinsert(Request $request)
     {
       $exe = new Executives;
       if ($files = $request->file('image')) {
@@ -320,13 +320,12 @@ class HomeController extends Controller
 		$exe->status =0;
 
         $exe->location = $request->location;
-
         $exe->save();
         return redirect('executive')->with('success', 'Executive Inserted Successfully');
     }
    }
 
-
+   
     public function executivenew(){
 		$exe=Executives::all();
 		
@@ -344,9 +343,6 @@ class HomeController extends Controller
 		print_r(json_encode($exe));
 
 	}
-
-
-	
 	public function exeedit(Request $request)
 {
     $id = $request->id;
@@ -379,6 +375,7 @@ class HomeController extends Controller
     }
 }
 
+	
 
 	
 	public function exedelete($id){
@@ -4891,7 +4888,7 @@ public function order_history()
 		return response()->json($result);
 	}
 
-public function purchaseorderedit(Request $request)
+	public function purchaseorderedit(Request $request)
 {
     $id = $request->id;
 
@@ -4942,7 +4939,27 @@ public function purchaseorderedit(Request $request)
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
-	
+
+public function deleteProduct(Request $request)
+{
+    $productId = $request->product_id;
+    $billNumber = $request->bill_number;
+
+    // Assuming Tbl_placeorders is your model for tbl_placeorders table
+    $product = Tbl_placeorders::where('product_id', $productId)
+        ->where('bill_number', $billNumber)
+        ->first();
+
+    if ($product) {
+        $product->delete();
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Product not found']);
+    }
+}
+
+
+
 	
 	public function bill($id){
 		$role=Auth::user()->user_type;
@@ -4962,6 +4979,25 @@ public function purchaseorderedit(Request $request)
 		return view('bill',compact('role','master','vendor','bills'));
 		}
 	
+	
+		public function removeProduct(Request $request,$id)
+{
+    // Perform server-side logic to remove the product from the database
+    $product = Tbl_placeorders::find($id);
+    if ($product) {
+        $product->delete();
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false]);
+    }
+}
+
+
+
+
+
+		
+		
 		public function productSearch(Request $request)
 		{
 			$vendorId = $request->input('vendor_id');
@@ -5217,37 +5253,35 @@ public function purchaseorderedit(Request $request)
 public function search_sale(Request $request)
 {
     $searchval = $request->searchval;
-    $selectedOrderStatus = $request->order_status; // Get the selected order status filter
+    $order_status = $request->order_status; // Get the selected order status filter
     $salelistHTML = '';
 
-    // Query to fetch sales and related shop details
-    $saleQuery = DB::table('tbl_sale_order_masters')
+    $query = DB::table('tbl_sale_order_masters')
         ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
         ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
         ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
-        ->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-        ->orderBy('tbl_sale_order_masters.id', 'DESC');
+        ->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode');
 
-    // Apply filter based on selected order status
-    if ($selectedOrderStatus !== null) {
-        $saleQuery->where('tbl_order_masters.order_status', $selectedOrderStatus);
+    if ($order_status !== '') {
+        $query->where('tbl_order_masters.order_status', $order_status);
     }
 
-    // Apply filter based on shop name
-    if ($searchval != '') {
-        $saleQuery->where('shops.shopname', 'LIKE', '%' . $searchval . '%');
+    if ($searchval !== '') {
+        $query->where(function ($q) use ($searchval) {
+            $q->where('tbl_sale_order_masters.order_id', 'like', '%' . $searchval . '%')
+              ->orWhere('shops.shopname', 'like', '%' . $searchval . '%')
+              ->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchval . '%');
+        });
     }
 
-    // Retrieve the results
-    $sales = $saleQuery->get();
+    $sales = $query->orderBy('tbl_sale_order_masters.id', 'DESC')->get();
 
     $role = Auth::user()->user_type;
-    $i = 1;
 
+    $i = 1;
     if (count($sales) > 0) {
         foreach ($sales as $key) {
-            // Construct HTML for each sale
             $salelistHTML .= "<tr>";
             $salelistHTML .= '<td>' . $i . '</td>';
             $salelistHTML .= '<td>' . $key->invoice_number . '</td>';
@@ -5273,9 +5307,6 @@ public function search_sale(Request $request)
                 case 3:
                     $salelistHTML .= 'Delivered';
                     break;
-					case 4:
-						$salelistHTML .= 'Cancelled';
-						break;
                 default:
                     break;
             }
@@ -5290,8 +5321,8 @@ public function search_sale(Request $request)
             </form></td>';
             if ($role != 3) {
                 $salelistHTML .= '<td><button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="' . $key->order_id . '" style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
-                    Update 
-                </button></td>';
+                Update 
+            </button></td>';
             } else {
                 $salelistHTML .= '</tr>';
                 $i++;
