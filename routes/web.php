@@ -1387,6 +1387,9 @@ Route::get('/remove-product/{id}', 'HomeController@removeProduct')->name('remove
 Route::get('/productfetchdetails', 'HomeController@productfetchdetails')->name('productfetchdetails');
 Route::post('/search_products', [App\Http\Controllers\HomeController::class, 'productSearch'])->name('search_products');
 
+
+Route::post('/deleteProduct', 'HomeController@deleteProduct')->name('deleteProduct');
+
 Route::get('/productpriority', 'HomeController@productpriority')->name('productpriority');
 Route::post('/search_product', [
     'middleware' => 'auth',
