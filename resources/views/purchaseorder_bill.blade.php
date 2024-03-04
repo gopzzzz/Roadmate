@@ -245,10 +245,8 @@ $i++;
                 updateRowValues(row);
             });
 
-            // Event listener for dynamically added deleteRow buttons
-            $('#stockTable tbody').on('click', '.deleteRow', function () {
-                $(this).closest('tr').remove();
-            });
+      
+
 
             // Event listener for dynamically added search_products input fields
             $('#stockTable tbody').on('keyup', '.search_products', function () {
@@ -316,7 +314,19 @@ $i++;
                 updateRowValues(inputField.closest('tr'));
                 $(this).closest('.product_list').hide();
             });
+            function updateProductQuantity(row) {
+        var productId = row.find('.search_products').data('product-id');
+        var qty = parseFloat(row.find('.qty').val()) || 0;
 
+        // Check if the product exists in Tbl_placeorders
+        var existingProduct = Tbl_placeorders.find(productId);
+
+        if (existingProduct) {
+            // Update the quantity
+            existingProduct.qty = qty;
+            existingProduct.save();
+        }
+    }
             // Function to update row values based on quantity change
             function updateRowValues(row) {
                 var qty = parseFloat(row.find('.qty').val()) || 0;
@@ -341,7 +351,40 @@ $i++;
                 updateRowValues($(this).closest('tr')); // Update totals when adding a new row
             });
         });
+
     </script>
+<script>
+$(document).on('click', '.deleteRow', function () {
+    var productId = $(this).closest('tr').find('.search_products').data('product-id');
+    var billNumber = $('#bill_number_input').val(); // Assuming you have an input field for bill number
+    
+    // Confirm deletion with user, optionally
+    if (confirm('Are you sure you want to delete this product?')) {
+        deleteProduct(productId, billNumber);
+        $(this).closest('tr').remove();
+    }
+});
+
+function deleteProduct(productId, billNumber) {
+    $.ajax({
+        type: "POST",
+        url: "{{ route('delete_product') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            "product_id": productId,
+            "bill_number": billNumber
+        },
+        success: function (response) {
+            console.log(response);
+            // Handle success, such as showing a success message
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+            // Handle error, such as showing an error message
+        }
+    });
+}
+</script>
 
 
 @endsection
