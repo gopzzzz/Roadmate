@@ -74,7 +74,7 @@ use App\Tbl_vendors;
 use App\Tbl_place_order_masters;
 use App\Tbl_sale_order_masters;
 use App\Tbl_sale_order_trans;
-use App\Tbl_godowns;
+use App\Tbl_roles;
 use DB;
 use Hash;
 use Auth;
@@ -4897,30 +4897,31 @@ public function order_history()
 	}
 
 	public function purchaseorderedit(Request $request)
-	{
-		$id = $request->id;
+{
+    $id = $request->id;
+
+    $puredit = Tbl_place_order_masters::find($id);
+	$pure = Tbl_place_order_masters::find($id);
+
+	$existingProductIds = []; 
+
+    if ($request->has('product_name')) {
+        foreach ($request->product_name as $key => $productName) {
+            $qty = $request->qty[$key] ?? null;
+
+            $product = DB::table('tbl_brand_products')
+                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+                ->where('tbl_brand_products.product_name', $productName)
+                ->select(
+                    'tbl_brand_products.*',
+                    'tbl_hsncodes.tax',
+                )
+                ->first();
+				if ($product) {
+					$existingProductIds[] = $product->id; 
 	
-		$puredit = Tbl_place_order_masters::find($id);
-		$pure = Tbl_place_order_masters::find($id);
-	
-		$existingProductIds = []; 
-	
-		if ($request->has('product_name')) {
-			foreach ($request->product_name as $key => $productName) {
-				$qty = $request->qty[$key] ?? null;
-	
-				$product = DB::table('tbl_brand_products')
-					->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-					->where('tbl_brand_products.product_name', $productName)
-					->select(
-						'tbl_brand_products.*',
-						'tbl_hsncodes.tax',
-					)
-					->first();
-					if ($product) {
-						$existingProductIds[] = $product->id;
-						$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
+					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
 														->first();
 
             if ($newProduct) {
@@ -4936,7 +4937,6 @@ public function order_history()
                 $newProduct->save();
 
             }
-			
         }
     
 	}
@@ -4948,28 +4948,7 @@ public function order_history()
 }
 }
 
-public function deleteProduct(Request $request)
-{
-    $productId = $request->product_id;
-    $billNumber = $request->bill_number;
-
-    // Assuming Tbl_placeorders is your model for tbl_placeorders table
-    $product = Tbl_placeorders::where('product_id', $productId)
-        ->where('bill_number', $billNumber)
-        ->first();
-
-    if ($product) {
-        $product->delete();
-        return response()->json(['success' => true]);
-    } else {
-        return response()->json(['success' => false, 'message' => 'Product not found']);
-    }
-}
-
-
-
-	
-	public function bill($id){
+public function bill($id){
 		$role=Auth::user()->user_type;
 		$master=DB::table('tbl_place_order_masters')
 		->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
@@ -5027,9 +5006,41 @@ public function deleteProduct(Request $request)
 				
 			return response()->json($products);
 		}
+		public function salesreturn(){
+			$role = Auth::user()->user_type;
+			return view('salesreturn',compact('role'));
+		}	
+	public function rolemenu(){
+		$role = Auth::user()->user_type;
+		$roles=DB::table('tbl_roles')->get();
+		return view('rolemenu',compact('role','roles'));
+	}	
+		public function roleinsert(Request $request){
+			$roles=new Tbl_roles;
+			$roles->designation=$request->rolename;
+			$roles->save();
+			return redirect('rolemenu')->with('success', 'Added successfully');	
+
+
+		}
+		public function rolefetch(Request $request){
+            $id=$request->id;
+			$roles=Tbl_roles::find($id);
+			
+			print_r(json_encode($roles));
+
+		}
+		public function roleedit(Request $request){
+            $id=$request->id;
+			$roles=Tbl_roles::find($id);
+			$roles->designation=$request->rolename;
+			$roles->save();
+			
+			return redirect('rolemenu')->with('success', 'Edited successfully');	
+
+		}
 		
-		
-		
+	
 		
 		
 		public function productpriority(Request $request){

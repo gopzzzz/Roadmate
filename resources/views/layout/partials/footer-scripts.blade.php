@@ -3574,6 +3574,25 @@ $('#category_name').on('change', function () {
 		$('#editgodown_modal').modal('show');
 	});
 
+	$('.edit_role').click(function(){
+	var id=$(this).data('id');
+	if(id){
+    $.ajax({
+					type: "POST",
+                    url: "{{ route('rolefetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#rolename').val(obj.designation);
+		 
+          $('#role_id').val(obj.id);
+                    },
+					});	
+		}
+		$('#editrole_modal').modal('show');
+	});
 
 
 
@@ -3822,12 +3841,9 @@ $('#stockTable tbody').on('input', '.qty', function () {
     row.find('.taxableamount').val(taxableamount);
     row.find('.total').val(total);
 
-    // Update total variables
-    updateTotals();
+   
 });
 
-// Trigger initial calculation on document ready
-$(document).ready(updateTotals);
 
 
 </script>

@@ -1,5 +1,7 @@
-<?php 
- use Illuminate\Support\Facades\Route;
+<?php
+
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Route;
  
 /*
 |--------------------------------------------------------------------------
@@ -1402,8 +1404,12 @@ Route::post('/search_sale',['middleware' => 'auth',
 Route::post('/search_order',['middleware' => 'auth',
 'uses' => 'HomeController@search_order'])->name('search_order');
 Route::post('/delete-product', 'HomeController@deleteProduct')->name('delete_product');
+Route::get('/salesreturn','HomeController@salesreturn')->name('salesreturn');
 
-
+Route::get('/rolemenu','HomeController@rolemenu')->name('rolemenu');
+Route::post('/roleinsert', [App\Http\Controllers\HomeController::class, 'roleinsert'])->name('roleinsert');
+Route::post('/rolefetch', [App\Http\Controllers\HomeController::class, 'rolefetch'])->name('rolefetch');
+Route::post('/roleedit', [App\Http\Controllers\HomeController::class, 'roleedit'])->name('roleedit');
 
 Route::get('/godown', [App\Http\Controllers\stockController::class, 'godown'])->name('godown');
 
