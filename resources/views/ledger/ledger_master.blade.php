@@ -137,7 +137,7 @@
 
 <label class="exampleModalLabel">Ledger Name</label>
 
-<input class="form-control" name="ledger_name" placeholder="Enter Name" required>
+<input class="form-control" name="ledger_name" placeholder="Enter Name" required autocomplete="off">
 
 
 

@@ -212,7 +212,7 @@ $name=Auth::user()->name;
    <a href="#" class="nav-link {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'purchaseorder_bill', 'order_history', 'salesreturn']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
-         Market Orders
+         B2B
          <i class="right fas fa-angle-left"></i>
       </p>
    </a>
@@ -259,6 +259,39 @@ $name=Auth::user()->name;
                               </li>
                         </ul>
                      </li>
+                     <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <p>
+         B2C
+         <i class="right fas fa-angle-left"></i>
+      </p>
+   </a>
+   <!-- <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('godown') }}" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Godown</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('physical_stock') }}" class="nav-link {{ request()->is('physical_stock') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Physical Stock</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Inventory Transfer</p>
+         </a>
+      </li>
+   </ul> -->
+</li>
 
 <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'active' : '' }}">
