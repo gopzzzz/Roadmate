@@ -3427,6 +3427,8 @@ $(window).on('load', function(){
 		  $('#hsncode1').val(obj.hsncode);
 		  $('#prate').val(obj.prate);
 		  $('#no_return_days').val(obj.no_return_days);
+		  $('#selling_rate').val(obj.selling_rate);
+		  $('#selling_mrp').val(obj.selling_mrp);
 		  $('#status').val(obj.status);
          
 					},
@@ -3829,17 +3831,13 @@ $(document).ready(updateTotals);
 
 
 </script>
-<script>
 
+
+
+<script>
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
     var order_status = $('#orderStatusFilterrs').val(); // Get the selected order status filter
-
-    if (searchval === '' && order_status === '') {
-        // If both search bar and order status filter are empty, refresh the sale list to show all items
-        location.reload();
-        return;
-    }
 
     $.ajax({
         type: "POST",
@@ -3853,10 +3851,10 @@ $('#search_sale').keyup(function () {
         success: function (res) {
             console.log(res);
 
-            if (res.salelistHTML) {
+            if (res && res.salelistHTML) {
                 $('#salelist').html(res.salelistHTML);
             } else {
-                $('#salelist').html('No Results Found');
+                $('#salelist').html('');
             }
         },
         error: function (error) {
@@ -3866,8 +3864,9 @@ $('#search_sale').keyup(function () {
 });
 
 
-</script>
 
+
+</script>
 <script>
 $('#search_order').keyup(function () {
     var searchval = $(this).val();
