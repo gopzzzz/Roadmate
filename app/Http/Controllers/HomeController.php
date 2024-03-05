@@ -784,10 +784,9 @@ public function crm(){
 			$name1=$files1->getClientOriginalName();  
 			$files1->move('img',$name1);  
 			
-			$store_list->image_1=$name1; 
-			
+			$store_list->image_1=$name1; 		
 		}  
-		if($files2=$request->file('image2')){  
+			if($files2=$request->file('image2')){  
 			$name2=$files2->getClientOriginalName();  
 			$files2->move('img',$name2);  
 			
@@ -819,6 +818,7 @@ public function crm(){
 		$store_list->description=$request->desc;
 		$store_list->store_prod_category=$request->prod_cat;
 		$store_list->status=1;
+		
 		if($files1=$request->file('image1')){  
 			$name1=$files1->getClientOriginalName();  
 			$files1->move('img',$name1);  
@@ -5235,7 +5235,7 @@ public function bill($id){
 public function search_sale(Request $request)
 {
     $searchval = $request->searchval;
-    $order_status = $request->order_status; // Get the selected order status filter
+    $order_status = $request->order_status;
     $salelistHTML = '';
 
     $query = DB::table('tbl_sale_order_masters')
