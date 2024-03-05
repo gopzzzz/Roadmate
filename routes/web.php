@@ -1412,6 +1412,7 @@ Route::post('/rolefetch', [App\Http\Controllers\HomeController::class, 'rolefetc
 Route::post('/roleedit', [App\Http\Controllers\HomeController::class, 'roleedit'])->name('roleedit');
 
 Route::get('/godown', [App\Http\Controllers\stockController::class, 'godown'])->name('godown');
+Route::get('/stockreport', [App\Http\Controllers\stockController::class, 'stockreport'])->name('stockreport');
 
 Route::post('/godowninsert', [App\Http\Controllers\stockController::class, 'godowninsert'])->name('godowninsert');
 
