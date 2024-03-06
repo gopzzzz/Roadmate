@@ -1405,7 +1405,8 @@ Route::post('/search_order',['middleware' => 'auth',
 'uses' => 'HomeController@search_order'])->name('search_order');
 Route::post('/delete-product', 'HomeController@deleteProduct')->name('delete_product');
 Route::get('/salesreturn','HomeController@salesreturn')->name('salesreturn');
-
+Route::post('/returnfetch', [App\Http\Controllers\HomeController::class, 'returnfetch'])->name('returnfetch');
+Route::post('/returnedit', [App\Http\Controllers\HomeController::class, 'returnedit'])->name('returnedit');
 Route::get('/rolemenu','HomeController@rolemenu')->name('rolemenu');
 Route::post('/roleinsert', [App\Http\Controllers\HomeController::class, 'roleinsert'])->name('roleinsert');
 Route::post('/rolefetch', [App\Http\Controllers\HomeController::class, 'rolefetch'])->name('rolefetch');
