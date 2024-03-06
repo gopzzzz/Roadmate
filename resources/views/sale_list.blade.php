@@ -145,11 +145,11 @@
     <div class="float-right">
         <div class="input-group">
             <div class="input-group-prepend">
-                <label class="input-group-text" for="orderStatusFilter">
+                <label class="input-group-text" for="orderStatusFilterrs">
                     <i class="fas fa-filter"></i>
                 </label>
             </div>
-            <select id="orderStatusFilter" class="custom-select" name="order_status">
+            <select id="orderStatusFilterrs" class="custom-select" name="order_status">
                 <option value="" @if($selectedOrderStatus === null) selected @endif>All Status</option>
                 @foreach([0 => 'Pending', 1 => 'Confirmed', 2 => 'Shipped', 3 => 'Delivered'] as $status => $label)
                     <option value="{{ $status }}" @if($status == $selectedOrderStatus && $selectedOrderStatus !== null) selected @endif>{{ $label }}</option>
@@ -161,12 +161,6 @@
         </div>
     </div>
 </form>
-
-
-
-
-
-
 
 
 
@@ -343,6 +337,9 @@
         </div>
     </div>
 </div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 @endsection

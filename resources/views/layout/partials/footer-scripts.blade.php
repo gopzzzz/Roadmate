@@ -1258,38 +1258,35 @@ $('.edit_fran').click(function(){
 		$('#edit_sup').modal('show');
 	});
 	//
-	
 	$('.view_execu').click(function(){
-		var id=$(this).data('id');
-	
-		if(id){
-      $.ajax({
-					type: "POST",
-
-					url: "{{ route('executivefetch') }}",
-					data: {  "_token": "{{ csrf_token() }}",
-					id: id },
-					success: function (res) {
-					console.log(res);
-          var obj=JSON.parse(res)
-          $('#name1').val(obj.name);
-		 // $('#image').val(obj.image);
-          $('#email1').val(obj.email);
-          $('#phnum1').val(obj.phonenum);
-		  $('#country1').val(obj.country_id);
+    var id = $(this).data('id');
+    if(id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('executivefetch') }}",
+            data: {"_token": "{{ csrf_token() }}", id: id },
+            success: function (res) {
+                console.log(res);
+                var obj = JSON.parse(res);
+                $('#name1').val(obj.name);
+                $('#email1').val(obj.email);
+                $('#phnum1').val(obj.phonenum);
+                $('#country1').val(obj.country_id);
                 $('#state1').val(obj.state_id);
-          $('#district1').val(obj.district);
-          $('#location1').val(obj.location);
-          $('#address1').val(obj.addrress);
-		  $('#status2').val(obj.status);
+                $('#district1').val(obj.district);
+                $('#location1').val(obj.location);
+                $('#address1').val(obj.addrress);
+                $('#status2').val(obj.status);
+                $('#exeviewid').val(obj.id);
+                // Set the image URL
+                $('#executive_image').attr('src', '{{ asset('/img/') }}/' + obj.image);
+            },
+        }); 
+    }
+    $('#viewexecutive_modal').modal('show');
+});
 
-          $('#exeviewid').val(obj.id);
-         
-					},
-					});	
-		}
-		$('#viewexecutive_modal').modal('show');
-	});
+
 
 	$('.view_fran').click(function(){
 		var id=$(this).data('id');
@@ -3433,6 +3430,8 @@ $(window).on('load', function(){
 		  $('#hsncode1').val(obj.hsncode);
 		  $('#prate').val(obj.prate);
 		  $('#no_return_days').val(obj.no_return_days);
+		  $('#selling_rate').val(obj.selling_rate);
+		  $('#selling_mrp').val(obj.selling_mrp);
 		  $('#status').val(obj.status);
          
 					},
@@ -3578,6 +3577,25 @@ $('#category_name').on('change', function () {
 		$('#editgodown_modal').modal('show');
 	});
 
+	$('.edit_role').click(function(){
+	var id=$(this).data('id');
+	if(id){
+    $.ajax({
+					type: "POST",
+                    url: "{{ route('rolefetch') }}",
+					data: {  "_token": "{{ csrf_token() }}",
+					id: id },
+					success: function (res) {
+					console.log(res);
+          var obj=JSON.parse(res)
+          $('#rolename').val(obj.designation);
+		 
+          $('#role_id').val(obj.id);
+                    },
+					});	
+		}
+		$('#editrole_modal').modal('show');
+	});
 
 
 
@@ -3826,26 +3844,19 @@ $('#stockTable tbody').on('input', '.qty', function () {
     row.find('.taxableamount').val(taxableamount);
     row.find('.total').val(total);
 
-    // Update total variables
-    updateTotals();
+   
 });
 
-// Trigger initial calculation on document ready
-$(document).ready(updateTotals);
 
 
 </script>
-<script>
 
+
+
+<script>
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
-    var order_status = $('#order_status').val(); // Get the selected order status filter
-
-    if (searchval === '') {
-        // If search bar is empty, refresh the sale list to show all items
-        location.reload();
-        return;
-    }
+    var order_status = $('#orderStatusFilterrs').val(); // Get the selected order status filter
 
     $.ajax({
         type: "POST",
@@ -3859,10 +3870,10 @@ $('#search_sale').keyup(function () {
         success: function (res) {
             console.log(res);
 
-            if (res.salelistHTML) {
+            if (res && res.salelistHTML) {
                 $('#salelist').html(res.salelistHTML);
             } else {
-                $('#salelist').html('No Results Found');
+                $('#salelist').html('');
             }
         },
         error: function (error) {
@@ -3874,11 +3885,14 @@ $('#search_sale').keyup(function () {
 
 
 
+</script>
+<script>
 $('#search_order').keyup(function () {
     var searchval = $(this).val();
+    var order_status = $('#orderStatusFilter').val(); // Get the selected order status filter
 
-    if (searchval === '') {
-        // Refresh or perform any action when the search bar is empty
+    if (searchval === '' && order_status === '') {
+        // If both search bar and order status filter are empty, refresh the page to show all items
         location.reload(); // This will refresh the page
         return;
     }
@@ -3889,7 +3903,8 @@ $('#search_order').keyup(function () {
         url: "{{ route('search_order') }}",
         data: {
             "_token": "{{ csrf_token() }}",
-            searchval: searchval
+            searchval: searchval,
+            order_status: order_status // Pass the selected order status filter
         },
         success: function (res) {
             console.log(res);
@@ -3898,7 +3913,6 @@ $('#search_order').keyup(function () {
                 $('#non-searchorderlist').hide();
                 $('#order_pagination').hide();
                 $('#searchorderlist').html(res.orderList);
-
             } else {
                 $('#searchorderlist').html('');
             }
@@ -3908,6 +3922,7 @@ $('#search_order').keyup(function () {
         }
     });
 });
+
 
 </script>
 

@@ -212,7 +212,7 @@ $name=Auth::user()->name;
    <a href="#" class="nav-link {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'purchaseorder_bill', 'order_history', 'salesreturn']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
-         Market Orders
+         B2B
          <i class="right fas fa-angle-left"></i>
       </p>
    </a>
@@ -259,6 +259,39 @@ $name=Auth::user()->name;
                               </li> -->
                         </ul>
                      </li>
+                     <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <p>
+         B2C
+         <i class="right fas fa-angle-left"></i>
+      </p>
+   </a>
+   <!-- <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('godown') }}" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Godown</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('physical_stock') }}" class="nav-link {{ request()->is('physical_stock') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Physical Stock</p>
+         </a>
+      </li>
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Inventory Transfer</p>
+         </a>
+      </li>
+   </ul> -->
+</li>
 
 <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
@@ -402,24 +435,24 @@ $name=Auth::user()->name;
                   </ul>
                </li>
             
-<li class="nav-item {{ request()->is('crm') ? 'menu-open' : '' }}">
+<!-- <li class="nav-item {{ request()->is('crm') ? 'menu-open' : '' }}">
    <a href="{{ url('crm') }}" class="nav-link {{ request()->is('crm') ? 'active' : '' }}">
       <i class="nav-icon fas fa-id-card"></i>
       <p>
          Staff
       </p>
    </a>
-</li>
-<li class="nav-item {{ request()->is('executive') ? 'menu-open' : '' }}">
+</li> -->
+<!-- <li class="nav-item {{ request()->is('executive') ? 'menu-open' : '' }}">
    <a href="{{ url('executive') }}" class="nav-link {{ request()->is('executive') ? 'active' : '' }}">
       <i class="nav-icon fas fa-id-card"></i>
       <p>
       Executive
       </p>
    </a>
-</li>
-<!-- <li class="nav-item has-treeview {{ request()->is(['rolemenu', 'executive']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['rolemenu', 'executive']) ? 'active' : '' }}">
+</li> -->
+<li class="nav-item has-treeview {{ request()->is(['rolemenu','crm', 'executive']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['rolemenu' ,'crm','executive']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-id-card"></i>
       <p>
       Staffs
@@ -434,13 +467,19 @@ $name=Auth::user()->name;
          </a>
       </li>
       <li class="nav-item">
+         <a href="{{ url('crm') }}" class="nav-link {{ request()->is('crm') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Staff</p>
+         </a>
+      </li>
+      <li class="nav-item">
          <a href="{{ url('executive') }}" class="nav-link {{ request()->is('executive') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Executive</p>
          </a>
       </li>
    </ul>
-</li> -->
+</li>
 <li class="nav-item has-treeview {{ request()->is(['store_listing', 'store_categories']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['store_listing', 'store_categories']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-university"></i>
