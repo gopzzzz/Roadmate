@@ -4022,7 +4022,7 @@ $(document).on('click', '.add-row', function () {
 });
 
 // Trigger initial calculation on document ready
-$(document).ready(updateTotals);
+// $(document).ready(updateTotals);
 
 
 </script>

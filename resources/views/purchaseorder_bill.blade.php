@@ -73,7 +73,7 @@
    <th>Vendor Name </th>
          <th>PO Number</th>
          <th>Requested BY</th>
-         <!-- <th></th> -->
+         <th></th>
 
          <th></th>
   
@@ -89,7 +89,7 @@
                     <td>{{ $key->vendor_name }}</td>
                     <td>{{ $key->bill_num }}</td>
                     <td>{{ $key->name }}</td>
-               <!-- <td>     <i class="fa fa-edit edit_purchaseorder"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i></td> -->
+               <td>     <i class="fa fa-edit edit_purchaseorder"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i></td>
 
 
 
@@ -107,7 +107,7 @@ $i++;
  <th>Vendor Name </th>
          <th>PO Number</th>
          <th>Requested BY</th>
-      <!-- <th></th> -->
+      <th></th>
  <th></th>
  @if($role==1)
  @endif
