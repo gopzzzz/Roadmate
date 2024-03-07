@@ -4163,6 +4163,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				}else{
 					$invoice=$check->invoice_number+1;
 				}
+				
 
 				//$ordermaster=DB::table('')->where('',$request->idd)->first();
 
