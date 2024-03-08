@@ -89,12 +89,26 @@
                     <td>{{ $key->vendor_name }}</td>
                     <td>{{ $key->bill_num }}</td>
                     <td>{{ $key->name }}</td>
+                    
                <td>     <i class="fa fa-edit edit_purchaseorder"  aria-hidden="true" data-toggle="modal" data-id="{{$key->id}}"></i></td>
 
 
-
+             
               <td>      <a href="{{url('bill/'.$key->id)}}" target="_blank"><button type="button" class="btn btn-success btn-sm" >PO print</button></a>
                 </td>
+                <td>
+    @if($key->status == 0)
+         
+            <form method="get" action="{{ route('purchase_order_master', ['orderId' => $key->id]) }}">
+                <button type="submit" class="btn btn-primary purchase">
+                    <i class="fas fa-file-invoice"></i>
+                </button>
+            </form>
+      
+    @else
+        <span class="text-success">Purchase Invoice Generated</span>
+    @endif
+</td>
 </tr>
  @php 
 $i++;  

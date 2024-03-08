@@ -76,6 +76,10 @@ use App\Tbl_sale_order_masters;
 use App\Tbl_sale_order_trans;
 use App\Tbl_roles;
 use App\Tbl_cancel_orders;
+use App\Tbl_inventory_stocks;
+use App\Tbl_purchase_order_masters;
+use App\Tbl_purchase_order_trans;
+use App\Tbl_godowns;
 
 use DB;
 use Hash;
@@ -4104,6 +4108,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 			$markk=DB::table('tbl_order_trans')
 			->get();
+			$godown=DB::table('tbl_godowns')
+			->get();
 		$saleorder=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -4137,106 +4143,136 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 			//echo "<pre>";print_r($saleorder);exit;
 		$role=Auth::user()->user_type;
-		return view('sale_order_master',compact('role','markk','saleorder','orderId'));
+		return view('sale_order_master',compact('role','markk','saleorder','orderId','godown'));
 	    }
-
-
 		
-		public function sale_orderinsert(Request $request)
-		{
-			try {
-				\Log::info('Debug: Request data', ['request' => $request->all()]);
-		
-				$shop = Shops::where('shopname', $request->shopname)->first();
-		
-				if (!$shop) {
-					dd("Shop with name $request->shopname not found");
-				}
+public function sale_orderinsert(Request $request)
+{
+    try {
+
+ 
+        Log::info('Debug: Request data', ['request' => $request->all()]);
 
 
-				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
-				if($check==null){
-                 $invoice=1000;
-				}else{
-					$invoice=$check->invoice_number+1;
-				}
+        $shop = Shops::where('shopname', $request->shopname)->first();
 
-				//$ordermaster=DB::table('')->where('',$request->idd)->first();
+        if (!$shop) {
+            return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
+        }
 
+ 
+        $check = DB::table('tbl_sale_order_masters')->orderBy('id', 'DESC')->first();
+        $invoice = ($check == null) ? 1000 : $check->invoice_number + 1;
 
-		
-				$saleMaster = new Tbl_sale_order_masters;
-				$saleMaster->shop_id = $shop->id;
-				$saleMaster->order_id = $request->idd;
-				
-				$saleMaster->invoice_number=$invoice;
-				$saleMaster->total_amount = $request->total_amount;
-				$saleMaster->bill_number = $request->billnumber 	;
-				$saleMaster->discount = $request->discount;
-				$saleMaster->coupen_id = 0;
-				$saleMaster->wallet_redeem_id = $request->walletamount;
-				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
-                $saleMaster->payment_mode = $paymentMode;
+    
+        $saleMaster = new Tbl_sale_order_masters;
+        $saleMaster->shop_id = $shop->id;
+        $saleMaster->order_id = $request->idd;
+        $saleMaster->invoice_number = $invoice;
+        $saleMaster->total_amount = $request->total_amount;
+        $saleMaster->bill_number = $request->billnumber;
+        $saleMaster->discount = $request->discount;
+        $saleMaster->coupen_id = 0;
+        $saleMaster->wallet_redeem_id = $request->walletamount;
+        $paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
+        $saleMaster->payment_mode = $paymentMode;
+        $saleMaster->order_status = 0;
 
-				$saleMaster->total_mrp = 0;
-				$saleMaster->shipping_charge = $request->shipping_charge;
-				$saleMaster->tax_amount = 0;
-				
-				
-				// $saleMaster->order_status = $request->order_status;
-				$saleMaster->delivery_date = $request->delivery_date;
-				$saleMaster->order_date = $request->orderdate;
-		
-				if ($saleMaster->save()) {
+        $saleMaster->total_mrp = 0;
+        $saleMaster->shipping_charge = $request->shipping_charge;
+        $saleMaster->tax_amount = 0;
+
+        $saleMaster->delivery_date = $request->delivery_date;
+        $saleMaster->order_date = $request->orderdate;
+
+        
+        DB::beginTransaction();
+
+        if ($saleMaster->save()) {
+          
+            foreach ($request->product_name as $index => $productName) {
+               
+                $product = Tbl_brand_products::where('product_name', $productName)->first();
+
+                if (!$product) {
+                    DB::rollBack();
+                    \Log::warning("Product with name $productName not found in brand products.");
+                    return redirect('order_master')->with('custom_error',"Product $productName is not available.");
 					
-					foreach ($request->product_name as $index => $productName) {
-						\Log::info('Debug: Inside Loop');
-		
-						
-						$qty = $request->qty[$index];
-						$offer_amount = $request->offer_amount[$index];
-						$price = $request->price[$index] ?? 0;
-		
-						
-						$product = Tbl_brand_products::where('product_name', $productName)->first();
-						\Log::info('Debug: Product', ['product' => $product]);		
-						$saleTrans = new Tbl_sale_order_trans;
-						$saleTrans->order_id = $saleMaster->id;
-						$saleTrans->product_id = $product ? $product->id : 0;
-						$saleTrans->sale_order_id = $saleMaster->id;
-						$saleTrans->qty = $qty;
-						$saleTrans->offer_amount = $offer_amount;
-						$saleTrans->price = $request->total_mrp;
-						$saleTrans->taxable_amount = 0;
-		
-						
-						if (!$saleTrans->save()) {
-							\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
-							break; 
-						}
-					}
-		
-					
-					Tbl_order_masters::where('id', $request->idd)->update(['sale_status' => 1,
-					'order_status' => 1
-				]);
-		
-					
-					Session::flash('success', 'Sale Invoice generated successfully!');
-				} else {
-					
-					Session::flash('error', 'Error adding Sale Invoice. Please try again.');
-				}
-		
-				return redirect('order_master');
-			}
-			catch (\Exception $e) {
-				\Log::error($e->getMessage());
-				dd($e->getMessage());
-			}
-		}
+                }
 
+               
+                $godown = Tbl_godowns::where('name', $request->godown)->first();
 
+                if ($product) {
+                  
+                    $qty = $request->qty[$index];
+                    $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+                        ->where('inventory_id', $godown->id)->first();
+
+                    if (!$inventoryStock) {
+                        DB::rollBack(); 
+                        \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
+						return redirect('order_master')->with('custom_error', "Product $productName is not in stock.");
+                    }
+
+                    if ($inventoryStock->stock < $qty) {
+                        DB::rollBack(); 
+						return redirect('order_master')->with('custom_error', "Product $productName is not in stock.");
+                    }
+
+                    
+                    $inventoryStock->stock -= $qty;
+                    $inventoryStock->save();
+                }
+
+             
+                $qty = $request->qty[$index];
+                $offer_amount = $request->offer_amount[$index];
+                $price = $request->price[$index] ?? 0;
+
+                $saleTrans = new Tbl_sale_order_trans;
+                $saleTrans->order_id = $saleMaster->id;
+                $saleTrans->product_id = $product ? $product->id : 0;
+                $saleTrans->sale_order_id = $saleMaster->id;
+                $saleTrans->qty = $qty;
+                $saleTrans->offer_amount = $offer_amount;
+                $saleTrans->price = $request->total_mrp;
+                $saleTrans->taxable_amount = 0;
+
+                if (!$saleTrans->save()) {
+                    DB::rollBack(); 
+                    \Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+                    return redirect('sale_order_master')->withErrors(["Error saving sale transaction."]);
+                }
+            }
+
+          
+            Tbl_order_masters::where('id', $request->idd)->update([
+                'sale_status' => 1,
+                'order_status' => 1
+            ]);
+
+          
+            DB::commit();
+
+        
+            Session::flash('success', 'Sale Invoice generated successfully!');
+        } else {
+            
+            Session::flash('error', 'Error adding Sale Invoice. Please try again.');
+            DB::rollBack(); 
+        }
+
+       
+        return redirect('order_master');
+    } catch (\Exception $e) {
+        \Log::error($e->getMessage());
+        DB::rollBack(); 
+      
+        return redirect('order_master')->withErrors(["An error occurred. Please try again."]);
+    }
+}
 
 		public function cancelorder($orderId) {
 			try {
@@ -4286,7 +4322,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			}
 		}
 		
-		 public function sale_bill($orderId) {
+		 public function sale_bill($orderId) { 
 
 			$markk=DB::table('tbl_sale_order_trans')
 				->get();
@@ -4429,6 +4465,99 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 // 	return response()->json(['success' => true]);
 // }
 
+public function purchase_order_master($orderId)
+{
+	$purchase=DB::table('tbl_place_order_masters')
+	->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
+	->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+	->where('tbl_place_order_masters.id',$orderId)
+    ->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
+	->get();
+	$purchaseOrder = Tbl_placeorders::where('bill_number',$orderId)
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->get();
+	$godown=DB::table('tbl_godowns')->get();
+	 $role=Auth::user()->user_type;
+	return view('purchase_order_master',compact('purchase','role','purchaseOrder','godown'));
+ }
+
+ 
+ public function purchase_orderinsert(Request $request){
+	 $saleMaster = new Tbl_purchase_order_masters;
+	 $saleMaster->bill_num = $request->billnum; 
+	 $saleMaster->request_by = $request->requestby;
+	 $saleMaster->order_date = $request->orderdate;
+ 
+	 $vendor = Tbl_vendors::where('vendor_name', $request->vendor)->first();
+ 
+	 if ($vendor) {
+		 $saleMaster->vendor_id = $vendor->id;
+	 } else {
+		
+		 Log::error('Vendor not found: ' . $request->vendor);
+		 Session::flash('error', 'Vendor not found. Please try again.');
+		 return redirect()->back();
+	 }
+	 $requestby= User::where('name', $request->requestby)->first();
+ 
+	 if ($requestby) {
+		 $saleMaster->request_by = $requestby->id;
+	 } else {
+		
+		 Log::error('REQUISITIONER not found : ' . $request->requestby);
+		 Session::flash('error', 'REQUISITIONER not found. Please try again.');
+		 return redirect()->back(); 
+	 }
+ 
+	 if ($saleMaster->save()) {
+		 foreach ($request->product_name as $index => $productName) {
+			 $qty = $request->qty[$index];
+			 $amount = $request->amount[$index];
+			 $godown= Tbl_godowns::where('name', $productName)->first();
+
+			 $product = Tbl_brand_products::where('product_name', $productName)->first();
+			 $saleTrans = new Tbl_purchase_order_trans;
+			 $saleTrans->bill_number = $saleMaster->id;
+			 $saleTrans->product_id = $product ? $product->id : 0;
+			 $saleTrans->purchase_order_id = $saleMaster->id;
+			 $saleTrans->qty = $qty;
+			 $saleTrans->amount = $amount;
+			 $saleTrans->order_date = $request->orderd[$index];
+ 
+			 if (!$saleTrans->save()) {
+				 Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+				 Session::flash('error', 'Error saving sale transaction. Please try again.');
+				 return redirect()->back(); 
+			 }
+			 $godown= Tbl_godowns::where('name',$request->godown)->first();
+			 $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+								->where('inventory_id',$godown->id)
+								->first();
+								if ($inventoryStock) {
+								$inventoryStock->stock += $qty;
+								$inventoryStock->save();
+							} else {
+								
+								$newInventoryStock = new Tbl_inventory_stocks;
+								$newInventoryStock->product_id = $product->id;
+								$newInventoryStock->inventory_id = $godown->id;
+								$newInventoryStock->stock = $qty; 
+								$newInventoryStock->save();
+							}
+		 }
+ 
+		 Tbl_place_order_masters::where('id', $request->idd)->update(['status' => 1]);
+ 
+		 Session::flash('success', 'Purchase Invoice generated successfully!');
+	 } else {
+		 Session::flash('error', 'Error adding Purchase Invoice. Please try again.');
+	 }
+ 
+	 return redirect()->route('purchaseorder_bill');
+ }
+ 
 
 public function order_history()
 {
@@ -4838,6 +4967,8 @@ public function order_history()
 		 $master->vendor_id=$id;
 		 $master->request_by=Auth::user()->id;
 		 $master->order_date =date('Y-m-d');
+		 $master->status=0;
+
 		 $master->save();
 			 foreach ($ordersToInsert as $order) {
 
@@ -4846,6 +4977,7 @@ public function order_history()
 				$placeOrder = new Tbl_placeorders;
 				$placeOrder->bill_number = $master->id;
 				$placeOrder->product_id = $order->product_id;
+
 				$placeOrder->qty = $order->qty;
 				$placeOrder->amount = $order->offer_amount;
 				$placeOrder->order_date =date('Y-m-d');
@@ -4899,56 +5031,61 @@ public function order_history()
 	}
 
 	public function purchaseorderedit(Request $request)
-{
-    $id = $request->id;
+	{
+		$id = $request->id;
+	
+		$purchaseOrderMaster= Tbl_place_order_masters::find($id);
+	if($purchaseOrderMaster){
+		$existingProductIds = []; 
+	
+		if ($request->has('product_name')) {
+			foreach ($request->product_name as $index => $productName) {
 
-    $puredit = Tbl_place_order_masters::find($id);
-	$pure = Tbl_place_order_masters::find($id);
+				$qty = $request->qty[$index] ?? null;
+				
+				Log::info('Original Product Name:', [$productName]);
+				
 
-	$existingProductIds = []; 
 
-    if ($request->has('product_name')) {
-        foreach ($request->product_name as $key => $productName) {
-            $qty = $request->qty[$key] ?? null;
-
-            $product = DB::table('tbl_brand_products')
-                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-                ->where('tbl_brand_products.product_name', $productName)
-                ->select(
-                    'tbl_brand_products.*',
-                    'tbl_hsncodes.tax',
-                )
-                ->first();
+				$product = Tbl_brand_products::where('product_name', $productName)->first();
+		
 				if ($product) {
-					$existingProductIds[] = $product->id; 
-	
-					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
-														->first();
+					$existingProductIds[] = $product->id;
+					$newProduct = Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
 
-            if ($newProduct) {
-              
+						->where('product_id', $product->id)
+						->first();
+		
+					if ($newProduct) {
+						$newProduct->qty = $qty;
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+						$newProduct->save();
+					} else {
+						$newProduct = new Tbl_placeorders;
+						$newProduct->bill_number = $id;
+						$newProduct->product_id = $product->id;
+						$newProduct->qty = $qty;
+
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+		
+						$newProduct->save();
+					}
+				}
+			}
+		
+				Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
+					->whereNotIn('product_id', $existingProductIds)
+					->delete();
 			
-                $newProduct = new Tbl_placeorders;
-                $newProduct->bill_number = $id; 
-                $newProduct->product_id =$product->id;
-                $newProduct->qty = $qty;
-                $newProduct->amount = $product->offer_price;
-				$newProduct->order_date =date('Y-m-d');
-
-                $newProduct->save();
-
-            }
-        }
-    
-	}
-	
-	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
+
+	}
 
 public function bill($id){
 		$role=Auth::user()->user_type;

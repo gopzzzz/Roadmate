@@ -141,7 +141,25 @@
                             </p>
                        
                   <!-- /.card-header -->
-                  
+                  <!-- sale_order_master.blade.php -->
+                  @if (session('custom_error'))
+    <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 4px; margin-bottom: 10px; color: #721c24;">
+        <strong>Error!</strong> {{ session('custom_error') }}
+    </div>
+@endif
+
+
+
+<style>
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+</style>
+
+<!-- Rest of your HTML content -->
+
              
                   <form id="filterForm" method="GET" action="{{ route('order_master') }}">
     <div class="float-right">

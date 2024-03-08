@@ -1405,12 +1405,15 @@ Route::post('/search_order',['middleware' => 'auth',
 'uses' => 'HomeController@search_order'])->name('search_order');
 Route::post('/delete-product', 'HomeController@deleteProduct')->name('delete_product');
 Route::get('/salesreturn','HomeController@salesreturn')->name('salesreturn');
+Route::get('/purchase_order_master/{orderId}','HomeController@purchase_order_master')->name('purchase_order_master');
+
 Route::post('/returnfetch', [App\Http\Controllers\HomeController::class, 'returnfetch'])->name('returnfetch');
 Route::post('/returnedit', [App\Http\Controllers\HomeController::class, 'returnedit'])->name('returnedit');
 Route::get('/rolemenu','HomeController@rolemenu')->name('rolemenu');
 Route::post('/roleinsert', [App\Http\Controllers\HomeController::class, 'roleinsert'])->name('roleinsert');
 Route::post('/rolefetch', [App\Http\Controllers\HomeController::class, 'rolefetch'])->name('rolefetch');
 Route::post('/roleedit', [App\Http\Controllers\HomeController::class, 'roleedit'])->name('roleedit');
+Route::post('/purchase_orderinsert', [App\Http\Controllers\HomeController::class, 'purchase_orderinsert'])->name('purchase_orderinsert');
 
 Route::get('/godown', [App\Http\Controllers\stockController::class, 'godown'])->name('godown');
 Route::get('/stockreport', [App\Http\Controllers\stockController::class, 'stockreport'])->name('stockreport');

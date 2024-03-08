@@ -145,11 +145,11 @@
     <div class="float-right">
         <div class="input-group">
             <div class="input-group-prepend">
-                <label class="input-group-text" for="orderStatusFilterrs">
+                <label class="input-group-text" for="saleStatusFilters">
                     <i class="fas fa-filter"></i>
                 </label>
             </div>
-            <select id="orderStatusFilterrs" class="custom-select" name="order_status">
+            <select id="saleStatusFilters" class="custom-select" name="order_status">
                 <option value="" @if($selectedOrderStatus === null) selected @endif>All Status</option>
                 @foreach([0 => 'Pending', 1 => 'Confirmed', 2 => 'Shipped', 3 => 'Delivered'] as $status => $label)
                     <option value="{{ $status }}" @if($status == $selectedOrderStatus && $selectedOrderStatus !== null) selected @endif>{{ $label }}</option>
@@ -278,7 +278,8 @@
     <div class="row">
         <div class="col-12">
             <div class="float-left">
-                {{ $sale->links() }}
+                {{ $sale->appends(['order_status' => $selectedOrderStatus])->links() }}
+
             </div>
         </div>
     </div>
