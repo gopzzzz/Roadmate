@@ -509,7 +509,9 @@ class HomeController extends Controller
 				$franchise->pincode = $request->pincode;
 				$franchise->phone_number = $request->phone_number;
 				$franchise->user_id = $user->id;
-	
+				$franchise->staff_count = $request->nofstaff;
+				$franchise->salary = $request->salary;
+				$franchise->maintanance_cost = $request->main_cost;
 				if ($franchise->save()) {
 					for ($i = 0; $i < count($type); $i++) {
 					$franchiseDetails = new Tbl_franchase_details;
@@ -586,6 +588,9 @@ class HomeController extends Controller
     $franchise->area = $request->area;
     $franchise->pincode = $request->pincode;
     $franchise->phone_number = $request->phone_number;
+	$franchise->staff_count = $request->nofstaff;
+	$franchise->salary = $request->salary;
+	$franchise->maintanance_cost = $request->main_cost;
 	$franchise->save();
     
 	
@@ -5129,16 +5134,20 @@ public function bill($id){
 			$vendorId = $request->input('vendor_id');
 			$alphabet = $request->input('alphabet');
 		
-			$products = DB::table('tbl_brand_products')
+			$products = DB::table('tbl_order_trans')
+				->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
 				->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
 				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
 				->where('tbl_rm_products.vendor_id', $vendorId )
-				->where('tbl_rm_products.status', 0)
-				->where('tbl_brand_products.status', 0)
+
+				->where('tbl_order_trans.order_status', 0)
 				->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
 				->select(
-					'tbl_brand_products.*',
+					'tbl_order_trans.*',
 					'tbl_hsncodes.tax',
+					'tbl_order_trans.offer_amount',
+					'tbl_order_trans.qty',
+					'tbl_brand_products.product_name'
 				)
 				->get();
 		

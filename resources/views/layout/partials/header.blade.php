@@ -295,6 +295,7 @@ $name=Auth::user()->name;
 
 <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'active' : '' }}">
+
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Stock Management
@@ -333,6 +334,7 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
+   
 </li>
 <li class="nav-item has-treeview {{ request()->is(['ledger_master','expense']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['ledger_master','expense']) ? 'active' : '' }}">
@@ -378,14 +380,14 @@ $name=Auth::user()->name;
       </li>
    </ul>
 
-   <ul class="nav nav-treeview">
+   <!-- <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('profit') }}" class="nav-link {{ request()->is('profit') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Profit</p>
          </a>
       </li>
-   </ul>
+   </ul> -->
    <!-- <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('turnover') }}" class="nav-link {{ request()->is('turnover') ? 'active' : '' }}">

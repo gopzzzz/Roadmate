@@ -68,7 +68,7 @@
                               <!-- <td>{{number_format((($key->offer_amount)-($key->offer_amount)/(1+$key->tax/100)),2)}}</td> -->
                               <td>{{$key->offer_amount}}</td>
                               <td>{{$key->prate}}</td>
-                              <td>{{$key->offer_amount}}</td>
+                              <td>{{($key->qty)*$key->offer_amount}}</td>
                               <td>{{number_format(($key->qty)*((($key->offer_amount))-($key->prate)),2)}}</td>
                            
                            </tr>

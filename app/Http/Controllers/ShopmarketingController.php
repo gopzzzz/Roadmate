@@ -197,7 +197,7 @@ public function productdetails(){
   $productId=$data1->productid;
   try{	
     $productDetails = DB::table('tbl_brand_products')
-     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_brand_products.*','tbl_rm_products.cat_id')
     ->where('tbl_brand_products.id',$productId) 
     ->where('tbl_rm_products.status',0)
@@ -500,6 +500,8 @@ foreach ($productlist as $proItem) {
     // Add the $cartItem to the $cart array
     $products[] = $proItem;
 }
+
+
  if($productlist == null){
  echo json_encode(array('error' => true, "message" => "Error"));
 
@@ -509,7 +511,7 @@ foreach ($productlist as $proItem) {
 
              $json_data = 0;
 
-            echo json_encode(array('error' => false,"product"=>$products, "message" => "Success"));
+            echo json_encode(array('error' => false,"product"=>$productlist, "message" => "Success"));
 
                 }
 }
