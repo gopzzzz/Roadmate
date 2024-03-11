@@ -242,7 +242,7 @@ $name=Auth::user()->name;
                            <i class="far fa-circle nav-icon"></i>
                            <p>Purchase Order</p>
                         </a>
-                     </li>
+                   
                            
                            <!-- <li class="nav-item">
                               <a href="{{ url('order_history') }}" class="nav-link {{ request()->is('order_history') ? 'active' : '' }}">
@@ -251,12 +251,12 @@ $name=Auth::user()->name;
                               </a>
                            </li> -->
                              
-                              <!-- <li class="nav-item">
+                              <li class="nav-item">
                                   <a href="{{ url('salesreturn') }}" class="nav-link {{ request()->is('salesreturn') ? 'active' : '' }}">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>Sales Return</p>
                                   </a>
-                              </li> -->
+                              </li>
                         </ul>
                      </li>
                      <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
@@ -293,8 +293,9 @@ $name=Auth::user()->name;
    </ul> -->
 </li>
 
-<li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
+<li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'active' : '' }}">
+
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Stock Management
@@ -317,14 +318,23 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
-   <!-- <ul class="nav nav-treeview">
+   <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Inventory Transfer</p>
          </a>
       </li>
-   </ul> -->
+   </ul>
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('stockreport') }}" class="nav-link {{ request()->is('stockreport') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Stock Report</p>
+         </a>
+      </li>
+   </ul>
+   
 </li>
 <li class="nav-item has-treeview {{ request()->is(['ledger_master','expense']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['ledger_master','expense']) ? 'active' : '' }}">

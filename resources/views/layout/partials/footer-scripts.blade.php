@@ -37,7 +37,9 @@
 <script src="{{asset('admin/dist/js/demo.js')}}"></script>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <!-- DataTables -->
@@ -3749,31 +3751,30 @@ $('.edit_purchaseorder').click(function () {
             success: function (res) {
     console.log('Response:', res);
 
-    // Access the data for Tbl_place_order_masters
+ 
     var purchaseOrderMaster = res.purchaseOrderMaster;
     console.log('purchaseOrderMaster:', purchaseOrderMaster);
 
-    // Access the data for Tbl_placeorders
+  
     var purchaseOrderDetails = res.purchaseOrderDetails;
     console.log('purchaseOrderDetails:', purchaseOrderDetails);
 
-    // Use the data to populate form fields
     $('#venname').val(purchaseOrderMaster.vendor_id);
     $('#requestby').val(purchaseOrderMaster.request_by);
     $('#purchaseid').val(purchaseOrderMaster.id);
 
-    // Clear existing rows in the table
+    
     $('#stockTable tbody').empty();
 
-                // Initialize total variables
+              
                 var total = 0;
                 var taxableamount = 0;
                 var taxamount = 0;
 
-                // Loop through the products and add rows to the table
+               
 				if (purchaseOrderDetails.length > 0) {
     $.each(purchaseOrderDetails, function (index, product) {
-		var isDisabled = true;  // Set this variable based on your condition
+		var isDisabled = true; 
 
 		var unitprice = (product.amount / (1 + product.tax / 100)).toFixed(2);
 		
@@ -3798,7 +3799,7 @@ var taxableamount = (unitprice *( product.tax / 100 * product.qty)).toFixed(2);
 			if (index > 0) {
                         row += '<td><button type="button" class="btn btn-danger btn-sm deleteRow">-</button></td>';
                     } else {
-                        row += '<td></td>'; // Empty cell for the first row
+                        row += '<td></td>'; 
                     }
 
 
@@ -3806,11 +3807,7 @@ var taxableamount = (unitprice *( product.tax / 100 * product.qty)).toFixed(2);
 
         $('#stockTable tbody').append(row);
     });
-
-                    // Set the total quantity and total amount fields
-                  
-
-                  
+   
                 } else {
                     console.error('No products found in purchaseOrderDetails.');
                 }
@@ -3825,26 +3822,21 @@ var taxableamount = (unitprice *( product.tax / 100 * product.qty)).toFixed(2);
    
   
 });
-// Event listener for quantity change
 $('#stockTable tbody').on('input', '.qty', function () {
-    // Get the parent row of the input field
     var row = $(this).closest('tr');
 
-    // Get the values from the current row
     var qty = parseFloat($(this).val()) || 0;
     var unitPrice = parseFloat(row.find('.unitprice').val()) || 0;
     var tax = parseFloat(row.find('.tax').val()) || 0;
 
-    // Calculate new values
     var total = (unitPrice * qty).toFixed(2);
     var taxamount = (unitPrice  * (tax/100)).toFixed(2);
     var taxableamount = (taxamount*qty).toFixed(2);
 
-    // Update the corresponding input fields in the current row
     row.find('.taxableamount').val(taxableamount);
     row.find('.total').val(total);
 
-   
+  
 });
 
 
@@ -3856,8 +3848,13 @@ $('#stockTable tbody').on('input', '.qty', function () {
 <script>
 $('#search_sale').keyup(function () {
     var searchval = $(this).val();
-    var order_status = $('#orderStatusFilterrs').val(); // Get the selected order status filter
+	var order_status = $('#saleStatusFilters').val(); // Get the selected order status filter
 
+if (searchval === '' && order_status === '') {
+	// If both search bar and order status filter are empty, refresh the page to show all items
+	location.reload(); // This will refresh the page
+	return;
+}
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -3865,7 +3862,6 @@ $('#search_sale').keyup(function () {
         data: {
             "_token": "{{ csrf_token() }}",
             searchval: searchval,
-            order_status: order_status // Pass the selected order status filter
         },
         success: function (res) {
             console.log(res);
@@ -3886,6 +3882,7 @@ $('#search_sale').keyup(function () {
 
 
 </script>
+
 <script>
 $('#search_order').keyup(function () {
     var searchval = $(this).val();
@@ -3918,10 +3915,11 @@ $('#search_order').keyup(function () {
             }
         },
         error: function (error) {
-            console.error('Error fetching search results:', error);
+			console.error('Error fetching search results:', error);
         }
     });
 });
+
 
 
 </script>
@@ -4138,6 +4136,30 @@ $('.edit_ledger').click(function(){
     $('#editledger_modal').modal('show');
 });
 
+
+
+
+
+    $('.edit_return').click(function(){
+        var id = $(this).data('id');
+        if(id) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('returnfetch') }}",
+                data: {  
+                    "_token": "{{ csrf_token() }}",
+                    id: id 
+                },
+                success: function (res) {
+                    console.log(res);
+                    var obj = JSON.parse(res);
+                    $('#return_id').val(obj.id);
+                    $('#return').val(obj.pay_returnstatus);
+                },
+            }); 
+        }
+        $('#editreturn_modal').modal('show');
+    });
 
 
 $('.edit_expense').click(function(){

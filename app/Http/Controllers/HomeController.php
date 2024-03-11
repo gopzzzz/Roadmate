@@ -75,6 +75,12 @@ use App\Tbl_place_order_masters;
 use App\Tbl_sale_order_masters;
 use App\Tbl_sale_order_trans;
 use App\Tbl_roles;
+use App\Tbl_cancel_orders;
+use App\Tbl_inventory_stocks;
+use App\Tbl_purchase_order_masters;
+use App\Tbl_purchase_order_trans;
+use App\Tbl_godowns;
+
 use DB;
 use Hash;
 use Auth;
@@ -789,10 +795,9 @@ public function crm(){
 			$name1=$files1->getClientOriginalName();  
 			$files1->move('img',$name1);  
 			
-			$store_list->image_1=$name1; 
-			
+			$store_list->image_1=$name1; 		
 		}  
-		if($files2=$request->file('image2')){  
+			if($files2=$request->file('image2')){  
 			$name2=$files2->getClientOriginalName();  
 			$files2->move('img',$name2);  
 			
@@ -824,6 +829,7 @@ public function crm(){
 		$store_list->description=$request->desc;
 		$store_list->store_prod_category=$request->prod_cat;
 		$store_list->status=1;
+		
 		if($files1=$request->file('image1')){  
 			$name1=$files1->getClientOriginalName();  
 			$files1->move('img',$name1);  
@@ -4107,6 +4113,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 			$markk=DB::table('tbl_order_trans')
 			->get();
+			$godown=DB::table('tbl_godowns')
+			->get();
 		$saleorder=DB::table('tbl_order_masters')
 		->leftJoin('tbl_order_trans', 'tbl_order_masters.id', '=', 'tbl_order_trans.order_id')
 		->leftJoin('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -4140,21 +4148,22 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 			//echo "<pre>";print_r($saleorder);exit;
 		$role=Auth::user()->user_type;
-		return view('sale_order_master',compact('role','markk','saleorder','orderId'));
+		return view('sale_order_master',compact('role','markk','saleorder','orderId','godown'));
 	    }
+		
+public function sale_orderinsert(Request $request)
+{
+    try {
+
+ 
+        Log::info('Debug: Request data', ['request' => $request->all()]);
 
 
-		
-		public function sale_orderinsert(Request $request)
-		{
-			try {
-				\Log::info('Debug: Request data', ['request' => $request->all()]);
-		
-				$shop = Shops::where('shopname', $request->shopname)->first();
-		
-				if (!$shop) {
-					dd("Shop with name $request->shopname not found");
-				}
+        $shop = Shops::where('shopname', $request->shopname)->first();
+
+        if (!$shop) {
+            return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
+        }
 
 
 				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
@@ -4168,79 +4177,115 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				//$ordermaster=DB::table('')->where('',$request->idd)->first();
 
 
-		
-				$saleMaster = new Tbl_sale_order_masters;
-				$saleMaster->shop_id = $shop->id;
-				$saleMaster->order_id = $request->idd;
-				
-				$saleMaster->invoice_number=$invoice;
-				$saleMaster->total_amount = $request->total_amount;
-				$saleMaster->bill_number = $request->billnumber 	;
-				$saleMaster->discount = $request->discount;
-				$saleMaster->coupen_id = 0;
-				$saleMaster->wallet_redeem_id = $request->walletamount;
-				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
-                $saleMaster->payment_mode = $paymentMode;
+    
+        $saleMaster = new Tbl_sale_order_masters;
+        $saleMaster->shop_id = $shop->id;
+        $saleMaster->order_id = $request->idd;
+        $saleMaster->invoice_number = $invoice;
+        $saleMaster->total_amount = $request->total_amount;
+        $saleMaster->bill_number = $request->billnumber;
+        $saleMaster->discount = $request->discount;
+        $saleMaster->coupen_id = 0;
+        $saleMaster->wallet_redeem_id = $request->walletamount;
+        $paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
+        $saleMaster->payment_mode = $paymentMode;
+        $saleMaster->order_status = 0;
 
-				$saleMaster->total_mrp = 0;
-				$saleMaster->shipping_charge = $request->shipping_charge;
-				$saleMaster->tax_amount = 0;
-				
-				
-				// $saleMaster->order_status = $request->order_status;
-				$saleMaster->delivery_date = $request->delivery_date;
-				$saleMaster->order_date = $request->orderdate;
-		
-				if ($saleMaster->save()) {
-					
-					foreach ($request->product_name as $index => $productName) {
-						\Log::info('Debug: Inside Loop');
-		
-						
-						$qty = $request->qty[$index];
-						$offer_amount = $request->offer_amount[$index];
-						$price = $request->price[$index] ?? 0;
-		
-						
-						$product = Tbl_brand_products::where('product_name', $productName)->first();
-						\Log::info('Debug: Product', ['product' => $product]);		
-						$saleTrans = new Tbl_sale_order_trans;
-						$saleTrans->order_id = $saleMaster->id;
-						$saleTrans->product_id = $product ? $product->id : 0;
-						$saleTrans->sale_order_id = $saleMaster->id;
-						$saleTrans->qty = $qty;
-						$saleTrans->offer_amount = $offer_amount;
-						$saleTrans->price = $request->total_mrp;
-						$saleTrans->taxable_amount = 0;
-		
-						
-						if (!$saleTrans->save()) {
-							\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
-							break; 
-						}
-					}
-		
-					
-					Tbl_order_masters::where('id', $request->idd)->update(['sale_status' => 1,
-					'order_status' => 1
-				]);
-		
-					
-					Session::flash('success', 'Sale Invoice generated successfully!');
-				} else {
-					
-					Session::flash('error', 'Error adding Sale Invoice. Please try again.');
-				}
-		
-				return redirect('order_master');
-			}
-			catch (\Exception $e) {
-				\Log::error($e->getMessage());
-				dd($e->getMessage());
-			}
-		}
+        $saleMaster->total_mrp = 0;
+        $saleMaster->shipping_charge = $request->shipping_charge;
+        $saleMaster->tax_amount = 0;
 
+        $saleMaster->delivery_date = $request->delivery_date;
+        $saleMaster->order_date = $request->orderdate;
 
+        
+        DB::beginTransaction();
+
+        if ($saleMaster->save()) {
+          
+            foreach ($request->product_name as $index => $productName) {
+               
+                $product = Tbl_brand_products::where('product_name', $productName)->first();
+
+                if (!$product) {
+                    DB::rollBack();
+                    \Log::warning("Product with name $productName not found in brand products.");
+                    return redirect('order_master')->with('custom_error',"Product $productName is not available.");
+					
+                }
+
+               
+                $godown = Tbl_godowns::where('name', $request->godown)->first();
+
+                if ($product) {
+                  
+                    $qty = $request->qty[$index];
+                    $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+                        ->where('inventory_id', $godown->id)->first();
+
+                    if (!$inventoryStock) {
+                        DB::rollBack(); 
+                        \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
+						return redirect('order_master')->with('custom_error', "Product $productName is not in stock.");
+                    }
+
+                    if ($inventoryStock->stock < $qty) {
+                        DB::rollBack(); 
+						return redirect('order_master')->with('custom_error', "Product $productName is not in stock.");
+                    }
+
+                    
+                    $inventoryStock->stock -= $qty;
+                    $inventoryStock->save();
+                }
+
+             
+                $qty = $request->qty[$index];
+                $offer_amount = $request->offer_amount[$index];
+                $price = $request->price[$index] ?? 0;
+
+                $saleTrans = new Tbl_sale_order_trans;
+                $saleTrans->order_id = $saleMaster->id;
+                $saleTrans->product_id = $product ? $product->id : 0;
+                $saleTrans->sale_order_id = $saleMaster->id;
+                $saleTrans->qty = $qty;
+                $saleTrans->offer_amount = $offer_amount;
+                $saleTrans->price = $request->total_mrp;
+                $saleTrans->taxable_amount = 0;
+
+                if (!$saleTrans->save()) {
+                    DB::rollBack(); 
+                    \Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+                    return redirect('sale_order_master')->withErrors(["Error saving sale transaction."]);
+                }
+            }
+
+          
+            Tbl_order_masters::where('id', $request->idd)->update([
+                'sale_status' => 1,
+                'order_status' => 1
+            ]);
+
+          
+            DB::commit();
+
+        
+            Session::flash('success', 'Sale Invoice generated successfully!');
+        } else {
+            
+            Session::flash('error', 'Error adding Sale Invoice. Please try again.');
+            DB::rollBack(); 
+        }
+
+       
+        return redirect('order_master');
+    } catch (\Exception $e) {
+        \Log::error($e->getMessage());
+        DB::rollBack(); 
+      
+        return redirect('order_master')->withErrors(["An error occurred. Please try again."]);
+    }
+}
 
 		public function cancelorder($orderId) {
 			try {
@@ -4290,7 +4335,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			}
 		}
 		
-		 public function sale_bill($orderId) {
+		 public function sale_bill($orderId) { 
 
 			$markk=DB::table('tbl_sale_order_trans')
 				->get();
@@ -4433,6 +4478,99 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 // 	return response()->json(['success' => true]);
 // }
 
+public function purchase_order_master($orderId)
+{
+	$purchase=DB::table('tbl_place_order_masters')
+	->leftJoin('tbl_vendors', 'tbl_place_order_masters.vendor_id', '=', 'tbl_vendors.id')
+	->leftJoin('users', 'tbl_place_order_masters.request_by', '=', 'users.id')
+	->where('tbl_place_order_masters.id',$orderId)
+    ->select('tbl_place_order_masters.*','tbl_vendors.vendor_name','users.name')
+	->get();
+	$purchaseOrder = Tbl_placeorders::where('bill_number',$orderId)
+		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->get();
+	$godown=DB::table('tbl_godowns')->get();
+	 $role=Auth::user()->user_type;
+	return view('purchase_order_master',compact('purchase','role','purchaseOrder','godown'));
+ }
+
+ 
+ public function purchase_orderinsert(Request $request){
+	 $saleMaster = new Tbl_purchase_order_masters;
+	 $saleMaster->bill_num = $request->billnum; 
+	 $saleMaster->request_by = $request->requestby;
+	 $saleMaster->order_date = $request->orderdate;
+ 
+	 $vendor = Tbl_vendors::where('vendor_name', $request->vendor)->first();
+ 
+	 if ($vendor) {
+		 $saleMaster->vendor_id = $vendor->id;
+	 } else {
+		
+		 Log::error('Vendor not found: ' . $request->vendor);
+		 Session::flash('error', 'Vendor not found. Please try again.');
+		 return redirect()->back();
+	 }
+	 $requestby= User::where('name', $request->requestby)->first();
+ 
+	 if ($requestby) {
+		 $saleMaster->request_by = $requestby->id;
+	 } else {
+		
+		 Log::error('REQUISITIONER not found : ' . $request->requestby);
+		 Session::flash('error', 'REQUISITIONER not found. Please try again.');
+		 return redirect()->back(); 
+	 }
+ 
+	 if ($saleMaster->save()) {
+		 foreach ($request->product_name as $index => $productName) {
+			 $qty = $request->qty[$index];
+			 $amount = $request->amount[$index];
+			 $godown= Tbl_godowns::where('name', $productName)->first();
+
+			 $product = Tbl_brand_products::where('product_name', $productName)->first();
+			 $saleTrans = new Tbl_purchase_order_trans;
+			 $saleTrans->bill_number = $saleMaster->id;
+			 $saleTrans->product_id = $product ? $product->id : 0;
+			 $saleTrans->purchase_order_id = $saleMaster->id;
+			 $saleTrans->qty = $qty;
+			 $saleTrans->amount = $amount;
+			 $saleTrans->order_date = $request->orderd[$index];
+ 
+			 if (!$saleTrans->save()) {
+				 Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+				 Session::flash('error', 'Error saving sale transaction. Please try again.');
+				 return redirect()->back(); 
+			 }
+			 $godown= Tbl_godowns::where('name',$request->godown)->first();
+			 $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+								->where('inventory_id',$godown->id)
+								->first();
+								if ($inventoryStock) {
+								$inventoryStock->stock += $qty;
+								$inventoryStock->save();
+							} else {
+								
+								$newInventoryStock = new Tbl_inventory_stocks;
+								$newInventoryStock->product_id = $product->id;
+								$newInventoryStock->inventory_id = $godown->id;
+								$newInventoryStock->stock = $qty; 
+								$newInventoryStock->save();
+							}
+		 }
+ 
+		 Tbl_place_order_masters::where('id', $request->idd)->update(['status' => 1]);
+ 
+		 Session::flash('success', 'Purchase Invoice generated successfully!');
+	 } else {
+		 Session::flash('error', 'Error adding Purchase Invoice. Please try again.');
+	 }
+ 
+	 return redirect()->route('purchaseorder_bill');
+ }
+ 
 
 public function order_history()
 {
@@ -4842,6 +4980,8 @@ public function order_history()
 		 $master->vendor_id=$id;
 		 $master->request_by=Auth::user()->id;
 		 $master->order_date =date('Y-m-d');
+		 $master->status=0;
+
 		 $master->save();
 			 foreach ($ordersToInsert as $order) {
 
@@ -4850,6 +4990,7 @@ public function order_history()
 				$placeOrder = new Tbl_placeorders;
 				$placeOrder->bill_number = $master->id;
 				$placeOrder->product_id = $order->product_id;
+
 				$placeOrder->qty = $order->qty;
 				$placeOrder->amount = $order->offer_amount;
 				$placeOrder->order_date =date('Y-m-d');
@@ -4903,56 +5044,61 @@ public function order_history()
 	}
 
 	public function purchaseorderedit(Request $request)
-{
-    $id = $request->id;
+	{
+		$id = $request->id;
+	
+		$purchaseOrderMaster= Tbl_place_order_masters::find($id);
+	if($purchaseOrderMaster){
+		$existingProductIds = []; 
+	
+		if ($request->has('product_name')) {
+			foreach ($request->product_name as $index => $productName) {
 
-    $puredit = Tbl_place_order_masters::find($id);
-	$pure = Tbl_place_order_masters::find($id);
+				$qty = $request->qty[$index] ?? null;
+				
+				Log::info('Original Product Name:', [$productName]);
+				
 
-	$existingProductIds = []; 
 
-    if ($request->has('product_name')) {
-        foreach ($request->product_name as $key => $productName) {
-            $qty = $request->qty[$key] ?? null;
-
-            $product = DB::table('tbl_brand_products')
-                ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-                ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-                ->where('tbl_brand_products.product_name', $productName)
-                ->select(
-                    'tbl_brand_products.*',
-                    'tbl_hsncodes.tax',
-                )
-                ->first();
+				$product = Tbl_brand_products::where('product_name', $productName)->first();
+		
 				if ($product) {
-					$existingProductIds[] = $product->id; 
-	
-					$newProduct = Tbl_placeorders::where('bill_number',$puredit->id)
-														->first();
+					$existingProductIds[] = $product->id;
+					$newProduct = Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
 
-            if ($newProduct) {
-              
+						->where('product_id', $product->id)
+						->first();
+		
+					if ($newProduct) {
+						$newProduct->qty = $qty;
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+						$newProduct->save();
+					} else {
+						$newProduct = new Tbl_placeorders;
+						$newProduct->bill_number = $id;
+						$newProduct->product_id = $product->id;
+						$newProduct->qty = $qty;
+
+						$newProduct->amount = $product->offer_price;
+						$newProduct->order_date = date('Y-m-d');
+		
+						$newProduct->save();
+					}
+				}
+			}
+		
+				Tbl_placeorders::where('bill_number', $purchaseOrderMaster->id)
+					->whereNotIn('product_id', $existingProductIds)
+					->delete();
 			
-                $newProduct = new Tbl_placeorders;
-                $newProduct->bill_number = $id; 
-                $newProduct->product_id =$product->id;
-                $newProduct->qty = $qty;
-                $newProduct->amount = $product->offer_price;
-				$newProduct->order_date =date('Y-m-d');
-
-                $newProduct->save();
-
-            }
-        }
-    
-	}
-	
-	
 	return redirect()->back()->with('success', 'Purchase Order edited successfully!');
 } else {
 	return redirect()->back()->with('error', 'Purchase Order not found!');
 }
 }
+
+	}
 
 public function bill($id){
 		$role=Auth::user()->user_type;
@@ -5018,8 +5164,41 @@ public function bill($id){
 		}
 		public function salesreturn(){
 			$role = Auth::user()->user_type;
-			return view('salesreturn',compact('role'));
+			$sales=DB::table('tbl_cancel_orders')
+			->join('tbl_order_trans','tbl_cancel_orders.order_trans_id', '=','tbl_order_trans.id')
+			->leftjoin('tbl_order_masters','tbl_order_trans.order_id', '=','tbl_order_masters.id')
+
+			->leftjoin('tbl_brand_products','tbl_order_trans.product_id', '=','tbl_brand_products.id')
+			->where('tbl_cancel_orders.type',2)
+			->select(
+				'tbl_cancel_orders.*',
+				'tbl_brand_products.product_name',
+				'tbl_order_masters.order_id',
+				'tbl_order_trans.offer_amount',
+				'tbl_order_trans.price',
+				'tbl_order_masters.payment_status'
+
+			)->get();
+			return view('salesreturn',compact('role','sales'));
+		}
+		public function returnfetch(Request $request){
+            $id=$request->id;
+			$sales=Tbl_cancel_orders::find($id);
+			
+			print_r(json_encode($sales));
+
 		}	
+		public function returnedit(Request $request){
+            $id=$request->id;
+			$roles=Tbl_cancel_orders::find($id);
+			$roles->pay_returnstatus=$request->return;
+			$roles->save();
+			
+			return redirect('salesreturn')->with('success', 'Edited successfully');	
+
+		}
+			
+
 	public function rolemenu(){
 		$role = Auth::user()->user_type;
 		$roles=DB::table('tbl_roles')->get();
@@ -5149,151 +5328,147 @@ public function bill($id){
         ->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
         ->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
         ->orderBy('tbl_order_masters.id', 'DESC');
+ // Apply filters based on user role
+ if ($role == 1) {
+	if ($searchval != '') {
+		$order->where(function($query) use ($searchval) {
+			$query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
+				->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
+				->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
+		});
+	}
+} else if ($role == 3) {
+	$fran = DB::table('tbl_franchase_details')
+		->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+		->where('tbl_franchises.user_id', $userid)
+		->select('tbl_franchase_details.*')
+		->get();
 
-    // Apply filters based on user role
-    if ($role == 1) {
-        if ($searchval != '') {
-            $order->where(function($query) use ($searchval) {
-                $query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
-                    ->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
-                    ->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
-            });
-        }
-    } else if ($role == 3) {
-        $fran = DB::table('tbl_franchase_details')
-            ->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
-            ->where('tbl_franchises.user_id', $userid)
-            ->select('tbl_franchase_details.*')
-            ->get();
+	$franShopIds = [];
+	foreach ($fran as $singleFranlist) {
+		$franShopIds[] = $singleFranlist->id;
+	}
 
-        $franShopIds = [];
-        foreach ($fran as $singleFranlist) {
-            $franShopIds[] = $singleFranlist->id;
-        }
+	$order->whereIn('tbl_order_masters.shop_id', $franShopIds);
 
-        $order->whereIn('tbl_order_masters.shop_id', $franShopIds);
-
-        if ($searchval != '') {
-            $order->where(function($query) use ($searchval) {
-                $query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
-                    ->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
-                    ->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
-            });
-        }
-    }
-
-    // Apply additional filter based on selected order status
-    if ($selectedOrderStatus !== null) {
-        $order->where('tbl_order_masters.order_status', $selectedOrderStatus);
-    }
-
-    // Retrieve paginated results
-    $order = $order->paginate(10);
-
-    $i = 1;
-    foreach ($order as $key) {
-        // Construct HTML for each order
-        $orderList .= "<tr>";
-        $orderList .= '<td>' . $i . '</td>';
-        $orderList .= '<td>' . $key->order_id . '</td>';
-        $orderList .= '<td>' . $key->shopname . '</td>';
-        $orderList .= '<td>' . $key->phone . '</td>';
-        $orderList .= '<td>' . 'Area: ' . $key->area . ', ' . $key->area1 . '<br>' . $key->district . ', ' . $key->state . '<br>' . $key->country . ', ' . $key->pincode . '</td>';
-        $orderList .= '<td>' . $key->total_amount . '</td>';
-        $orderList .= '<td>' . $key->discount . '</td>';
-        $orderList .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
-        $orderList .= '<td>' . ($key->payment_status == 0 ? '<strong style="background-color: yellow; padding: 2px;">Unpaid</strong>' : '<strong style="background-color: lightgreen; padding: 2px;">Paid</strong>') . '</td>';
-        $orderList .= '<td>';
-
-        switch ($key->order_status) {
-            case 0:
-                $orderList .= '<strong class="bg-warning" padding: 2px;">Pending</strong>';
-                break;
-            case 1:
-                $orderList .= '<strong class="bg-info" padding: 2px;">Confirmed</strong>';
-                break;
-            case 2:
-                $orderList .= '<strong class="bg-primary" padding: 2px;">Shipped</strong>';
-                break;
-            case 3:
-                $orderList .= '<strong class="bg-success" padding: 2px;">Delivered</strong>';
-                break;
-            default:
-                break;
-        }
-
-        $orderList .= '</td>';
-        $orderList .= '<td>' . $key->delivery_date . '</td>';
-        $orderList .= '<td>' . $key->order_date . '</td>';
-        $orderList .= '<td>' . ($key->sale_status == 0 ? '<form method="get" action="' . route('sale_order_master', ['orderId' => $key->id]) . '"><button type="submit" class="btn btn-primary sale"><i class="fas fa-file-invoice"></i></button></form>' : '<span class="text-success">Sale Invoice Generated</span>') . '</td>';
-        $orderList .= '<td style="width: 50px;">' .
-            '<form method="get" action="' . route('order_invoice', ['orderId' => $key->id]) . '" target="_blank">' .
-            '<button type="submit" class="print-button">' .
-            '<i class="material-icons">&#xe8ad;</i>' .
-            '</button>' .
-            '</form>' .
-            '</td>';
-        $orderList .= '</tr>';
-        $i++;
-    }
-
-    if (empty($orderList)) {
-        $orderList = 'No Results Found';
-    }
-
-    return response()->json(['orderList' => $orderList]);
+	if ($searchval != '') {
+		$order->where(function($query) use ($searchval) {
+			$query->where('tbl_order_masters.order_id', 'LIKE', '%' . $searchval . '%')
+				->orWhere('shops.shopname', 'LIKE', '%' . $searchval . '%')
+				->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%');
+		});
+	}
 }
 
-	
+// Apply additional filter based on selected order status
+if ($selectedOrderStatus !== null) {
+	$order->where('tbl_order_masters.order_status', $selectedOrderStatus);
+}
+
+// Retrieve paginated results
+$order = $order->paginate(10);
+
+$i = 1;
+foreach ($order as $key) {
+	// Construct HTML for each order
+	$orderList .= "<tr>";
+	$orderList .= '<td>' . $i . '</td>';
+	$orderList .= '<td>' . $key->order_id . '</td>';
+	$orderList .= '<td>' . $key->shopname . '</td>';
+	$orderList .= '<td>' . $key->phone . '</td>';
+	$orderList .= '<td>' . 'Area: ' . $key->area . ', ' . $key->area1 . '<br>' . $key->district . ', ' . $key->state . '<br>' . $key->country . ', ' . $key->pincode . '</td>';
+	$orderList .= '<td>' . $key->total_amount . '</td>';
+	$orderList .= '<td>' . $key->discount . '</td>';
+	$orderList .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
+	$orderList .= '<td>' . ($key->payment_status == 0 ? '<strong style="background-color: yellow; padding: 2px;">Unpaid</strong>' : '<strong style="background-color: lightgreen; padding: 2px;">Paid</strong>') . '</td>';
+	$orderList .= '<td>';
+
+	switch ($key->order_status) {
+		case 0:
+			$orderList .= '<strong class="bg-warning" padding: 2px;">Pending</strong>';
+			break;
+		case 1:
+			$orderList .= '<strong class="bg-info" padding: 2px;">Confirmed</strong>';
+			break;
+		case 2:
+			$orderList .= '<strong class="bg-primary" padding: 2px;">Shipped</strong>';
+			break;
+		case 3:
+			$orderList .= '<strong class="bg-success" padding: 2px;">Delivered</strong>';
+			break;
+		default:
+			break;
+	}
+
+	$orderList .= '</td>';
+	$orderList .= '<td>' . $key->delivery_date . '</td>';
+	$orderList .= '<td>' . $key->order_date . '</td>';
+	$orderList .= '<td>' . ($key->sale_status == 0 ? '<form method="get" action="' . route('sale_order_master', ['orderId' => $key->id]) . '"><button type="submit" class="btn btn-primary sale"><i class="fas fa-file-invoice"></i></button></form>' : '<span class="text-success">Sale Invoice Generated</span>') . '</td>';
+	$orderList .= '<td style="width: 50px;">' .
+		'<form method="get" action="' . route('order_invoice', ['orderId' => $key->id]) . '" target="_blank">' .
+		'<button type="submit" class="print-button">' .
+		'<i class="material-icons">&#xe8ad;</i>' .
+		'</button>' .
+		'</form>' .
+		'</td>';
+	$orderList .= '</tr>';
+	$i++;
+}
+
+if (empty($orderList)) {
+	$orderList = 'No Results Found';
+}
+
+return response()->json(['orderList' =>$orderList]);
+}
 	
 public function search_sale(Request $request)
 {
     $searchval = $request->searchval;
-    $order_status = $request->order_status;
+    $salelistHTML = '';
+    $selectedOrderStatus = $request->order_status; // Get the selected order status filter
+	$salesQuery = DB::table('tbl_sale_order_masters')
+    ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+    ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+    ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
+    ->select(
+        'tbl_sale_order_masters.*',
+        'shops.shopname',
+        'shops.address',
+        'tbl_order_masters.order_status',
+        'tbl_order_masters.payment_status',
+        'tbl_deliveryaddres.area',
+        'tbl_deliveryaddres.area1',
+        'tbl_deliveryaddres.country',
+        'tbl_deliveryaddres.state',
+        'tbl_deliveryaddres.district',
+        'tbl_deliveryaddres.city',
+        'tbl_deliveryaddres.phone',
+        'tbl_deliveryaddres.pincode'
+    )
+    ->orderBy('tbl_sale_order_masters.id', 'DESC');
 
-    if ($searchval != '') {
-        $salesQuery = DB::table('tbl_sale_order_masters')
-            ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
-            ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-            ->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-            ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
-            ->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-            ->where('tbl_sale_order_masters.order_id', 'like', '%' . $searchval . '%')
-            ->orWhere('shops.shopname', 'like', '%' . $searchval . '%')
-            ->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchval . '%');
+if ($searchval != '') {
+    $salesQuery->where(function ($query) use ($searchval) {
+        $query->where('shops.shopname', 'LIKE', '%' . $searchval . '%')
+            ->orWhere('tbl_deliveryaddres.phone', 'LIKE', '%' . $searchval . '%')
+            ->orWhere('tbl_sale_order_masters.order_id', 'LIKE', '%' . $searchval . '%');
+    });
+}
 
-			if ($order_status != '') {
-				$salesQuery->where('tbl_order_masters.order_status', '=', $order_status);
-			}
-		
-			if ($searchval != '') {
-				$salesQuery->where(function ($query) use ($searchval) {
-					$query->where('tbl_sale_order_masters.order_id', 'like', '%' . $searchval . '%')
-						->orWhere('shops.shopname', 'like', '%' . $searchval . '%')
-						->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchval . '%');
-				});
-			}
-		
-			$sales = $salesQuery->get();
-    } else {
-        $sales = DB::table('tbl_sale_order_masters')
-            ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
-            ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-            ->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-            ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.order_id')
-            ->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-            ->orderBy('tbl_sale_order_masters.id', 'DESC')
-            ->get();
-    }
+if ($selectedOrderStatus !== null) {
+    $salesQuery->where(function ($query) use ($selectedOrderStatus) {
+        $query->where('tbl_order_masters.order_status', $selectedOrderStatus);
+    });
+}
 
-    $role = Auth::user()->user_type;
+$sales = $salesQuery->get();
+
+$role = Auth::user()->user_type;
 
     $i = 1;
-    $salelistHTML = '';
-
-    if (count($sales) > 0) {
-        foreach ($sales as $key) {
-            $salelistHTML .= "<tr>";
+	foreach ($sales as $key) {
+			$salelistHTML .= "<tr>";
             $salelistHTML .= '<td>' . $i . '</td>';
             $salelistHTML .= '<td>' . $key->invoice_number . '</td>';
             $salelistHTML .= '<td>' . $key->shopname . '</td>';
@@ -5302,50 +5477,41 @@ public function search_sale(Request $request)
             $salelistHTML .= '<td>' . $key->total_amount . '</td>';
             $salelistHTML .= '<td>' . $key->discount . '</td>';
             $salelistHTML .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
-            $salelistHTML .= '<td>' . ($key->payment_status == 0 ? 'Unpaid' : 'Paid') . '</td>';
-            $salelistHTML .= '<td>';
+			$orderStatus = $key->order_status ?? 'Unknown';
+			$salelistHTML .= '<td>';
+			if ($key->payment_status == 0) {
+				$salelistHTML .= 'Unpaid';
+			} elseif ($key->payment_status == 1) {
+				$salelistHTML .= 'Paid';
+			} else {
+				$salelistHTML .= 'Unknown';
+			}
+			$salelistHTML .= '</td>';
+					
+			$salelistHTML .= '<td>' . $orderStatus . '</td>';
+			
+				$salelistHTML .= '<td>' . $key->delivery_date . '</td>';
+				$salelistHTML .= '<td>' . $key->order_date . '</td>';
+				$salelistHTML .= '<td><form method="get" action="' . route('sale_bill', ['orderId' => $key->id]) . '" target="_blank">
+					<button type="submit" class="print-button">
+						<i class="material-icons">&#xe8ad;</i>
+					</button>
+				</form></td>';
+				if($role!=3){
+				$salelistHTML .= '<td><button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="' . $key->order_id . '" style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
+					Update 
+				</button></td>';
+				}else{
+				$salelistHTML .= '</tr>';
+				$i++;
+				}
+			}
+				if (empty($salelistHTML)) {
+					$salelistHTML = 'No Results Found';
+				}
+			
 
-            switch ($key->order_status) {
-                case 0:
-                    $salelistHTML .= 'Pending';
-                    break;
-                case 1:
-                    $salelistHTML .= 'Confirmed';
-                    break;
-                case 2:
-                    $salelistHTML .= 'Shipped';
-                    break;
-                case 3:
-                    $salelistHTML .= 'Delivered';
-                    break;
-                default:
-                    break;
-            }
-
-            $salelistHTML .= '</td>';
-            $salelistHTML .= '<td>' . $key->delivery_date . '</td>';
-            $salelistHTML .= '<td>' . $key->order_date . '</td>';
-            $salelistHTML .= '<td><form method="get" action="' . route('sale_bill', ['orderId' => $key->id]) . '" target="_blank">
-                <button type="submit" class="print-button">
-                    <i class="material-icons">&#xe8ad;</i>
-                </button>
-            </form></td>';
-            if ($role != 3) {
-                $salelistHTML .= '<td><button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="' . $key->order_id . '" style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
-                    Update 
-                </button></td>';
-            } else {
-                $salelistHTML .= '</tr>';
-                $i++;
-            }
-        }
-    } else {
-        $salelistHTML = 'No Results Found';
-    }
-
-    return response()->json(['salelistHTML' => $salelistHTML]);
-}
-
-
+		return response()->json(['salelistHTML' => $salelistHTML]);
+	}	
 
 }

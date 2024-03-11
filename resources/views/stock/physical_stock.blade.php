@@ -80,9 +80,14 @@
         </p>
     </div>
 
+    @if (session('custom_error'))
+    <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 4px; margin-bottom: 10px; color: #721c24;">
+        <strong>Error!</strong> {{ session('custom_error') }}
+    </div>
+@endif
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <form method="POST" action="{{ url('physical_stockinsert') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url('physical_stockinsert') }}" onsubmit="return validateForm();" enctype="multipart/form-data">
         @csrf
         <div class="modal-dialog modal-lg" role="document" style="width:80%;">
             <div class="modal-content">
@@ -227,8 +232,8 @@ $i++;
                 <table id="physicalStockTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
+                            <!-- <th>Product Name</th>
+                            <th>Quantity</th> -->
                             <!-- Add more headings as needed -->
                         </tr>
                     </thead>
