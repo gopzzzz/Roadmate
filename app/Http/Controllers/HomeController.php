@@ -4299,34 +4299,36 @@ public function sale_orderinsert(Request $request)
 
 	
 		public function sale_list(Request $request)
-		{
-			$role = Auth::user()->user_type;
-		
-			$selectedOrderStatus = $request->input('order_status');
-		
-			$ordersQuery = DB::table('tbl_sale_order_masters')
-				->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
-				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-				->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
-				->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-				->orderBy('tbl_sale_order_masters.id', 'DESC');
-		
-			if ($selectedOrderStatus !== null) {
-				$ordersQuery->where('tbl_order_masters.order_status', $selectedOrderStatus);
-			}
-		
-			try {
-				$sale = $ordersQuery
-					->paginate(10);
-		
-				return view('sale_list', compact('sale', 'role', 'selectedOrderStatus'));
-			} catch (\Exception $e) {
-				\Log::error($e->getMessage());
-				dd($e->getMessage());
+{
+    $role = Auth::user()->user_type;
+    $statusFilter = $request->input('status');
+    
+    $ordersQuery = DB::table('tbl_sale_order_masters')
+        ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+        ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+        ->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
+        ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
+        ->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->orderBy('tbl_sale_order_masters.id', 'DESC');
+    
+		if ($statusFilter !== null) {
+			if ($statusFilter == 0) {
+				$ordersQuery = $ordersQuery->where('order_status', $statusFilter)->orWhereNull('order_status');
+			} else {
+				$ordersQuery = $ordersQuery->where('order_status', $statusFilter);
 			}
 		}
 		
+    try {
+        $sale = $ordersQuery->paginate(10); // Pagination with 10 items per page
+        
+        return view('sale_list', compact('sale', 'role'));
+    } catch (\Exception $e) {
+        \Log::error($e->getMessage());
+        dd($e->getMessage());
+    }
+}
+
 		 public function sale_bill($orderId) { 
 
 			$markk=DB::table('tbl_sale_order_trans')

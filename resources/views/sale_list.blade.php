@@ -141,37 +141,34 @@
                        
                   <!-- /.card-header -->
                 
-                  <form id="filterForm" method="GET" action="{{ route('sale_list') }}">
-    <div class="float-right">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text" for="saleStatusFilters">
-                    <i class="fas fa-filter"></i>
-                </label>
-            </div>
-            <select id="saleStatusFilters" class="custom-select" name="order_status">
-                <option value="" @if($selectedOrderStatus === null) selected @endif>All Status</option>
-                @foreach([0 => 'Pending', 1 => 'Confirmed', 2 => 'Shipped', 3 => 'Delivered'] as $status => $label)
-                    <option value="{{ $status }}" @if($status == $selectedOrderStatus && $selectedOrderStatus !== null) selected @endif>{{ $label }}</option>
-                @endforeach
-            </select>
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">Apply</button>
-            </div>
+                 
+                  <div class="row">
+    <div class="col-md-4">
+    <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
+    </div>
+    <div class="col-md-4"></div> <!-- Empty column for spacing -->
+    <div class="col-md-4 text-right">
+    <div class="input-group input-group-sm">
+        <label class="input-group-text" for="orderStatusFilter">
+            <i class="fas fa-filter"></i>
+        </label>
+        <select id="orderStatusFilter" class="custom-select">
+            <option value="">All</option>
+            <option value="0">Pending</option>
+            <option value="1">Confirmed</option>
+            <option value="2">Shipped</option>
+            <option value="3">Delivered</option>
+        </select>
+        <div class="input-group-append">
+            <button id="applyFilter" class="btn btn-primary btn-sm ml-2">Apply Filter</button>
         </div>
     </div>
-</form>
+</div>
+       
+   
+</div>
 
 
-
-
-    <form>
-     <div class="col-md-4 mx-auto">
-        <div class="form-group">
-         <input type="text" id="search_sale" class="form-control" name="search_sale" placeholder="Search" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%;">
-        </div>
-    </div>
-</form>
 
 
   <table class="table table-bordered table-striped table-sm">
@@ -268,22 +265,16 @@
        
         </tbody>
         <tfoot>
-      
-   
-            
-        </tfoot>
+    <tr>
+        <td colspan="12">
+            {{$sale->links()}}
+        </td>
+    </tr>
+</tfoot>
     </table>
 
     
-    <div class="row">
-        <div class="col-12">
-            <div class="float-left">
-                {{ $sale->appends(['order_status' => $selectedOrderStatus])->links() }}
-
-            </div>
-        </div>
-    </div>
-
+   
    
    
     
@@ -341,6 +332,42 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#search').on('keyup', function() {
+            var searchText = $(this).val().toLowerCase();
+            $('#salelist tr').filter(function() {
+                var shopName = $(this).find('td:nth-child(3)').text().toLowerCase();
+                var orderId = $(this).find('td:nth-child(2)').text().toLowerCase();
+                var phoneNumber = $(this).find('td:nth-child(4)').text().toLowerCase();
+                var shopMatch = shopName.indexOf(searchText) > -1;
+                var orderMatch = orderId.indexOf(searchText) > -1;
+                var phoneMatch = phoneNumber.indexOf(searchText) > -1;
+                $(this).toggle(shopMatch || orderMatch || phoneMatch);
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#applyFilter').click(function() {
+            var statusFilter = $('#orderStatusFilter').val();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('sale_list') }}",
+                data: { status: statusFilter },
+                success: function(response) {
+                    $('#salelist').html($(response).find('#salelist').html());
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
 
 
 @endsection
