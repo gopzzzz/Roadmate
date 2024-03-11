@@ -33,7 +33,7 @@ class ledgerController extends Controller
 		$ledger=new Tbl_leadgers;
 		$ledger->ledger_name=$request->ledger_name;
 		$ledger->save();
-		return redirect('ledger_master')->with('success', 'ledger master inserted successfully.');
+		return redirect('ledger_master')->with('success', 'Ledger inserted successfully.');
 	}
 
     public function ledgerfetch(Request $request){
@@ -46,7 +46,7 @@ class ledgerController extends Controller
 		$ledger=Tbl_leadgers::find($id);
 		$ledger->ledger_name=$request->ledger_name;
 		$ledger->save();
-		return redirect('ledger_master')->with('success', 'ledger master edited successfully.');
+		return redirect('ledger_master')->with('success', 'Ledger edited successfully.');
 	}
 
 

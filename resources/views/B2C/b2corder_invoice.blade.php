@@ -65,7 +65,7 @@
 
         .company-logo img {
        
-            max-width: 250px; /* Adjust the size of the logo */
+            max-width: 210px; /* Adjust the size of the logo */
             height: 85px;
         }
 
@@ -278,11 +278,11 @@
     <img src="{{ asset('market/RoadMateLogo.png') }}" alt="Company Logo">
 </div> <br><br>
 <div class="invoice-header">
-            <div class="invoice-title">Sale Bill</div>
+            <div class="invoice-title">Invoice</div>
         </div>
 <br>
 
-         
+        
 
         <div class="invoice-details">
             <div class="left-details">
@@ -300,15 +300,16 @@
             
               <!-- <div>9995723014<br><p style="color:#007bff">info@roadmate.in <br>www.RoadMate.in</p></div> -->
            
-@foreach($salebill as $key)
+@foreach($invoice as $key)
             @endforeach
-            <div class="right-details">
+            <div class="right-details"> 
             
     <p class="details-label"></p><br><br>   
     <div class="details-item"><strong>Date:</strong> <span class="highlight-background">{{ now()->format('d-m-Y') }}</span></div>
-    <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->invoice_number}}/{{ date('y') }}</span></div>
+    <!-- <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->order_id}}/{{ date('y') }}</span></div> -->
     <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->order_id}}/{{ date('y') }}</span></div>
-    <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">0000{{$key->bill_number}}</span></div>
+    <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">00000</span></div>
+   
     <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ $key->delivery_date }}</span></div>
 
 </div>
@@ -342,69 +343,64 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
-<<<<<<< HEAD
-                    <!-- <th>MRP</th> -->
-=======
->>>>>>> c8fb5b34625a3a8fe8527cca8489eb40aa922e33
                     <th>Unit Price</th>
                     <th>Quantity</th>
-                    <th>TAX</th>
-                    <th>TAX.Amount</th>
+                    <th>SGST</th>
+                    <th>CGST</th>
+                    <th>Tax.Amt</th>
                     <th>Amount</th>
                 </tr>
             </thead>
             <tbody>
             @php  
 $i=1;
-$sum=0;   
+$sum=0;
 $taxableamount=0;
 $subtotal=0;
 @endphp
-            @foreach($salebill as $key)
-            @php 
-            $unitprice=(($key->offer_amount)/(1+(($key->tax)/100)));
-            $taxamount=($unitprice*($key->tax/100));
 
-$unitprice = number_format($unitprice, 2, '.', '');
+            @foreach($invoice as $key)
+            @php 
+            $unitprice=(($key->selling_rate)/(1+(($key->tax)/100)));
+            $taxamount=($unitprice*($key->tax/100));
+                $unitprice = number_format($unitprice, 2, '.', '');
 $taxamount = number_format($taxamount, 2, '.', '');
             @endphp
                 <tr> 
                 <td>{{$i}}</td>
-
                     <td>{{$key->product_name}}</td>
-<<<<<<< HEAD
-                    <!-- <td>{{$unitprice}}</td> -->
-=======
->>>>>>> c8fb5b34625a3a8fe8527cca8489eb40aa922e33
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
-                    <td>{{$key->tax}} %</td>
-                    <td>{{($key->qty*$taxamount)}} </td>
-                    <td>{{$key->qty*$key->offer_amount}}</td>
+                    <td>{{$key->cgst}} %</td>
+                    <td>{{$key->igst}} %</td>
+                    <td>{{$taxamount * $key->qty}} </td>
+                    <td>{{$key->qty*$key->selling_rate}}</td>
                    
                 </tr>
+
                 @php 
-                $sum += $key->qty*$key->offer_amount;
+                $sum += $key->qty*$key->selling_rate;
 $taxableamount += $taxamount*$key->qty;
 $subtotal+= $key->qty*$unitprice;
 $i++;
 
                 @endphp
+                
                 @endforeach
                 <!-- Add more rows as needed -->
             </tbody>
-             <tfoot>
+            <tfoot>
                 <tr class="total-row">
                 <td></td>
                     <td style="border: 2px solid #000000;">Total</td>
-                    <!-- <td style="border: 2px solid #000000";></td> -->
+                    <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000";>Total SGST</td>
                     <td style="border: 2px solid #000000";>Total CGST</td>
                     <td></td>
                     <td></td>
                 </tr>
-</tfoot>
+            </tfoot>
         </table>
         
 <div class="invoice-details">
@@ -419,12 +415,12 @@ $i++;
     </div>
     <div class="right-details">
     
-    <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p>
+            <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($subtotal,2) }}</span></p>
             <p><strong><span style="color: grey;"><b>DELIVERY CHARGE:</b></span></strong><span class="highlight-back" >{{ $key->shipping_charge }}</span></p>
-            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{$taxableamount}}</span></p>
+            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{number_format($taxableamount,2)}}</span></p>
             <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->
             <!-- <br><br> -->
-            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ $sum +$key->shipping_charge }}</span></p>
+            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ number_format($sum + $key->shipping_charge,2)}}</span></p>
         
     </div>
          

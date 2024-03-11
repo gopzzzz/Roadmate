@@ -4881,6 +4881,7 @@ public function order_history()
 	$role=Auth::user()->user_type;
     return view('marketvendor',compact('vendor','role'));
 	}
+
 	public function vendorinsert(Request $request){
 	$vendor=new Tbl_vendors;
 	$vendor->vendor_name=$request->venname;
@@ -4893,11 +4894,13 @@ public function order_history()
     $vendor->save();
     return redirect('marketvendor')->with('success', 'Added successfully');	
 	}
+
     public function vendorfetch(Request $request){
 	$id=$request->id;
 	$vendor=Tbl_vendors::find($id);
 	print_r(json_encode($vendor));
    }
+
     public function vendoredit(Request $request){
 	$id=$request->id;
 	$vendor=Tbl_vendors::find($id);
@@ -5313,6 +5316,8 @@ public function bill($id){
         return redirect()->back()->with('success', 'Priority removed successfully.');
     }
 
+
+	
 	public function search_order(Request $request)
 {
     $role = Auth::user()->user_type;
@@ -5513,5 +5518,8 @@ $role = Auth::user()->user_type;
 
 		return response()->json(['salelistHTML' => $salelistHTML]);
 	}	
+
+
+
 
 }
