@@ -330,7 +330,7 @@
             <p class="details-label"><b>Ship to</b></p>
         </div>
         <div class="content">
-            <p>{{ $key->area }}, {{ $key->area1 }}, {{ $key->city }}, {{ $key->district }}, {{ $key->state }}, {{ $key->country }}, {{ $key->pincode }}</p>
+            <p>{{ $key->area }} {{ $key->area1 }} {{ $key->city }} <br>{{ $key->district }} {{ $key->state }}<br> {{ $key->country }} {{ $key->pincode }}</p>
         </div>
     </div>
 </div>
@@ -342,10 +342,6 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
-<<<<<<< HEAD
-                    <!-- <th>MRP</th> -->
-=======
->>>>>>> c8fb5b34625a3a8fe8527cca8489eb40aa922e33
                     <th>Unit Price</th>
                     <th>Quantity</th>
                     <th>TAX</th>
@@ -372,10 +368,6 @@ $taxamount = number_format($taxamount, 2, '.', '');
                 <td>{{$i}}</td>
 
                     <td>{{$key->product_name}}</td>
-<<<<<<< HEAD
-                    <!-- <td>{{$unitprice}}</td> -->
-=======
->>>>>>> c8fb5b34625a3a8fe8527cca8489eb40aa922e33
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
                     <td>{{$key->tax}} %</td>

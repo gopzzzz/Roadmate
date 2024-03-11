@@ -5386,7 +5386,6 @@ foreach ($order as $key) {
 	$orderList .= '<td>' . $key->phone . '</td>';
 	$orderList .= '<td>' . 'Area: ' . $key->area . ', ' . $key->area1 . '<br>' . $key->district . ', ' . $key->state . '<br>' . $key->country . ', ' . $key->pincode . '</td>';
 	$orderList .= '<td>' . $key->total_amount . '</td>';
-	$orderList .= '<td>' . $key->discount . '</td>';
 	$orderList .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
 	$orderList .= '<td>' . ($key->payment_status == 0 ? '<strong style="background-color: yellow; padding: 2px;">Unpaid</strong>' : '<strong style="background-color: lightgreen; padding: 2px;">Paid</strong>') . '</td>';
 	$orderList .= '<td>';
