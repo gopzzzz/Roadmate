@@ -357,7 +357,7 @@
     $(document).ready(function() {
         $('#search').on('keyup', function() {
             var searchText = $(this).val().toLowerCase();
-            $('#salelist tr').filter(function() {
+            $('#searchorderlist tr').filter(function() {
                 var shopName = $(this).find('td:nth-child(3)').text().toLowerCase();
                 var orderId = $(this).find('td:nth-child(2)').text().toLowerCase();
                 var phoneNumber = $(this).find('td:nth-child(4)').text().toLowerCase();
@@ -369,6 +369,7 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
         $('#applyFilter').click(function() {
