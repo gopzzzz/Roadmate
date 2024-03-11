@@ -361,8 +361,10 @@ $subtotal=0;
 
             @foreach($invoice as $key)
             @php 
-            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)), 2);
-            $taxamount=number_format($unitprice*($key->tax/100), 2);
+            $unitprice=(($key->offer_amount)/(1+(($key->tax)/100)));
+            $taxamount=($unitprice*($key->tax/100));
+            $unitprice = number_format($unitprice, 2, '.', '');
+$taxamount = number_format($taxamount, 2, '.', '');
             @endphp
                 <tr> 
                 <td>{{$i}}</td>

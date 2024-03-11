@@ -20,7 +20,7 @@ use App\Tbl_physicalstock_trans;
 use App\Tbl_brand_products;
 use App\Tbl_inventory_masters;
 use App\Tbl_inventory_trans;
-
+use App\Tbl_inventory_stocks;
 
 use DB;
 use Hash;
@@ -160,61 +160,79 @@ class stockController extends Controller
 			return response()->json([]);
 		}
 		
-
-
 		public function physical_stockinsert(Request $request)
-		{
-			try {
-				\Log::info('Debug: Request data', ['request' => $request->all()]);
-		
-				$lastPhysicalStock = Tbl_physicalstock_masters::latest()->first();
-				$bill_number = $lastPhysicalStock ? $lastPhysicalStock->bill_number + 1 : 1;
-		
-				$physical = new Tbl_physicalstock_masters;
-				$physical->bill_number = $bill_number;
-				$physical->remarks = 0;
-				$physical->godown_id = $request->godown;
-				$physical->added_date = now();
-				$physical->login_id = auth()->user()->id;
-		
-				if ($physical->save()) {
-					
-					foreach ($request->product_name as $index => $productName) {
-						\Log::info('Debug: Inside Loop');
-		
-						$quantity = $request->quantity[$index];
-		
-						$product = Tbl_brand_products::where('product_name', $productName)->first();
-						\Log::info('Debug: Product', ['product' => $product]);
-		
-						if ($product) {
-							$stockTrans = new Tbl_physicalstock_trans;
-							$stockTrans->master_id = $physical->id;
-							$stockTrans->quantity = $quantity;
-							$stockTrans->product_id = $product->id;
-		
-							if (!$stockTrans->save()) {
-								\Log::error('Error saving stock transaction:', ['errors' => $stockTrans->getErrors()]);
-							}
-						} else {
-							\Log::error('Product not found:', ['product_name' => $productName]);
-						}
-					}
-		
-					Session::flash('success', 'Physical stock added successfully!');
-				} else {
-					Session::flash('error', 'Error adding Physical stock. Please try again.');
-				}
-		
-				return redirect('physical_stock');
-			} catch (\Exception $e) {
-				\Log::error($e->getMessage());
-				dd($e->getMessage());
-			}
-		}
-		
+{
+    try {
+        \Log::info('Debug: Request data', ['request' => $request->all()]);
 
-		
+        $lastPhysicalStock = Tbl_physicalstock_masters::latest()->first();
+        $bill_number = $lastPhysicalStock ? $lastPhysicalStock->bill_number + 1 : 1;
+
+        $physical = new Tbl_physicalstock_masters;
+        $physical->bill_number = $bill_number;
+        $physical->remarks = 0;
+        $physical->godown_id = $request->godown;
+        $physical->added_date = now();
+        $physical->login_id = auth()->user()->id;
+
+        if ($physical->save()) {
+            foreach ($request->product_name as $index => $productName) {
+                \Log::info('Debug: Inside Loop');
+
+                $quantity = $request->quantity[$index];
+
+                $product = Tbl_brand_products::where('product_name', $productName)->first();
+                \Log::info('Debug: Product', ['product' => $product]);
+
+                if ($product) {
+                    $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+                        ->where('inventory_id', $request->godown)
+                        ->first();
+
+                  
+                    if ($quantity < 0 && (!$inventoryStock || $inventoryStock->stock < abs($quantity))) {
+                        \Log::warning("Product with ID {$product->id} not found in inventory stocks or not enough stock.");
+                        $physical->delete();
+                        return redirect('physical_stock')->with('custom_error', "Product $productName is not in stock.");
+                    }
+
+                    $stockTrans = new Tbl_physicalstock_trans;
+                    $stockTrans->master_id = $physical->id;
+                    $stockTrans->quantity = $quantity;
+                    $stockTrans->product_id = $product->id;
+
+                    if (!$stockTrans->save()) {
+                        \Log::error('Error saving stock transaction:', ['errors' => $stockTrans->getErrors()]);
+                    }
+
+                    if ($inventoryStock) {
+                       
+                        $inventoryStock->stock += $quantity;
+                        $inventoryStock->save();
+                    } else {
+                        
+                        $newInventoryStock = new Tbl_inventory_stocks;
+                        $newInventoryStock->product_id = $product->id;
+                        $newInventoryStock->inventory_id = $request->godown;
+                        $newInventoryStock->stock = $quantity; 
+                        $newInventoryStock->save();
+                    }
+                }
+            }
+
+            Session::flash('success', 'Physical stock added successfully!');
+        } else {
+            Session::flash('error', 'Error adding Physical stock. Please try again.');
+        }
+
+        return redirect('physical_stock');
+    } catch (\Exception $e) {
+        \Log::error($e->getMessage());
+        Session::flash('error', 'An error occurred. Please try again.');
+        return redirect()->back();
+    }
+}
+
 		public function getProductsByMasterId($masterId) {
 			$physical_trans = DB::table('tbl_physicalstock_trans')
 				->leftJoin('tbl_brand_products', 'tbl_physicalstock_trans.product_id', '=', 'tbl_brand_products.id')
@@ -418,6 +436,23 @@ public function inventoryTransferEdit(Request $request){
         return redirect()->back()->with('error', 'Inventory transfer not found!');
     }
 }
+public function stockreport(){
+	
+		$stock = DB::table('tbl_inventory_stocks')->orderBy('id', 'DESC')
+		->leftJoin('tbl_godowns', 'tbl_inventory_stocks.inventory_id', '=', 'tbl_godowns.id')
+		->leftJoin('tbl_brand_products', 'tbl_inventory_stocks.product_id', '=', 'tbl_brand_products.id')
+        ->select(
+			'tbl_inventory_stocks.*',
+			'tbl_godowns.name',
+			'tbl_brand_products.product_name'
+		)
+		->get();
+
+		$role=Auth::user()->user_type;
+		
+		return view('stock.stockreport',compact('stock','role'));
+	}
+	
 
 
 

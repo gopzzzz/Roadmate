@@ -170,9 +170,9 @@
 										<input type="hidden" name="id" id="bannerid">
 
 											<div class="modal-body row">
-											<div class="form-group col-sm-6">
+											<div class="form-group col-sm-12">
 													<label class="exampleModalLabel">Banner Type</label>
-													<select name="type1" class="form-control" id="bannertype1">
+													<select name="type1" class="form-control" id="bannertype1" disabled>
 													    <option value="0">Select Type</option>
 														<option value="1">Customer</option>
 														<option value="2">Shop</option>
@@ -180,13 +180,7 @@
 														<option value="4">Store</option>
 													</select>
 												</div>
-												<div class="form-group col-sm-6">
-    <label class="exampleModalLabel">Images</label>
-    @foreach($banner as $shop)
-        <img src="{{ asset('/img/'.$shop->banner_image) }}" alt="" width="100"/>
-    @endforeach
-</div>
-											</div>
+										</div>
 											<div class="modal-footer">
 	
 												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

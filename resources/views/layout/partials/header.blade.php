@@ -239,12 +239,12 @@ $name=Auth::user()->name;
                               </a>
                            </li> -->
                              
-                              <!-- <li class="nav-item">
+                              <li class="nav-item">
                                   <a href="{{ url('salesreturn') }}" class="nav-link {{ request()->is('salesreturn') ? 'active' : '' }}">
                                       <i class="far fa-circle nav-icon"></i>
                                       <p>Sales Return</p>
                                   </a>
-                              </li> -->
+                              </li>
                         </ul>
                      </li>
                      <li class="nav-item has-treeview {{ request()->is(['b2corders','b2c_salelist']) ? 'menu-open' : '' }}">
@@ -281,8 +281,9 @@ $name=Auth::user()->name;
    </ul> -->
 </li>
 
-<!-- <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
+<!-- <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'active' : '' }}">
+
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          Stock Management
@@ -385,14 +386,14 @@ $name=Auth::user()->name;
       </li>
    </ul>
 
-   <ul class="nav nav-treeview">
+   <!-- <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('profit') }}" class="nav-link {{ request()->is('profit') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Profit</p>
          </a>
       </li>
-   </ul>
+   </ul> -->
    <!-- <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('turnover') }}" class="nav-link {{ request()->is('turnover') ? 'active' : '' }}">

@@ -342,7 +342,10 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
+<<<<<<< HEAD
                     <!-- <th>MRP</th> -->
+=======
+>>>>>>> c8fb5b34625a3a8fe8527cca8489eb40aa922e33
                     <th>Unit Price</th>
                     <th>Quantity</th>
                     <th>TAX</th>
@@ -353,20 +356,26 @@
             <tbody>
             @php  
 $i=1;
-$sum=0;
+$sum=0;   
 $taxableamount=0;
 $subtotal=0;
 @endphp
             @foreach($salebill as $key)
             @php 
-            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)),2);
-            $taxamount=number_format($unitprice*($key->tax/100),2);
+            $unitprice=(($key->offer_amount)/(1+(($key->tax)/100)));
+            $taxamount=($unitprice*($key->tax/100));
+
+$unitprice = number_format($unitprice, 2, '.', '');
+$taxamount = number_format($taxamount, 2, '.', '');
             @endphp
                 <tr> 
                 <td>{{$i}}</td>
 
                     <td>{{$key->product_name}}</td>
+<<<<<<< HEAD
                     <!-- <td>{{$unitprice}}</td> -->
+=======
+>>>>>>> c8fb5b34625a3a8fe8527cca8489eb40aa922e33
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
                     <td>{{$key->tax}} %</td>
@@ -395,7 +404,7 @@ $i++;
                     <td></td>
                     <td></td>
                 </tr>
-            </tfoot>
+</tfoot>
         </table>
         
 <div class="invoice-details">
