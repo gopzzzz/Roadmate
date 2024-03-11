@@ -342,7 +342,6 @@
                 <tr>
                 <th>#</th>
                     <th>Description</th>
-                    <!-- <th>MRP</th> -->
                     <th>Unit Price</th>
                     <th>Quantity</th>
                     <th>TAX</th>
@@ -359,23 +358,25 @@ $subtotal=0;
 @endphp
             @foreach($salebill as $key)
             @php 
-            $unitprice=number_format(($key->offer_amount)/(1+(($key->tax)/100)),2);
-            $taxamount=number_format($unitprice*($key->tax/100),2);
+           $unitprice=(($key->selling_rate)/(1+(($key->tax)/100)));
+            $taxamount=($unitprice*($key->tax/100));
+
+$unitprice = number_format($unitprice, 2, '.', '');
+$taxamount = number_format($taxamount, 2, '.', '');
             @endphp
                 <tr> 
                 <td>{{$i}}</td>
 
                     <td>{{$key->product_name}}</td>
-                    <!-- <td>{{$unitprice}}</td> -->
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
                     <td>{{$key->tax}} %</td>
                     <td>{{($key->qty*$taxamount)}} </td>
-                    <td>{{$key->qty*$key->offer_amount}}</td>
+                    <td>{{$key->qty*$key->selling_rate}}</td>
                    
                 </tr>
                 @php 
-                $sum += $key->qty*$key->offer_amount;
+                $sum += $key->qty*$key->selling_rate;
 $taxableamount += $taxamount*$key->qty;
 $subtotal+= $key->qty*$unitprice;
 $i++;
@@ -384,16 +385,16 @@ $i++;
                 @endforeach
                 <!-- Add more rows as needed -->
             </tbody>
-             <tfoot>
+            <tfoot>
                 <tr class="total-row">
                 <td></td>
                     <td style="border: 2px solid #000000;">Total</td>
-                    <!-- <td style="border: 2px solid #000000";></td> -->
                     <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000";>Total SGST</td>
                     <td style="border: 2px solid #000000";>Total CGST</td>
                     <td></td>
-                    <td></td>
+                                        <td></td>
+
                 </tr>
             </tfoot>
         </table>

@@ -16,7 +16,7 @@ use App\Tbl_states;
 use App\Tbl_districts;
 use App\User;
 use App\Tbl_physicalstock_masters;
-use App\tbl_physicalstock_trans;
+use App\Tbl_physicalstock_trans;
 use App\Tbl_brand_products;
 use App\Tbl_inventory_masters;
 use App\Tbl_inventory_trans;

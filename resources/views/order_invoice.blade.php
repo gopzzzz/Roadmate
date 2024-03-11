@@ -400,7 +400,7 @@ $i++;
                 </tr>
             </tfoot>
         </table>
-        
+         
 <div class="invoice-details">
 <div class="left-details">
 <p class="details-label"></p>

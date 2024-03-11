@@ -1463,3 +1463,24 @@ Route::get('/profit', 'AccountController@profit')->name('profit');
 
 Route::get('/turnover', 'AccountController@turnover')->name('turnover');
 
+
+Route::get('/b2corders', [App\Http\Controllers\B2cController::class, 'b2corders'])->name('b2corders');
+
+Route::get('/b2c_salelist', [App\Http\Controllers\B2cController::class, 'b2c_salelist'])->name('b2c_salelist');
+
+Route::get('/b2csale_order/{orderId}', [App\Http\Controllers\B2cController::class, 'b2csale_order'])->name('b2csale_order');
+
+Route::post('/b2csale_orderinsert', [App\Http\Controllers\B2cController::class, 'b2csale_orderinsert'])->name('b2csale_orderinsert');
+
+Route::get('/b2corder_invoice/{orderId}', [App\Http\Controllers\B2cController::class, 'b2corder_invoice'])->name('b2corder_invoice');
+
+Route::get('/b2csale_bill/{orderId}', [App\Http\Controllers\B2cController::class, 'b2csale_bill'])->name('b2csale_bill');
+
+Route::get('/b2cancel-order/{orderId}', [App\Http\Controllers\B2cController::class, 'b2cancelorder'])->name('b2cancel-order');
+
+Route::post('/b2csearch_order', [App\Http\Controllers\B2cController::class, 'b2csearch_order'])->name('b2csearch_order');
+
+Route::post('/b2cstatusedit/{id}', [App\Http\Controllers\B2cController::class, 'b2cstatusedit'])->name('b2cstatusedit');
+
+Route::post('/b2corderfetch', [App\Http\Controllers\B2cController::class, 'b2corderfetch'])->name('b2corderfetch');
+

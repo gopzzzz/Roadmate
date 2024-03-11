@@ -230,19 +230,7 @@ $name=Auth::user()->name;
          </a>
       </li>
 
-                           <li class="nav-item">
-                        <a href="{{ url('purchase_order') }}" class="nav-link {{ request()->is('purchase_order') ? 'active' : '' }}">
-                           <i class="far fa-circle nav-icon"></i>
-                           <p>PO Request</p>
-                        </a>
-                     </li>
-
-                     <li class="nav-item">
-                        <a href="{{ url('purchaseorder_bill') }}" class="nav-link {{ request()->is('purchaseorder_bill') ? 'active' : '' }}">
-                           <i class="far fa-circle nav-icon"></i>
-                           <p>Purchase Order</p>
-                        </a>
-                     </li>
+                          
                            
                            <!-- <li class="nav-item">
                               <a href="{{ url('order_history') }}" class="nav-link {{ request()->is('order_history') ? 'active' : '' }}">
@@ -259,31 +247,31 @@ $name=Auth::user()->name;
                               </li> -->
                         </ul>
                      </li>
-                     <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer']) ? 'active' : '' }}">
+                     <li class="nav-item has-treeview {{ request()->is(['b2corders','b2c_salelist']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['b2corders','b2c_salelist']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          B2C
          <i class="right fas fa-angle-left"></i>
       </p>
    </a>
-   <!-- <ul class="nav nav-treeview">
+   <ul class="nav nav-treeview">
       <li class="nav-item">
-         <a href="{{ url('godown') }}" class="nav-link {{ request()->is('godown') ? 'active' : '' }}">
+         <a href="{{ url('b2corders') }}" class="nav-link {{ request()->is('b2corders') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
-            <p>Godown</p>
+            <p>B2C Orders</p>
          </a>
       </li>
    </ul>
-   <ul class="nav nav-treeview">
+    <ul class="nav nav-treeview">
       <li class="nav-item">
-         <a href="{{ url('physical_stock') }}" class="nav-link {{ request()->is('physical_stock') ? 'active' : '' }}">
+         <a href="{{ url('b2c_salelist') }}" class="nav-link {{ request()->is('b2c_salelist') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
-            <p>Physical Stock</p>
+            <p>B2C Sale List</p>
          </a>
       </li>
    </ul>
-   <ul class="nav nav-treeview">
+   <!--<ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
@@ -326,6 +314,33 @@ $name=Auth::user()->name;
       </li>
    </ul>
 </li> -->
+<li class="nav-item has-treeview {{ request()->is(['purchase_order','purchaseorder_bill']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['purchase_order','purchaseorder_bill']) ? 'active' : '' }}">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <p>
+         Purchase
+         <i class="right fas fa-angle-left"></i>
+      </p>
+   </a>
+   <ul class="nav nav-treeview">
+   <li class="nav-item">
+                        <a href="{{ url('purchase_order') }}" class="nav-link {{ request()->is('purchase_order') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>PO Request</p>
+                        </a>
+                     </li>
+                     </ul>
+
+                     <ul class="nav nav-treeview">
+                     <li class="nav-item">
+                        <a href="{{ url('purchaseorder_bill') }}" class="nav-link {{ request()->is('purchaseorder_bill') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Purchase Order</p>
+                        </a>
+                     </li>
+                     </ul>
+
+</li>
 <li class="nav-item has-treeview {{ request()->is(['ledger_master','expense']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['ledger_master','expense']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
