@@ -148,6 +148,8 @@
            
             <th> MRP</th>
             <th>Selling Rate</th>
+            <th>Unit Price</th>
+
             <th>Tax </th>
             <th>Tax Amt</th>
             <th>Total Amount</th>
@@ -157,16 +159,19 @@
     <tbody>
         @foreach($saleorder as $index => $product)
          
-        <tr>
+        <tr>           
+
         <input type="hidden" id="productId" name="id">
 <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
 <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
 
 <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->price }}" required readonly></td>
 <td><input class="form-control offer-amount" name="offer_amount[]" value="{{ $product->offer_amount }}" required readonly></td>
+<td><input class="form-control unit price" name="unit price[]" value="{{ number_format(($product->offer_amount)/(1+($product->tax)/100),2) }}" required readonly></td>
+
 <td><input class="form-control" name="tax" value="{{ $product->tax }} %" required readonly></td>
 <td><input class="form-control tax" name="tax" value="{{ number_format(($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100), 2) }}" required readonly></td>
-<td><input class="form-control" name="total_amount" value="{{ $product->qty * $product->offer_amount }}"required readonly></td>
+<td><input class="form-control" name="total_amount" value="{{ number_format(($product->offer_amount)/(1+($product->tax)/100),2) + number_format(($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100), 2) }}"required readonly></td>
 
         </tr>
         @endforeach
@@ -214,7 +219,7 @@
              
                
                 <div class="form-group">
-                    <label class="exampleModalLabel">GANDTOTAL AMOUNT</label>
+                    <label class="exampleModalLabel">GRANDTOTAL AMOUNT</label>
                     <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required readonly>
                 </div>
 </div>
