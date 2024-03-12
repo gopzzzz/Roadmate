@@ -309,27 +309,36 @@ class HomeController extends Controller
 		print_r(json_encode($visit));
 	}
 	
-     public function exeinsert(Request $request)
-    {
-      $exe = new Executives;
-      if ($files = $request->file('image')) {
-        $name = $files->getClientOriginalName();
-        $files->move('img/', $name);
-
-        $exe->image = $name;
-        $exe->name = $request->exename;
-        $exe->phonenum = $request->phonenumber;
-        $exe->email = $request->email;
-        $exe->addrress = $request->address;
-        $exe->district = $request->district;
-
-		$exe->status =0;
-
-        $exe->location = $request->location;
-        $exe->save();
-        return redirect('executive')->with('success', 'Executive Inserted Successfully');
-    }
-   }
+	public function exeinsert(Request $request)
+	{
+		// Validate request data
+		$validatedData = $request->validate([
+			'exename' => 'required',
+			'phonenumber' => 'required|unique:executives,phonenum',
+			'email' => 'required|email|unique:executives,email',
+			'address' => 'required',
+			// Add more validation rules as needed
+		]);
+	
+		// If validation passes, insert the executive into the database
+		$exe = new Executives;
+		if ($files = $request->file('image')) {
+			$name = $files->getClientOriginalName();
+			$files->move('img/', $name);
+	
+			$exe->image = $name;
+			$exe->name = $request->exename;
+			$exe->phonenum = $request->phonenumber;
+			$exe->email = $request->email;
+			$exe->addrress = $request->address;
+			$exe->district = $request->district;
+			$exe->status = 0;
+			$exe->location = $request->location;
+			$exe->save();
+			return redirect('executive')->with('success', 'Executive Inserted Successfully');
+		}
+	}
+	
 
    
     public function executivenew(){
@@ -4307,34 +4316,36 @@ public function sale_orderinsert(Request $request)
 
 	
 		public function sale_list(Request $request)
-		{
-			$role = Auth::user()->user_type;
-		
-			$selectedOrderStatus = $request->input('order_status');
-		
-			$ordersQuery = DB::table('tbl_sale_order_masters')
-				->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
-				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-				->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
-				->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-				->orderBy('tbl_sale_order_masters.id', 'DESC');
-		
-			if ($selectedOrderStatus !== null) {
-				$ordersQuery->where('tbl_order_masters.order_status', $selectedOrderStatus);
-			}
-		
-			try {
-				$sale = $ordersQuery
-					->paginate(10);
-		
-				return view('sale_list', compact('sale', 'role', 'selectedOrderStatus'));
-			} catch (\Exception $e) {
-				\Log::error($e->getMessage());
-				dd($e->getMessage());
+{
+    $role = Auth::user()->user_type;
+    $statusFilter = $request->input('status');
+    
+    $ordersQuery = DB::table('tbl_sale_order_masters')
+        ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+        ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+        ->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
+        ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
+        ->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->orderBy('tbl_sale_order_masters.id', 'DESC');
+    
+		if ($statusFilter !== null) {
+			if ($statusFilter == 0) {
+				$ordersQuery = $ordersQuery->where('order_status', $statusFilter)->orWhereNull('order_status');
+			} else {
+				$ordersQuery = $ordersQuery->where('order_status', $statusFilter);
 			}
 		}
 		
+    try {
+        $sale = $ordersQuery->paginate(10); // Pagination with 10 items per page
+        
+        return view('sale_list', compact('sale', 'role'));
+    } catch (\Exception $e) {
+        \Log::error($e->getMessage());
+        dd($e->getMessage());
+    }
+}
+
 		 public function sale_bill($orderId) { 
 
 			$markk=DB::table('tbl_sale_order_trans')
@@ -5383,7 +5394,6 @@ foreach ($order as $key) {
 	$orderList .= '<td>' . $key->phone . '</td>';
 	$orderList .= '<td>' . 'Area: ' . $key->area . ', ' . $key->area1 . '<br>' . $key->district . ', ' . $key->state . '<br>' . $key->country . ', ' . $key->pincode . '</td>';
 	$orderList .= '<td>' . $key->total_amount . '</td>';
-	$orderList .= '<td>' . $key->discount . '</td>';
 	$orderList .= '<td>' . ($key->payment_mode == 0 ? 'Cash on Delivery' : 'Online') . '</td>';
 	$orderList .= '<td>' . ($key->payment_status == 0 ? '<strong style="background-color: yellow; padding: 2px;">Unpaid</strong>' : '<strong style="background-color: lightgreen; padding: 2px;">Paid</strong>') . '</td>';
 	$orderList .= '<td>';

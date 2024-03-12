@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\QueryException;
 
 use App\Tbl_godowns;
 use App\Tbl_places;
@@ -61,35 +62,50 @@ class stockController extends Controller
 
 
 	public function godowninsert(Request $request) {
-			
-		$user = new User;
-		$user->name=$request->name;
-		$user->email = $request->email;
-		$user->password = Hash::make($request->password);
-		
-		$user->user_type = 8; 
-		$user->login_status = 0;
-		if($user->save()){
-			$stock=new Tbl_godowns;
-			
-				$stock->name=$request->name;
-				$placeIds = $request->input('place_id');
-				$lastPlaceId = end($placeIds);
-
-				$stock->place_id = $lastPlaceId;
-
-				$stock->landmark=$request->landmark;
-				$stock->phone_number=$request->phone_number;
-				$stock->email=$request->email;
-				$stock->user_id = $user->id;
-				$stock->GST_Num	 = $request->GST_Num;
-				
-				
-				$stock->save();
-		}
-		
-			return redirect('godown')->with('success', 'Data inserted successfully.');
-		}
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                // Add other validation rules as needed
+            ]);
+    
+            // Create a new user
+            $user = new User;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->user_type = 8; 
+            $user->login_status = 0;
+            $user->save();
+    
+            // Get the last place ID
+            $placeIds = $request->input('place_id');
+            $lastPlaceId = end($placeIds);
+    
+            // Create a new godown entry
+            $godown = new Tbl_godowns;
+            $godown->name = $request->name;
+            $godown->place_id = $lastPlaceId;
+            $godown->landmark = $request->landmark;
+            $godown->phone_number = $request->phone_number;
+            $godown->email = $request->email;
+            $godown->GST_Num = $request->GST_Num;
+            $godown->user_id = $user->id;
+            $godown->save();
+    
+            return redirect('godown')->with('success', 'Data inserted successfully.');
+        } catch (QueryException $exception) {
+            if ($exception->errorInfo[1] == 1062) { // 1062 is MySQL's error code for duplicate entry
+                // Display error message using SweetAlert2
+                $errorMessage = 'Duplicate email entry found.';
+                return "<script>Swal.fire({ icon: 'error', title: 'Validation Error', text: '$errorMessage' })</script>";
+            } else {
+                // Handle other types of exceptions if needed
+                return redirect()->back()->with('error', 'An error occurred.');
+            }
+        }
+    }
+    
 
 	
 		public function godownfetch(Request $request){

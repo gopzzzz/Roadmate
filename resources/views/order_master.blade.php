@@ -199,7 +199,7 @@
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
-                <th>Discount</th>
+                <!-- <th>Discount</th> -->
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
@@ -232,7 +232,7 @@
                 <td>{{ $key->phone }}</td>
                 <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
                 <td>{{ $key->total_amount }}</td>
-                <td>{{ $key->discount }}</td>
+                <!-- <td>{{ $key->discount }}</td> -->
                 
                 <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
                 </td>

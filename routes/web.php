@@ -1489,3 +1489,6 @@ Route::post('/b2cstatusedit/{id}', [App\Http\Controllers\B2cController::class, '
 
 Route::post('/b2corderfetch', [App\Http\Controllers\B2cController::class, 'b2corderfetch'])->name('b2corderfetch');
 
+Route::get('/b2corders/search', [App\Http\Controllers\B2cController::class, 'search'])->name('b2corders.search');
+
+

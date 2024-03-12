@@ -212,7 +212,7 @@ $taxamount = number_format($taxamount, 2, '.', '');
            <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$unitprice}}</td>
            <td style="border: 2px solid #f2f2f2; text-align: right;">{{$key->tax}} %</td>
            <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$taxamount * $key->qty}}</td>
-           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{$key->qty*$unitprice}}</td>
+           <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{($taxamount * $key->qty)+$unitprice}}</td>
        </tr> 
 
 @php 
