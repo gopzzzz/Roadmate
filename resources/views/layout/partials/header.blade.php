@@ -271,17 +271,10 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
-   <!--<ul class="nav nav-treeview">
-      <li class="nav-item">
-         <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Inventory Transfer</p>
-         </a>
-      </li>
-   </ul> -->
+   
 </li>
 
-<!-- <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
+<li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'active' : '' }}">
 
       <i class="nav-icon fas fa-briefcase"></i>
@@ -306,15 +299,15 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
-   <ul class="nav nav-treeview">
+   <!-- <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Inventory Transfer</p>
          </a>
       </li>
-   </ul>
-</li> -->
+   </ul> -->
+</li>
 <li class="nav-item has-treeview {{ request()->is(['purchase_order','purchaseorder_bill']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['purchase_order','purchaseorder_bill']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
@@ -729,11 +722,12 @@ $name=Auth::user()->name;
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a href="{{url('suggcomplnt')}}" class="nav-link {{ request()->is('suggcomplnt') ? 'active' : '' }}">
-                           <i class="far fa-circle nav-icon"></i>
-                           <p>Complaints&Suggestion </p>
-                        </a>
-                     </li>
+    <a href="{{url('suggcomplnt')}}" class="nav-link {{ request()->is('suggcomplnt') ? 'active' : '' }}" style="font-size: 14px;">
+        <i class="far fa-circle nav-icon"></i>
+        <p>Complaints&Suggestion </p>
+    </a>
+</li>
+
                      <li class="nav-item">
                         <a href="{{url('termcondition')}}" class="nav-link {{ request()->is('termcondition') ? 'active' : '' }}">
                            <i class="far fa-circle nav-icon"></i>

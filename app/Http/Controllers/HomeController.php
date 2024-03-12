@@ -309,27 +309,36 @@ class HomeController extends Controller
 		print_r(json_encode($visit));
 	}
 	
-     public function exeinsert(Request $request)
-    {
-      $exe = new Executives;
-      if ($files = $request->file('image')) {
-        $name = $files->getClientOriginalName();
-        $files->move('img/', $name);
-
-        $exe->image = $name;
-        $exe->name = $request->exename;
-        $exe->phonenum = $request->phonenumber;
-        $exe->email = $request->email;
-        $exe->addrress = $request->address;
-        $exe->district = $request->district;
-
-		$exe->status =0;
-
-        $exe->location = $request->location;
-        $exe->save();
-        return redirect('executive')->with('success', 'Executive Inserted Successfully');
-    }
-   }
+	public function exeinsert(Request $request)
+	{
+		// Validate request data
+		$validatedData = $request->validate([
+			'exename' => 'required',
+			'phonenumber' => 'required|unique:executives,phonenum',
+			'email' => 'required|email|unique:executives,email',
+			'address' => 'required',
+			// Add more validation rules as needed
+		]);
+	
+		// If validation passes, insert the executive into the database
+		$exe = new Executives;
+		if ($files = $request->file('image')) {
+			$name = $files->getClientOriginalName();
+			$files->move('img/', $name);
+	
+			$exe->image = $name;
+			$exe->name = $request->exename;
+			$exe->phonenum = $request->phonenumber;
+			$exe->email = $request->email;
+			$exe->addrress = $request->address;
+			$exe->district = $request->district;
+			$exe->status = 0;
+			$exe->location = $request->location;
+			$exe->save();
+			return redirect('executive')->with('success', 'Executive Inserted Successfully');
+		}
+	}
+	
 
    
     public function executivenew(){

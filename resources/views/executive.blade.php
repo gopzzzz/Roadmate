@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
 
+
 </head>
 
 <div class="content-wrapper">
@@ -914,4 +915,21 @@
     }
 </script>
 
+<script>
+    // Check if there are validation errors passed from the controller
+    @if ($errors->any())
+        // Prepare error messages
+        var errorMessages = '';
+        @foreach ($errors->all() as $error)
+            errorMessages += "{{ $error }}\n";
+        @endforeach
+
+        // Display error messages in a SweetAlert2 popup box
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: errorMessages,
+        });
+    @endif
+</script>
   @endsection
