@@ -12,6 +12,8 @@ use App\Tbl_wallet_transactions;
 use App\Tbl_cancel_orders;
 use App\Tbl_product_ratings;
 use App\User_lists;
+use App\Tbl_b2corders;
+use App\Tbl_b2cordertrans;
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -1020,8 +1022,10 @@ public function placeorder(){
         //   );
 
         $his=new Tbl_wallet_transactions;
+        $his->u_type=1;
         $his->type=2;
-        $his->shop_id=$data1->wallet_redeem_id;
+        $his->amount=$data1->wallet_redeem_id;
+        $his->shop_id=$data1->shop_id;
         $his->save();
    foreach($data1->orderlist as $singlelist){	
       $trans = new Tbl_order_trans();
@@ -1060,6 +1064,109 @@ public function placeorder(){
         echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
     }
  } 
+
+ public function customerplaceorder(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+ 
+    $data1 = json_decode($json);
+ 
+    $wallet=DB::table('user_lists')->where('id',$data1->customer_id)->first();
+    if($wallet){
+     $walletamount=$wallet->wallet_amount;
+     if($walletamount>=$data1->wallet_redeem_id){
+ 
+    $lastrow=DB::table('tbl_order_masters')->orderBy('id', 'DESC')->first();
+    if($lastrow){
+    $order_id=$lastrow->order_id+1;
+    }else{
+     $order_id=1000;
+    }
+ 
+    $order=new Tbl_b2corders;
+    $order->shop_id=$data1->customer_id;
+    $order->order_id=$order_id;
+    $order->total_amount=$data1->total_amount;
+    $order->discount=$data1->discount;
+    $order->coupen_id=$data1->coupen_id;
+    $order->wallet_redeem_id=$data1->wallet_redeem_id;
+    $order->payment_mode=$data1->payment_mode;
+    $order->selling_mrp=$data1->total_mrp;
+    $order->shipping_charge=$data1->shipping_charge;
+    $order->tax_amount=$data1->tax_amount;
+    $order->payment_status=$data1->payment_status;
+    $order->order_status=$data1->order_status;
+    $order->sale_status=0;
+    $order->delivery_date=$data1->delivery_date;
+    $order->order_date=$data1->order_date;
+    $order->save();
+ 
+    $orderid=$order->id; 
+     //echo $walletamount;exit;
+     
+        // echo "hi";exit;
+         $wamount=$walletamount-$data1->wallet_redeem_id;
+         DB::table('user_lists')
+         ->where('id',$wallet->id)  // find your user by their email
+         ->limit(1)  // optional - to ensure only one record is updated.
+         ->update(array('wallet_amount' => $wamount)); 
+ 
+         // DB::table('tbl_wallet_trabsactions')->insertGetId(
+         //     [
+         //       'type' => 2,
+         //       'amount' => $data1->wallet_redeem_id,
+         //       'shop_id' => $data1->shop_id,
+         //       'created_at'=>date('Y-m-d H:i:s'),
+         //       'updated_at'=>date('Y-m-d H:i:s')
+         //     ]
+         //   );
+ 
+         $his=new Tbl_wallet_transactions;
+         $his->u_type=2;
+         $his->type=2;
+         $his->amount=$data1->wallet_redeem_id;
+         $his->shop_id=$data1->customer_id;
+         $his->save();
+    foreach($data1->orderlist as $singlelist){	
+       $trans = new Tbl_b2cordertrans();
+ 
+       $trans->product_id = $singlelist->product_id;
+ 
+       $trans->order_id =$orderid;
+ 
+       $trans->qty = $singlelist->qty;
+ 
+       $trans->selling_rate	= $singlelist->selling_rate;
+ 
+       $trans->price = $singlelist->selling_mrp;
+ 
+       $trans->taxable_amount = $singlelist->taxable_amount;
+
+       $trans->order_status =0;
+ 
+       $trans->save();
+ 
+       $check=DB::table('tbl_carts')->where('u_type',2)->where('shop_id',$data1->customer_id)->where('product_id',$singlelist->product_id)->first();
+       if($check){
+         DB::table('tbl_carts')->where('id',$check->id)->delete();
+       }
+ }
+         $json_data = 1;     
+ 
+         echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+     }else{
+         $json_data = 0;     
+ 
+         echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
+     }
+  
+     }else{
+         $json_data = 0;     
+ 
+         echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
+     }
+ }
 
  public function cartadd(){
 
@@ -1329,6 +1436,59 @@ public function updateqty(){
  }
 
 }
+public function customerorderhistory(){
+    
+     
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $shop_id=$data1->customerid;
+  $index=$data1->index;
+  $offset=($index*10);
+  $limit=10;
+
+
+  try{	
+
+    $order_list=DB::table('tbl_b2cordertrans')
+    ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
+    ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name')
+   
+    ->where('tbl_b2corders.shop_id',$shop_id)
+    ->offset($offset) 
+      ->limit($limit) 
+      ->orderBy('tbl_b2cordertrans.id', 'DESC')
+    ->get();
+
+        if($order_list == null){
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+
+                }
+}
+
+catch (Exception $e)
+
+{
+  //return Json("Sorry! Please check input parameters and values");
+   echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+
+}
 
 public function orderhistory(){
      
@@ -1389,6 +1549,7 @@ public function vieworder(){
     ->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_order_masters.*','tbl_brand_products.id as pro_id','tbl_order_trans.id as trans_id','tbl_order_trans.qty', 'tbl_order_trans.offer_amount', 'tbl_order_trans.price', 'tbl_order_trans.taxable_amount','tbl_brand_products.product_name','tbl_order_trans.order_status as product_status')
+    
     ->where('tbl_order_masters.id',$order_id)
    // ->where('status',0)
     ->get();

@@ -824,6 +824,9 @@ Route::post('shopwallet','ShopmarketingController@shopwallet');
 Route::post('brandfilter','ShopmarketingController@brandfilter');
 Route::post('brand_list','ShopmarketingController@brand_list');
 Route::post('searchproduct','ShopmarketingController@searchproduct');
+//b2c module 
+Route::post('customerplaceorder','ShopmarketingController@customerplaceorder');
+Route::post('customerorderhistory','ShopmarketingController@customerorderhistory');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 
