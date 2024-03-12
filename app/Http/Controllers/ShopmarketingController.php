@@ -449,7 +449,7 @@ $cartlist = DB::table('tbl_carts')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
     //->select('tbl_brand_products.*','tbl_hsncodes.tax')
-    ->select('tbl_carts.*','tbl_hsncodes.tax','tbl_brand_products.offer_price', 'tbl_brand_products.price', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
+    ->select('tbl_carts.*','tbl_hsncodes.tax','tbl_brand_products.selling_rate', 'tbl_brand_products.selling_mrp', 'tbl_brand_products.product_name', 'tbl_brand_products.description')
    
     ->where('tbl_carts.shop_id', $shopId)
     ->where('tbl_carts.u_type', $u_type)
@@ -921,7 +921,7 @@ public function deliveryaddresslist(){
     try {    
         $deliveryaddress = DB::table('tbl_deliveryaddres')
             ->where('shop_id', $shopId)
-            ->where('u_type', 1)
+            ->where('u_type',1)
             ->get();
 
         if ($deliveryaddress == null) {

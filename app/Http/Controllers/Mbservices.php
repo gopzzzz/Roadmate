@@ -1026,7 +1026,7 @@ public function otpcheck(Request $request){
 
    ->where('phnum',$phnum)
 
-   ->select('user_lists.id','user_lists.sex','user_lists.status','user_lists.name','user_lists.phnum','user_lists.otp','user_lists.created_at','user_lists.updated_at')
+   ->select('user_lists.id','user_lists.sex','user_lists.status','user_lists.name','user_lists.phnum','user_lists.otp','user_lists.created_at','user_lists.updated_at','user_lists.delivery_id')
 
    ->get();
 
