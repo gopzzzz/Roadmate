@@ -4328,7 +4328,6 @@ public function sale_orderinsert(Request $request)
         dd($e->getMessage());
     }
 }
-
 		 public function sale_bill($orderId) { 
 
 			$markk=DB::table('tbl_sale_order_trans')
@@ -5394,6 +5393,9 @@ foreach ($order as $key) {
 		case 3:
 			$orderList .= '<strong class="bg-success" padding: 2px;">Delivered</strong>';
 			break;
+			case 4:
+				$orderList .= '<strong class="bg-success" padding: 2px;">Cancel</strong>';
+				break;
 		default:
 			break;
 	}
@@ -5511,6 +5513,7 @@ $role = Auth::user()->user_type;
 
 		return response()->json(['salelistHTML' => $salelistHTML]);
 	}	
+
 
 
 
