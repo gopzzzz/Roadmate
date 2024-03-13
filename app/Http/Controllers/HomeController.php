@@ -5142,31 +5142,29 @@ public function bill($id){
 
 		
 		
-		public function productSearch(Request $request)
-		{
-			$vendorId = $request->input('vendor_id');
-			$alphabet = $request->input('alphabet');
-		
-			$products = DB::table('tbl_order_trans')
-				->join('tbl_brand_products', 'tbl_order_trans.product_id', '=', 'tbl_brand_products.id')
-				->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-				->where('tbl_rm_products.vendor_id', $vendorId )
+public function productSearch(Request $request)
+{
+	$vendorId = $request->input('vendor_id');
+	$alphabet = $request->input('alphabet');
 
-				->where('tbl_order_trans.order_status', 0)
-				->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
-				->select(
-					'tbl_order_trans.*',
-					'tbl_hsncodes.tax',
-					'tbl_order_trans.offer_amount',
-					'tbl_order_trans.qty',
-					'tbl_brand_products.product_name'
-				)
-				->get();
+	$products = DB::table('tbl_brand_products')
+		->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+		->where('tbl_rm_products.vendor_id', $vendorId )
+		->where('tbl_rm_products.status', 0)
+		->where('tbl_brand_products.status', 0)
+		->where('tbl_brand_products.product_name', 'LIKE', $alphabet . '%')
+		->select(
+			'tbl_brand_products.*',
+			'tbl_hsncodes.tax',
+		)
+		->get();
+
 		
-				
-			return response()->json($products);
-		}
+	return response()->json($products);
+}
+
+
 		public function salesreturn(){
 			$role = Auth::user()->user_type;
 			$sales=DB::table('tbl_cancel_orders')
