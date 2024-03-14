@@ -827,6 +827,7 @@ Route::post('searchproduct','ShopmarketingController@searchproduct');
 //b2c module 
 Route::post('customerplaceorder','ShopmarketingController@customerplaceorder');
 Route::post('customerorderhistory','ShopmarketingController@customerorderhistory');
+Route::post('orderdetails','ShopmarketingController@orderdetails');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
 

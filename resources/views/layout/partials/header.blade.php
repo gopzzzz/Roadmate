@@ -876,40 +876,7 @@ $name=Auth::user()->name;
                   </p>
                </a>
             </li>
-            <li class="nav-item has-treeview {{ request()->is(['revenue_master','profit','turnover']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['revenue_master','profit','turnover']) ? 'active' : '' }}">
-      <i class="nav-icon fas fa-briefcase"></i>
-      <p>
-         Accounts
-         <i class="right fas fa-angle-left"></i>
-      </p>
-   </a>
-   <ul class="nav nav-treeview">
-      <li class="nav-item">
-         <a href="{{ url('revenue_master') }}" class="nav-link {{ request()->is('revenue_master') ? 'active' : '' }}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Revenue</p>
-         </a>
-      </li>
-   </ul>
-
-   <ul class="nav nav-treeview">
-      <li class="nav-item">
-         <a href="{{ url('profit') }}" class="nav-link {{ request()->is('profit') ? 'active' : '' }}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Profit</p>
-         </a>
-      </li>
-   </ul>
-   <!-- <ul class="nav nav-treeview">
-      <li class="nav-item">
-         <a href="{{ url('turnover') }}" class="nav-link {{ request()->is('turnover') ? 'active' : '' }}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Turn Over</p>
-         </a>
-      </li>
-   </ul> -->
-</li>
+    
             @elseif($role==4)
             <li class="nav-item has-treeview {{ request()->is(['country', 'district','state', 'place','franchises']) ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ request()->is(['country', 'district','state', 'place','franchises']) ? 'active' : '' }}">

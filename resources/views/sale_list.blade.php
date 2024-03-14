@@ -249,7 +249,7 @@
         </td>
         <td>
         @if($role!=3)
-        <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->order_id }}"
+        <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
                 style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
                 Update 
             </button>     

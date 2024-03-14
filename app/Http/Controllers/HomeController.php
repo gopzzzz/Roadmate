@@ -108,12 +108,151 @@ class HomeController extends Controller
     {
 		$role=Auth::user()->user_type;
 		$date=date('Y-m-d');
-	    $tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
+	   
 		$customers=DB::table('user_lists')->count();
 		$shops=DB::table('shops')->count();
 		$franchise=DB::table('tbl_franchises')->count();
+		$userid=Auth::user()->id;
+		$tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
+		if($role==1){
+			$order=array();
+			$turnover=0;
+			$totalRevenue=0;
+			$dexpense=0;
+			$e2=0;
+			$e3=0;
+		}else if($role==3){
+			$fran = DB::table('tbl_franchase_details')
+		->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+		->where('tbl_franchises.user_id', $userid)
+		->select('tbl_franchase_details.*')
+		->get();
+	$order = collect();
+	$order_trans = collect();
+	$order_master = collect();
+	foreach ($fran as $singleFranlist) {
+		if ($singleFranlist->type == 4) {
+			
+		  $shopsQuery = DB::table('tbl_order_masters')
+					->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+					->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+					 ->where('tbl_places.district_id', $singleFranlist->district_id)
+					 ->orderBy('id', 'DESC')
+					 ->limit(6);
+
+					 $shopsQuery2=DB::table('tbl_sale_order_trans')
+					 ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+					->where('tbl_places.district_id', $singleFranlist->district_id)
+					->select('tbl_sale_order_trans.*','tbl_sale_order_masters.invoice_number','tbl_brand_products.product_name','tbl_brand_products.offer_price','tbl_brand_products.prate','tbl_hsncodes.tax','shops.shopname');
+			 
+	 
+					$shopsQuery1=DB::table('tbl_sale_order_masters')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+				   ->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+				   ->where('tbl_places.district_id', $singleFranlist->district_id)
+				   ->select('tbl_sale_order_masters.*');
+		} else {
+		  $shopsQuery = DB::table('tbl_order_masters')
+					->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+					->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+					 ->where('tbl_places.id', $singleFranlist->place_id)
+					 ->orderBy('id', 'DESC')
+					 ->limit(6);
+
+					 $shopsQuery2=DB::table('tbl_sale_order_trans')
+					 ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+					->where('tbl_places.id', $singleFranlist->place_id)
+					->select('tbl_sale_order_trans.*','tbl_sale_order_masters.invoice_number','tbl_brand_products.product_name','tbl_brand_products.offer_price','tbl_brand_products.prate','tbl_hsncodes.tax','shops.shopname');
+				   
+					$shopsQuery1=DB::table('tbl_sale_order_masters')
+				   ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+				   ->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+				   ->where('tbl_places.id', $singleFranlist->place_id)
+				   ->select('tbl_sale_order_masters.*');
+		}
+	
+	
 		
-        return view('dashboard',compact('role','tbookings','customers','shops','franchise'));
+		$order = $order->merge($shopsQuery->get());
+		$order_trans = $order_trans->merge($shopsQuery2->get());
+		$order_master = $order_master->merge($shopsQuery1->get());	
+		
+	}
+
+	$fexpense=DB::table('tbl_franchises')->where('user_id', $userid)->first();
+	if($fexpense){
+	 $e2=$fexpense->staff_count*$fexpense->salary;
+	 $e3=$fexpense->maintanance_cost;
+	}
+  
+   
+	$expense=DB::table('tbl_expenses')->sum('amount');
+	 $totalRevenue = 0;
+	 $turnover =0;
+
+			 foreach ($order_trans as $orderlist) {
+
+				 $r1=$orderlist->offer_amount;
+				 $r2=$orderlist->prate;
+				 $rev=$r1-$r2;
+				 // Calculate revenue for each order transaction
+				 $revenue =$orderlist->qty *  $rev; // Assuming quantity is available in $order_trans
+
+				
+				 
+				 // Add revenue from this order transaction to total revenue
+				 $turnover +=$orderlist->qty*$orderlist->offer_amount;
+				 $totalRevenue += $revenue;
+			 }
+
+			  $dexpense=0;
+		 //     $totalamount=0;
+		   // $totalAmount=0;
+			
+
+			 foreach($order_master as $key){
+				 $totalamount=$key->total_amount;
+				// echo $totalamount;
+				 if($totalamount>300){
+					  $DcharGe=$totalamount*(2/100);
+				 }else{
+					
+					 $DcharGe=($totalamount-40)*(2/100);
+				 }
+				// echo $totalAmount;
+				
+				 if($DcharGe<40){
+					   $e1=40;
+				 }else{
+					$e1=$DcharGe;
+					
+				 }
+				 $dexpense +=$e1;
+			 }
+
+
+		}
+
+		
+		
+	
+
+		
+        return view('dashboard',compact('role','tbookings','customers','shops','franchise','order','turnover','totalRevenue','dexpense','e2','e3'));
     }
 	
 	public function customerlistfetch(Request $request){

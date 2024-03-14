@@ -1464,7 +1464,7 @@ Route::get('/expensedelete/{id}', [App\Http\Controllers\ledgerController::class,
 //Accounts Module 
 Route::get('/revenue_master', 'AccountController@revenue_master')->name('revenue_master');
 
-Route::get('/profit', 'AccountController@profit')->name('profit');
+Route::get('/totalexpense', 'AccountController@totalexpense')->name('totalexpense');
 
 Route::get('/turnover', 'AccountController@turnover')->name('turnover');
 
