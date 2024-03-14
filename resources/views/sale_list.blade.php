@@ -265,17 +265,19 @@
 
        
         </tbody>
-        <tfoot>
-    <tr>
-        <td colspan="12">
-            {{$sale->links()}}
-        </td>
-    </tr>
-</tfoot>
+    
     </table>
 
     
    
+    <div class="row">
+        <div class="col-12">
+            <div class="float-left">
+                {{ $sale->links() }}
+            </div>
+        </div>
+    </div>
+
    
    
     

@@ -121,6 +121,7 @@ class HomeController extends Controller
 			$dexpense=0;
 			$e2=0;
 			$e3=0;
+			$e4=0;
 		}else if($role==3){
 			$fran = DB::table('tbl_franchase_details')
 		->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
@@ -141,7 +142,7 @@ class HomeController extends Controller
 					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
 					 ->where('tbl_places.district_id', $singleFranlist->district_id)
 					 ->orderBy('id', 'DESC')
-					 ->limit(6);
+					 ->limit(3);
 
 					 $shopsQuery2=DB::table('tbl_sale_order_trans')
 					 ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
@@ -167,7 +168,7 @@ class HomeController extends Controller
 					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
 					 ->where('tbl_places.id', $singleFranlist->place_id)
 					 ->orderBy('id', 'DESC')
-					 ->limit(6);
+					 ->limit(3);
 
 					 $shopsQuery2=DB::table('tbl_sale_order_trans')
 					 ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
@@ -197,6 +198,7 @@ class HomeController extends Controller
 	if($fexpense){
 	 $e2=$fexpense->staff_count*$fexpense->salary;
 	 $e3=$fexpense->maintanance_cost;
+	 $e4=$fexpense->rent;
 	}
   
    
@@ -252,7 +254,7 @@ class HomeController extends Controller
 	
 
 		
-        return view('dashboard',compact('role','tbookings','customers','shops','franchise','order','turnover','totalRevenue','dexpense','e2','e3'));
+        return view('dashboard',compact('role','tbookings','customers','shops','franchise','order','turnover','totalRevenue','dexpense','e2','e3','e4'));
     }
 	
 	public function customerlistfetch(Request $request){
@@ -660,6 +662,7 @@ class HomeController extends Controller
 				$franchise->staff_count = $request->nofstaff;
 				$franchise->salary = $request->salary;
 				$franchise->maintanance_cost = $request->main_cost;
+				$franchise->rent = $request->rent;
 				if ($franchise->save()) {
 					for ($i = 0; $i < count($type); $i++) {
 					$franchiseDetails = new Tbl_franchase_details;
@@ -739,6 +742,7 @@ class HomeController extends Controller
 	$franchise->staff_count = $request->nofstaff;
 	$franchise->salary = $request->salary;
 	$franchise->maintanance_cost = $request->main_cost;
+	$franchise->rent = $request->rent;
 	$franchise->save();
     
 	
@@ -4089,13 +4093,15 @@ foreach ($fran as $singleFranlist) {
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
-				 ->where('tbl_places.district_id', $singleFranlist->district_id);		
+				->orderBy('tbl_order_masters.id', 'DESC')
+				->where('tbl_places.district_id', $singleFranlist->district_id);		
     } else {
       $shopsQuery = DB::table('tbl_order_masters')
 				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
 				->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->orderBy('tbl_order_masters.id', 'DESC')
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
 				 ->where('tbl_places.id', $singleFranlist->place_id);
     }
@@ -4347,9 +4353,11 @@ public function sale_orderinsert(Request $request)
         $saleMaster->order_date = $request->orderdate;
 
         
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
         if ($saleMaster->save()) {
+
+			
           
             foreach ($request->product_name as $index => $productName) {
                
@@ -4420,6 +4428,7 @@ public function sale_orderinsert(Request $request)
         
             Session::flash('success', 'Sale Invoice generated successfully!');
         } else {
+			
             
             Session::flash('error', 'Error adding Sale Invoice. Please try again.');
             DB::rollBack(); 

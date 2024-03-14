@@ -91,6 +91,10 @@
                               <label class="exampleModalLabel">Maintanance Cost</label>
                               <input class="form-control" name="main_cost" placeholder="Enter Maintanance Cost" required>
                            </div>
+                           <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Rent</label>
+                              <input class="form-control" name="rent" placeholder="Enter Rent" required>
+                           </div>
 
                         <div class="modal-header">
                            <h5 class="modal-title" id="exampleModalLabel">FRANCHISE DETAILS</h5>
@@ -343,6 +347,10 @@
                               <input class="form-control" id="mcost" name="main_cost" placeholder="Enter Maintanance Cost" required>
                            </div>
                              
+                           <div class="form-group col-sm-12">
+                              <label class="exampleModalLabel">Rent</label>
+                              <input class="form-control" id="rent" name="rent" placeholder="Enter Rent" required>
+                           </div>
                              
                               <div class="modal-footer">
                                  <button type="submit" name="submit" class="btn btn-primary ml-auto">Update</button>

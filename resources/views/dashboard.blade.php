@@ -108,10 +108,10 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Adedd Shops</span>
-                <span class="info-box-number">
+                <a href="{{url('ashops')}}"><span class="info-box-number">
                   Click More
                   
-                </span>
+                </span></a>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -124,7 +124,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Bookings</span>
-                <span class="info-box-number">Click More </span>
+                <a href="{{url('timeslot')}}"><span class="info-box-number">Click More </span></a>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -196,7 +196,7 @@
                   <div class="col-sm-3 col-6">
                     <div class="description-block border-right">
                       <!-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span> -->
-                      <h5 class="description-header">₹ {{$dexpense}}</h5>
+                      <h5 class="description-header">₹ {{$dexpense+$e2+$e3+$e4}}</h5>
                       <span class="description-text">TOTAL EXPENSE</span>
                     </div>
                     <!-- /.description-block -->
