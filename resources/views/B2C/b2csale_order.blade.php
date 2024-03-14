@@ -112,10 +112,12 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <input type="hidden" id="shopId" name="id">
+                        
                         <label class="exampleModalLabel">SHOP NAME:</label>
                         <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
-                    </div>
+                        <input type="hidden" id="shopId" name="shop_id" value="{{ $order->shop_id }}" required readonly>
+
+                 </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -154,7 +156,7 @@
         @foreach($saleorder as $index => $product)
          
         <tr>
-        <input type="hidden" id="productId" name="id">
+        <input type="hidden" name="product_id[]" value="{{ $product->proid }}">
 <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
 <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
 
