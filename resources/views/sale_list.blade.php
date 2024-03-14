@@ -142,11 +142,12 @@
                        
                   <!-- /.card-header -->
                 
-                 
+                 <br>
                   <div class="row">
     <div class="col-md-4">
     <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
     </div>
+   
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
     <div class="col-md-4 text-right">
     <div class="input-group input-group-sm">
@@ -172,6 +173,8 @@
 
 
 
+<br>
+
 
   <table class="table table-bordered table-striped table-sm">
         <thead>
@@ -184,7 +187,6 @@
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
-                <!-- <th>Discount</th> -->
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
@@ -213,7 +215,6 @@
            <td>{{ $key->phone }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
            <td>{{ $key->total_amount }}</td>
-           <!-- <td>{{ $key->discount }}</td> -->
            
            <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
            </td>
@@ -251,7 +252,7 @@
         </td>
         <td>
         @if($role!=3)
-        <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->order_id }}"
+        <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodal" data-id="{{ $key->id }}"
                 style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
                 Update 
             </button>     
@@ -266,17 +267,19 @@
 
        
         </tbody>
-        <tfoot>
-    <tr>
-        <td colspan="12">
-            {{$sale->links()}}
-        </td>
-    </tr>
-</tfoot>
+    
     </table>
 
     
    
+    <div class="row">
+        <div class="col-12">
+            <div class="float-left">
+                {{ $sale->links() }}
+            </div>
+        </div>
+    </div>
+
    
    
     

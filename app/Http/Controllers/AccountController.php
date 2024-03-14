@@ -85,7 +85,7 @@ class AccountController extends Controller
 
 	 
     }
-    public function profit(){
+    public function totalexpense(){
         $role=Auth::user()->user_type;
         $userid=Auth::user()->id;
         if($role==1){

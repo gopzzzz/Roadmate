@@ -108,12 +108,153 @@ class HomeController extends Controller
     {
 		$role=Auth::user()->user_type;
 		$date=date('Y-m-d');
-	    $tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
+	   
 		$customers=DB::table('user_lists')->count();
 		$shops=DB::table('shops')->count();
 		$franchise=DB::table('tbl_franchises')->count();
+		$userid=Auth::user()->id;
+		$tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
+		if($role==1){
+			$order=array();
+			$turnover=0;
+			$totalRevenue=0;
+			$dexpense=0;
+			$e2=0;
+			$e3=0;
+			$e4=0;
+		}else if($role==3){
+			$fran = DB::table('tbl_franchase_details')
+		->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
+		->where('tbl_franchises.user_id', $userid)
+		->select('tbl_franchase_details.*')
+		->get();
+	$order = collect();
+	$order_trans = collect();
+	$order_master = collect();
+	foreach ($fran as $singleFranlist) {
+		if ($singleFranlist->type == 4) {
+			
+		  $shopsQuery = DB::table('tbl_order_masters')
+					->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+					->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+					 ->where('tbl_places.district_id', $singleFranlist->district_id)
+					 ->orderBy('id', 'DESC')
+					 ->limit(3);
+
+					 $shopsQuery2=DB::table('tbl_sale_order_trans')
+					 ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+					->where('tbl_places.district_id', $singleFranlist->district_id)
+					->select('tbl_sale_order_trans.*','tbl_sale_order_masters.invoice_number','tbl_brand_products.product_name','tbl_brand_products.offer_price','tbl_brand_products.prate','tbl_hsncodes.tax','shops.shopname');
+			 
+	 
+					$shopsQuery1=DB::table('tbl_sale_order_masters')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+				   ->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+				   ->where('tbl_places.district_id', $singleFranlist->district_id)
+				   ->select('tbl_sale_order_masters.*');
+		} else {
+		  $shopsQuery = DB::table('tbl_order_masters')
+					->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+					->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+					->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
+					 ->where('tbl_places.id', $singleFranlist->place_id)
+					 ->orderBy('id', 'DESC')
+					 ->limit(3);
+
+					 $shopsQuery2=DB::table('tbl_sale_order_trans')
+					 ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
+					->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+					->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+					->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+					->where('tbl_places.id', $singleFranlist->place_id)
+					->select('tbl_sale_order_trans.*','tbl_sale_order_masters.invoice_number','tbl_brand_products.product_name','tbl_brand_products.offer_price','tbl_brand_products.prate','tbl_hsncodes.tax','shops.shopname');
+				   
+					$shopsQuery1=DB::table('tbl_sale_order_masters')
+				   ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+				   ->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
+				   ->where('tbl_places.id', $singleFranlist->place_id)
+				   ->select('tbl_sale_order_masters.*');
+		}
+	
+	
 		
-        return view('dashboard',compact('role','tbookings','customers','shops','franchise'));
+		$order = $order->merge($shopsQuery->get());
+		$order_trans = $order_trans->merge($shopsQuery2->get());
+		$order_master = $order_master->merge($shopsQuery1->get());	
+		
+	}
+
+	$fexpense=DB::table('tbl_franchises')->where('user_id', $userid)->first();
+	if($fexpense){
+	 $e2=$fexpense->staff_count*$fexpense->salary;
+	 $e3=$fexpense->maintanance_cost;
+	 $e4=$fexpense->rent;
+	}
+  
+   
+	$expense=DB::table('tbl_expenses')->sum('amount');
+	 $totalRevenue = 0;
+	 $turnover =0;
+
+			 foreach ($order_trans as $orderlist) {
+
+				 $r1=$orderlist->offer_amount;
+				 $r2=$orderlist->prate;
+				 $rev=$r1-$r2;
+				 // Calculate revenue for each order transaction
+				 $revenue =$orderlist->qty *  $rev; // Assuming quantity is available in $order_trans
+
+				
+				 
+				 // Add revenue from this order transaction to total revenue
+				 $turnover +=$orderlist->qty*$orderlist->offer_amount;
+				 $totalRevenue += $revenue;
+			 }
+
+			  $dexpense=0;
+		 //     $totalamount=0;
+		   // $totalAmount=0;
+			
+
+			 foreach($order_master as $key){
+				 $totalamount=$key->total_amount;
+				// echo $totalamount;
+				 if($totalamount>300){
+					  $DcharGe=$totalamount*(2/100);
+				 }else{
+					
+					 $DcharGe=($totalamount-40)*(2/100);
+				 }
+				// echo $totalAmount;
+				
+				 if($DcharGe<40){
+					   $e1=40;
+				 }else{
+					$e1=$DcharGe;
+					
+				 }
+				 $dexpense +=$e1;
+			 }
+
+
+		}
+
+		
+		
+	
+
+		
+        return view('dashboard',compact('role','tbookings','customers','shops','franchise','order','turnover','totalRevenue','dexpense','e2','e3','e4'));
     }
 	
 	public function customerlistfetch(Request $request){
@@ -521,6 +662,7 @@ class HomeController extends Controller
 				$franchise->staff_count = $request->nofstaff;
 				$franchise->salary = $request->salary;
 				$franchise->maintanance_cost = $request->main_cost;
+				$franchise->rent = $request->rent;
 				if ($franchise->save()) {
 					for ($i = 0; $i < count($type); $i++) {
 					$franchiseDetails = new Tbl_franchase_details;
@@ -600,6 +742,7 @@ class HomeController extends Controller
 	$franchise->staff_count = $request->nofstaff;
 	$franchise->salary = $request->salary;
 	$franchise->maintanance_cost = $request->main_cost;
+	$franchise->rent = $request->rent;
 	$franchise->save();
     
 	
@@ -3950,13 +4093,15 @@ foreach ($fran as $singleFranlist) {
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
-				 ->where('tbl_places.district_id', $singleFranlist->district_id);		
+				->orderBy('tbl_order_masters.id', 'DESC')
+				->where('tbl_places.district_id', $singleFranlist->district_id);		
     } else {
       $shopsQuery = DB::table('tbl_order_masters')
 				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
 				->leftJoin('tbl_places', 'shops.place_id', '=', 'tbl_places.id')
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
+				->orderBy('tbl_order_masters.id', 'DESC')
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
 				 ->where('tbl_places.id', $singleFranlist->place_id);
     }
@@ -4170,19 +4315,28 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		public function sale_orderinsert(Request $request)
 {
     try {
-        \Log::info('Debug: Request data', ['request' => $request->all()]);
+        Log::info('Debug: Request data', ['request' => $request->all()]);
 
-        // Retrieve the shop ID from the request
-        $shopId = $request->input('shop_id');
 
-        $check = DB::table('tbl_sale_order_masters')->orderBy('id', 'DESC')->first();
-        if ($check == null) {
-            $invoice = 1000;
-        } else {
-            $invoice = $check->invoice_number + 1;
+        $shop = Shops::where('id', $request->shop_id)->first();
+
+        if (!$shop) {
+            return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
         }
 
-        // Create a new instance of Tbl_sale_order_masters
+
+				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
+				if($check==null){
+                 $invoice=1000;
+				}else{
+					$invoice=$check->invoice_number+1;
+				}
+				
+
+				//$ordermaster=DB::table('')->where('',$request->idd)->first();
+
+
+    
         $saleMaster = new Tbl_sale_order_masters;
         $saleMaster->shop_id = $shopId; 
         $saleMaster->order_id = $request->idd;
@@ -4200,10 +4354,50 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
         $saleMaster->delivery_date = $request->delivery_date;
         $saleMaster->order_date = $request->orderdate;
 
+        
+        // DB::beginTransaction();
+
         if ($saleMaster->save()) {
-            // Loop through the products and save them
-            foreach ($request->product_name as $index => $productName) {
-                $productId = $request->product_id[$index];
+
+			
+          
+            foreach ($request->proid as $index => $proid) {
+               
+                $product = Tbl_brand_products::where('id', $proid)->first();
+
+                if (!$product) {
+                    DB::rollBack();
+                    \Log::warning("Product with name {$product->product_name} not found in brand products.");
+                    return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
+					
+                }
+
+               
+                $godown = Tbl_godowns::where('name', $request->godown)->first();
+
+                if ($product) {
+                  
+                    $qty = $request->qty[$index];
+                    $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+                        ->where('inventory_id', $godown->id)->first();
+
+                    if (!$inventoryStock) {
+                        DB::rollBack(); 
+                        \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
+						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+                    }
+
+                    if ($inventoryStock->stock < $qty) {
+                        DB::rollBack(); 
+						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+                    }
+
+                    
+                    $inventoryStock->stock -= $qty;
+                    $inventoryStock->save();
+                }
+
+             
                 $qty = $request->qty[$index];
                 $offerAmount = $request->offer_amount[$index];
                 $price = $request->total_mrp[$index];
@@ -4231,6 +4425,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
             Session::flash('success', 'Sale Invoice generated successfully!');
         } else {
+			
+            
             Session::flash('error', 'Error adding Sale Invoice. Please try again.');
         }
 

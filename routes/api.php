@@ -797,16 +797,23 @@ Route::post('categoryproductlist','ShopmarketingController@categoryproductlist')
 Route::get('categorylist','ShopmarketingController@categorylist');
 Route::post('subcategorylist','ShopmarketingController@subcategorylist');
 Route::post('productdetails','ShopmarketingController@productdetails');
-Route::post('wishlist','ShopmarketingController@wishlist');      
+Route::post('wishlist','ShopmarketingController@wishlist');     
+Route::post('customerwishlist','ShopmarketingController@customerwishlist'); 
 Route::post('cart','ShopmarketingController@cart');
+Route::post('customercart','ShopmarketingController@customercart');
 
              
 Route::post('deliveryaddressadd','ShopmarketingController@deliveryaddressadd');
+Route::post('customerdeliveryaddressadd','ShopmarketingController@customerdeliveryaddressadd');
 Route::post('deliveryaddresslist','ShopmarketingController@deliveryaddresslist');
+Route::post('customerdeliveryaddresslist','ShopmarketingController@customerdeliveryaddresslist');
 Route::post('cartadd','ShopmarketingController@cartadd');
+Route::post('customercartadd','ShopmarketingController@customercartadd');
 Route::post('cartdelete','ShopmarketingController@cartdelete');
 Route::post('wishlistdelete','ShopmarketingController@wishlistdelete');
+Route::post('customerwishlistdelete','ShopmarketingController@customerwishlistdelete');
 Route::post('wishlistadd','ShopmarketingController@wishlistadd');
+Route::post('cuswishlistadd','ShopmarketingController@cuswishlistadd');
 
 Route::post('placeorder','ShopmarketingController@placeorder');
 Route::post('updateqty','ShopmarketingController@updateqty');
@@ -817,8 +824,14 @@ Route::post('shopwallet','ShopmarketingController@shopwallet');
 Route::post('brandfilter','ShopmarketingController@brandfilter');
 Route::post('brand_list','ShopmarketingController@brand_list');
 Route::post('searchproduct','ShopmarketingController@searchproduct');
+//b2c module 
+Route::post('customerplaceorder','ShopmarketingController@customerplaceorder');
+Route::post('customerorderhistory','ShopmarketingController@customerorderhistory');
+Route::post('orderdetails','ShopmarketingController@orderdetails');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
+
+Route::post('customerdeliveryaddressupdate','ShopmarketingController@customerdeliveryaddressupdate');
 Route::post('product','ShopmarketingController@product');
 Route::post('cancelorder','ShopmarketingController@cancelorder');
 Route::post('returnorder','ShopmarketingController@returnorder');

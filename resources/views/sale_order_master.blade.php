@@ -162,8 +162,8 @@
          
         <tr>           
 
-        <input type="hidden" name="product_id[]" value="{{ $product->proid }}">
-<td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
+        <input type="hidden" class="form-control proid" name="proid[]" value="{{ $product->proid }}" required readonly>
+        <td><input class="form-control product-name" name="product_name[]" value="{{ $product->product_name }}" required readonly></td>
 <td><input class="form-control qty" name="qty[]" value="{{ $product->qty }}" required readonly></td>
 
 <td><input class="form-control total-mrp" name="total_mrp" value="{{ $product->price }}" required readonly></td>
@@ -172,7 +172,7 @@
 
 <td><input class="form-control" name="tax" value="{{ $product->tax }} %" required readonly></td>
 <td><input class="form-control tax" name="tax" value="{{ number_format(($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100), 2) }}" required readonly></td>
-<td><input class="form-control" name="total_amount" value="{{ number_format(($product->offer_amount)/(1+($product->tax)/100),2) + number_format(($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100), 2) }}"required readonly></td>
+<td><input class="form-control" name="total_amount" value="{{ (($product->offer_amount)/(1+($product->tax)/100)) + (($product->offer_amount) / (1 + (($product->tax) / 100)) * ($product->tax / 100)) }}"required readonly></td>
 
         </tr>
         @endforeach
