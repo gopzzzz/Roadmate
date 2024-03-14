@@ -122,7 +122,7 @@
 													</select> -->
 													<input type="hidden" class="form-control" name="shop" id="shopid">
 
-													<input type="text" class="form-control searchshops" id="shopname" required>
+													<input type="text" class="form-control searchshops" id="shopname" placeholder="Search Shops"required>
 
 													<div id="shoplist"></div>
 
