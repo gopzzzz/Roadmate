@@ -102,7 +102,7 @@
    <th>Item Name </th>
    
          <th>Total Qty</th>
-         <th>Total Price</th>
+         <th>P Rate</th>
     
         
 </tr>
