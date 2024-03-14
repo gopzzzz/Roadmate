@@ -142,11 +142,12 @@
                        
                   <!-- /.card-header -->
                 
-                 
+                 <br>
                   <div class="row">
     <div class="col-md-4">
     <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
     </div>
+   
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
     <div class="col-md-4 text-right">
     <div class="input-group input-group-sm">
@@ -171,6 +172,8 @@
 
 
 
+<br>
+
 
   <table class="table table-bordered table-striped table-sm">
         <thead>
@@ -183,7 +186,6 @@
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
-                <th>Discount</th>
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
@@ -212,7 +214,6 @@
            <td>{{ $key->phone }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
            <td>{{ $key->total_amount }}</td>
-           <td>{{ $key->discount }}</td>
            
            <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
            </td>

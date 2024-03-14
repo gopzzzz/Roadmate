@@ -4163,12 +4163,10 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 public function sale_orderinsert(Request $request)
 {
     try {
-
- 
         Log::info('Debug: Request data', ['request' => $request->all()]);
 
 
-        $shop = Shops::where('shopname', $request->shopname)->first();
+        $shop = Shops::where('id', $request->shop_id)->first();
 
         if (!$shop) {
             return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
@@ -4204,14 +4202,14 @@ public function sale_orderinsert(Request $request)
 
         if ($saleMaster->save()) {
           
-            foreach ($request->product_name as $index => $productName) {
+            foreach ($request->proid as $index => $proid) {
                
-                $product = Tbl_brand_products::where('product_name', $productName)->first();
+                $product = Tbl_brand_products::where('id', $proid)->first();
 
                 if (!$product) {
                     DB::rollBack();
-                    \Log::warning("Product with name $productName not found in brand products.");
-                    return redirect('order_master')->with('custom_error',"Product $productName is not available.");
+                    \Log::warning("Product with name {$product->product_name} not found in brand products.");
+                    return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
 					
                 }
 
@@ -4227,12 +4225,12 @@ public function sale_orderinsert(Request $request)
                     if (!$inventoryStock) {
                         DB::rollBack(); 
                         \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
-						return redirect('order_master')->with('custom_error', "Product $productName is not in stock.");
+						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
                     }
 
                     if ($inventoryStock->stock < $qty) {
                         DB::rollBack(); 
-						return redirect('order_master')->with('custom_error', "Product $productName is not in stock.");
+						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
                     }
 
                     
