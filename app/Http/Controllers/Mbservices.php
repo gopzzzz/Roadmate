@@ -1076,6 +1076,8 @@ public function otpcheck(Request $request){
 
     $cusreg->phnum = $data1->phone;
 
+    $cusreg->delivery_id =0;
+
     if($cusreg->save()){
 
      $wallet= new Wallets;

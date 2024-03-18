@@ -97,7 +97,7 @@
       </div><!-- /.container-fluid -->
     </section>
 
-    @else
+    @else if($role==3)
     <section class="content">
       <div class="container-fluid">
         <!-- Info boxes -->
@@ -194,11 +194,13 @@
                   </div>
                   <!-- /.col -->
                   <div class="col-sm-3 col-6">
+                    <a href="{{url('totalexpense')}}">
                     <div class="description-block border-right">
                       <!-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span> -->
                       <h5 class="description-header">₹ {{$dexpense+$e2+$e3+$e4}}</h5>
                       <span class="description-text">TOTAL EXPENSE</span>
                     </div>
+</a>
                     <!-- /.description-block -->
                   </div>
                   <!-- /.col -->

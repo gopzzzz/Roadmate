@@ -90,6 +90,7 @@ class AccountController extends Controller
         $userid=Auth::user()->id;
         if($role==1){
             $e2=0;
+            $e4=0;
             $order_trans=DB::table('tbl_sale_order_trans')
             ->leftJoin('tbl_sale_order_masters', 'tbl_sale_order_trans.order_id', '=', 'tbl_sale_order_masters.id')
             ->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
@@ -163,6 +164,7 @@ class AccountController extends Controller
        if($fexpense){
         $e2=$fexpense->staff_count*$fexpense->salary;
         $e3=$fexpense->maintanance_cost;
+        $e4=$fexpense->rent;
        }
      
       
@@ -214,7 +216,7 @@ class AccountController extends Controller
              //  echo $dexpense;exit;
 
                 
-        return view('accounts.profit',compact('role','totalRevenue','expense','turnover','e2','e3','dexpense'));
+        return view('accounts.profit',compact('role','totalRevenue','expense','turnover','e2','e3','e4','dexpense'));
     
     }
     public function turnover(){

@@ -114,15 +114,8 @@ class HomeController extends Controller
 		$franchise=DB::table('tbl_franchises')->count();
 		$userid=Auth::user()->id;
 		$tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
-		if($role==1){
-			$order=array();
-			$turnover=0;
-			$totalRevenue=0;
-			$dexpense=0;
-			$e2=0;
-			$e3=0;
-			$e4=0;
-		}else if($role==3){
+		
+		if($role==3){
 			$fran = DB::table('tbl_franchase_details')
 		->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
 		->where('tbl_franchises.user_id', $userid)
@@ -247,6 +240,15 @@ class HomeController extends Controller
 			 }
 
 
+		}else{
+			
+				$order=array();
+				$turnover=0;
+				$totalRevenue=0;
+				$dexpense=0;
+				$e2=0;
+				$e3=0;
+				$e4=0;
 		}
 
 		
@@ -4247,6 +4249,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 	
 				$wh = new Tbl_wallet_transactions;
 				$wh->amount = $percentage;
+				$wh->u_type =1;
 				$wh->type = 1;
 				$wh->shop_id = $shop_id;
 				$wh->save();
@@ -4326,8 +4329,7 @@ public function sale_orderinsert(Request $request)
 				}
 				
 
-				//$ordermaster=DB::table('')->where('',$request->idd)->first();
-
+				
 
     
         $saleMaster = new Tbl_sale_order_masters;
@@ -4341,70 +4343,75 @@ public function sale_orderinsert(Request $request)
         $saleMaster->wallet_redeem_id = $request->walletamount;
         $paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
         $saleMaster->payment_mode = $paymentMode;
-        $saleMaster->order_status = 0;
-
+       
         $saleMaster->total_mrp = 0;
         $saleMaster->shipping_charge = $request->shipping_charge;
         $saleMaster->tax_amount = 0;
 
         $saleMaster->delivery_date = $request->delivery_date;
-        $saleMaster->order_date = $request->orderdate;
+       
+		$saleMaster->order_date = $request->orderdate;
 
-        
-        // DB::beginTransaction();
+	
+		
 
         if ($saleMaster->save()) {
+
+			//echo "hi";exit;
 
 			
           
             foreach ($request->proid as $index => $proid) {
-               
-                $product = Tbl_brand_products::where('id', $proid)->first();
 
-                if (!$product) {
-                    DB::rollBack();
-                    \Log::warning("Product with name {$product->product_name} not found in brand products.");
-                    return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
+				
+               
+                // $product[$index]= Tbl_brand_products::where('id',$proid[$index])->first();
+				
+
+                // if (!$product) {
+                //     DB::rollBack();
+                //     \Log::warning("Product with name {$product->product_name} not found in brand products.");
+                //     return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
 					
-                }
+                // }
+
+				
 
                
-                $godown = Tbl_godowns::where('name', $request->godown)->first();
+                // $godown = Tbl_godowns::where('name',$request->godown)->first();
 
-                if ($product) {
+                // if ($product) {
                   
-                    $qty = $request->qty[$index];
-                    $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
-                        ->where('inventory_id', $godown->id)->first();
+                //     $qty = $request->qty[$index];
+                //     $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+                //         ->where('inventory_id', $godown->id)->first();
 
-                    if (!$inventoryStock) {
-                        DB::rollBack(); 
-                        \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
-						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
-                    }
+                //     if (!$inventoryStock) {
+                //         DB::rollBack(); 
+                //         \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
+				// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+                //     }
 
-                    if ($inventoryStock->stock < $qty) {
-                        DB::rollBack(); 
-						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
-                    }
+                //     if ($inventoryStock->stock < $qty) {
+                //         DB::rollBack(); 
+				// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+                //     }
 
                     
-                    $inventoryStock->stock -= $qty;
-                    $inventoryStock->save();
-                }
+                //     $inventoryStock->stock -= $qty;
+                //     $inventoryStock->save();
+                // }
 
              
-                $qty = $request->qty[$index];
-                $offer_amount = $request->offer_amount[$index];
-                $price = $request->price[$index] ?? 0;
+               
 
                 $saleTrans = new Tbl_sale_order_trans;
                 $saleTrans->order_id = $saleMaster->id;
-                $saleTrans->product_id = $product ? $product->id : 0;
+                $saleTrans->product_id = $request->proid[$index];
                 $saleTrans->sale_order_id = $saleMaster->id;
-                $saleTrans->qty = $qty;
-                $saleTrans->offer_amount = $offer_amount;
-                $saleTrans->price = $request->total_mrp;
+                $saleTrans->qty = $request->qty[$index];
+                $saleTrans->offer_amount = $request->offer_amount[$index];
+                $saleTrans->price = $request->price[$index];
                 $saleTrans->taxable_amount = 0;
 
                 if (!$saleTrans->save()) {
@@ -4421,7 +4428,7 @@ public function sale_orderinsert(Request $request)
             ]);
 
           
-            DB::commit();
+            // DB::commit();
 
         
             Session::flash('success', 'Sale Invoice generated successfully!');
@@ -4435,6 +4442,7 @@ public function sale_orderinsert(Request $request)
        
         return redirect('order_master');
     } catch (\Exception $e) {
+		echo $e->getMessage();exit;
         \Log::error($e->getMessage());
         DB::rollBack(); 
       

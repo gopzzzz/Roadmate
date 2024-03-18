@@ -827,6 +827,7 @@ Route::post('searchproduct','ShopmarketingController@searchproduct');
 //b2c module 
 Route::post('customerplaceorder','ShopmarketingController@customerplaceorder');
 Route::post('customerorderhistory','ShopmarketingController@customerorderhistory');
+Route::post('upcomingorders','ShopmarketingController@upcomingorders');
 Route::post('orderdetails','ShopmarketingController@orderdetails');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
@@ -835,6 +836,8 @@ Route::post('customerdeliveryaddressupdate','ShopmarketingController@customerdel
 Route::post('product','ShopmarketingController@product');
 Route::post('cancelorder','ShopmarketingController@cancelorder');
 Route::post('returnorder','ShopmarketingController@returnorder');
+Route::post('cusreturnorder','ShopmarketingController@cusreturnorder');
+Route::post('cuscancelorder','ShopmarketingController@cuscancelorder');
 Route::post('productrating','ShopmarketingController@productrating');
 Route::post('averagerating','ShopmarketingController@averagerating');
 Route::get('priorityproducts','ShopmarketingController@priorityproducts');

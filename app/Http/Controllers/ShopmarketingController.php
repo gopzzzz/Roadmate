@@ -14,6 +14,7 @@ use App\Tbl_product_ratings;
 use App\User_lists;
 use App\Tbl_b2corders;
 use App\Tbl_b2cordertrans;
+use App\Tbl_b2c_cancel_orders;
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -1458,7 +1459,78 @@ public function customerorderhistory(){
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
     ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_brand_products.product_name')
-   
+   ->where('tbl_b2corders.order_status',3)
+    ->where('tbl_b2corders.shop_id',$shop_id)
+    ->offset($offset) 
+      ->limit($limit) 
+      ->orderBy('tbl_b2cordertrans.id', 'DESC')
+    ->get();
+    $order_list = [];
+    foreach ($products as $proItem) {
+        $imageArray = DB::table('tbl_productimages')->where('prod_id',$proItem->product_id)->first();
+        
+        //echo "<pre>";print_r($imageArray);exit;
+    
+        // Check if $imageArray is not null before accessing its properties
+        if ($imageArray) {
+            // Assuming there is a column named 'images' in tbl_productimages table
+            $proItem->images = $imageArray->images;
+        } else {
+            // If no images are found, set it to an empty array or null, depending on your needs
+            $proItem->images = "";
+            // or $cartItem->images = null;
+        }
+    
+        // Add the $cartItem to the $cart array
+        $order_list[] = $proItem;
+    }
+
+        if($order_list == null){
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+
+                }
+}
+
+catch (Exception $e)
+
+{
+  //return Json("Sorry! Please check input parameters and values");
+   echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+
+}
+public function upcomingorders(){
+       
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $shop_id=$data1->customerid;
+  $index=$data1->index;
+  $offset=($index*10);
+  $limit=10;
+
+
+  try{	
+
+    $products=DB::table('tbl_b2cordertrans')
+    ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
+    ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_brand_products.product_name')
+   ->where('tbl_b2corders.order_status','!=',3)
     ->where('tbl_b2corders.shop_id',$shop_id)
     ->offset($offset) 
       ->limit($limit) 
@@ -1796,6 +1868,46 @@ public function cancelorder(){
 
  }
 }
+public function cuscancelorder(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+   $data1 = json_decode($json);
+  
+   $order_id=$data1->trans_id;
+  
+  
+   $orderstatus=Tbl_order_trans::find($order_id);
+   $orderstatus->order_status=2;
+   
+  
+   if($orderstatus->save()){
+  
+      
+  
+      $cancel =new Tbl_b2c_cancel_orders;
+      $cancel->type=1;
+      $cancel->order_trans_id=$order_id;
+      $cancel->qty=0;
+      $cancel->pay_returnstatus=0;
+      $cancel->comment=$data1->reason;
+      $cancel->save();
+  
+  
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+  
+   }else{
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+  
+   }   
+}
 public function returnorder(){
 
     
@@ -1820,6 +1932,7 @@ public function returnorder(){
     $cancel->type=2;
     $cancel->order_trans_id=$order_id;
     $cancel->qty=0;
+    $cancel->pay_returnstatus=0;
     $cancel->comment=$data1->reason;
     $cancel->save();
 
@@ -1836,6 +1949,45 @@ public function returnorder(){
   echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
 
  }
+}
+public function cusreturnorder(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+   $data1 = json_decode($json);
+  
+   $order_id=$data1->trans_id;
+  
+  
+   $orderstatus=Tbl_b2cordertrans::find($order_id);
+   $orderstatus->order_status=3;
+   
+  
+   if($orderstatus->save()){
+  
+     
+      $cancel =new Tbl_b2c_cancel_orders;
+      $cancel->type=2;
+      $cancel->order_trans_id=$order_id;
+      $cancel->qty=0;
+      $cancel->comment=$data1->reason;
+      $cancel->pay_returnstatus=0;
+      $cancel->save();
+  
+  
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+  
+   }else{
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+  
+   }  
 }
 public function productrating(){
     $postdata = file_get_contents("php://input");					
