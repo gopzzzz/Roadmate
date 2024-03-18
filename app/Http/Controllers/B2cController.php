@@ -38,10 +38,21 @@ class B2cController extends Controller
     $statusFilter = $request->input('status');
 
     $ordersQuery = DB::table('tbl_b2corders')
-        ->leftJoin('shops', 'tbl_b2corders.shop_id', '=', 'shops.id')
-        ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+        ->leftJoin('user_lists', 'tbl_b2corders.shop_id', '=', 'user_lists.id')
+        ->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2corders.coupen_id', '=', 'tbl_coupens.id')
-        ->select('tbl_b2corders.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode');
+        ->select('tbl_b2corders.*', 
+		'user_lists.name',
+		'user_lists.phnum', 
+		'tbl_coupens.coupencode', 
+		'tbl_deliveryaddres.area', 
+		'tbl_deliveryaddres.area1', 
+		'tbl_deliveryaddres.country', 
+		'tbl_deliveryaddres.state', 
+		'tbl_deliveryaddres.district', 
+		'tbl_deliveryaddres.city', 
+		'tbl_deliveryaddres.phone', 
+		'tbl_deliveryaddres.pincode');
     
 		if ($statusFilter !== null) {
 			$ordersQuery = $ordersQuery->where('order_status', $statusFilter);
@@ -63,8 +74,8 @@ $saleorder=DB::table('tbl_b2corders')
 ->leftJoin('tbl_b2cordertrans', 'tbl_b2corders.id', '=', 'tbl_b2cordertrans.order_id')
 ->leftJoin('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
 ->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-->leftJoin('shops', 'tbl_b2corders.shop_id', '=', 'shops.id') 
-->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+->leftJoin('user_lists', 'tbl_b2corders.shop_id', '=', 'user_lists.id')
+->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
 ->where('tbl_b2corders.id',$orderId)
     ->select( 
         'tbl_b2corders.*',
@@ -72,10 +83,10 @@ $saleorder=DB::table('tbl_b2corders')
         'tbl_b2cordertrans.qty',
         'tbl_b2cordertrans.price',
         'tbl_b2cordertrans.selling_rate',
-        'shops.id as shop_id',
-        'shops.shopname',
-        'shops.address' ,
-        'shops.delivery_id' ,
+        'user_lists.id as shop_id',
+        'user_lists.name',
+        'user_lists.phnum',
+        'user_lists.delivery_id' ,
         'tbl_brand_products.id as proid',
         'tbl_brand_products.product_name',
         'tbl_deliveryaddres.phone',
@@ -191,11 +202,11 @@ public function b2csale_orderinsert(Request $request)
     $statusFilter = $request->input('status');
 
     $ordersQuery = DB::table('tbl_b2csales')
-        ->leftJoin('shops', 'tbl_b2csales.shop_id', '=', 'shops.id')
-        ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+	->leftJoin('user_lists', 'tbl_b2csales.shop_id', '=', 'user_lists.id')
+	->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2csales.coupen_id', '=', 'tbl_coupens.id')
         ->leftJoin('tbl_b2corders', 'tbl_b2csales.order_id', '=', 'tbl_b2corders.id')
-        ->select('tbl_b2csales.*', 'shops.shopname', 'shops.address', 'tbl_b2corders.order_status', 'tbl_b2corders.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->select('tbl_b2csales.*', 'user_lists.name', 'user_lists.phnum', 'tbl_b2corders.order_status', 'tbl_b2corders.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
         ->orderBy('tbl_b2csales.id', 'DESC');
 
     if ($statusFilter !== null) {
@@ -220,17 +231,17 @@ public function b2csale_orderinsert(Request $request)
 			->leftJoin('tbl_b2cordertrans', 'tbl_b2corders.id', '=', 'tbl_b2cordertrans.order_id')
 			->leftJoin('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
 			->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-			->leftJoin('shops', 'tbl_b2corders.shop_id', '=', 'shops.id') 
-			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+			->leftJoin('user_lists', 'tbl_b2corders.shop_id', '=', 'user_lists.id')
+	        ->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
 			->where('tbl_b2corders.id',$orderId)
 				->select(
 					'tbl_b2corders.*',
 					
 					'tbl_b2cordertrans.qty',
 					'tbl_b2cordertrans.selling_rate',
-					'shops.shopname',
-					'shops.address' ,
-					'shops.delivery_id' ,
+					'user_lists.name',
+                    'user_lists.phnum',
+					'user_lists.delivery_id' ,
 					'tbl_brand_products.product_name',
 					'tbl_deliveryaddres.area',
 					'tbl_deliveryaddres.area1',
@@ -256,8 +267,8 @@ public function b2csale_orderinsert(Request $request)
 				->leftJoin('tbl_b2csalestrans', 'tbl_b2csales.id', '=', 'tbl_b2csalestrans.order_id')
 				->leftJoin('tbl_brand_products', 'tbl_b2csalestrans.product_id', '=', 'tbl_brand_products.id')
 					->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-				->leftJoin('shops', 'tbl_b2csales.shop_id', '=', 'shops.id') 
-				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+					->leftJoin('user_lists', 'tbl_b2csales.shop_id', '=', 'user_lists.id')
+					->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->where('tbl_b2csales.id',$orderId)
 					->select(
 						'tbl_b2csales.*',
@@ -265,9 +276,9 @@ public function b2csale_orderinsert(Request $request)
 						'tbl_b2csalestrans.sale_order_id',
 						'tbl_b2csalestrans.qty',
 						'tbl_b2csalestrans.selling_rate',
-						'shops.shopname',
-						'shops.address' ,
-						'shops.delivery_id' ,
+						'user_lists.name',
+                    'user_lists.phnum',
+					'user_lists.delivery_id' ,
 						'tbl_brand_products.product_name',
 						'tbl_deliveryaddres.area',
 						'tbl_deliveryaddres.area1',

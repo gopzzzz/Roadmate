@@ -319,8 +319,8 @@
             <p class="details-label"><b>Billed to</b></p>
         </div>
         <div class="content left-content">
-            <p>{{$key->shopname}}<br>
-                {{$key->address}}
+            <p>{{$key->name}}<br>
+                
             </p>
         </div>
     </div>

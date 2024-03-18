@@ -179,7 +179,7 @@
             <tr>
                 <th>id</th>
                 <th>OrderId</th>
-                <th>Shop Name</th>
+                <th>Customer Name</th>
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
@@ -207,9 +207,9 @@
        <tr>
            <td>{{ $i++ }}</td>
            <td>{{ $key->invoice_number }}</td>
-           <td>{{ $key->shopname }}</td>
+           <td>{{ $key->name }}</td>
           
-           <td>{{ $key->phone }}</td>
+           <td>{{ $key->phnum }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
            <td>{{ $key->total_amount }}</td>
            <!-- <td>{{ $key->discount }}</td> -->
