@@ -143,7 +143,7 @@
                 
                  
 
-
+                  <br>
 
                   <div class="row">
     <div class="col-md-4">
@@ -171,7 +171,7 @@
    
 </div>
 
-
+<br>
   <table class="table table-bordered table-striped table-sm">
         <thead>
       
@@ -183,7 +183,7 @@
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
-                <th>Discount</th>
+                <!-- <th>Discount</th> -->
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
@@ -212,7 +212,7 @@
            <td>{{ $key->phone }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
            <td>{{ $key->total_amount }}</td>
-           <td>{{ $key->discount }}</td>
+           <!-- <td>{{ $key->discount }}</td> -->
            
            <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
            </td>
@@ -250,7 +250,7 @@
         </td>
         <td>
         @if($role!=3)
-        <button class="btn btn-primary editstatus" data-toggle="modal" data-target="#editstatusmodals" data-id="{{ $key->order_id }}"
+        <button class="btn btn-primary b2ceditstatus" data-toggle="modal" data-target="#editstatusmodals" data-id="{{ $key->order_id }}"
                 style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
                 Update 
             </button>     
@@ -303,7 +303,7 @@
             <form id="statusEditForms" method="post" action="{{ route('b2cstatusedit', ['id' => 'id'],['total_amount' => 'id']) }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body row">
-                    <input type="hidden" name="id" id="stat_id" value="">
+                    <input type="hidden" name="id" id="stat_idd" value="">
                     <input type="hidden" name="total_amount" id="total_amount" value="">
 
                     <div class="form-group col-sm-12">
@@ -339,7 +339,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-$(document).on('click', '.editstatus', function () {
+$(document).on('click', '.b2ceditstatus', function () {
     var id = $(this).data('id');
     console.log('Clicked on editstatus with id:', id);
 
@@ -348,7 +348,7 @@ $(document).on('click', '.editstatus', function () {
     url = url.replace('_id_', id);
     form.attr('action', url);
 
-    $('#stat_id').val(id);
+    $('#stat_idd').val(id);
 
     $.ajax({
         type: "POST",

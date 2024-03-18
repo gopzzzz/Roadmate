@@ -165,6 +165,7 @@
             <button id="applyFilter" class="btn btn-primary btn-sm ml-2">Apply Filter</button>
         </div>
     </div>
+    
 </div>
        
    

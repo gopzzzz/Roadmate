@@ -121,6 +121,7 @@
                         <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
                     </div>
                 </div>
+
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label class="exampleModalLabel">PHONE NUMBER:</label>

@@ -4182,7 +4182,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 		public function orderfetch(Request $request)
 		{
-			$order_id = $request->id; 
+			$order_id = $request->id; // assuming id in the request is the order_id
 			$order = Tbl_order_masters::where('id', $order_id)->first();
 		
 		
@@ -4194,77 +4194,77 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				return response()->json(['error' => 'Order details not found'], 404);
 			}
 		}
+		
 		public function orderstatus() {
 			$order = Tbl_order_masters::orderBy('order_status')->get();
 		
 			return view('order_master', compact('order'));
 		}
 		public function statusedit(Request $request, $order_id)
-		{
-			\Log::info('Received order_id for statusedit: ' . $order_id);
-		
-			$total_amount = $request->input('total_amount');
-		
-			\Log::info('Received total_amount for statusedit: ' . $total_amount);
-		
-			if (!is_numeric($total_amount)) {
-				\Log::error('Invalid total_amount received: ' . $total_amount);
-				return redirect('sale_list')->with('error', 'Invalid total_amount received.');
-			}
-		
-			$order = Tbl_order_masters::where('id',$order_id)->first();
-		
-			if ($order) {
-				$order->order_status = $request->order_status;
-				
-				// Ensure payment_status is properly set
-				if ($request->has('paystatus') && $request->paystatus !== null) {
-					$order->payment_status = $request->paystatus;
-				} elseif ($order->payment_status === null) {
-					// If payment_status is null, set it to its current value
-					$order->payment_status = $order->payment_status;
+{
+    \Log::info('Received order_id for statusedit: ' . $order_id);
+
+    $total_amount = $request->input('total_amount');
+
+    \Log::info('Received total_amount for statusedit: ' . $total_amount);
+
+    if (!is_numeric($total_amount)) {
+        \Log::error('Invalid total_amount received: ' . $total_amount);
+        return redirect('sale_list')->with('error', 'Invalid total_amount received.');
+    }
+
+    $order = Tbl_order_masters::where('id',$order_id)->first();
+
+    if ($order) {
+        $order->order_status = $request->order_status;
+        
+        // Ensure payment_status is properly set
+        if ($request->has('paystatus') && $request->paystatus !== null) {
+            $order->payment_status = $request->paystatus;
+        } elseif ($order->payment_status === null) {
+            // If payment_status is null, set it to its current value
+            $order->payment_status = $order->payment_status;
+        }
+
+        if ($request->paystatus == '1') {
+
+			if($order->wallet_redeem_id==0){
+				$percentage = ($total_amount * 10) / 100;
+				\Log::info('Calculated Percentage: ' . $percentage);
+	
+				$shop_id = $order->shop_id;
+	
+				$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+	
+				if ($wallet) {
+					$wallet->wallet_amount += $wallet->amount + $percentage;
+					$wallet->save();
+					\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+				} else {
+					$w = new Tbl_wallets;
+					$w->shop_id = $shop_id;
+					$w->wallet_amount += $percentage;
+					$w->save();
 				}
-		
-				if ($request->paystatus == '1') {
-		
-					if($order->wallet_redeem_id==0){
-						$percentage = ($total_amount * 10) / 100;
-						\Log::info('Calculated Percentage: ' . $percentage);
-			
-						$shop_id = $order->shop_id;
-			
-						$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
-			
-						if ($wallet) {
-							$wallet->wallet_amount += $wallet->amount + $percentage;
-							$wallet->save();
-							\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
-						} else {
-							$w = new Tbl_wallets;
-							$w->shop_id = $shop_id;
-							$w->wallet_amount += $percentage;
-							$w->save();
-						}
-			
-						$wh = new Tbl_wallet_transactions;
-						$wh->amount = $percentage;
-						$wh->u_type =1;
-						$wh->type = 1;
-						$wh->shop_id = $shop_id;
-						$wh->save();
-					}
-		
-				   
-				}
-		
-				$order->save();
-		
-				return redirect('sale_list')->with('success', 'Order status updated successfully.');
-			} else {
-				return redirect('sale_list')->with('error', 'Order not found.');
+	
+				$wh = new Tbl_wallet_transactions;
+				$wh->amount = $percentage;
+				$wh->u_type =1;
+				$wh->type = 1;
+				$wh->shop_id = $shop_id;
+				$wh->save();
 			}
-		}
-		
+
+           
+        }
+
+        $order->save();
+
+        return redirect('sale_list')->with('success', 'Order status updated successfully.');
+    } else {
+        return redirect('sale_list')->with('error', 'Order not found.');
+    }
+}
 
 	public function sale_order_master($orderId) {
 
@@ -4307,8 +4307,13 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		$role=Auth::user()->user_type;
 		return view('sale_order_master',compact('role','markk','saleorder','orderId','godown'));
 	    }
+	
 		
-public function sale_orderinsert(Request $request)
+		
+		
+
+
+		public function sale_orderinsert(Request $request)
 {
     try {
         Log::info('Debug: Request data', ['request' => $request->all()]);
@@ -4329,8 +4334,7 @@ public function sale_orderinsert(Request $request)
 				}
 				
 
-				//$ordermaster=DB::table('')->where('',$request->idd)->first();
-
+				
 
     
         $saleMaster = new Tbl_sale_order_masters;
@@ -4344,70 +4348,75 @@ public function sale_orderinsert(Request $request)
         $saleMaster->wallet_redeem_id = $request->walletamount;
         $paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
         $saleMaster->payment_mode = $paymentMode;
-        $saleMaster->order_status = 0;
-
+       
         $saleMaster->total_mrp = 0;
         $saleMaster->shipping_charge = $request->shipping_charge;
         $saleMaster->tax_amount = 0;
 
         $saleMaster->delivery_date = $request->delivery_date;
-        $saleMaster->order_date = $request->orderdate;
+       
+		$saleMaster->order_date = $request->orderdate;
 
-        
-        // DB::beginTransaction();
+	
+		
 
         if ($saleMaster->save()) {
+
+			//echo "hi";exit;
 
 			
           
             foreach ($request->proid as $index => $proid) {
-               
-                $product = Tbl_brand_products::where('id', $proid)->first();
 
-                if (!$product) {
-                    DB::rollBack();
-                    \Log::warning("Product with name {$product->product_name} not found in brand products.");
-                    return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
+				
+               
+                // $product[$index]= Tbl_brand_products::where('id',$proid[$index])->first();
+				
+
+                // if (!$product) {
+                //     DB::rollBack();
+                //     \Log::warning("Product with name {$product->product_name} not found in brand products.");
+                //     return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
 					
-                }
+                // }
+
+				
 
                
-                $godown = Tbl_godowns::where('name', $request->godown)->first();
+                // $godown = Tbl_godowns::where('name',$request->godown)->first();
 
-                if ($product) {
+                // if ($product) {
                   
-                    $qty = $request->qty[$index];
-                    $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
-                        ->where('inventory_id', $godown->id)->first();
+                //     $qty = $request->qty[$index];
+                //     $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+                //         ->where('inventory_id', $godown->id)->first();
 
-                    if (!$inventoryStock) {
-                        DB::rollBack(); 
-                        \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
-						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
-                    }
+                //     if (!$inventoryStock) {
+                //         DB::rollBack(); 
+                //         \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
+				// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+                //     }
 
-                    if ($inventoryStock->stock < $qty) {
-                        DB::rollBack(); 
-						return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
-                    }
+                //     if ($inventoryStock->stock < $qty) {
+                //         DB::rollBack(); 
+				// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+                //     }
 
                     
-                    $inventoryStock->stock -= $qty;
-                    $inventoryStock->save();
-                }
+                //     $inventoryStock->stock -= $qty;
+                //     $inventoryStock->save();
+                // }
 
              
-                $qty = $request->qty[$index];
-                $offer_amount = $request->offer_amount[$index];
-                $price = $request->price[$index] ?? 0;
+               
 
                 $saleTrans = new Tbl_sale_order_trans;
                 $saleTrans->order_id = $saleMaster->id;
-                $saleTrans->product_id = $product ? $product->id : 0;
+                $saleTrans->product_id = $request->proid[$index];
                 $saleTrans->sale_order_id = $saleMaster->id;
-                $saleTrans->qty = $qty;
-                $saleTrans->offer_amount = $offer_amount;
-                $saleTrans->price = $request->total_mrp;
+                $saleTrans->qty = $request->qty[$index];
+                $saleTrans->offer_amount = $request->offer_amount[$index];
+                $saleTrans->price = $request->price[$index];
                 $saleTrans->taxable_amount = 0;
 
                 if (!$saleTrans->save()) {
@@ -4424,7 +4433,7 @@ public function sale_orderinsert(Request $request)
             ]);
 
           
-            DB::commit();
+            // DB::commit();
 
         
             Session::flash('success', 'Sale Invoice generated successfully!');
@@ -4438,12 +4447,15 @@ public function sale_orderinsert(Request $request)
        
         return redirect('order_master');
     } catch (\Exception $e) {
+		echo $e->getMessage();exit;
         \Log::error($e->getMessage());
         DB::rollBack(); 
       
         return redirect('order_master')->withErrors(["An error occurred. Please try again."]);
     }
 }
+
+
 
 		public function cancelorder($orderId) {
 			try {
@@ -4453,7 +4465,7 @@ public function sale_orderinsert(Request $request)
 				
 				Tbl_order_trans::where('order_id', $orderId)->update(['order_status' => 2]);
 		
-				\Session::flash('success', 'Order canceled successfully!');
+				\Session::flash('success', 'Order Cancelled Successfully!');
 			} catch (\Exception $e) {
 				\Log::error('Error canceling order: ' . $e->getMessage());
 				\Session::flash('error', 'Error canceling order. Please try again.');

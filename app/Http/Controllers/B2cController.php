@@ -101,11 +101,7 @@ public function b2csale_orderinsert(Request $request)
 			try {
 				\Log::info('Debug: Request data', ['request' => $request->all()]);
 		
-				$shop = Shops::where('shopname', $request->shopname)->first();
-		
-				if (!$shop) {
-					dd("Shop with name $request->shopname not found");
-				}
+				$shopId = $request->input('shop_id');
 
 
 				$check=DB::table('tbl_b2csales')->orderBy('id','DESC')->first();
@@ -120,7 +116,7 @@ public function b2csale_orderinsert(Request $request)
 
 		
 				$saleMaster = new Tbl_b2csales;
-				$saleMaster->shop_id = $shop->id;
+				$saleMaster->shop_id = $shopId; 
 				$saleMaster->order_id = $request->idd;
 				
 				$saleMaster->invoice_number=$invoice;
@@ -142,14 +138,12 @@ public function b2csale_orderinsert(Request $request)
 				$saleMaster->order_date = $request->orderdate;
 		
 				if ($saleMaster->save()) {
-					
+					// Loop through the products and save them
 					foreach ($request->product_name as $index => $productName) {
-						\Log::info('Debug: Inside Loop');
-		
-						
+						$productId = $request->product_id[$index];
 						$qty = $request->qty[$index];
 						$selling_rate = $request->selling_rate[$index];
-						$price = $request->price[$index] ?? 0;
+						$price = $request->total_mrp[$index];
 		
 						
 						$product = Tbl_brand_products::where('product_name', $productName)->first();
@@ -300,7 +294,7 @@ public function b2csale_orderinsert(Request $request)
 						
 						Tbl_b2cordertrans::where('order_id', $orderId)->update(['order_status' => 2]);
 				
-						\Session::flash('success', 'Order canceled successfully!');
+						\Session::flash('success', 'Order Cancelled Successfully!');
 					} catch (\Exception $e) {
 						\Log::error('Error canceling order: ' . $e->getMessage());
 						\Session::flash('error', 'Error canceling order. Please try again.');

@@ -3648,6 +3648,7 @@ $('#category_name').on('change', function () {
 });
 
 
+
 $(document).ready(function () {
     var selectedProductIds = [];
 
