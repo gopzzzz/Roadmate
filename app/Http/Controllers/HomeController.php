@@ -4010,6 +4010,8 @@ function sendNotification1($msg1,$title)
 				'tbl_deliveryaddres.pincode',
 				'tbl_deliveryaddres.country',
 				'tbl_hsncodes.tax',
+				'tbl_hsncodes.hsncode',
+
 				'tbl_hsncodes.cgst',
 				'tbl_hsncodes.igst',
 				)
@@ -4506,42 +4508,42 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 }
 public function sale_bill($orderId) { 
 
-	$markk=DB::table('tbl_sale_order_trans')
-		->get();
-	$salebill=DB::table('tbl_sale_order_masters')
-	->leftJoin('tbl_sale_order_trans', 'tbl_sale_order_masters.id', '=', 'tbl_sale_order_trans.order_id')
-	->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
-		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-	->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id') 
-	->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-	->where('tbl_sale_order_masters.id',$orderId)
-		->select(
-			'tbl_sale_order_masters.*',
-			
-			'tbl_sale_order_trans.sale_order_id',
-			'tbl_sale_order_trans.qty',
-			'tbl_sale_order_trans.offer_amount',
-			'shops.shopname',
-			'shops.address' ,
-			'shops.delivery_id' ,
-			'tbl_brand_products.product_name',
-			'tbl_deliveryaddres.area',
-			'tbl_deliveryaddres.area1',
-			'tbl_deliveryaddres.city',
-			'tbl_deliveryaddres.district',
-			'tbl_deliveryaddres.state',
-			'tbl_deliveryaddres.pincode',
-			'tbl_deliveryaddres.country',
-			'tbl_hsncodes.tax',
-			'tbl_hsncodes.hsncode',
+			$markk=DB::table('tbl_sale_order_trans')
+				->get();
+			$salebill=DB::table('tbl_sale_order_masters')
+			->leftJoin('tbl_sale_order_trans', 'tbl_sale_order_masters.id', '=', 'tbl_sale_order_trans.order_id')
+			->leftJoin('tbl_brand_products', 'tbl_sale_order_trans.product_id', '=', 'tbl_brand_products.id')
+				->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+			->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id') 
+			->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+			->where('tbl_sale_order_masters.id',$orderId)
+				->select(
+					'tbl_sale_order_masters.*',
+					
+					'tbl_sale_order_trans.sale_order_id',
+					'tbl_sale_order_trans.qty',
+					'tbl_sale_order_trans.offer_amount',
+					'shops.shopname',
+					'shops.address' ,
+					'shops.delivery_id' ,
+					'tbl_brand_products.product_name',
+					'tbl_deliveryaddres.area',
+					'tbl_deliveryaddres.area1',
+					'tbl_deliveryaddres.city',
+					'tbl_deliveryaddres.district',
+					'tbl_deliveryaddres.state',
+					'tbl_deliveryaddres.pincode',
+					'tbl_deliveryaddres.country',
+					'tbl_hsncodes.tax',
+					'tbl_hsncodes.hsncode',
 
-			'tbl_hsncodes.cgst',
-			'tbl_hsncodes.igst',
-			)
-		->get();
-	$role=Auth::user()->user_type;
-	return view('sale_bill',compact('role','markk','salebill'));
-	}
+					'tbl_hsncodes.cgst',
+					'tbl_hsncodes.igst',
+					)
+				->get();
+			$role=Auth::user()->user_type;
+			return view('sale_bill',compact('role','markk','salebill'));
+			}
 
 
 		public function product_order(Request $request)
@@ -5285,7 +5287,7 @@ public function bill($id){
 		$bills=DB::table('tbl_placeorders')->where('bill_number',$id)
 		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax','tbl_hsncodes.hsncode')
 		->get();
 	
 	

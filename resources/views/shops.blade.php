@@ -462,9 +462,8 @@
                     <th>Shop Type</th>
 
                   
-
-<th>Action</th>
-
+                    @if($role==1 || $role==7 || $role==9)<th>Action</th>
+@endif
 
                   </tr>
 
@@ -553,7 +552,8 @@
 
                      
 
-<th>Action</th>
+                      @if($role==1 || $role==7 || $role==9)<th>Action</th>
+@endif
 
 
 
@@ -796,7 +796,7 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label class="exampleModalLabel">Existing Images</label>
+    <label class="exampleModalLabel">Existing Image</label>
     @foreach($shops as $shop)
         <img src="{{ asset('/img/'.$shop->image) }}" alt="" width="75"/>
     @endforeach
@@ -930,9 +930,6 @@
 
 
                 <label class="exampleModalLabel">Transaction Id.</label>
-
-
-
                 <input class="form-control" name="trans_id" id="trans_id1" required>
 
 
@@ -940,8 +937,7 @@
 				
 				<div class="form-group col-sm-6">
 
-
-                <label class="exampleModalLabel">Agrement Status</label> &nbsp;&nbsp;
+<label class="exampleModalLabel">Agrement Status</label> &nbsp;&nbsp;
 
                 <input type="radio"  name="verif_status" required value="1" id="verif_status3"> Yes
        
