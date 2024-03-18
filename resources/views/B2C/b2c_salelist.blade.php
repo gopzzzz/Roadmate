@@ -143,7 +143,7 @@
                 
                  
 
-
+                  <br>
 
                   <div class="row">
     <div class="col-md-4">
@@ -171,7 +171,7 @@
    
 </div>
 
-
+<br>
   <table class="table table-bordered table-striped table-sm">
         <thead>
       

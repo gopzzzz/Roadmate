@@ -19,6 +19,8 @@ use App\User;
 use App\Tbl_b2csales;
 use App\Tbl_b2csalestrans;
 use App\Tbl_brand_products;
+use App\Tbl_wallets;
+use App\Tbl_wallet_transactions;
 
 
 use DB;
