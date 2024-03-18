@@ -175,11 +175,13 @@
    
            
             <tr>
-    <th style="text-align: center; width: 15%;">ITEM #</th>
+    <th style="text-align: center; width: 10%;">ITEM #</th>
     <th style="text-align: center; width: 40%;">DESCRIPTION</th>
     <th style="text-align: center; width: 10%;">QTY</th>
-    <th style="text-align: center; width: 20%;">UNIT PRICE </th>
-    <th style="text-align: center; width: 20%;">TAX %</th>
+    <th style="text-align: center; width: 15%;">UNIT PRICE </th>
+    <th style="text-align: center; width: 15%;">HSN CODE</th>
+
+    <th style="text-align: center; width: 25%;">TAX %</th>
     <th style="text-align: center; width: 20%;">TAX AMOUNT</th>
     <th style="text-align: center; width: 20%;">TOTAL</th>
 </tr>
@@ -210,6 +212,8 @@ $taxamount = number_format($taxamount, 2, '.', '');
            <td style="border: 2px solid #f2f2f2;">{{$key->product_name}}</td>
            <td style="border: 2px solid #f2f2f2; text-align: center;">{{$key->qty}}</td>
            <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$unitprice}}</td>
+           <td style="border: 2px solid #f2f2f2; text-align: right;">{{$key->hsncode}}</td>
+
            <td style="border: 2px solid #f2f2f2; text-align: right;">{{$key->tax}} %</td>
            <td style="border: 2px solid #f2f2f2; text-align: right;">₹{{$taxamount * $key->qty}}</td>
            <td style="border: 2px solid #f2f2f2; background-color: #FFDAB9; text-align: right;">₹{{($taxamount * $key->qty)+$unitprice}}</td>

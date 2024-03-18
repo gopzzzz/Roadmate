@@ -5287,7 +5287,7 @@ public function bill($id){
 		$bills=DB::table('tbl_placeorders')->where('bill_number',$id)
 		->leftJoin('tbl_brand_products', 'tbl_placeorders.product_id', '=', 'tbl_brand_products.id')
 		->leftJoin('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax')
+		->select('tbl_placeorders.*','tbl_brand_products.product_name','tbl_hsncodes.tax','tbl_hsncodes.hsncode')
 		->get();
 	
 	

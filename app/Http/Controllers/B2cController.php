@@ -41,7 +41,8 @@ class B2cController extends Controller
         ->leftJoin('shops', 'tbl_b2corders.shop_id', '=', 'shops.id')
         ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2corders.coupen_id', '=', 'tbl_coupens.id')
-        ->select('tbl_b2corders.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode');
+        ->select('tbl_b2corders.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+		->orderBy('tbl_b2corders.id', 'DESC');
     
 		if ($statusFilter !== null) {
 			$ordersQuery = $ordersQuery->where('order_status', $statusFilter);
@@ -240,6 +241,8 @@ public function b2csale_orderinsert(Request $request)
 					'tbl_deliveryaddres.pincode',
 					'tbl_deliveryaddres.country',
 					'tbl_hsncodes.tax',
+					'tbl_hsncodes.hsncode',
+
 					'tbl_hsncodes.cgst',
 					'tbl_hsncodes.igst',
 					)
@@ -277,6 +280,8 @@ public function b2csale_orderinsert(Request $request)
 						'tbl_deliveryaddres.pincode',
 						'tbl_deliveryaddres.country',
 						'tbl_hsncodes.tax',
+						'tbl_hsncodes.hsncode',
+
 						'tbl_hsncodes.cgst',
 						'tbl_hsncodes.igst',
 						)
