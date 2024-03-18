@@ -4307,8 +4307,13 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		$role=Auth::user()->user_type;
 		return view('sale_order_master',compact('role','markk','saleorder','orderId','godown'));
 	    }
+	
 		
-public function sale_orderinsert(Request $request)
+		
+		
+
+
+		public function sale_orderinsert(Request $request)
 {
     try {
         Log::info('Debug: Request data', ['request' => $request->all()]);
@@ -4450,6 +4455,8 @@ public function sale_orderinsert(Request $request)
     }
 }
 
+
+
 		public function cancelorder($orderId) {
 			try {
 				
@@ -4458,7 +4465,7 @@ public function sale_orderinsert(Request $request)
 				
 				Tbl_order_trans::where('order_id', $orderId)->update(['order_status' => 2]);
 		
-				\Session::flash('success', 'Order canceled successfully!');
+				\Session::flash('success', 'Order Cancelled Successfully!');
 			} catch (\Exception $e) {
 				\Log::error('Error canceling order: ' . $e->getMessage());
 				\Session::flash('error', 'Error canceling order. Please try again.');
