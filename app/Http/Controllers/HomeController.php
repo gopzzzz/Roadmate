@@ -4010,6 +4010,8 @@ function sendNotification1($msg1,$title)
 				'tbl_deliveryaddres.pincode',
 				'tbl_deliveryaddres.country',
 				'tbl_hsncodes.tax',
+				'tbl_hsncodes.hsncode',
+
 				'tbl_hsncodes.cgst',
 				'tbl_hsncodes.igst',
 				)
@@ -4180,7 +4182,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 		public function orderfetch(Request $request)
 		{
-			$order_id = $request->id; // assuming id in the request is the order_id
+			$order_id = $request->id; 
 			$order = Tbl_order_masters::where('id', $order_id)->first();
 		
 		
@@ -4192,76 +4194,77 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				return response()->json(['error' => 'Order details not found'], 404);
 			}
 		}
-		
 		public function orderstatus() {
 			$order = Tbl_order_masters::orderBy('order_status')->get();
 		
 			return view('order_master', compact('order'));
 		}
 		public function statusedit(Request $request, $order_id)
-{
-    \Log::info('Received order_id for statusedit: ' . $order_id);
-
-    $total_amount = $request->input('total_amount');
-
-    \Log::info('Received total_amount for statusedit: ' . $total_amount);
-
-    if (!is_numeric($total_amount)) {
-        \Log::error('Invalid total_amount received: ' . $total_amount);
-        return redirect('sale_list')->with('error', 'Invalid total_amount received.');
-    }
-
-    $order = Tbl_order_masters::where('id',$order_id)->first();
-
-    if ($order) {
-        $order->order_status = $request->order_status;
-        
-        // Ensure payment_status is properly set
-        if ($request->has('paystatus') && $request->paystatus !== null) {
-            $order->payment_status = $request->paystatus;
-        } elseif ($order->payment_status === null) {
-            // If payment_status is null, set it to its current value
-            $order->payment_status = $order->payment_status;
-        }
-
-        if ($request->paystatus == '1') {
-
-			if($order->wallet_redeem_id==0){
-				$percentage = ($total_amount * 10) / 100;
-				\Log::info('Calculated Percentage: ' . $percentage);
-	
-				$shop_id = $order->shop_id;
-	
-				$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
-	
-				if ($wallet) {
-					$wallet->wallet_amount += $wallet->amount + $percentage;
-					$wallet->save();
-					\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
-				} else {
-					$w = new Tbl_wallets;
-					$w->shop_id = $shop_id;
-					$w->wallet_amount += $percentage;
-					$w->save();
-				}
-	
-				$wh = new Tbl_wallet_transactions;
-				$wh->amount = $percentage;
-				$wh->type = 1;
-				$wh->shop_id = $shop_id;
-				$wh->save();
+		{
+			\Log::info('Received order_id for statusedit: ' . $order_id);
+		
+			$total_amount = $request->input('total_amount');
+		
+			\Log::info('Received total_amount for statusedit: ' . $total_amount);
+		
+			if (!is_numeric($total_amount)) {
+				\Log::error('Invalid total_amount received: ' . $total_amount);
+				return redirect('sale_list')->with('error', 'Invalid total_amount received.');
 			}
-
-           
-        }
-
-        $order->save();
-
-        return redirect('sale_list')->with('success', 'Order status updated successfully.');
-    } else {
-        return redirect('sale_list')->with('error', 'Order not found.');
-    }
-}
+		
+			$order = Tbl_order_masters::where('id',$order_id)->first();
+		
+			if ($order) {
+				$order->order_status = $request->order_status;
+				
+				// Ensure payment_status is properly set
+				if ($request->has('paystatus') && $request->paystatus !== null) {
+					$order->payment_status = $request->paystatus;
+				} elseif ($order->payment_status === null) {
+					// If payment_status is null, set it to its current value
+					$order->payment_status = $order->payment_status;
+				}
+		
+				if ($request->paystatus == '1') {
+		
+					if($order->wallet_redeem_id==0){
+						$percentage = ($total_amount * 10) / 100;
+						\Log::info('Calculated Percentage: ' . $percentage);
+			
+						$shop_id = $order->shop_id;
+			
+						$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+			
+						if ($wallet) {
+							$wallet->wallet_amount += $wallet->amount + $percentage;
+							$wallet->save();
+							\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+						} else {
+							$w = new Tbl_wallets;
+							$w->shop_id = $shop_id;
+							$w->wallet_amount += $percentage;
+							$w->save();
+						}
+			
+						$wh = new Tbl_wallet_transactions;
+						$wh->amount = $percentage;
+						$wh->u_type =1;
+						$wh->type = 1;
+						$wh->shop_id = $shop_id;
+						$wh->save();
+					}
+		
+				   
+				}
+		
+				$order->save();
+		
+				return redirect('sale_list')->with('success', 'Order status updated successfully.');
+			} else {
+				return redirect('sale_list')->with('error', 'Order not found.');
+			}
+		}
+		
 
 	public function sale_order_master($orderId) {
 
@@ -4520,6 +4523,8 @@ public function sale_orderinsert(Request $request)
 					'tbl_deliveryaddres.pincode',
 					'tbl_deliveryaddres.country',
 					'tbl_hsncodes.tax',
+					'tbl_hsncodes.hsncode',
+
 					'tbl_hsncodes.cgst',
 					'tbl_hsncodes.igst',
 					)

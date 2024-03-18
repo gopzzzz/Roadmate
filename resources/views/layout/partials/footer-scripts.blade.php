@@ -3602,7 +3602,7 @@ $('#category_name').on('change', function () {
 
 
 
-$(document).on('click', '.editstatus', function () {
+	$(document).on('click', '.editstatus', function () {
     var id = $(this).data('id');
     console.log('Clicked on editstatus with id:', id);
 
