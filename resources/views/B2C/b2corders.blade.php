@@ -193,7 +193,6 @@
              
 
                 @if($role==1)
-                    <!-- Add your header content for role 1 if needed -->
                 @endif
             </tr>
         </thead>

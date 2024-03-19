@@ -435,7 +435,6 @@ $i++;
     <div class="thank-you">
                 <p style="color: grey; text-align:center; font-size:25px;"><b>Thank you for your business!</b></p>
                 <p style="color: grey; font-size:14px;">Should you have any enquiries concerning this invoice,please contact us.</p>
-                <!-- Add more thank-you notes as needed -->
             </div>
         </div> 
 

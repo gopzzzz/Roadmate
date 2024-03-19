@@ -392,7 +392,6 @@ $i++;
                 @endphp
                 
                 @endforeach
-                <!-- Add more rows as needed -->
             </tbody>
             <tfoot>
                 <tr class="total-row">
@@ -463,7 +462,6 @@ $i++;
 
 </p>
            
-            <!-- Add more company details as needed -->
         </div>
         
         <script>

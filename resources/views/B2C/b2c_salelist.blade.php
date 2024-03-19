@@ -16,7 +16,6 @@
             float: right; /* Align the button to the right */
         }
         
-        /* Define your CSS styles for the invoice here */
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -183,7 +182,6 @@
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
-                <!-- <th>Discount</th> -->
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
