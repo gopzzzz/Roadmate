@@ -111,7 +111,6 @@ public function b2csale_orderinsert(Request $request)
 					$invoice=$check->invoice_number+1;
 				}
 
-				//$ordermaster=DB::table('')->where('',$request->idd)->first();
 
 
 		
