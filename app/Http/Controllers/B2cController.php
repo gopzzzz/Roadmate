@@ -47,9 +47,10 @@ class B2cController extends Controller
 			$ordersQuery = $ordersQuery->where('order_status', $statusFilter);
 		}
 
-    $orders = $ordersQuery->get();
-
-    return view('B2C.b2corders', ['orders' => $orders, 'role' => $role]);
+	$orders = $ordersQuery
+	->orderBy('tbl_b2corders.id', 'DESC')
+	->paginate(10);
+    return view('B2C.b2corders', ['orders' => $orders, 'role' => $role,'statusFilter'=>$statusFilter]);
 }
 
 	

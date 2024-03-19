@@ -281,7 +281,8 @@
         </tfoot>
     </table>
     <div class="row">
-   
+    {{ $orders->appends(['order_status' => $statusFilter])->links() }}
+
 </div>
 </div>
 </div>
