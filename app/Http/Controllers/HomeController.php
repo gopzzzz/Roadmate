@@ -4506,7 +4506,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
         dd($e->getMessage());
     }
 }
-		 public function sale_bill($orderId) { 
+public function sale_bill($orderId) { 
 
 			$markk=DB::table('tbl_sale_order_trans')
 				->get();

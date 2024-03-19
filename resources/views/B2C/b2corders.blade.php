@@ -199,13 +199,12 @@
         </thead>
         <tbody id="searchorderlist">
         @php 
-           
-           $i = 1;
-           
-       @endphp
+       $i = 1; // Initialize $i here
+    @endphp
        @foreach($orders as $key)
        <tr>
-           <td>{{ $i++ }}</td>
+                      <td>{{ $i }}</td>
+
            <td>{{ $key->order_id }}</td>
            <td>{{ $key->name }}</td>
           

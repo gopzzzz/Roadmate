@@ -321,6 +321,8 @@
         </div>
         <div class="content left-content">
             <p>{{$key->name}}<br>
+                
+                
             </p>
         </div>
     </div>
