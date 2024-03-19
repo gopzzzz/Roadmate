@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use App\User_lists;
 
 use App\Tbl_b2corders;
 use App\Shops;
@@ -41,7 +40,7 @@ class B2cController extends Controller
         ->leftJoin('user_lists', 'tbl_b2corders.shop_id', '=', 'user_lists.id')
         ->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2corders.coupen_id', '=', 'tbl_coupens.id')
-        ->select('tbl_b2corders.*', 'user_lists.name', 'user_lists.phnum', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->select('tbl_b2corders.*', 'user_lists.name',  'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
 		->orderBy('tbl_b2corders.id', 'DESC');
     
 		if ($statusFilter !== null) {
@@ -75,7 +74,7 @@ $saleorder=DB::table('tbl_b2corders')
         'tbl_b2cordertrans.selling_rate',
         'user_lists.id as shop_id',
         'user_lists.name',
-        'user_lists.phnum',
+       
         'user_lists.delivery_id' ,
         'tbl_brand_products.id as proid',
         'tbl_brand_products.product_name',
@@ -196,7 +195,7 @@ public function b2csale_orderinsert(Request $request)
 	->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2csales.coupen_id', '=', 'tbl_coupens.id')
         ->leftJoin('tbl_b2corders', 'tbl_b2csales.order_id', '=', 'tbl_b2corders.id')
-        ->select('tbl_b2csales.*', 'user_lists.name', 'user_lists.phnum', 'tbl_b2corders.order_status', 'tbl_b2corders.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->select('tbl_b2csales.*', 'user_lists.name',  'tbl_b2corders.order_status', 'tbl_b2corders.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
         ->orderBy('tbl_b2csales.id', 'DESC');
 
     if ($statusFilter !== null) {
@@ -230,7 +229,6 @@ public function b2csale_orderinsert(Request $request)
 					'tbl_b2cordertrans.qty',
 					'tbl_b2cordertrans.selling_rate',
 					'user_lists.name',
-                    'user_lists.phnum',
 					'user_lists.delivery_id' ,
 					'tbl_brand_products.product_name',
 					'tbl_deliveryaddres.area',
@@ -242,7 +240,6 @@ public function b2csale_orderinsert(Request $request)
 					'tbl_deliveryaddres.country',
 					'tbl_hsncodes.tax',
 					'tbl_hsncodes.hsncode',
-
 					'tbl_hsncodes.cgst',
 					'tbl_hsncodes.igst',
 					)
@@ -264,12 +261,11 @@ public function b2csale_orderinsert(Request $request)
 				->where('tbl_b2csales.id',$orderId)
 					->select(
 						'tbl_b2csales.*',
-						
 						'tbl_b2csalestrans.sale_order_id',
 						'tbl_b2csalestrans.qty',
 						'tbl_b2csalestrans.selling_rate',
 						'user_lists.name',
-                    'user_lists.phnum',
+                 
 					'user_lists.delivery_id' ,
 						'tbl_brand_products.product_name',
 						'tbl_deliveryaddres.area',
@@ -281,7 +277,6 @@ public function b2csale_orderinsert(Request $request)
 						'tbl_deliveryaddres.country',
 						'tbl_hsncodes.tax',
 						'tbl_hsncodes.hsncode',
-
 						'tbl_hsncodes.cgst',
 						'tbl_hsncodes.igst',
 						)
@@ -374,6 +369,8 @@ public function b2cstatusedit(Request $request, $order_id)
 	
 				$wh = new Tbl_wallet_transactions;
 				$wh->amount = $percentage;
+				$wh->u_type =1;
+
 				$wh->type = 1;
 				$wh->shop_id = $shop_id;
 				$wh->save();
