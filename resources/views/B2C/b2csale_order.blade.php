@@ -113,8 +113,8 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         
-                        <label class="exampleModalLabel">SHOP NAME:</label>
-                        <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
+                        <label class="exampleModalLabel">CUSTOMER NAME:</label>
+                        <input type="text" class="form-control" name="shopname" value="{{ $order->name }}" required readonly>
                         <input type="hidden" id="shopId" name="shop_id" value="{{ $order->shop_id }}" required readonly>
 
                  </div>
@@ -125,12 +125,7 @@
                         <input class="form-control" name="phone" value="{{ $order->phone }}" required readonly>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label class="exampleModalLabel">ADDRESS:</label>
-                        <textarea class="form-control" name="address" placeholder="Enter igst" required readonly>{{ $order->address }}</textarea>
-                    </div>
-                </div>
+              
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label class="exampleModalLabel">DELIVERY ADDRESS:</label>
@@ -197,7 +192,7 @@
                 </div>
  
                 <div class="form-group">
-                    <label class="exampleModalLabel">GANDTOTAL AMOUNT</label>
+                    <label class="exampleModalLabel">GRANDTOTAL AMOUNT</label>
                     <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required readonly>
                 </div>
 </div>

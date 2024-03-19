@@ -147,7 +147,7 @@
 
                   <div class="row">
     <div class="col-md-4">
-    <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
+    <input type="text" id="search" placeholder="Search by Customer Name or Order ID or Phone" class="form-control form-control-sm">
     </div>
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
     <div class="col-md-4 text-right">
@@ -179,7 +179,7 @@
             <tr>
                 <th>id</th>
                 <th>OrderId</th>
-                <th>Shop Name</th>
+                <th>Customer Name</th>
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
@@ -207,7 +207,7 @@
        <tr>
            <td>{{ $i++ }}</td>
            <td>{{ $key->invoice_number }}</td>
-           <td>{{ $key->shopname }}</td>
+           <td>{{ $key->name }}</td>
           
            <td>{{ $key->phone }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
