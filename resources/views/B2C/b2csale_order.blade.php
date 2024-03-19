@@ -114,7 +114,8 @@
                     <div class="form-group">
                         
                         <label class="exampleModalLabel">SHOP NAME:</label>
-                        <input type="text" class="form-control" name="shopname" value="{{ $order->shopname }}" required readonly>
+                        <input type="text" class="form-control" name="shopname" value="{{ $order->name }}" required readonly>
+                        <input type="text" class="form-control" name="shopname" value="{{ $order->name }}" required readonly>
                         <input type="hidden" id="shopId" name="shop_id" value="{{ $order->shop_id }}" required readonly>
 
                  </div>
@@ -122,7 +123,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label class="exampleModalLabel">PHONE NUMBER:</label>
-                        <input class="form-control" name="phone" value="{{ $order->phone }}" required readonly>
+                        <input class="form-control" name="phone" value="{{ $order->phnum }}" required readonly>
                     </div>
                 </div>
                 <div class="col-sm-3">

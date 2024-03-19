@@ -309,7 +309,7 @@
     <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->invoice_number}}/{{ date('y') }}</span></div>
     <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->order_id}}/{{ date('y') }}</span></div>
     <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">0000{{$key->bill_number}}</span></div>
-    <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ $key->delivery_date }}</span></div>
+    <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ now()->format('d-m-Y') }}</span></div>
 
 </div>
         </div><br>
@@ -319,8 +319,8 @@
             <p class="details-label"><b>Billed to</b></p>
         </div>
         <div class="content left-content">
-            <p>{{$key->shopname}}<br>
-                {{$key->address}}
+            <p>{{$key->name}}<br>
+                
             </p>
         </div>
     </div>
@@ -344,6 +344,8 @@
                     <th>Description</th>
                     <th>Unit Price</th>
                     <th>Quantity</th>
+                    <th>Hsn Code</th>
+
                     <th>TAX</th>
                     <th>TAX.Amount</th>
                     <th>Amount</th>
@@ -370,6 +372,8 @@ $taxamount = number_format($taxamount, 2, '.', '');
                     <td>{{$key->product_name}}</td>
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
+                    <td>{{$key->hsncode}} </td>
+
                     <td>{{$key->tax}} %</td>
                     <td>{{($key->qty*$taxamount)}} </td>
                     <td>{{$key->qty*$key->selling_rate}}</td>
@@ -390,8 +394,10 @@ $i++;
                 <td></td>
                     <td style="border: 2px solid #000000;">Total</td>
                     <td style="border: 2px solid #000000";></td>
-                    <td style="border: 2px solid #000000";>Total SGST</td>
-                    <td style="border: 2px solid #000000";>Total CGST</td>
+                    <td style="border: 2px solid #000000";></td>
+
+                    <td style="border: 2px solid #000000";></td>
+                    <td style="border: 2px solid #000000";></td>
                     <td></td>
                                         <td></td>
 

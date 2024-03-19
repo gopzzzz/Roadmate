@@ -401,7 +401,7 @@ $i++;
                     <td></td>
                 </tr>
 </tfoot>
-        </table>
+        </table>  
         
 <div class="invoice-details">
 <div class="left-details">

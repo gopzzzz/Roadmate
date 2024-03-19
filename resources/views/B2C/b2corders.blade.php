@@ -176,11 +176,10 @@
             <tr>
                 <th>id</th>
                 <th>OrderId</th>
-                <th>Shop Name</th>
+                <th>Customer Name</th>
                 <th>Phone Number</th>
                 <th>Address</th>
                 <th>Total Amount</th>
-                <th>Discount</th>
                 
                 <th>Payment Mode</th>
                     <th>Payment Status</th>
@@ -200,20 +199,18 @@
         </thead>
         <tbody id="searchorderlist">
         @php 
-           
-           $i = 1;
-           
-       @endphp
+       $i = 1; // Initialize $i here
+    @endphp
        @foreach($orders as $key)
        <tr>
-           <td>{{ $i++ }}</td>
+                      <td>{{ $i }}</td>
+
            <td>{{ $key->order_id }}</td>
-           <td>{{ $key->shopname }}</td>
+           <td>{{ $key->name }}</td>
           
-           <td>{{ $key->phone }}</td>
+           <td>{{ $key->phnum }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
            <td>{{ $key->total_amount }}</td>
-           <td>{{ $key->discount }}</td>
            
            <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
            </td>
