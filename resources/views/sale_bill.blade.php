@@ -344,6 +344,8 @@
                     <th>Description</th>
                     <th>Unit Price</th>
                     <th>Quantity</th>
+                    <th>HSN Code</th>
+
                     <th>TAX</th>
                     <th>TAX.Amount</th>
                     <th>Amount</th>
@@ -370,6 +372,8 @@ $taxamount = number_format($taxamount, 2, '.', '');
                     <td>{{$key->product_name}}</td>
                     <td>{{$unitprice}}</td>
                     <td>{{$key->qty}} </td>
+                    <td>{{$key->hsncode}} </td>
+
                     <td>{{$key->tax}} %</td>
                     <td>{{($key->qty*$taxamount)}} </td>
                     <td>{{$key->qty*$key->offer_amount}}</td>
@@ -389,10 +393,10 @@ $i++;
                 <tr class="total-row">
                 <td></td>
                     <td style="border: 2px solid #000000;">Total</td>
-                    <!-- <td style="border: 2px solid #000000";></td> -->
                     <td style="border: 2px solid #000000";></td>
-                    <td style="border: 2px solid #000000";>Total SGST</td>
-                    <td style="border: 2px solid #000000";>Total CGST</td>
+                    <td style="border: 2px solid #000000";></td>
+                    <td style="border: 2px solid #000000";></td>
+                    <td style="border: 2px solid #000000";></td>
                     <td></td>
                     <td></td>
                 </tr>

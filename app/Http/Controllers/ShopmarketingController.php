@@ -1458,7 +1458,7 @@ public function customerorderhistory(){
     ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_brand_products.product_name')
+    ->select('tbl_b2cordertrans.*','tbl_b2corders.order_status as status','tbl_brand_products.product_name','tbl_brand_products.product_name')
    ->where('tbl_b2corders.order_status',3)
     ->where('tbl_b2corders.shop_id',$shop_id)
     ->offset($offset) 
@@ -1529,7 +1529,7 @@ public function upcomingorders(){
     ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_brand_products.product_name')
+    ->select('tbl_b2cordertrans.*','tbl_b2corders.order_status as status','tbl_brand_products.product_name','tbl_brand_products.product_name')
    ->where('tbl_b2corders.order_status','!=',3)
     ->where('tbl_b2corders.shop_id',$shop_id)
     ->offset($offset) 
@@ -1690,16 +1690,37 @@ public function orderdetails(){
   $json = str_replace(array("\t","\n"), "", $postdata);
   $data1 = json_decode($json);
   $order_id=$data1->order_id;
+
+  $shopId = $data1->customer_id;
+
+  $productId = $data1->productid;
+
+  $type = $data1->type;
   try{	
+   
+
     $products=DB::table('tbl_b2cordertrans')
     ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name')
+    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_b2corders.order_status as status')
     
     ->where('tbl_b2cordertrans.id',$order_id)
    // ->where('status',0)
     ->get();
+
+    $ratings = DB::table('tbl_product_ratings')
+    ->where('shopid', $shopId)
+    ->where('product_id', $productId)
+    ->where('type', $type)
+    ->first();
+
+    if($ratings==null){
+        $stars=0;
+    }else{
+        $stars=$ratings->rating;
+    }
+
     $order_list = [];
     foreach ($products as $proItem) {
         $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->product_id)->first();
@@ -1726,7 +1747,7 @@ public function orderdetails(){
 
             else{								
  $json_data = 0;
- echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+ echo json_encode(array('error' => false,"order_history"=>$order_list,"ratings" => $stars, "message" => "Success"));
 
                 }
             }
@@ -1878,7 +1899,7 @@ public function cuscancelorder(){
    $order_id=$data1->trans_id;
   
   
-   $orderstatus=Tbl_order_trans::find($order_id);
+   $orderstatus=Tbl_b2cordertrans::find($order_id);
    $orderstatus->order_status=2;
    
   

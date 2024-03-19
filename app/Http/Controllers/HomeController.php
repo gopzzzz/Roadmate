@@ -4012,6 +4012,8 @@ function sendNotification1($msg1,$title)
 				'tbl_deliveryaddres.pincode',
 				'tbl_deliveryaddres.country',
 				'tbl_hsncodes.tax',
+				'tbl_hsncodes.hsncode',
+
 				'tbl_hsncodes.cgst',
 				'tbl_hsncodes.igst',
 				)
@@ -4535,6 +4537,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 					'tbl_deliveryaddres.pincode',
 					'tbl_deliveryaddres.country',
 					'tbl_hsncodes.tax',
+					'tbl_hsncodes.hsncode',
+
 					'tbl_hsncodes.cgst',
 					'tbl_hsncodes.igst',
 					)

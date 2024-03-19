@@ -208,8 +208,8 @@ $name=Auth::user()->name;
                   </ul>
                </li>
                
-<li class="nav-item has-treeview {{ request()->is(['order_master', 'sale_list', 'purchase_order', 'order_history', 'salesreturn']) ? 'menu-open' : '' }}">
-   <a href="#" class="nav-link {{ request()->is(['order_master', 'sale_list', 'purchase_order',  'order_history', 'salesreturn']) ? 'active' : '' }}">
+<li class="nav-item has-treeview {{ request()->is(['order_master', 'sale_list', 'order_history', 'salesreturn']) ? 'menu-open' : '' }}">
+   <a href="#" class="nav-link {{ request()->is(['order_master', 'sale_list', 'order_history', 'salesreturn']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
          B2B
@@ -301,12 +301,12 @@ $name=Auth::user()->name;
    </ul>
    <ul class="nav nav-treeview">
       <li class="nav-item">
-         <a href="{{ url('inventory_transfer') }}" class="nav-link {{ request()->is('inventory_transfer') ? 'active' : '' }}">
+         <a href="{{ url('stockreport') }}" class="nav-link {{ request()->is('stockreport') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
-            <p>Inventory Transfer</p>
+            <p>stockreport</p>
          </a>
       </li>
-   </ul> 
+   </ul>
 </li> -->
 <li class="nav-item has-treeview {{ request()->is(['purchase_order','purchaseorder_bill']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['purchase_order','purchaseorder_bill']) ? 'active' : '' }}">
