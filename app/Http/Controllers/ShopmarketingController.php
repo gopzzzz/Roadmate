@@ -947,18 +947,113 @@ public function customerdeliveryaddresslist(){
 
     $shopId = $data1->shopid;
     
-    try {    
+    try {  
+
         $deliveryaddress = DB::table('tbl_deliveryaddres')
             ->where('shop_id', $shopId)
             ->where('u_type', 2)
             ->get();
 
-        if ($deliveryaddress == null) {
-            echo json_encode(array('error' => true, "message" => "Error"));
-        } else {                                
-            $json_data = 0;
-            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddress, "message" => "Success"));
-        }
+
+            $addreesId=DB::table('user_lists')->where('id',$shopId)->get()
+
+            ->toArray();
+
+            
+
+    
+
+     
+       //print_r($bookedtime);exit;
+
+      // For removing object and converting to one dimensional array
+
+       $addreesId = array_column( array_map( function($value) { return (array)$value; }, $addreesId ),'delivery_id');
+
+    
+
+       $deliveryAddlist=array();
+
+       for($i=0;$i<count($deliveryaddress);$i++){
+
+        
+
+        
+
+          if(in_array($deliveryaddress[$i]->id, $addreesId)){  //If booking is present
+
+            
+
+              $data = array(
+
+                    'id' => $deliveryaddress[$i]->id,
+                      'u_type' => $deliveryaddress[$i]->u_type,
+                        'shop_id' => $deliveryaddress[$i]->shop_id,
+                          'area' => $deliveryaddress[$i]->area,
+                            'area1' => $deliveryaddress[$i]->area1,
+                              'country' => $deliveryaddress[$i]->country,
+                                'state' => $deliveryaddress[$i]->state,
+'district' => $deliveryaddress[$i]->district,
+'city' => $deliveryaddress[$i]->city,
+'phone' => $deliveryaddress[$i]->phone,
+'pincode' => $deliveryaddress[$i]->pincode,
+
+                    'status' => 1);
+
+            }else{//If booking is not present
+ $data = array(
+
+                    'id' => $deliveryaddress[$i]->id,
+                      'u_type' => $deliveryaddress[$i]->u_type,
+                        'shop_id' => $deliveryaddress[$i]->shop_id,
+                          'area' => $deliveryaddress[$i]->area,
+                            'area1' => $deliveryaddress[$i]->area1,
+                              'country' => $deliveryaddress[$i]->country,
+                                'state' => $deliveryaddress[$i]->state,
+'district' => $deliveryaddress[$i]->district,
+'city' => $deliveryaddress[$i]->city,
+'phone' => $deliveryaddress[$i]->phone,
+'pincode' => $deliveryaddress[$i]->pincode,
+
+                    'status' => 0);
+
+            }
+
+          //  echo "<pre>";print_r($data);exit;
+
+            array_push($deliveryAddlist,$data);
+
+    
+
+       } 
+
+       
+         
+
+      
+
+    
+
+            if($deliveryAddlist==null){
+
+              echo json_encode(array('error' => true, "message" => "Error"));
+
+                 }
+
+                else{								
+
+                  $json_data = 0;
+
+                  echo json_encode(array('error' => false, "data" => $deliveryAddlist, "message" => "Success"));
+
+               }
+
+             
+
+
+    
+
+     
     } catch (Exception $e) {
         // Handle the exception here
         echo json_encode(array('error' => true, "message" => "An error occurred."));
