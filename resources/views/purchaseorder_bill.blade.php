@@ -96,7 +96,7 @@
              
               <td>      <a href="{{url('bill/'.$key->id)}}" target="_blank"><button type="button" class="btn btn-success btn-sm" >PO print</button></a>
                 </td>
-                <td>
+                <!-- <td>
     @if($key->status == 0)
          
             <form method="get" action="{{ route('purchase_order_master', ['orderId' => $key->id]) }}">
@@ -108,7 +108,7 @@
     @else
         <span class="text-success">Purchase Invoice Generated</span>
     @endif
-</td>
+</td> -->
 </tr>
  @php 
 $i++;  

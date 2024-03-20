@@ -62,7 +62,7 @@
                <!-- /.card -->
                <div class="card">
                   <div class="card-header">
-                     <h3 class="card-title">Profit Calculation</h3>
+                     <h3 class="card-title">Expense Calculation</h3>
                      <p align="right">
                        <!-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Shop Packages</button>-->
                     
@@ -78,31 +78,28 @@
                               </tr>
                            </thead>
                            <tbody>
-                           <tr>
-                                 <td>Turn Over</td>
-                                 <td>{{$turnover}}</td>
-                              </tr>
-                            
+                       
+                             
                               <tr>
-                                 <td>Revenue</td>
-                                 <td>{{$totalRevenue}}</td>
-                              </tr>
-                              <tr>
-                                 <td>Delivery Expense (E1)</td>
+                                 <td>Delivery Expense</td>
                                  <td>{{$dexpense}}</td>
                               </tr>
                               <tr>
-                                 <td>Salary Expense (E2)</td>
+                                 <td>Salary Expense </td>
                                  <td>{{$e2}}</td>
                               </tr>
                               <tr>
-                                 <td>Maintanance Cost (E3)</td>
+                                 <td>Maintanance Cost</td>
                                  <td>{{$e3}}</td>
                               </tr>
                               <tr>
-                                 <td>Profit (Revenue-(E1+E2+E3))</td>
-                                 <td>{{$totalRevenue-($dexpense+$e2+$e3)}}</td>
+                                 <td>RENT </td>
+                                 <td>{{$e4}}</td>
                               </tr>
+                              <tr>
+                                 <!-- <td>Profit (Revenue-(E1+E2+E3))</td>
+                                 <td>{{$totalRevenue-($dexpense+$e2+$e3)}}</td>
+                              </tr> -->
                            </tbody>
                         </table>
                      </div>

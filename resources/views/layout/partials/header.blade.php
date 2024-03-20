@@ -232,12 +232,12 @@ $name=Auth::user()->name;
 
                           
                            
-                           <!-- <li class="nav-item">
+                           <li class="nav-item">
                               <a href="{{ url('order_history') }}" class="nav-link {{ request()->is('order_history') ? 'active' : '' }}">
                                  <i class="far fa-circle nav-icon"></i>
                                  <p>Order History</p>
                               </a>
-                           </li> -->
+                           </li>
                              
                               <li class="nav-item">
                                   <a href="{{ url('salesreturn') }}" class="nav-link {{ request()->is('salesreturn') ? 'active' : '' }}">
@@ -274,7 +274,7 @@ $name=Auth::user()->name;
    
 </li>
 
-<li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
+<!-- <li class="nav-item has-treeview {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['godown','physical_stock','inventory_transfer','stockreport']) ? 'active' : '' }}">
 
       <i class="nav-icon fas fa-briefcase"></i>
@@ -299,7 +299,7 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
-   <!-- <ul class="nav nav-treeview">
+   <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('stockreport') }}" class="nav-link {{ request()->is('stockreport') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
@@ -1138,6 +1138,48 @@ $name=Auth::user()->name;
                            <p>Reviews</p>
                         </a>
                      </li>
+                  </ul>
+               </li>
+
+               <li class="nav-item has-treeview {{ request()->is(['country', 'district','state', 'place','franchises']) ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ request()->is(['country', 'district','state', 'place','franchises']) ? 'active' : '' }}">
+                     <i class="nav-icon fas fa-briefcase"></i>
+                     <p>
+                        Franchise Module
+                        <i class="right fas fa-angle-left"></i>
+                     </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                     <li class="nav-item">
+                        <a href="{{ url('country') }}" class="nav-link  {{ request()->is('country') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Country</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('state') }}" class="nav-link  {{ request()->is('state') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>State</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('district') }}" class="nav-link  {{ request()->is('district') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>District</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('place') }}" class="nav-link  {{ request()->is('place') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Place</p>
+                        </a>
+                     </li>
+                     <!-- <li class="nav-item">
+                        <a href="{{ url('franchises') }}" class="nav-link  {{ request()->is('franchises') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Franchise List</p>
+                        </a>
+                     </li> -->
                   </ul>
                </li>
             @endif
