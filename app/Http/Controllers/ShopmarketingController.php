@@ -14,6 +14,7 @@ use App\Tbl_product_ratings;
 use App\User_lists;
 use App\Tbl_b2corders;
 use App\Tbl_b2cordertrans;
+use App\Tbl_b2c_cancel_orders;
 class ShopmarketingController extends Controller
 {
   public function mhomepage(Request $request){
@@ -946,18 +947,113 @@ public function customerdeliveryaddresslist(){
 
     $shopId = $data1->shopid;
     
-    try {    
+    try {  
+
         $deliveryaddress = DB::table('tbl_deliveryaddres')
             ->where('shop_id', $shopId)
             ->where('u_type', 2)
             ->get();
 
-        if ($deliveryaddress == null) {
-            echo json_encode(array('error' => true, "message" => "Error"));
-        } else {                                
-            $json_data = 0;
-            echo json_encode(array('error' => false, "deliveryaddresslist" => $deliveryaddress, "message" => "Success"));
-        }
+
+            $addreesId=DB::table('user_lists')->where('id',$shopId)->get()
+
+            ->toArray();
+
+            
+
+    
+
+     
+       //print_r($bookedtime);exit;
+
+      // For removing object and converting to one dimensional array
+
+       $addreesId = array_column( array_map( function($value) { return (array)$value; }, $addreesId ),'delivery_id');
+
+    
+
+       $deliveryAddlist=array();
+
+       for($i=0;$i<count($deliveryaddress);$i++){
+
+        
+
+        
+
+          if(in_array($deliveryaddress[$i]->id, $addreesId)){  //If booking is present
+
+            
+
+              $data = array(
+
+                    'id' => $deliveryaddress[$i]->id,
+                      'u_type' => $deliveryaddress[$i]->u_type,
+                        'shop_id' => $deliveryaddress[$i]->shop_id,
+                          'area' => $deliveryaddress[$i]->area,
+                            'area1' => $deliveryaddress[$i]->area1,
+                              'country' => $deliveryaddress[$i]->country,
+                                'state' => $deliveryaddress[$i]->state,
+'district' => $deliveryaddress[$i]->district,
+'city' => $deliveryaddress[$i]->city,
+'phone' => $deliveryaddress[$i]->phone,
+'pincode' => $deliveryaddress[$i]->pincode,
+
+                    'status' => 1);
+
+            }else{//If booking is not present
+ $data = array(
+
+                    'id' => $deliveryaddress[$i]->id,
+                      'u_type' => $deliveryaddress[$i]->u_type,
+                        'shop_id' => $deliveryaddress[$i]->shop_id,
+                          'area' => $deliveryaddress[$i]->area,
+                            'area1' => $deliveryaddress[$i]->area1,
+                              'country' => $deliveryaddress[$i]->country,
+                                'state' => $deliveryaddress[$i]->state,
+'district' => $deliveryaddress[$i]->district,
+'city' => $deliveryaddress[$i]->city,
+'phone' => $deliveryaddress[$i]->phone,
+'pincode' => $deliveryaddress[$i]->pincode,
+
+                    'status' => 0);
+
+            }
+
+          //  echo "<pre>";print_r($data);exit;
+
+            array_push($deliveryAddlist,$data);
+
+    
+
+       } 
+
+       
+         
+
+      
+
+    
+
+            if($deliveryAddlist==null){
+
+              echo json_encode(array('error' => true, "message" => "Error"));
+
+                 }
+
+                else{								
+
+                  $json_data = 0;
+
+                  echo json_encode(array('error' => false, "data" => $deliveryAddlist, "message" => "Success"));
+
+               }
+
+             
+
+
+    
+
+     
     } catch (Exception $e) {
         // Handle the exception here
         echo json_encode(array('error' => true, "message" => "An error occurred."));
@@ -1457,8 +1553,79 @@ public function customerorderhistory(){
     ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_brand_products.product_name')
-   
+    ->select('tbl_b2cordertrans.*','tbl_b2corders.order_status as status','tbl_brand_products.product_name','tbl_brand_products.product_name')
+   ->where('tbl_b2corders.order_status',3)
+    ->where('tbl_b2corders.shop_id',$shop_id)
+    ->offset($offset) 
+      ->limit($limit) 
+      ->orderBy('tbl_b2cordertrans.id', 'DESC')
+    ->get();
+    $order_list = [];
+    foreach ($products as $proItem) {
+        $imageArray = DB::table('tbl_productimages')->where('prod_id',$proItem->product_id)->first();
+        
+        //echo "<pre>";print_r($imageArray);exit;
+    
+        // Check if $imageArray is not null before accessing its properties
+        if ($imageArray) {
+            // Assuming there is a column named 'images' in tbl_productimages table
+            $proItem->images = $imageArray->images;
+        } else {
+            // If no images are found, set it to an empty array or null, depending on your needs
+            $proItem->images = "";
+            // or $cartItem->images = null;
+        }
+    
+        // Add the $cartItem to the $cart array
+        $order_list[] = $proItem;
+    }
+
+        if($order_list == null){
+
+          echo json_encode(array('error' => true, "message" => "Error"));
+
+             }
+
+            else{								
+
+            $json_data = 0;
+
+            echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+
+                }
+}
+
+catch (Exception $e)
+
+{
+  //return Json("Sorry! Please check input parameters and values");
+   echo	json_encode(array('error' => true, "message" => "Sorry! Please check input parameters and values"));
+
+}
+
+}
+public function upcomingorders(){
+       
+  $postdata = file_get_contents("php://input");					
+
+  $json = str_replace(array("\t","\n"), "", $postdata);
+
+  $data1 = json_decode($json);
+
+  $shop_id=$data1->customerid;
+  $index=$data1->index;
+  $offset=($index*10);
+  $limit=10;
+
+
+  try{	
+
+    $products=DB::table('tbl_b2cordertrans')
+    ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
+    ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
+    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+    ->select('tbl_b2cordertrans.*','tbl_b2corders.order_status as status','tbl_brand_products.product_name','tbl_brand_products.product_name')
+   ->where('tbl_b2corders.order_status','!=',3)
     ->where('tbl_b2corders.shop_id',$shop_id)
     ->offset($offset) 
       ->limit($limit) 
@@ -1618,16 +1785,37 @@ public function orderdetails(){
   $json = str_replace(array("\t","\n"), "", $postdata);
   $data1 = json_decode($json);
   $order_id=$data1->order_id;
+
+  $shopId = $data1->customer_id;
+
+  $productId = $data1->productid;
+
+  $type = $data1->type;
   try{	
+   
+
     $products=DB::table('tbl_b2cordertrans')
     ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name')
+    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_b2corders.order_status as status')
     
     ->where('tbl_b2cordertrans.id',$order_id)
    // ->where('status',0)
     ->get();
+
+    $ratings = DB::table('tbl_product_ratings')
+    ->where('shopid', $shopId)
+    ->where('product_id', $productId)
+    ->where('type', $type)
+    ->first();
+
+    if($ratings==null){
+        $stars=0;
+    }else{
+        $stars=$ratings->rating;
+    }
+
     $order_list = [];
     foreach ($products as $proItem) {
         $imageArray = DB::table('tbl_productimages')->where('prod_id', $proItem->product_id)->first();
@@ -1654,7 +1842,7 @@ public function orderdetails(){
 
             else{								
  $json_data = 0;
- echo json_encode(array('error' => false,"order_history"=>$order_list, "message" => "Success"));
+ echo json_encode(array('error' => false,"order_history"=>$order_list,"ratings" => $stars, "message" => "Success"));
 
                 }
             }
@@ -1796,6 +1984,77 @@ public function cancelorder(){
 
  }
 }
+public function cuscancelorder(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+   $data1 = json_decode($json);
+  
+   $order_id=$data1->trans_id;
+
+  
+   
+   
+   
+   
+
+  
+  
+   $orderstatus=Tbl_b2cordertrans::find($order_id);
+   $orderstatus->order_status=2;
+   
+  
+   if($orderstatus->save()){
+  
+      $cancel =new Tbl_b2c_cancel_orders;
+      $cancel->type=1;
+      $cancel->order_trans_id=$order_id;
+      $cancel->qty=0;
+      $cancel->pay_returnstatus=0;
+      $cancel->comment=$data1->reason;
+      $cancel->save();
+
+      $check=DB::table('tbl_b2cordertrans')->where('id',$order_id)->first();
+      $masterid=$check->order_id;
+      $invoicecount=DB::table('tbl_b2cordertrans')->where('order_id',$masterid)->count();
+      $cancelcount=DB::table('tbl_b2cordertrans')->where('order_status',2)->where('order_id',$masterid)->count();
+      if($invoicecount=$cancelcount){
+       
+           $masterorder=Tbl_b2corders::find($masterid);
+           $masterorder->order_status=4;
+           $masterorder->save();
+       }else{
+        $OrderMaster=DB::table('tbl_b2corders')->where('id',$masterid)->first();
+        $totalAmount=$OrderMaster->total_amount-($check->selling_rate);
+        $totalmrp=$OrderMaster->selling_mrp-($check->selling_rate);
+        $discount=$check->price-$check->selling_rate;
+        $finaldiscount=$OrderMaster->discount-$discount;
+        $masterorder=Tbl_b2corders::find($masterid);
+        $masterorder->total_amount=$totalAmount;
+        $masterorder->discount=$finaldiscount;
+        $masterorder->total_mrp=$totalmrp;
+       // $masterorder->shipping_charge=$data1->shipping_charge;
+        if($data1->total_amount==0){
+            $masterorder->order_status=4;
+        }
+        $masterorder->tax_amount=0;
+        $masterorder->save();
+       }
+      
+  
+      $json_data = 1;
+  
+      echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+  
+   }else{
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+  
+   }   
+}
 public function returnorder(){
 
     
@@ -1820,6 +2079,7 @@ public function returnorder(){
     $cancel->type=2;
     $cancel->order_trans_id=$order_id;
     $cancel->qty=0;
+    $cancel->pay_returnstatus=0;
     $cancel->comment=$data1->reason;
     $cancel->save();
 
@@ -1836,6 +2096,45 @@ public function returnorder(){
   echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
 
  }
+}
+public function cusreturnorder(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+   $data1 = json_decode($json);
+  
+   $order_id=$data1->trans_id;
+  
+  
+   $orderstatus=Tbl_b2cordertrans::find($order_id);
+   $orderstatus->order_status=3;
+   
+  
+   if($orderstatus->save()){
+  
+     
+      $cancel =new Tbl_b2c_cancel_orders;
+      $cancel->type=2;
+      $cancel->order_trans_id=$order_id;
+      $cancel->qty=0;
+      $cancel->comment=$data1->reason;
+      $cancel->pay_returnstatus=0;
+      $cancel->save();
+  
+  
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+  
+   }else{
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+  
+   }  
 }
 public function productrating(){
     $postdata = file_get_contents("php://input");					

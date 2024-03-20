@@ -114,15 +114,8 @@ class HomeController extends Controller
 		$franchise=DB::table('tbl_franchises')->count();
 		$userid=Auth::user()->id;
 		$tbookings=DB::table('booktimemasters')->where('adate',$date)->count();
-		if($role==1){
-			$order=array();
-			$turnover=0;
-			$totalRevenue=0;
-			$dexpense=0;
-			$e2=0;
-			$e3=0;
-			$e4=0;
-		}else if($role==3){
+		
+		if($role==3){
 			$fran = DB::table('tbl_franchase_details')
 		->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
 		->where('tbl_franchises.user_id', $userid)
@@ -247,6 +240,15 @@ class HomeController extends Controller
 			 }
 
 
+		}else{
+			
+				$order=array();
+				$turnover=0;
+				$totalRevenue=0;
+				$dexpense=0;
+				$e2=0;
+				$e3=0;
+				$e4=0;
 		}
 
 		

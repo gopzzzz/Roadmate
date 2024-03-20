@@ -1451,6 +1451,7 @@ Route::post('/ledger_masteredit', [App\Http\Controllers\ledgerController::class,
 
 Route::post('/ledgerfetch', [App\Http\Controllers\ledgerController::class, 'ledgerfetch'])->name('ledgerfetch');
 
+
 Route::get('/expense', [App\Http\Controllers\ledgerController::class, 'expense'])->name('expense');
 
 Route::post('/expenseinsert', [App\Http\Controllers\ledgerController::class, 'expenseinsert'])->name('expenseinsert');
@@ -1460,6 +1461,8 @@ Route::post('/expensefetch', [App\Http\Controllers\ledgerController::class, 'exp
 Route::post('/expensedit', [App\Http\Controllers\ledgerController::class, 'expensedit'])->name('expensedit');
 
 Route::get('/expensedelete/{id}', [App\Http\Controllers\ledgerController::class, 'expensedelete'])->name('expensedelete');
+
+
 
 //Accounts Module 
 Route::get('/revenue_master', 'AccountController@revenue_master')->name('revenue_master');
