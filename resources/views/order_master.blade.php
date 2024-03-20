@@ -355,7 +355,7 @@
                 @if($role==1)
                   
                 @endif
-            
+             
         </tfoot>
     </table>
     <div class="row">
