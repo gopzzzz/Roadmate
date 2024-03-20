@@ -6378,6 +6378,10 @@ catch (Exception $e)
 
   $longitude=$data1->long;
 
+  $index=$data1->index;
+$offset=($index*20);
+$limit=20;
+
 
 
    $radius=50;//Range to be covered in kms
@@ -6411,6 +6415,9 @@ catch (Exception $e)
         ->where('shop_offer_models.model_id',$model_id)
 
         ->where('tbl_shop_offers.offer_end_date','>=',$date)
+
+        ->offset($offset) 
+        ->limit($limit)
 
         ->groupBy('tbl_shop_offers.id')
 

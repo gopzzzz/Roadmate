@@ -1992,6 +1992,13 @@ public function cuscancelorder(){
    $data1 = json_decode($json);
   
    $order_id=$data1->trans_id;
+
+  
+   
+   
+   
+   
+
   
   
    $orderstatus=Tbl_b2cordertrans::find($order_id);
@@ -2000,8 +2007,6 @@ public function cuscancelorder(){
   
    if($orderstatus->save()){
   
-      
-  
       $cancel =new Tbl_b2c_cancel_orders;
       $cancel->type=1;
       $cancel->order_trans_id=$order_id;
@@ -2009,12 +2014,38 @@ public function cuscancelorder(){
       $cancel->pay_returnstatus=0;
       $cancel->comment=$data1->reason;
       $cancel->save();
+
+      $check=DB::table('tbl_b2cordertrans')->where('id',$order_id)->first();
+      $masterid=$check->order_id;
+      $invoicecount=DB::table('tbl_b2cordertrans')->where('order_id',$masterid)->count();
+      $cancelcount=DB::table('tbl_b2cordertrans')->where('order_status',2)->where('order_id',$masterid)->count();
+      if($invoicecount=$cancelcount){
+       
+           $masterorder=Tbl_b2corders::find($masterid);
+           $masterorder->order_status=4;
+           $masterorder->save();
+       }else{
+        $OrderMaster=DB::table('tbl_b2corders')->where('id',$masterid)->first();
+        $totalAmount=$OrderMaster->total_amount-($check->selling_rate);
+        $totalmrp=$OrderMaster->selling_mrp-($check->selling_rate);
+        $discount=$check->price-$check->selling_rate;
+        $finaldiscount=$OrderMaster->discount-$discount;
+        $masterorder=Tbl_b2corders::find($masterid);
+        $masterorder->total_amount=$totalAmount;
+        $masterorder->discount=$finaldiscount;
+        $masterorder->total_mrp=$totalmrp;
+       // $masterorder->shipping_charge=$data1->shipping_charge;
+        if($data1->total_amount==0){
+            $masterorder->order_status=4;
+        }
+        $masterorder->tax_amount=0;
+        $masterorder->save();
+       }
+      
   
+      $json_data = 1;
   
-  
-    $json_data = 1;
-  
-    echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+      echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
   
    }else{
   
