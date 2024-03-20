@@ -320,7 +320,8 @@
         </div>
         <div class="content left-content">
             <p>{{$key->name}}<br>
-                
+            <p>{{ $key->area }}, {{ $key->area1 }}, {{ $key->city }}, {{ $key->district }}, {{ $key->state }}, {{ $key->country }}, {{ $key->pincode }}</p>
+
             </p>
         </div>
     </div>
