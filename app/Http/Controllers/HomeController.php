@@ -4498,9 +4498,9 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		}
 		
     try {
-        $sale = $ordersQuery->paginate(10); // Pagination with 10 items per page
+        $sale = $ordersQuery->paginate(10)->appends(['status' => $statusFilter]); // Pagination with 10 items per page
         
-        return view('sale_list', compact('sale', 'role'));
+        return view('sale_list', compact('sale', 'role','statusFilter'));
     } catch (\Exception $e) {
         \Log::error($e->getMessage());
         dd($e->getMessage());
