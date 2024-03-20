@@ -41,15 +41,15 @@ class B2cController extends Controller
         ->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2corders.coupen_id', '=', 'tbl_coupens.id')
         ->select('tbl_b2corders.*', 'user_lists.name',  'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-		->orderBy('tbl_b2corders.id', 'DESC');
+        ->orderBy('tbl_b2corders.id', 'DESC');
     
-		if ($statusFilter !== null) {
-			$ordersQuery = $ordersQuery->where('order_status', $statusFilter);
-		}
+    if ($statusFilter !== null) {
+        $ordersQuery = $ordersQuery->where('order_status', $statusFilter);
+    }
 
-    $orders = $ordersQuery->get();
+    $orders = $ordersQuery->paginate(10)->appends(['status' => $statusFilter]);
 
-    return view('B2C.b2corders', ['orders' => $orders, 'role' => $role]);
+    return view('B2C.b2corders', ['orders' => $orders, 'role' => $role, 'statusFilter' => $statusFilter]);
 }
 
 	
@@ -90,7 +90,6 @@ $saleorder=DB::table('tbl_b2corders')
         )
     ->get();
 
-    //echo "<pre>";print_r($saleorder);exit;
 $role = Auth::user()->user_type;
 return view('B2C.b2csale_order',compact('role','markk','saleorder','orderId'));
 }
@@ -337,11 +336,9 @@ public function b2cstatusedit(Request $request, $order_id)
     if ($order) {
         $order->order_status = $request->order_status;
         
-        // Ensure payment_status is properly set
         if ($request->has('paystatus') && $request->paystatus !== null) {
             $order->payment_status = $request->paystatus;
         } elseif ($order->payment_status === null) {
-            // If payment_status is null, set it to its current value
             $order->payment_status = $order->payment_status;
         }
 
@@ -368,7 +365,7 @@ public function b2cstatusedit(Request $request, $order_id)
 	
 				$wh = new Tbl_wallet_transactions;
 				$wh->amount = $percentage;
-				$wh->u_type =1;
+				$wh->u_type =2;
 
 				$wh->type = 1;
 				$wh->shop_id = $shop_id;
