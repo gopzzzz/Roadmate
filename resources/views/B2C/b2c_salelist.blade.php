@@ -273,9 +273,9 @@
     
     <div class="row">
         <div class="col-12">
-            <div class="float-left">
-                {{ $sale->links() }}
-            </div>
+        <div class="row">
+    {{ $sale->appends(['status' => $statusFilter])->links() }}
+</div>
         </div>
     </div>
 
@@ -422,7 +422,21 @@ $(document).on('click', '.b2ceditstatus', function () {
     });
 </script>
 
+<script>
+    document.getElementById('applyFilter').addEventListener('click', function() {
+        var statusFilter = document.getElementById('orderStatusFilter').value;
+        var baseUrl = window.location.href.split('?')[0]; // Get the base URL without query parameters
+        var newUrl = baseUrl + '?status=' + statusFilter; // Construct new URL with the filter value
+        
+        window.location.href = newUrl; // Redirect to the new URL
+    });
 
+    // Set selected value in dropdown based on query parameter
+    var statusFilterParam = new URLSearchParams(window.location.search).get('status');
+    if (statusFilterParam !== null) {
+        document.getElementById('orderStatusFilter').value = statusFilterParam;
+    }
+</script>
 
 
 @endsection

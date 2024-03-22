@@ -201,9 +201,9 @@ public function b2csale_orderinsert(Request $request)
     }
 
     try {
-        $sale = $ordersQuery->paginate(10);
+        $sale = $ordersQuery->paginate(10)->appends(['status' => $statusFilter]);
 
-        return view('B2C.b2c_salelist', compact('sale', 'role'))->render();
+        return view('B2C.b2c_salelist', compact('sale', 'role','statusFilter'))->render();
     } catch (\Exception $e) {
         \Log::error($e->getMessage());
         dd($e->getMessage());
@@ -350,7 +350,7 @@ public function b2cstatusedit(Request $request, $order_id)
 	
 				$shop_id = $order->shop_id;
 	
-				$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+				$wallet = Tbl_wallets::where('id', $shop_id)->first();
 	
 				if ($wallet) {
 					$wallet->wallet_amount += $wallet->amount + $percentage;

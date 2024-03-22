@@ -146,7 +146,7 @@
     <input type="text" id="search" placeholder="Search by Customer Name or Order ID or Phone" class="form-control form-control-sm">
     </div>
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
-    <div class="col-md-4 text-right">
+<div class="col-md-4 text-right">
     <div class="input-group input-group-sm">
         <label class="input-group-text" for="orderStatusFilter">
             <i class="fas fa-filter"></i>
@@ -163,6 +163,7 @@
         </div>
     </div>
 </div>
+
        
    
 </div>
@@ -386,6 +387,19 @@
         });
     });
 </script>
+<script>
+    document.getElementById('applyFilter').addEventListener('click', function() {
+        var statusFilter = document.getElementById('orderStatusFilter').value;
+        var baseUrl = window.location.href.split('?')[0]; // Get the base URL without query parameters
+        var newUrl = baseUrl + '?status=' + statusFilter; // Construct new URL with the filter value
+        
+        window.location.href = newUrl; // Redirect to the new URL
+    });
 
-
+    // Set selected value in dropdown based on query parameter
+    var statusFilterParam = new URLSearchParams(window.location.search).get('status');
+    if (statusFilterParam !== null) {
+        document.getElementById('orderStatusFilter').value = statusFilterParam;
+    }
+</script>
 @endsection

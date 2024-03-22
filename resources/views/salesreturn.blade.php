@@ -240,6 +240,7 @@
                     <th>Sl</th>
                     <th>Order Id</th>
                     <th>Item</th>
+                    <th>Reason</th>
 
                     <th>Quantity</th>
                     <th>Selling Rate</th>
@@ -262,7 +263,8 @@
            <td>{{ $i}}</td>
            <td>{{ $key->order_id }}</td>
            <td>{{ $key->product_name }}</td>
-          
+           <td>{{ $key->comment }}</td>
+
            <td>{{ $key->qty }}</td>
            <td>{{ $key->offer_amount }}</td>
            <td>{{ $key->price }}</td>
@@ -295,6 +297,7 @@ $i++;
                   <th>Sl</th>
                     <th>Order Id</th>
                     <th>Item</th>
+                    <th>Reason</th>
 
                     <th>Quantity</th>
                     <th>Selling Rate</th>
