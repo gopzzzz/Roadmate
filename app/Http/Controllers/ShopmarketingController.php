@@ -124,6 +124,7 @@ catch (Exception $e)
 
 }
 }
+
 public function categorylist(){
      $postdata = file_get_contents("php://input");					
     $json = str_replace(array("\t","\n"), "", $postdata);
@@ -1168,12 +1169,12 @@ public function placeorder(){
  
     $data1 = json_decode($json);
  
-    $wallet=DB::table('user_lists')->where('id',$data1->customer_id)->first();
-    if($wallet){
-     $walletamount=$wallet->wallet_amount;
-     if($walletamount>=$data1->wallet_redeem_id){
+    // $wallet=DB::table('user_lists')->where('id',$data1->customer_id)->first();
+    // if($wallet){
+    //  $walletamount=$wallet->wallet_amount;
+    //  if($walletamount>=$data1->wallet_redeem_id){
  
-    $lastrow=DB::table('tbl_order_masters')->orderBy('id', 'DESC')->first();
+    $lastrow=DB::table('tbl_b2corders')->orderBy('id', 'DESC')->first();
     if($lastrow){
     $order_id=$lastrow->order_id+1;
     }else{
@@ -1202,11 +1203,11 @@ public function placeorder(){
      //echo $walletamount;exit;
      
         // echo "hi";exit;
-         $wamount=$walletamount-$data1->wallet_redeem_id;
-         DB::table('user_lists')
-         ->where('id',$wallet->id)  // find your user by their email
-         ->limit(1)  // optional - to ensure only one record is updated.
-         ->update(array('wallet_amount' => $wamount)); 
+        //  $wamount=$walletamount-$data1->wallet_redeem_id;
+        //  DB::table('user_lists')
+        //  ->where('id',$wallet->id)  // find your user by their email
+        //  ->limit(1)  // optional - to ensure only one record is updated.
+        //  ->update(array('wallet_amount' => $wamount)); 
  
          // DB::table('tbl_wallet_trabsactions')->insertGetId(
          //     [
@@ -1218,12 +1219,12 @@ public function placeorder(){
          //     ]
          //   );
  
-         $his=new Tbl_wallet_transactions;
-         $his->u_type=2;
-         $his->type=2;
-         $his->amount=$data1->wallet_redeem_id;
-         $his->shop_id=$data1->customer_id;
-         $his->save();
+        //  $his=new Tbl_wallet_transactions;
+        //  $his->u_type=2;
+        //  $his->type=2;
+        //  $his->amount=$data1->wallet_redeem_id;
+        //  $his->shop_id=$data1->customer_id;
+        //  $his->save();
     foreach($data1->orderlist as $singlelist){	
        $trans = new Tbl_b2cordertrans();
  
@@ -1251,17 +1252,17 @@ public function placeorder(){
          $json_data = 1;     
  
          echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
-     }else{
-         $json_data = 0;     
+    //  }else{
+    //      $json_data = 0;     
  
-         echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
-     }
+    //      echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
+    //  }
   
-     }else{
-         $json_data = 0;     
+    //  }else{
+    //      $json_data = 0;     
  
-         echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
-     }
+    //      echo json_encode(array('error' => true, "data" => $json_data, "message" => "insufficient amount"));
+    //  }
  }
 
  public function cartadd(){
@@ -1798,7 +1799,7 @@ public function orderdetails(){
     ->join('tbl_b2corders', 'tbl_b2cordertrans.order_id', '=', 'tbl_b2corders.id')
     ->join('tbl_brand_products', 'tbl_b2cordertrans.product_id', '=', 'tbl_brand_products.id')
     ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_b2corders.order_status as status')
+    ->select('tbl_b2cordertrans.*','tbl_brand_products.product_name','tbl_b2corders.order_status as status','tbl_b2corders.order_id as salesorderid')
     
     ->where('tbl_b2cordertrans.id',$order_id)
    // ->where('status',0)

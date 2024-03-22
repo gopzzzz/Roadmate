@@ -247,7 +247,7 @@ $name=Auth::user()->name;
                               </li>
                         </ul>
                      </li>
-                     <li class="nav-item has-treeview {{ request()->is(['b2corders','b2c_salelist']) ? 'menu-open' : '' }}">
+                     <li class="nav-item has-treeview {{ request()->is(['b2corders','b2c_salelist','b2csalesreturn']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['b2corders','b2c_salelist']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
@@ -263,11 +263,21 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
+   
     <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('b2c_salelist') }}" class="nav-link {{ request()->is('b2c_salelist') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>B2C Sale List</p>
+         </a>
+      </li>
+   </ul>
+
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('b2csalesreturn') }}" class="nav-link {{ request()->is('b2csalesreturn') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Sales Return</p>
          </a>
       </li>
    </ul>
@@ -1082,6 +1092,12 @@ $name=Auth::user()->name;
                         <a href="{{ url('shops') }}" class="nav-link {{ request()->is('shops') ? 'active' : '' }}">
                            <i class="far fa-circle nav-icon"></i>
                            <p>Shops</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('unshops') }}" class="nav-link {{ request()->is('vshops') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                           <p>Unmaped Shops</p>
                         </a>
                      </li>
                      <li class="nav-item">
