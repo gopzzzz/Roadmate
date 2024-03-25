@@ -4163,6 +4163,30 @@ $('.edit_ledger').click(function(){
         $('#editreturn_modal').modal('show');
     });
 
+	
+
+	
+    $('.edit_b2creturn').click(function(){
+        var id = $(this).data('id');
+        if(id) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('edit_b2creturn') }}",
+                data: {  
+                    "_token": "{{ csrf_token() }}",
+                    id: id 
+                },
+                success: function (res) {
+                    console.log(res);
+                    var obj = JSON.parse(res);
+                    $('#return_id').val(obj.id);
+                    $('#return').val(obj.pay_returnstatus);
+                },
+            }); 
+        }
+        $('#editreturn_modal').modal('show');
+    });
+
 
 $('.edit_expense').click(function(){
     var id = $(this).data('id');

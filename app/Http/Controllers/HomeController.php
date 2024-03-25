@@ -80,6 +80,7 @@ use App\Tbl_inventory_stocks;
 use App\Tbl_purchase_order_masters;
 use App\Tbl_purchase_order_trans;
 use App\Tbl_godowns;
+use App\Tbl_b2c_cancel_orders;
 
 use DB;
 use Hash;
@@ -1571,6 +1572,34 @@ public function shop_categoriesdelete($id){
 			
 		
 		return view('shops',compact('shops','shop_categories','exe','role','con','cond','dis'));	
+	}
+	public function unshops(){
+		$shop_categories=Shiop_categories::all();
+		$exe=Executives::all();
+		$role=Auth::user()->user_type;
+		$userid=Auth::user()->id;
+		$con = Tbl_countrys::where('deleted_status', 0)->get();
+		$cond = Tbl_states::where('deleted_status', 0)->get();
+		$dis = Tbl_districts::where('deleted_status', 0)->get();
+		$plac = Tbl_places::leftJoin('tbl_districts', 'tbl_places.district_id', '=', 'tbl_districts.id')
+			->leftJoin('tbl_states', 'tbl_districts.state_id', '=', 'tbl_states.id')
+			->leftJoin('tbl_countrys', 'tbl_states.country_id', '=', 'tbl_countrys.id')
+			->select('tbl_places.*', 'tbl_districts.state_id', 'tbl_states.country_id', 'tbl_countrys.country_name', 'tbl_states.state_name', 'tbl_districts.district_name')
+			->get();
+	
+		    $type = "";
+
+			$shops = DB::table('shops')
+            ->leftJoin('shiop_categories', 'shops.type', '=', 'shiop_categories.id')
+			->leftJoin('executives', 'shops.exeid', '=', 'executives.id')
+			->select('shops.*', 'shiop_categories.category','executives.name')
+			->orderBy('shops.id','DESC')
+			->where('shops.authorised_status',1)
+			->where('shops.place_id','')
+			->paginate(12);
+	
+	
+		return view('shops',compact('shops','shop_categories','exe','role','con','cond','dis','plac','type'));
 	}
 	public function ashops(){
 		$shop_categories=Shiop_categories::all();
@@ -5357,9 +5386,38 @@ public function productSearch(Request $request)
 			)->get();
 			return view('salesreturn',compact('role','sales'));
 		}
+		public function b2csalesreturn(){
+			$role = Auth::user()->user_type;
+			$sales=DB::table('tbl_b2c_cancel_orders')
+			->join('tbl_b2cordertrans','tbl_b2c_cancel_orders.order_trans_id', '=','tbl_b2cordertrans.id')
+			->leftjoin('tbl_b2corders','tbl_b2cordertrans.order_id', '=','tbl_b2corders.id')
+
+			->leftjoin('tbl_brand_products','tbl_b2cordertrans.product_id', '=','tbl_brand_products.id')
+			->where('tbl_b2c_cancel_orders.type',2)
+			->select(
+				'tbl_b2c_cancel_orders.*',
+				'tbl_brand_products.product_name',
+				'tbl_b2cordertrans.qty',
+				'tbl_b2corders.order_id',
+				'tbl_b2cordertrans.selling_rate as offer_amount',
+				'tbl_b2cordertrans.price',
+				'tbl_b2corders.payment_status'
+
+			)
+			->orderBy('id', 'DESC')
+			->get();
+			return view('b2csalesreturn',compact('role','sales'));
+		}
 		public function returnfetch(Request $request){
             $id=$request->id;
 			$sales=Tbl_cancel_orders::find($id);
+			
+			print_r(json_encode($sales));
+
+		}	
+		public function edit_b2creturn(Request $request){
+            $id=$request->id;
+			$sales=Tbl_b2c_cancel_orders::find($id);
 			
 			print_r(json_encode($sales));
 
@@ -5372,6 +5430,14 @@ public function productSearch(Request $request)
 			
 			return redirect('salesreturn')->with('success', 'Edited successfully');	
 
+		}
+		public function returneditb2c(Request $request){
+			$id=$request->id;
+			$roles=Tbl_b2c_cancel_orders::find($id);
+			$roles->pay_returnstatus=$request->return;
+			$roles->save();
+			
+			return redirect('b2csalesreturn')->with('success', 'Edited successfully');	
 		}
 			
 

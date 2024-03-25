@@ -401,6 +401,12 @@ Route::get('/ashops', [
     'uses' => 'HomeController@ashops'
 ])->name('ashops');
 
+Route::get('/unshops', [
+    'middleware' => 'auth',
+    'uses' => 'HomeController@unshops'
+])->name('unshops');
+
+
 Route::post('/shopinsert', [
     'middleware' => 'auth',
     'uses' => 'HomeController@shopinsert'
@@ -1405,10 +1411,14 @@ Route::post('/search_order',['middleware' => 'auth',
 'uses' => 'HomeController@search_order'])->name('search_order');
 Route::post('/delete-product', 'HomeController@deleteProduct')->name('delete_product');
 Route::get('/salesreturn','HomeController@salesreturn')->name('salesreturn');
+Route::get('/b2csalesreturn','HomeController@b2csalesreturn')->name('b2csalesreturn');
 Route::get('/purchase_order_master/{orderId}','HomeController@purchase_order_master')->name('purchase_order_master');
 
 Route::post('/returnfetch', [App\Http\Controllers\HomeController::class, 'returnfetch'])->name('returnfetch');
+Route::post('/edit_b2creturn', [App\Http\Controllers\HomeController::class, 'edit_b2creturn'])->name('edit_b2creturn');
 Route::post('/returnedit', [App\Http\Controllers\HomeController::class, 'returnedit'])->name('returnedit');
+Route::post('/returneditb2c', [App\Http\Controllers\HomeController::class, 'returneditb2c'])->name('returneditb2c');
+
 Route::get('/rolemenu','HomeController@rolemenu')->name('rolemenu');
 Route::post('/roleinsert', [App\Http\Controllers\HomeController::class, 'roleinsert'])->name('roleinsert');
 Route::post('/rolefetch', [App\Http\Controllers\HomeController::class, 'rolefetch'])->name('rolefetch');
