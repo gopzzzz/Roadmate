@@ -227,14 +227,14 @@
 
                 </div>
                                        <div class="modal-footer">
-                                       <a href="{{ route('cancel-order', ['orderId' => $orderId]) }}">
-                                            <button type="button" class="btn btn-secondary">Cancel Order</button>
-                                        </a>
+                                       <a href="{{ route('cancel-order', ['orderId' => $orderId]) }}" id="cancel-link">
+        <button type="button" class="btn btn-secondary">Cancel Order</button>
+    </a>
 
 
                                           <a href="{{url('order_master')}}"> <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a> -->
  
-                                          <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                                          <button type="submit" name="submit" class="btn btn-primary" id="submit-btn">Submit</button>
                                        </div>                      
                                         
                
@@ -289,6 +289,17 @@
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             
+            <script>
+    document.getElementById('cancel-link').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default action of the link
+
+        if (confirm('Are you sure you want to cancel this order?')) {
+            window.location.href = this.getAttribute('href'); // Proceed with canceling the order
+        }
+    });
+</script>
+
+
             <!-- <script>
   $(document).ready(function() {
     // Function to update total amount and total column
