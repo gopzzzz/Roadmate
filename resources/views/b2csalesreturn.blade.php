@@ -240,9 +240,9 @@
                     <th>Sl</th>
                     <th>Order Id</th>
                     <th>Item</th>
-                    <th>Reason</th>
 
                     <th>Quantity</th>
+                    <th>Comment</th>
                     <th>Selling Rate</th>
                     <th>MRP</th>
           <th>Payment Status</th>
@@ -263,9 +263,9 @@
            <td>{{ $i}}</td>
            <td>{{ $key->order_id }}</td>
            <td>{{ $key->product_name }}</td>
-           <td>{{ $key->comment }}</td>
-
+          
            <td>{{ $key->qty }}</td>
+           <td>{{ $key->comment }}</td>
            <td>{{ $key->offer_amount }}</td>
            <td>{{ $key->price }}</td>
            
@@ -274,7 +274,7 @@
            <td>  @if($key->pay_returnstatus==0) Unpaid @else Paid @endif     
            </td>
            <td> 
-    <button class="btn btn-primary edit_return" data-toggle="modal" data-id="{{ $key->id }}"
+    <button class="btn btn-primary edit_b2creturn" data-toggle="modal" data-id="{{ $key->id }}"
             style="background: linear-gradient(45deg, #28a745, #28a745); color: #fff;">
             Update 
     </button>
@@ -297,7 +297,6 @@ $i++;
                   <th>Sl</th>
                     <th>Order Id</th>
                     <th>Item</th>
-                    <th>Reason</th>
 
                     <th>Quantity</th>
                     <th>Selling Rate</th>
@@ -323,12 +322,12 @@ $i++;
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit Payment Return Status</h5>
+        <h5 class="modal-title">Edit Payment B2C Return Status</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="{{url('returnedit')}}" enctype="multipart/form-data" name="exeedit">
+      <form method="POST" action="{{url('returneditb2c')}}" enctype="multipart/form-data" name="exeedit">
 
 @csrf
       <div class="modal-body row">

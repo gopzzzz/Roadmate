@@ -831,6 +831,7 @@ Route::post('upcomingorders','ShopmarketingController@upcomingorders');
 Route::post('orderdetails','ShopmarketingController@orderdetails');
 
 Route::post('deliveryaddressupdate','ShopmarketingController@deliveryaddressupdate');
+Route::post('deliveryaddressdelete','ShopmarketingController@deliveryaddressdelete');
 
 Route::post('customerdeliveryaddressupdate','ShopmarketingController@customerdeliveryaddressupdate');
 Route::post('product','ShopmarketingController@product');

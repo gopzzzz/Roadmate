@@ -247,7 +247,7 @@ $name=Auth::user()->name;
                               </li>
                         </ul>
                      </li>
-                     <li class="nav-item has-treeview {{ request()->is(['b2corders','b2c_salelist']) ? 'menu-open' : '' }}">
+                     <li class="nav-item has-treeview {{ request()->is(['b2corders','b2c_salelist','b2csalesreturn']) ? 'menu-open' : '' }}">
    <a href="#" class="nav-link {{ request()->is(['b2corders','b2c_salelist']) ? 'active' : '' }}">
       <i class="nav-icon fas fa-briefcase"></i>
       <p>
@@ -263,11 +263,21 @@ $name=Auth::user()->name;
          </a>
       </li>
    </ul>
+   
     <ul class="nav nav-treeview">
       <li class="nav-item">
          <a href="{{ url('b2c_salelist') }}" class="nav-link {{ request()->is('b2c_salelist') ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>B2C Sale List</p>
+         </a>
+      </li>
+   </ul>
+
+   <ul class="nav nav-treeview">
+      <li class="nav-item">
+         <a href="{{ url('b2csalesreturn') }}" class="nav-link {{ request()->is('b2csalesreturn') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Sales Return</p>
          </a>
       </li>
    </ul>
@@ -815,23 +825,8 @@ $name=Auth::user()->name;
                   </ul>
                </li>
          
-            <li class="nav-item has-treeview  {{ request()->is('order_master') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->is('order_master') ? 'active' : '' }}">
-                           <i class="nav-icon fas fa-briefcase"></i>
-                           <p>
-                              Market Orders
-                              <i class="right fas fa-angle-left"></i>
-                           </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                           <li class="nav-item">
-                              <a href="{{ url('order_master') }}" class="nav-link {{ request()->is('order_master') ? 'active' : '' }}">
-                                 <i class="far fa-circle nav-icon"></i>
-                                 <p>Orders</p>
-                              </a>
-                           </li>
-</ul>
-</li>
+          
+
             @elseif($role==3)
             <li class="nav-item has-treeview {{ request()->is('ashops') ? 'menu-open' : '' }}">
                <a href="#" class="nav-link {{ request()->is('ashops') ? 'active' : '' }}">
@@ -1084,6 +1079,7 @@ $name=Auth::user()->name;
                            <p>Shops</p>
                         </a>
                      </li>
+                  
                      <li class="nav-item">
                         <a href="{{ url('vshops') }}" class="nav-link {{ request()->is('vshops') ? 'active' : '' }}">
                            <i class="far fa-circle nav-icon"></i>
