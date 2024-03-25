@@ -71,18 +71,34 @@ $offset=($index*20);
 $limit=20;
   $categoryId=$data1->categoryid; 
   try{	
-      $productlist=DB::table('tbl_brand_products')
-      ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-      ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
-    ->where('tbl_rm_products.status',0)
-
-      ->where('tbl_brand_products.status',0)
-      ->where('tbl_rm_products.cat_id', $categoryId)
-      ->orderBy('id', 'DESC')
-      ->offset($offset) 
-      ->limit($limit)
-       ->get();
+     if (property_exists($data1, 'type')) {
+        $productlist=DB::table('tbl_brand_products')
+        ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+        ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+      ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+      ->where('tbl_rm_products.status',0)
+  
+        ->where('tbl_brand_products.b2c_status',0)
+        ->where('tbl_rm_products.cat_id', $categoryId)
+        ->orderBy('id', 'DESC')
+        ->offset($offset) 
+        ->limit($limit)
+         ->get();
+      }else{
+        $productlist=DB::table('tbl_brand_products')
+        ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+        ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+      ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+      ->where('tbl_rm_products.status',0)
+  
+        ->where('tbl_brand_products.status',0)
+        ->where('tbl_rm_products.cat_id', $categoryId)
+        ->orderBy('id', 'DESC')
+        ->offset($offset) 
+        ->limit($limit)
+         ->get();
+      }
+     
        
   $products = [];
   
@@ -564,18 +580,32 @@ $postdata = file_get_contents("php://input");
   $offset=($index*20);
   $limit=20;
  try{	
-
-    $productlist=DB::table('tbl_brand_products')
-    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
-    ->orderBy('id', 'DESC')
-    ->where('tbl_rm_products.status',0)
-
-    ->where('tbl_brand_products.status',0)
-    ->offset($offset) 
-    ->limit($limit) 
-     ->get();
+    if (property_exists($data1, 'type')) {
+        $productlist=DB::table('tbl_brand_products')
+        ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+        ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+        ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+        ->orderBy('id', 'DESC')
+        ->where('tbl_rm_products.status',0)
+    
+        ->where('tbl_brand_products.b2c_status',0)
+        ->offset($offset) 
+        ->limit($limit) 
+         ->get();
+    }else{
+        $productlist=DB::table('tbl_brand_products')
+        ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+        ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+        ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+        ->orderBy('id', 'DESC')
+        ->where('tbl_rm_products.status',0)
+    
+        ->where('tbl_brand_products.status',0)
+        ->offset($offset) 
+        ->limit($limit) 
+         ->get();
+    }
+ 
        $products = [];
 
 foreach ($productlist as $proItem) {
@@ -697,16 +727,37 @@ public function brandfilter(){
     $limit=20;
   try{	
 
+    if (property_exists($data1, 'type')) {
+
+        $productlist=DB::table('tbl_brand_products')
+        ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+        ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+        ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+        ->where('tbl_brand_products.brand_id',$brand_id)
+        ->where('tbl_rm_products.status',0)
+  
+        ->where('tbl_brand_products.b2c_status',0)
+        ->orderBy('id', 'DESC')
+
+          ->offset($offset) 
+          ->limit($limit) 
+         ->get();
+    }else{
+        
   $productlist=DB::table('tbl_brand_products')
-    ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-    ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
-    ->select('tbl_brand_products.*','tbl_hsncodes.tax')
-    ->where('tbl_brand_products.brand_id',$brand_id)
-    ->where('tbl_brand_products.status',0)
-    ->orderBy('id', 'DESC')
-      ->offset($offset) 
-      ->limit($limit) 
-     ->get();
+  ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+  ->join('tbl_hsncodes', 'tbl_brand_products.hsncode', '=', 'tbl_hsncodes.id')
+  ->select('tbl_brand_products.*','tbl_hsncodes.tax')
+  ->where('tbl_brand_products.brand_id',$brand_id)
+  ->where('tbl_rm_products.status',0)
+  
+            ->where('tbl_brand_products.status',0)
+  ->orderBy('id', 'DESC')
+    ->offset($offset) 
+    ->limit($limit) 
+   ->get();
+    }
+
      
      
         $products = [];
@@ -768,14 +819,31 @@ public function searchproduct(){
     $limit=20;
     try{	
 
-      $productlist=DB::table('tbl_brand_products')
-      ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
-      ->select('tbl_brand_products.*')
-      ->orWhere('tbl_brand_products.product_name', 'like', "%{$search}%")
-      ->offset($offset) 
-      ->limit($limit) 
-      ->where('tbl_brand_products.status',0)
-       ->get();
+       if (property_exists($data1, 'type')) {
+            $productlist=DB::table('tbl_brand_products')
+            ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+            ->select('tbl_brand_products.*')
+            ->orWhere('tbl_brand_products.product_name', 'like', "%{$search}%")
+            ->offset($offset) 
+            ->limit($limit) 
+            ->where('tbl_rm_products.status',0)
+  
+            ->where('tbl_brand_products.b2c_status',0)
+             ->get();
+        }else{
+            $productlist=DB::table('tbl_brand_products')
+            ->join('tbl_rm_products', 'tbl_brand_products.brand_id', '=', 'tbl_rm_products.id')
+            ->select('tbl_brand_products.*')
+            ->orWhere('tbl_brand_products.product_name', 'like', "%{$search}%")
+            ->offset($offset) 
+            ->limit($limit) 
+              ->where('tbl_rm_products.status',0)
+  
+             ->where('tbl_brand_products.status',0)
+             ->get();
+        }
+
+    
        
        
           $products = [];
@@ -883,6 +951,33 @@ public function brand_list(){
   echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
 
  }
+}
+public function deliveryaddressdelete(){
+    $postdata = file_get_contents("php://input");					
+
+    $json = str_replace(array("\t","\n"), "", $postdata);
+  
+   $data1 = json_decode($json);
+  
+   $deliveryid=$data1->deliveryid;
+   
+  
+  
+  
+  
+   if(DB::table('tbl_deliveryaddres')->where('id',$deliveryid)->delete()){
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
+  
+   }else{
+  
+    $json_data = 1;
+  
+    echo json_encode(array('error' => true, "data" => $json_data, "message" => "error"));
+  
+   }
 }
 public function customerdeliveryaddressupdate(){
     $postdata = file_get_contents("php://input");	

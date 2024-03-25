@@ -242,6 +242,7 @@
                     <th>Item</th>
 
                     <th>Quantity</th>
+                    <th>Comment</th>
                     <th>Selling Rate</th>
                     <th>MRP</th>
           <th>Payment Status</th>
@@ -264,6 +265,7 @@
            <td>{{ $key->product_name }}</td>
           
            <td>{{ $key->qty }}</td>
+           <td>{{ $key->comment }}</td>
            <td>{{ $key->offer_amount }}</td>
            <td>{{ $key->price }}</td>
            
