@@ -197,12 +197,13 @@
 
                 </div>
                                        <div class="modal-footer">
-                                       <a href="{{ route('b2cancel-order', ['orderId' => $orderId]) }}">
-                                            <button type="button" class="btn btn-secondary">Cancel Order</button>
-                                        </a>
+   
+                                       <a href="{{ route('b2cancel-order', ['orderId' => $orderId]) }}" onclick="return confirmDelete('{{ $orderId }}')">
+    <button type="button" class="btn btn-secondary">Cancel Order</button>
+</a>
+           
 
-
-                                          <a href="{{url('b2corders')}}"> <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a> -->
+                                          <a href="{{url('b2corders')}}">
  
                                           <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                                        </div>                      
@@ -309,5 +310,36 @@
 </script>
  -->
 
+ 
 
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("cancelOrderLink").addEventListener("click", function(event) {
+            if (!confirm('Are you sure you want to cancel this order?')) {
+                event.preventDefault(); // Prevent the default behavior (following the link)
+            }
+        });
+    });
+</script> -->
+<script>
+    function confirmDelete(orderId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Cancel it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If the user clicks "Yes", proceed with the deletion
+                window.location.href = "{{ route('b2cancel-order', ['orderId' => $orderId]) }}";
+            }
+        });
+
+        // Return false to prevent the default behavior of the anchor tag
+        return false;
+    }
+</script>
 @endsection
