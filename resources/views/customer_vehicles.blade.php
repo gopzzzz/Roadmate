@@ -115,7 +115,6 @@
                         <thead>
                            <tr>
                               <th>id</th>
-                              <th>id</th>
                               <th>Customer</th>	
                               <th>Vehicle Type</th>							  
                               <th>Fuel Type</th>
