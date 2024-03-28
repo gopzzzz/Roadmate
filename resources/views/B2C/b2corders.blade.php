@@ -371,6 +371,46 @@
 
 <script>
     $(document).ready(function() {
+        $('#search').on('keyup', function() {
+            var searchText = $(this).val().toLowerCase();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('b2corders') }}",
+                data: {
+                    search: searchText,
+                    status: $('#orderStatusFilter').val()
+                },
+                success: function(response) {
+                    $('#searchorderlist').html($(response).find('#searchorderlist').html());
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $('#applyFilter').click(function() {
+            var statusFilter = $('#orderStatusFilter').val();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('b2corders') }}",
+                data: {
+                    search: $('#search').val().toLowerCase(),
+                    status: statusFilter
+                },
+                success: function(response) {
+                    $('#searchorderlist').html($(response).find('#searchorderlist').html());
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<!-- <script>
+    $(document).ready(function() {
         $('#applyFilter').click(function() {
             var statusFilter = $('#orderStatusFilter').val();
             $.ajax({
@@ -386,7 +426,7 @@
             });
         });
     });
-</script>
+</script> -->
 <script>
     document.getElementById('applyFilter').addEventListener('click', function() {
         var statusFilter = document.getElementById('orderStatusFilter').value;

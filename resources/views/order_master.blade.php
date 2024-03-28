@@ -186,6 +186,20 @@
 </div>
 <br>
 <br>
+</form>
+
+  <div class="card-body">
+  <form>
+    @if($role!=3)
+     <div class="col-md-4 mx-auto">
+   
+        <div class="form-group">
+         <input type="text" id="search_order" class="form-control" name="search_order" placeholder="Search" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+        </div>
+     
+    </div>
+</form>@endif
+<br><br>
   <table class="table table-bordered table-striped table-sm">
         <thead>
             

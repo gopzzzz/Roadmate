@@ -353,24 +353,50 @@
         });
     });
 </script>
+<!-- HTML code remains unchanged -->
+
 <script>
     $(document).ready(function() {
+        $('#search').on('keyup', function() {
+            var searchText = $(this).val().toLowerCase();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('sale_list') }}",
+                data: {
+                    search: searchText,
+                    status: $('#orderStatusFilter').val()
+                },
+                success: function(response) {
+                    $('#salelist').html($(response).find('#salelist').html());
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
         $('#applyFilter').click(function() {
             var statusFilter = $('#orderStatusFilter').val();
             $.ajax({
                 type: "GET",
                 url: "{{ route('sale_list') }}",
-                data: { status: statusFilter },
+                data: {
+                    search: $('#search').val().toLowerCase(),
+                    status: statusFilter
+                },
                 success: function(response) {
                     $('#salelist').html($(response).find('#salelist').html());
                 },
-                error: function(xhr, status,error ) {
+                error: function(xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
         });
     });
 </script>
+
+<!-- Remaining JavaScript code remains unchanged -->
+
 <script>
     document.getElementById('applyFilter').addEventListener('click', function() {
         var statusFilter = document.getElementById('orderStatusFilter').value;

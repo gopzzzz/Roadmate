@@ -443,6 +443,7 @@ $(document).on('click', '.b2ceditstatus', function () {
     });
 </script>
 
+
 <script>
     document.getElementById('applyFilter').addEventListener('click', function() {
         var statusFilter = document.getElementById('orderStatusFilter').value;
