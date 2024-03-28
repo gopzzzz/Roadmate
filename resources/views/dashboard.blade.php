@@ -97,7 +97,7 @@
       </div><!-- /.container-fluid -->
     </section>
 
-    @else if($role==3)
+    @elseif($role==3)
     <section class="content">
       <div class="container-fluid">
         <!-- Info boxes -->
