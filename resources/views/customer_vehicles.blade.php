@@ -114,7 +114,7 @@
                      <table id="example1" class="table table-bordered table-striped">
                         <thead>
                            <tr>
-                              <th>id</th>
+                              
                               <th>id</th>
                               <th>Customer</th>	
                               <th>Vehicle Type</th>							  

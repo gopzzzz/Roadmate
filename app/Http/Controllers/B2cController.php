@@ -33,24 +33,33 @@ class B2cController extends Controller
 {
     $role = Auth::user()->user_type;
     $userid = Auth::user()->id;
-    
     $statusFilter = $request->input('status');
+    $searchQuery = $request->input('search');
 
     $ordersQuery = DB::table('tbl_b2corders')
         ->leftJoin('user_lists', 'tbl_b2corders.shop_id', '=', 'user_lists.id')
         ->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
         ->leftJoin('tbl_coupens', 'tbl_b2corders.coupen_id', '=', 'tbl_coupens.id')
-        ->select('tbl_b2corders.*', 'user_lists.name',  'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->select('tbl_b2corders.*', 'user_lists.name', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
         ->orderBy('tbl_b2corders.id', 'DESC');
-    
+
     if ($statusFilter !== null) {
-        $ordersQuery = $ordersQuery->where('order_status', $statusFilter);
+        $ordersQuery->where('tbl_b2corders.order_status', $statusFilter);
     }
 
-    $orders = $ordersQuery->paginate(10)->appends(['status' => $statusFilter]);
+    if ($searchQuery) {
+        $ordersQuery->where(function($query) use ($searchQuery) {
+            $query->where('user_lists.name', 'like', '%' . $searchQuery . '%')
+                ->orWhere('tbl_b2corders.order_id', 'like', '%' . $searchQuery . '%')
+                ->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchQuery . '%');
+        });
+    }
 
-    return view('B2C.b2corders', ['orders' => $orders, 'role' => $role, 'statusFilter' => $statusFilter]);
+    $orders = $ordersQuery->paginate(10)->appends(['status' => $statusFilter, 'search' => $searchQuery]);
+
+    return view('B2C.b2corders', ['orders' => $orders, 'role' => $role, 'statusFilter' => $statusFilter, 'searchQuery' => $searchQuery]);
 }
+
 
 	
 
@@ -184,32 +193,41 @@ public function b2csale_orderinsert(Request $request)
 
 
 		public function b2c_salelist(Request $request)
-{
-    $role = Auth::user()->user_type;
-    $statusFilter = $request->input('status');
-
-    $ordersQuery = DB::table('tbl_b2csales')
-	->leftJoin('user_lists', 'tbl_b2csales.shop_id', '=', 'user_lists.id')
-	->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
-        ->leftJoin('tbl_coupens', 'tbl_b2csales.coupen_id', '=', 'tbl_coupens.id')
-        ->leftJoin('tbl_b2corders', 'tbl_b2csales.order_id', '=', 'tbl_b2corders.id')
-        ->select('tbl_b2csales.*', 'user_lists.name',  'tbl_b2corders.order_status', 'tbl_b2corders.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-        ->orderBy('tbl_b2csales.id', 'DESC');
-
-    if ($statusFilter !== null) {
-        $ordersQuery = $ordersQuery->where('order_status', $statusFilter);
-    }
-
-    try {
-        $sale = $ordersQuery->paginate(10)->appends(['status' => $statusFilter]);
-
-        return view('B2C.b2c_salelist', compact('sale', 'role','statusFilter'))->render();
-    } catch (\Exception $e) {
-        \Log::error($e->getMessage());
-        dd($e->getMessage());
-    }
-}
-
+		{
+			$role = Auth::user()->user_type;
+			$statusFilter = $request->input('status');
+			$searchQuery = $request->input('search');
+		
+			$ordersQuery = DB::table('tbl_b2csales')
+				->leftJoin('user_lists', 'tbl_b2csales.shop_id', '=', 'user_lists.id')
+				->leftJoin('tbl_deliveryaddres', 'user_lists.delivery_id', '=', 'tbl_deliveryaddres.id')
+				->leftJoin('tbl_coupens', 'tbl_b2csales.coupen_id', '=', 'tbl_coupens.id')
+				->leftJoin('tbl_b2corders', 'tbl_b2csales.order_id', '=', 'tbl_b2corders.id')
+				->select('tbl_b2csales.*', 'user_lists.name', 'tbl_b2corders.order_status', 'tbl_b2corders.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+				->orderBy('tbl_b2csales.id', 'DESC');
+		
+			if ($statusFilter !== null) {
+				$ordersQuery->where('tbl_b2corders.order_status', $statusFilter);
+			}
+		
+			if ($searchQuery) {
+				$ordersQuery->where(function($query) use ($searchQuery) {
+					$query->where('user_lists.name', 'like', '%' . $searchQuery . '%')
+						->orWhere('tbl_b2csales.order_id', 'like', '%' . $searchQuery . '%')
+						->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchQuery . '%');
+				});
+			}
+		
+			try {
+				$sale = $ordersQuery->paginate(10)->appends(['status' => $statusFilter, 'search' => $searchQuery]);
+		
+				return view('B2C.b2c_salelist', compact('sale', 'role', 'statusFilter', 'searchQuery'))->render();
+			} catch (\Exception $e) {
+				\Log::error($e->getMessage());
+				dd($e->getMessage());
+			}
+		}
+		
 		public function b2corder_invoice($orderId) {
 
 			$markk=DB::table('tbl_b2cordertrans')
