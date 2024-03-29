@@ -160,11 +160,14 @@
 
 <!-- Rest of your HTML content -->
 
-             
 <div class="row">
+
     <div class="col-md-4">
-    <input type="text" id="search" placeholder="Search by Customer Name or Order ID or Phone" class="form-control form-control-sm">
+    @if($role!=3)
+    <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
+    @endif
     </div>
+   
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
 <div class="col-md-4 text-right">
     <div class="input-group input-group-sm">
@@ -182,24 +185,14 @@
             <button id="applyFilter" class="btn btn-primary btn-sm ml-2">Apply Filter</button>
         </div>
     </div>
-</div> 
+</div>
+
+       
+   
 </div>
 <br>
 <br>
-</form>
 
-  <div class="card-body">
-  <form>
-    @if($role!=3)
-     <div class="col-md-4 mx-auto">
-   
-        <div class="form-group">
-         <input type="text" id="search_order" class="form-control" name="search_order" placeholder="Search" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%;">
-        </div>
-     
-    </div>
-</form>@endif
-<br><br>
   <table class="table table-bordered table-striped table-sm">
         <thead>
             
@@ -490,6 +483,8 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#search').on('keyup', function() {
@@ -509,12 +504,33 @@
 
 <script>
     $(document).ready(function() {
+        $('#search').on('keyup', function() {
+            var searchText = $(this).val().toLowerCase();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('order_master') }}",
+                data: {
+                    search: searchText,
+                    status: $('#orderStatusFilter').val()
+                },
+                success: function(response) {
+                    $('#searchorderlist').html($(response).find('#searchorderlist').html());
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
         $('#applyFilter').click(function() {
             var statusFilter = $('#orderStatusFilter').val();
             $.ajax({
                 type: "GET",
                 url: "{{ route('order_master') }}",
-                data: { status: statusFilter },
+                data: {
+                    search: $('#search').val().toLowerCase(),
+                    status: statusFilter
+                },
                 success: function(response) {
                     $('#searchorderlist').html($(response).find('#searchorderlist').html());
                 },
