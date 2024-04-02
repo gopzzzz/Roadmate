@@ -200,8 +200,10 @@
                 <th>id</th>
                 <th>OrderId</th>
                 <th>Shop Name</th>
+                @if($role!=3)
                 <th>Phone Number</th>
                 <th>Address</th>
+                @endif
                 <th>Total Amount</th>
                 <!-- <th>Discount</th> -->
                 
@@ -232,9 +234,11 @@
                 <td>{{ $i++ }}</td>
                 <td>{{ $key->order_id }}</td>
                 <td>{{ $key->shopname }}</td>
-               
+                @if($role!=3)
+
                 <td>{{ $key->phone }}</td>
                 <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
+                @endif
                 <td>{{ $key->total_amount }}</td>
                 <!-- <td>{{ $key->discount }}</td> -->
                 
