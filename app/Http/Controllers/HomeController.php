@@ -4096,21 +4096,28 @@ function sendNotification1($msg1,$title)
 		public function order_master(Request $request) {
 			$role = Auth::user()->user_type;
 			$userid=Auth::user()->id;
-			$selectedOrderStatus = $request->input('order_status');
+			$statusFilter = $request->input('status');
+			$searchQuery = $request->input('search');
 
 			$order = DB::table('tbl_order_masters')
 				->leftJoin('shops', 'tbl_order_masters.shop_id', '=', 'shops.id')
 				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
 				->leftJoin('tbl_coupens', 'tbl_order_masters.coupen_id', '=', 'tbl_coupens.id')
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode');
-				if ($selectedOrderStatus !== null) {
-					$order->where('tbl_order_masters.order_status', $selectedOrderStatus);
+				if ($statusFilter !== null) {
+					$order->where('tbl_order_masters.order_status', $statusFilter);
 				}
-			
+				if ($searchQuery) {
+					$order->where(function($query) use ($searchQuery) {
+						$query->where('shops.shopname', 'like', '%' . $searchQuery . '%')
+							->orWhere('tbl_order_masters.order_id', 'like', '%' . $searchQuery . '%')
+							->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchQuery . '%');
+					});
+				}
 				if($role==1){
 				$order = $order
 				->orderBy('tbl_order_masters.id', 'DESC')
-				->paginate(10);
+				->paginate(10)->appends(['status' => $statusFilter,'search' => $searchQuery]);
 			}else if($role==3){
 			     $fran = DB::table('tbl_franchase_details')
     ->leftJoin('tbl_franchises', 'tbl_franchase_details.franchise_id', '=', 'tbl_franchises.id')
@@ -4138,10 +4145,16 @@ foreach ($fran as $singleFranlist) {
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
 				 ->where('tbl_places.id', $singleFranlist->place_id);
     }
-
-		if ($selectedOrderStatus !== null) {
-			$shopsQuery->where('tbl_order_masters.order_status', $selectedOrderStatus);
-		}
+	if ($statusFilter !== null) {
+		$shopsQuery->where('tbl_order_masters.order_status', $statusFilter);
+	}
+	if ($searchQuery) {
+		$shopsQuery->where(function($query) use ($searchQuery) {
+			$query->where('shops.shopname', 'like', '%' . $searchQuery . '%')
+				->orWhere('tbl_order_masters.order_id', 'like', '%' . $searchQuery . '%')
+				->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchQuery . '%');
+		});
+	}
 	
     $order = $order->merge($shopsQuery->get());
 	
@@ -4167,20 +4180,24 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				->select('tbl_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_coupens.coupencode','tbl_deliveryaddres.area','tbl_deliveryaddres.area1','tbl_deliveryaddres.country','tbl_deliveryaddres.state','tbl_deliveryaddres.district','tbl_deliveryaddres.city','tbl_deliveryaddres.phone','tbl_deliveryaddres.pincode')
 				
 				->orderBy('tbl_order_masters.id', 'DESC');
-				
-				if ($selectedOrderStatus !== null) {
-					$order->where('tbl_order_masters.order_status', $selectedOrderStatus);
+				if ($statusFilter !== null) {
+					$order->where('tbl_order_masters.order_status', $statusFilter);
 				}
-			
-			
+				if ($searchQuery) {
+					$order->where(function($query) use ($searchQuery) {
+						$query->where('shops.shopname', 'like', '%' . $searchQuery . '%')
+							->orWhere('tbl_order_masters.order_id', 'like', '%' . $searchQuery . '%')
+							->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchQuery . '%');
+					});
+				}
 				$order = $order
 				->orderBy('tbl_order_masters.id', 'DESC')
-				->paginate(10);
+				->paginate(10)->appends(['status' => $statusFilter,'search' => $searchQuery]);
 			}
 			$mark = DB::table('shops')->get();
 			$orderr = DB::table('tbl_coupens')->get();
 		
-			return view('order_master', compact('order', 'role', 'orderr', 'mark','selectedOrderStatus'));
+			return view('order_master', compact('order', 'role', 'orderr', 'mark','statusFilter','searchQuery'));
 		}
 		
 
@@ -4387,6 +4404,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
         $saleMaster->delivery_date = $request->delivery_date;
        
 		$saleMaster->order_date = $request->orderdate;
+		$saleMaster->order_status = 0;
 
 	
 		
@@ -4513,13 +4531,13 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 			$statusFilter = $request->input('status');
 			$searchQuery = $request->input('search');
 
-			$ordersQuery = DB::table('tbl_sale_order_masters')
-				->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
-				->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
-				->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
-				->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
-				->select('tbl_sale_order_masters.*', 'shops.shopname', 'shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
-				->orderBy('tbl_sale_order_masters.id', 'DESC');
+    $ordersQuery = DB::table('tbl_sale_order_masters')
+        ->leftJoin('shops', 'tbl_sale_order_masters.shop_id', '=', 'shops.id')
+        ->leftJoin('tbl_deliveryaddres', 'shops.delivery_id', '=', 'tbl_deliveryaddres.id')
+        ->leftJoin('tbl_coupens', 'tbl_sale_order_masters.coupen_id', '=', 'tbl_coupens.id')
+        ->leftJoin('tbl_order_masters', 'tbl_sale_order_masters.order_id', '=', 'tbl_order_masters.id')
+        ->select('tbl_sale_order_masters.*', 'shops.shopname', 'tbl_order_masters.order_id','shops.address', 'tbl_order_masters.order_status', 'tbl_order_masters.payment_status', 'tbl_coupens.coupencode', 'tbl_deliveryaddres.area', 'tbl_deliveryaddres.area1', 'tbl_deliveryaddres.country', 'tbl_deliveryaddres.state', 'tbl_deliveryaddres.district', 'tbl_deliveryaddres.city', 'tbl_deliveryaddres.phone', 'tbl_deliveryaddres.pincode')
+        ->orderBy('tbl_sale_order_masters.id', 'DESC');
 
 			if ($statusFilter !== null) {
 				if ($statusFilter == 0) {

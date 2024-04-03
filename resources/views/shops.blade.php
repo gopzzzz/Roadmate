@@ -452,11 +452,11 @@
                     <th>Category</th>
 
                     <th>Shopname</th>
-
+                    @if($role!=3)
                     <th>Address</th>
 
                     <th>Phone Number </th>
-
+                    @endif
                     <th>Pincode</th>
 
                     <th>Shop Type</th>
@@ -487,9 +487,12 @@
 
                     <td><img src="{{ asset('/img/'.$key->image) }}" alt="" width="75"/></td>
                     <td>{{$key->category}}</td>
+                    
                     <td>{{$key->shopname}}</td>
+                    @if($role!=3)
                     <td>{{$key->address}}</td>
                     <td>{{$key->phone_number}}</td>
+                    @endif
                     <td>{{$key->pincode}}</td>
                     <td>@if($key->authorised_status==0) <button type="button" class="btn btn-info btn-sm">Visted Shop</button> @elseif($key->authorised_status==1)  <button type="button" class="btn btn-success btn-sm">Autherised Shop</button> @endif</td>
 					         
@@ -541,11 +544,11 @@
                       <th>Category</th>
 
                       <th>Shopname</th>
-
+@if($role!=3)
                       <th>Address</th>
 
                       <th>Phone Number </th>
-
+@endif
                       <th>Pincode</th>
 
                       <th>Shop Type</th>

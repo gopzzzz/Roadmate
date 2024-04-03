@@ -95,12 +95,11 @@
          <th>Quantity</th>
          <th>Total Price</th>
     
-         <th></th>
    @if($role==1)
   @endif
 </tr>
    </thead>
-   <tbody id="non-searchshoplist">
+   <tbody>
 
    @php 
 
@@ -141,7 +140,6 @@ $i++;
          <th>Quantity</th>
          <th>Total Price</th>         
          
-         <th></th>
  @if($role==1)
  @endif
  </tr>
