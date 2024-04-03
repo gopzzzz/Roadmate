@@ -145,7 +145,7 @@
                  <br>
                   <div class="row">
     <div class="col-md-4">
-    <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
+    <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm" autocomplete="off">
     </div>
    
     <div class="col-md-4"></div> 
@@ -335,64 +335,68 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-    $(document).ready(function() {
-        $('#search').on('keyup', function() {
-            var searchText = $(this).val().toLowerCase();
-            $('#salelist tr').filter(function() {
-                var shopName = $(this).find('td:nth-child(3)').text().toLowerCase();
-                var orderId = $(this).find('td:nth-child(2)').text().toLowerCase();
-                var phoneNumber = $(this).find('td:nth-child(4)').text().toLowerCase();
-                var shopMatch = shopName.indexOf(searchText) > -1;
-                var orderMatch = orderId.indexOf(searchText) > -1;
-                var phoneMatch = phoneNumber.indexOf(searchText) > -1;
-                $(this).toggle(shopMatch || orderMatch || phoneMatch);
-            });
+   $(document).ready(function() {
+    $('#search').on('keyup', function() {
+        var searchText = $(this).val().toLowerCase();
+        $('#salelist tbody tr').each(function() {
+            var shopName = $(this).find('td:nth-child(3)').text().toLowerCase();
+            var orderId = $(this).find('td:nth-child(2)').text().toLowerCase();
+            var phoneNumber = $(this).find('td:nth-child(4)').text().toLowerCase();
+            var shopMatch = shopName.includes(searchText);
+            var orderMatch = orderId.includes(searchText);
+            var phoneMatch = phoneNumber.includes(searchText);
+            if (shopMatch || orderMatch || phoneMatch) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
         });
     });
+});
+
 </script>
-<!-- HTML code remains unchanged -->
+
 
 <script>
     $(document).ready(function() {
-        $('#search').on('keyup', function() {
-            var searchText = $(this).val().toLowerCase();
-            $.ajax({
-                type: "GET",
-                url: "{{ route('sale_list') }}",
-                data: {
-                    search: searchText,
-                    status: $('#orderStatusFilter').val()
-                },
-                success: function(response) {
-                    $('#salelist').html($(response).find('#salelist').html());
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-
-        $('#applyFilter').click(function() {
-            var statusFilter = $('#orderStatusFilter').val();
-            $.ajax({
-                type: "GET",
-                url: "{{ route('sale_list') }}",
-                data: {
-                    search: $('#search').val().toLowerCase(),
-                    status: statusFilter
-                },
-                success: function(response) {
-                    $('#salelist').html($(response).find('#salelist').html());
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
+    $('#search').on('keyup', function() {
+        var searchText = $(this).val().toLowerCase();
+        $.ajax({
+            type: "GET",
+            url: "{{ route('sale_list') }}",
+            data: {
+                search: searchText,
+                status: $('#orderStatusFilter').val()
+            },
+            success: function(response) {
+                $('#salelist').html($(response).find('#salelist').html());
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
         });
     });
+
+    $('#applyFilter').click(function() {
+        var statusFilter = $('#orderStatusFilter').val();
+        $.ajax({
+            type: "GET",
+            url: "{{ route('sale_list') }}",
+            data: {
+                search: $('#search').val().toLowerCase(),
+                status: statusFilter
+            },
+            success: function(response) {
+                $('#salelist').html($(response).find('#salelist').html());
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
 </script>
 
 <!-- Remaining JavaScript code remains unchanged -->
