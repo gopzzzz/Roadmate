@@ -143,7 +143,7 @@
                        <br>
                        <div class="row">
     <div class="col-md-4">
-    <input type="text" id="search" placeholder="Search by Customer Name or Order ID or Phone" class="form-control form-control-sm">
+    <input type="text" id="search" placeholder="Search by Customer Name or Order ID or Phone" class="form-control form-control-sm" autocomplete="off">
     </div>
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
 <div class="col-md-4 text-right">
@@ -368,7 +368,7 @@
         });
     });
 </script>
-
+ 
 <script>
     $(document).ready(function() {
         $('#search').on('keyup', function() {

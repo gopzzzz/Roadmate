@@ -413,8 +413,8 @@ $i++;
     </div>
     </div>
     <div class="right-details">
-    
-    <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p>
+    <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ round($subtotal) }}</span></p>
+    <!-- <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p> -->
             <p><strong><span style="color: grey;"><b>DELIVERY CHARGE:</b></span></strong><span class="highlight-back" >{{ $key->shipping_charge }}</span></p>
             <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{$taxableamount}}</span></p>
             <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->

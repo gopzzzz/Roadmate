@@ -213,7 +213,7 @@ public function b2csale_orderinsert(Request $request)
 			if ($searchQuery) {
 				$ordersQuery->where(function($query) use ($searchQuery) {
 					$query->where('user_lists.name', 'like', '%' . $searchQuery . '%')
-						->orWhere('tbl_b2csales.order_id', 'like', '%' . $searchQuery . '%')
+						->orWhere('tbl_b2csales.invoice_number', 'like', '%' . $searchQuery . '%')
 						->orWhere('tbl_deliveryaddres.phone', 'like', '%' . $searchQuery . '%');
 				});
 			}
