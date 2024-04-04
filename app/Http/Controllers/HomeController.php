@@ -4417,7 +4417,11 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
           
             foreach ($request->proid as $index => $proid) {
 
-				
+				if (!$proid) {
+					// Handle the error, such as showing a message to the user
+					return redirect('sale_order_master')->withErrors(["Product ID is missing for one or more products."]);
+				}
+			
                
                 // $product[$index]= Tbl_brand_products::where('id',$proid[$index])->first();
 				
@@ -5413,7 +5417,7 @@ public function productSearch(Request $request)
 				'tbl_order_trans.price',
 				'tbl_order_masters.payment_status'
 
-			)->get();
+			)->orderby('tbl_cancel_orders.id','DESC')->get();
 			return view('salesreturn',compact('role','sales'));
 		}
 		public function b2csalesreturn(){
