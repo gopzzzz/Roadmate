@@ -320,8 +320,7 @@
             <p class="details-label"><b>Billed to</b></p>
         </div>
         <div class="content left-content">
-            <p>{{$key->shopname}}<br>
-                {{$key->address}}
+            <p>{{ $key->area }}, {{ $key->area1 }}, {{ $key->city }}, {{ $key->district }}, {{ $key->state }}, {{ $key->country }}, {{ $key->pincode }}
             </p>
         </div>
     </div>
