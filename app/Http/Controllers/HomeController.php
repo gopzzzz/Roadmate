@@ -4404,7 +4404,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
         $saleMaster->delivery_date = $request->delivery_date;
        
 		$saleMaster->order_date = $request->orderdate;
-		$saleMaster->order_status = 0;
+		
 
 	
 		

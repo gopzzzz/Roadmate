@@ -397,12 +397,12 @@
     });
 });
 
-</script>
+</script> 
 
 <!-- Remaining JavaScript code remains unchanged -->
 
 <script>
-    document.getElementById('applyFilter').addEventListener('click', function() {
+    document.getElementById('applyFilter').addEventListener('click',  function() {
         var statusFilter = document.getElementById('orderStatusFilter').value;
         var baseUrl = window.location.href.split('?')[0]; // Get the base URL without query parameters
         var newUrl = baseUrl + '?status=' + statusFilter; // Construct new URL with the filter value
