@@ -4532,7 +4532,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		public function sale_list(Request $request)
 		{
 			$role = Auth::user()->user_type;
-			$statusFilter = $request->input('status');
+			$statusFilter = $request->input('status');  
 			$searchQuery = $request->input('search');
 
     $ordersQuery = DB::table('tbl_sale_order_masters')
