@@ -4388,7 +4388,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 				$saleMaster->shop_id = $shop->id;
 				$saleMaster->order_id = $request->idd;
 				$saleMaster->invoice_number = $invoice;
-				$saleMaster->total_amount = $request->total_amount;
+				$saleMaster->total_amount = $request->price;
 				$saleMaster->bill_number = $request->billnumber;
 				$saleMaster->discount = $request->discount;
 				$saleMaster->coupen_id = 0;
@@ -4464,7 +4464,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 						$saleTrans->sale_order_id = $saleMaster->id;
 						$saleTrans->qty = $request->qty[$index];
 						$saleTrans->offer_amount = $request->offer_amount[$index];
-						$saleTrans->price = $request->price[$index];
+						$saleTrans->price = $request->total_amount;
 						$saleTrans->taxable_amount = 0;
 		
 						if (!$saleTrans->save()) {
