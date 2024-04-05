@@ -166,6 +166,9 @@
     @if($role!=3)
     <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm">
     @endif
+    @if($role==3)
+    <input type="text" id="search" placeholder="Search by Shop Name or Order ID " class="form-control form-control-sm">
+@endif
     </div>
    
     <div class="col-md-4"></div> <!-- Empty column for spacing -->
