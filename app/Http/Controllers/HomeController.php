@@ -4360,155 +4360,148 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 		
 		
 
-
 		public function sale_orderinsert(Request $request)
-{
-    try {
-        Log::info('Debug: Request data', ['request' => $request->all()]);
-
-
-        $shop = Shops::where('id', $request->shop_id)->first();
-
-        if (!$shop) {
-            return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
-        }
-
-
-				$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
-				if($check==null){
-                 $invoice=1000;
-				}else{
-					$invoice=$check->invoice_number+1;
-				}
-				
-
-				
-
-    
-        $saleMaster = new Tbl_sale_order_masters;
-        $saleMaster->shop_id = $shop->id;
-        $saleMaster->order_id = $request->idd;
-        $saleMaster->invoice_number = $invoice;
-        $saleMaster->total_amount = $request->total_amount;
-        $saleMaster->bill_number = $request->billnumber;
-        $saleMaster->discount = $request->discount;
-        $saleMaster->coupen_id = 0;
-        $saleMaster->wallet_redeem_id = $request->walletamount;
-        $paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
-        $saleMaster->payment_mode = $paymentMode;
-       
-        $saleMaster->total_mrp = 0;
-        $saleMaster->shipping_charge = $request->shipping_charge;
-        $saleMaster->tax_amount = 0;
-
-        $saleMaster->delivery_date = $request->delivery_date;
-       
-		$saleMaster->order_date = $request->orderdate;
-		$saleMaster->order_status = 0;
-
-	
+		{
+			try {
+				Log::info('Debug: Request data', ['request' => $request->all()]);
 		
-
-        if ($saleMaster->save()) {
-
-			//echo "hi";exit;
-
-			
-          
-            foreach ($request->proid as $index => $proid) {
-
-				if (!$proid) {
-					// Handle the error, such as showing a message to the user
-					return redirect('sale_order_master')->withErrors(["Product ID is missing for one or more products."]);
+		
+				$shop = Shops::where('id', $request->shop_id)->first();
+		
+				if (!$shop) {
+					return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
 				}
+		
+		
+						$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
+						if($check==null){
+						 $invoice=1000;
+						}else{
+							$invoice=$check->invoice_number+1;
+						}
+						
+		
+						
+		
 			
-               
-                // $product[$index]= Tbl_brand_products::where('id',$proid[$index])->first();
+				$saleMaster = new Tbl_sale_order_masters;
+				$saleMaster->shop_id = $shop->id;
+				$saleMaster->order_id = $request->idd;
+				$saleMaster->invoice_number = $invoice;
+				$saleMaster->total_amount = $request->total_amount;
+				$saleMaster->bill_number = $request->billnumber;
+				$saleMaster->discount = $request->discount;
+				$saleMaster->coupen_id = 0;
+				$saleMaster->wallet_redeem_id = $request->walletamount;
+				$paymentMode = $request->payment == 'Cash on Delivery' ? 0 : 1;
+				$saleMaster->payment_mode = $paymentMode;
+			   
+				$saleMaster->total_mrp = 0;
+				$saleMaster->shipping_charge = $request->shipping_charge;
+				$saleMaster->tax_amount = 0;
+		
+				$saleMaster->delivery_date = $request->delivery_date;
+			   
+				$saleMaster->order_date = $request->orderdate;
 				
-
-                // if (!$product) {
-                //     DB::rollBack();
-                //     \Log::warning("Product with name {$product->product_name} not found in brand products.");
-                //     return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
+		
+			
+				
+		
+				if ($saleMaster->save()) {
+		
+					//echo "hi";exit;
+		
 					
-                // }
-
+				  
+					foreach ($request->proid as $index => $proid) {
+		
+						
+					   
+						// $product[$index]= Tbl_brand_products::where('id',$proid[$index])->first();
+						
+		
+						// if (!$product) {
+						//     DB::rollBack();
+						//     \Log::warning("Product with name {$product->product_name} not found in brand products.");
+						//     return redirect('order_master')->with('custom_error',"Product {$product->product_name} is not available.");
+							
+						// }
+		
+						
+		
+					   
+						// $godown = Tbl_godowns::where('name',$request->godown)->first();
+		
+						// if ($product) {
+						  
+						//     $qty = $request->qty[$index];
+						//     $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
+						//         ->where('inventory_id', $godown->id)->first();
+		
+						//     if (!$inventoryStock) {
+						//         DB::rollBack(); 
+						//         \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
+						// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+						//     }
+		
+						//     if ($inventoryStock->stock < $qty) {
+						//         DB::rollBack(); 
+						// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
+						//     }
+		
+							
+						//     $inventoryStock->stock -= $qty;
+						//     $inventoryStock->save();
+						// }
+		
+					 
+					   
+		
+						$saleTrans = new Tbl_sale_order_trans;
+						$saleTrans->order_id = $saleMaster->id;
+						$saleTrans->product_id = $request->proid[$index];
+						$saleTrans->sale_order_id = $saleMaster->id;
+						$saleTrans->qty = $request->qty[$index];
+						$saleTrans->offer_amount = $request->offer_amount[$index];
+						$saleTrans->price = $request->price[$index];
+						$saleTrans->taxable_amount = 0;
+		
+						if (!$saleTrans->save()) {
+							DB::rollBack(); 
+							\Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
+							return redirect('sale_order_master')->withErrors(["Error saving sale transaction."]);
+						}
+					}
+		
+				  
+					Tbl_order_masters::where('id', $request->idd)->update([
+						'sale_status' => 1,
+						'order_status' => 1
+					]);
+		
+				  
+					// DB::commit();
+		
 				
-
-               
-                // $godown = Tbl_godowns::where('name',$request->godown)->first();
-
-                // if ($product) {
-                  
-                //     $qty = $request->qty[$index];
-                //     $inventoryStock = Tbl_inventory_stocks::where('product_id', $product->id)
-                //         ->where('inventory_id', $godown->id)->first();
-
-                //     if (!$inventoryStock) {
-                //         DB::rollBack(); 
-                //         \Log::warning("Product with ID {$product->id} not found in inventory stocks.");
-				// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
-                //     }
-
-                //     if ($inventoryStock->stock < $qty) {
-                //         DB::rollBack(); 
-				// 		return redirect('order_master')->with('custom_error', "Product {$product->product_name} is not in stock.");
-                //     }
-
-                    
-                //     $inventoryStock->stock -= $qty;
-                //     $inventoryStock->save();
-                // }
-
-             
-               
-
-                $saleTrans = new Tbl_sale_order_trans;
-                $saleTrans->order_id = $saleMaster->id;
-                $saleTrans->product_id = $request->proid[$index];
-                $saleTrans->sale_order_id = $saleMaster->id;
-                $saleTrans->qty = $request->qty[$index];
-                $saleTrans->offer_amount = $request->offer_amount[$index];
-                $saleTrans->price = $request->price[$index];
-                $saleTrans->taxable_amount = 0;
-
-                if (!$saleTrans->save()) {
-                    DB::rollBack(); 
-                    \Log::error('Error saving sale transaction:', ['errors' => $saleTrans->getErrors()]);
-                    return redirect('sale_order_master')->withErrors(["Error saving sale transaction."]);
-                }
-            }
-
-          
-            Tbl_order_masters::where('id', $request->idd)->update([
-                'sale_status' => 1,
-                'order_status' => 1
-            ]);
-
-          
-            // DB::commit();
-
-        
-            Session::flash('success', 'Sale Invoice generated successfully!');
-        } else {
-			
-            
-            Session::flash('error', 'Error adding Sale Invoice. Please try again.');
-            DB::rollBack(); 
-        }
-
-       
-        return redirect('order_master');
-    } catch (\Exception $e) {
-		echo $e->getMessage();exit;
-        \Log::error($e->getMessage());
-        DB::rollBack(); 
-      
-        return redirect('order_master')->withErrors(["An error occurred. Please try again."]);
-    }
-}
-
-
+					Session::flash('success', 'Sale Invoice generated successfully!');
+				} else {
+					
+					
+					Session::flash('error', 'Error adding Sale Invoice. Please try again.');
+					DB::rollBack(); 
+				}
+		
+			   
+				return redirect('order_master');
+			} catch (\Exception $e) {
+				echo $e->getMessage();exit;
+				\Log::error($e->getMessage());
+				DB::rollBack(); 
+			  
+				return redirect('order_master')->withErrors(["An error occurred. Please try again."]);
+			}
+		}
 
 		public function cancelorder($orderId) {
 			try {
