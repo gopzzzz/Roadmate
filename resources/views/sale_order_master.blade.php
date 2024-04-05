@@ -221,7 +221,7 @@
                
                 <div class="form-group">
                     <label class="exampleModalLabel">GRANDTOTAL AMOUNT</label>
-                    <input class="form-control" name="price[]" value="{{ $order->total_amount + $order->shipping_charge }}" required readonly>
+                    <input class="form-control" name="price" value="{{ $order->total_amount + $order->shipping_charge }}" required readonly>
                 </div>
 </div>
 
@@ -366,6 +366,7 @@
 
 
 <!-- The rest of your view content -->
+
 
 
 
