@@ -397,7 +397,10 @@ class HomeController extends Controller
 		$timslot->shop_id=$request->shop;
 		$timslot->book_type=$request->type1;
 		$timslot->adate=$request->date;
+		$timslot->model_id = 0;
 		$timslot->timeslots=$request->time;
+		$timslot->crm_status= 0;
+		
 		$timslot->save();
 		return redirect('timeslot');
 	}
@@ -4228,27 +4231,30 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 
 		}
 
-		public function orderfetch(Request $request)
-		{
-			$order_id = $request->id; // assuming id in the request is the order_id
-			$order = Tbl_order_masters::where('id', $order_id)->first();
 		
-		
-		
-			if ($order) {
-				$orderArray = $order->toArray();
-				return response()->json($orderArray);
-			} else {
-				return response()->json(['error' => 'Order details not found'], 404);
-			}
-		}
 		
 		public function orderstatus() {
 			$order = Tbl_order_masters::orderBy('order_status')->get();
 		
 			return view('order_master', compact('order'));
 		}
-		public function statusedit(Request $request, $order_id)
+	
+
+		public function orderfetch(Request $request)
+{
+    $order_id = $request->id;
+    $order = Tbl_order_masters::find($order_id);
+
+    if ($order) {
+        return response()->json($order);
+    } else {
+        return response()->json(['error' => 'Order details not found'], 404);
+    }
+}
+
+		
+
+public function statusedit(Request $request, $order_id)
 {
     \Log::info('Received order_id for statusedit: ' . $order_id);
 
@@ -4266,11 +4272,9 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
     if ($order) {
         $order->order_status = $request->order_status;
         
-        // Ensure payment_status is properly set
         if ($request->has('paystatus') && $request->paystatus !== null) {
             $order->payment_status = $request->paystatus;
         } elseif ($order->payment_status === null) {
-            // If payment_status is null, set it to its current value
             $order->payment_status = $order->payment_status;
         }
 
@@ -4282,7 +4286,7 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 	
 				$shop_id = $order->shop_id;
 	
-				$wallet = Tbl_wallets::where('shop_id', $shop_id)->first();
+				$wallet = Tbl_wallets::where('id', $shop_id)->first();
 	
 				if ($wallet) {
 					$wallet->wallet_amount += $wallet->amount + $percentage;
@@ -4297,7 +4301,8 @@ $order = new \Illuminate\Pagination\LengthAwarePaginator(
 	
 				$wh = new Tbl_wallet_transactions;
 				$wh->amount = $percentage;
-				$wh->u_type =1;
+				$wh->u_type =2;
+
 				$wh->type = 1;
 				$wh->shop_id = $shop_id;
 				$wh->save();
