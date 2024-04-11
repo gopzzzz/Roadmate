@@ -2090,13 +2090,6 @@ public function cuscancelorder(){
    $order_id=$data1->trans_id;
 
   
-   
-   
-   
-   
-
-  
-  
    $orderstatus=Tbl_b2cordertrans::find($order_id);
    $orderstatus->order_status=2;
    

@@ -397,8 +397,8 @@ class HomeController extends Controller
 		$timslot->shop_id=$request->shop;
 		$timslot->book_type=$request->type1;
 		$timslot->adate=$request->date;
-		$timslot->model_id = 0;
 		$timslot->timeslots=$request->time;
+		$timslot->model_id= 0;
 		$timslot->crm_status= 0;
 		
 		$timslot->save();
@@ -2267,8 +2267,8 @@ public function shop_categoriesdelete($id){
 		->leftJoin('brand_lists', 'user_vehicles.vehicle_brand', '=', 'brand_lists.id')
 		->leftJoin('brand_models', 'user_vehicles.vehicle_model', '=', 'brand_models.id')
 		->select('user_vehicles.*', 'brand_lists.brand','fuel_types.fuel_type','brand_models.brand_model','vehicle_types.veh_type','user_lists.name')
-		->orderBy('user_vehicles.id', 'DESC')
-		->paginate(10);
+		->orderBy('user_vehicles.id', 'DESC')->get();
+		
 		$fuel=Fuel_types::all();
 		$brand=Brand_lists::all();
 		$vehtype=Vehicle_types::all();
@@ -4037,6 +4037,8 @@ function sendNotification1($msg1,$title)
 				'shops.delivery_id' ,
 				'tbl_brand_products.product_name',
 				'tbl_deliveryaddres.area',
+				'tbl_deliveryaddres.phone',
+
 				'tbl_deliveryaddres.area1',
 				'tbl_deliveryaddres.city',
 				'tbl_deliveryaddres.district',
@@ -4597,6 +4599,7 @@ public function sale_bill($orderId) {
 					'tbl_deliveryaddres.state',
 					'tbl_deliveryaddres.pincode',
 					'tbl_deliveryaddres.country',
+					'tbl_deliveryaddres.phone',
 					'tbl_hsncodes.tax',
 					'tbl_hsncodes.hsncode',
 

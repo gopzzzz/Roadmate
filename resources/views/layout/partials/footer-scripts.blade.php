@@ -366,7 +366,9 @@ $(document).on('click', '.edit_country', function () {
           //$('#image').val(obj.name);
 		  $('#crm_id').val(obj.id);
           $('#crm_name').val(obj.crm_name);
-		  $('#phone_number').val(obj.phone_number	);
+		  $('#phone_number').val(obj.phone_number);
+		  $('#password').val(obj.user_id);
+
           $('#address').val(obj.address);
           $('#dob').val(obj.dob);
 					},
@@ -1195,7 +1197,7 @@ $('.edit_fran').click(function(){
 
 
 	$('#clickme').on('click',function(){
-     $('.editplaceTree').show();
+     $('.editplaceTree').show();  
 	 $('#hideme').show();
 	 $('#clickme').hide();
 	});
