@@ -65,7 +65,7 @@
 
         .company-logo img {
        
-            max-width: 250px; /* Adjust the size of the logo */
+            max-width: 210px; /* Adjust the size of the logo */
             height: 85px;
         }
 
@@ -76,7 +76,7 @@
         }
 
         .left-details,
-        .right-details {
+        .right-details {  
             width: 50%;
         }
        
@@ -145,7 +145,7 @@
 .box {
     background-color: #D3D3D3;
     padding: 1px;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
     box-sizing: border-box;
     width: 85%;
     height: 30px; 
@@ -167,7 +167,7 @@
         }
 
         .invoice-items {
-            width: 92%;
+            width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
             
@@ -175,35 +175,26 @@
         }
 
         .invoice-items th {
-            border: 2px solid #000000;
+            border: 1px solid #000000;
             padding: 12px;
-            text-align: center;
           
         }
          .invoice-items td {
             border: 1px solid #ffffff;
-            border-left:2px solid #000000;
-            border-right:2px solid #000000;
+            border-left:1px solid #000000;
+            border-right:1px solid #000000;
             
             padding: 12px;
             text-align: left;
             
         }
 
-        .invoice-items th {
-            background-color: #D3D3D3;
-            color: #000000;
-        }
-        .invoice-items td {
-            background-color: #E9E9E4;
-            color: #000000;
-        }
+      
 
         .total-row td {
             border-top: 1px solid #000000;
-            border-right: 2px solid #000000;
-            border-bottom: 2px solid #000000;
-            background-color: #f0f0f0;
+            border-right: 1px solid #000000;
+            border-bottom: 1px solid #000000;
             
         }
 
@@ -241,7 +232,10 @@
             height: 35px; /* Adjust the height as needed */
         }
 
-       
+        .invoice-items th:first-child {
+    border: 1px solid black; /* Adjust border style as needed */
+}
+
         .bank-details {
             width: 48%;
             border-top: 1px solid #ccc;
@@ -274,88 +268,73 @@
 <body>
 <button class="print-button" onclick="printPage()">Print Page</button>
     <div class="invoice">
-    <div class="company-logo" style="float: left">
-    <img src="{{ asset('market/RoadMateLogo.png') }}" alt="Company Logo">
-</div> <br><br>
+  
 <div class="invoice-header">
-            <div class="invoice-title">Sale Bill</div>
+            <div> <p style="font-size:20px;"><b>Tax Invoice</div></b></p>
         </div>
+        <div id="qrcode"></div>
 <br>
 
-         
 
-        <div class="invoice-details">
-            <div class="left-details">
-                <p class="details-label"></p>
-                <p style="font-size:20px;"><b>NEXTWAVE ACCESS PRIVATE LIMITED</b></p>
-                <p>Kinfra Hi-tech Park &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9995723014<br>
-                HMT Colony PO,Kalamassery,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:info@roadmate.in" style="color: #3364FF; font-family: Arial; text-decoration: underline;" target="_blank">info@roadmate.in</a>
-
-                North Kalamassery, Kochi, Kerala &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.RoadMate.in" target="_blank" style="color: #3364FF; font-family: Arial; text-decoration: underline;">www.RoadMate.in</a>
-
-                683503 <br>
-                32AAHCN5463A1ZU</p>
-                
-            </div>
-            
-              <!-- <div>9995723014<br><p style="color:#007bff">info@roadmate.in <br>www.RoadMate.in</p></div> -->
            
 @foreach($salebill as $key)
             @endforeach
-            <div class="right-details">
-            
-    <p class="details-label"></p><br><br>   
-    <div class="details-item"><strong>Date:</strong> <span class="highlight-background">{{ $key->order_date }}</span></div>
-    <div class="details-item"><strong>Invoice Number:</strong> <span class="highlight-background">RM/{{$key->invoice_number}}/{{ date('y') }}</span></div>
-    <div class="details-item"><strong>Sales Order No:</strong> <span class="highlight-background">RM/SO/{{$key->invoice_number}}/{{ date('y') }}</span></div>
-    <div class="details-item"><strong>E-way Bill No:</strong> <span class="highlight-background">0000{{$key->bill_number}}</span></div>
-    <div class="details-item"><strong>Payment Due By:</strong> <span class="highlight-background">{{ $key->order_date }}</span></div>
+            <table class="invoice-items" >
 
-</div>
-        </div><br>
-        <div class="invoice-detailss">
-    <div class="left-container">
-        <div class="box">
-            <p class="details-label"><b>Billed to</b></p>
-        </div>
-        <div class="content left-content">
-        <p>{{ $key->area }} {{ $key->area1 }} {{ $key->city }} <br>{{ $key->district }} {{ $key->state }}<br> {{ $key->country }} {{ $key->pincode }}</p>
+<thead>
+    <tr><th colspan="3" rowspan="3" style="font-weight: normal;"><b>RoadMate</b><br>
+4th Floor, Kinfra Hi-Tech Park<br>
+South Kalamassery, Kalamassery,<br>Ernakulam<br>Kerala-683503, India<br>GSTIN/UIN: 32AAHCN5463A1ZU</br>State Name: Kerala, Code: 32</br>
+E-Mail: info@roadmate.in</th><th  colspan="3" style="font-weight: normal;">Invoice No.<br><b>RM/{{$key->invoice_number}}/{{ date('y') }}</b></th>
+<th  colspan="3" style="font-weight: normal;">Dated<br><b>{{ $key->order_date }}</b></th></tr>
+<tr>
+<th colspan="3" style="font-weight: normal;">Delivery Note<br><br></th>
+<th colspan="3" style="font-weight: normal;">Mode/Terms of Payment<br><br></th>
+</tr>
+   <tr><th colspan="3" style="font-weight: normal;">Reference No. & Date.<br><br></th>
+   <th colspan="3" style="font-weight: normal;">Other References<br><br></th></tr>
 
-        </div>
-    </div>
+    <tr><th colspan="3" rowspan="4"  style="font-weight: normal;">Consignee(Ship to)<br>
+<b>{{ $key->shopname }}</b><br>
+{{ $key->area }} {{ $key->area1 }} {{ $key->city }}<br>{{ $key->district }}, {{ $key->state }}<br>Mob: {{ $key->phone }}<br>{{ $key->state }} - {{ $key->pincode }},  {{ $key->country }}<br>State Name: {{ $key->state }}
+</th></tr>
+<tr><th colspan="3" style="font-weight: normal;">Buyers Order No.<br><br></th>
+<th colspan="3" style="font-weight: normal;">Dated<br><br></th></tr>
+<tr><th colspan="3" style="font-weight: normal;">Dispatch Doc No.<br><br></th>
+<th colspan="3" style="font-weight: normal;">Delivery Note Date<br><br></th></tr>
+<tr><th colspan="3" style="font-weight: normal;">Dispatched through.<br><br></th>
+<th colspan="3" style="font-weight: normal; vertical-align: top;">Destination<br><br></th></tr>
 
-    <div class="right-container">
-        <div class="box">
-            <p class="details-label"><b>Ship to</b></p>
-        </div>
-        <div class="content">
-            <p>{{ $key->area }} {{ $key->area1 }} {{ $key->city }} <br>{{ $key->district }} {{ $key->state }}<br> {{ $key->country }} {{ $key->pincode }}</p>
-        </div>
-    </div>
-</div>
-<br><br>
+<tr><th colspan="3" rowspan="1" style="font-weight: normal;">Buyer(Bill to)<br>
+<b>{{ $key->shopname }}</b><br>
+{{ $key->area }} {{ $key->area1 }} {{ $key->city }}<br>{{ $key->district }}, {{ $key->state }}<br>Mob: {{ $key->phone }}<br>{{ $key->state }} - {{ $key->pincode }},  {{ $key->country }}<br>State Name: {{ $key->state }}
+</th><th colspan="6" style="font-weight: normal; text-align: left; vertical-align: top;">Terms of Delivery<br></th></tr>
 
 
-        <table class="invoice-items">
-            <thead>
-                <tr>
-                <th>#</th>
-                    <th>Description</th>
-                    <th>Unit Price</th>
-                    <th>Quantity</th>
-                    <th>HSN Code</th>
-
-                    <th>TAX</th>
-                    <th>TAX.Amount</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
+<thead>
+<tr>
+<th style="font-weight: normal;">Sl<br>No.</th>
+<th style="font-weight: normal;">Description of Goods</th>
+<th style="font-weight: normal;">HSN/SAC</th>
+<th style="font-weight: normal;">GST Rate</th>
+<th style="font-weight: normal;  width: 5%;">Quantity</th>
+<th style="font-weight: normal;">Rate</th>
+<th style="font-weight: normal; width: 5%;">Per</th>
+<th style="font-weight: normal;" colspan="2">Amount</th>
+</tr>
+</thead>
+<tbody>
             @php  
 $i=1;
 $sum=0;   
 $taxableamount=0;
 $subtotal=0;
+$totalQuantity = 0;
+    $totalSum = 0;
+    $totalcgst=0;
+    $totalsgst=0;
+    $totalsubtotal=0;
+    $totaltaxamount=0;
 @endphp
             @foreach($salebill as $key)
             @php 
@@ -364,20 +343,79 @@ $subtotal=0;
 
 $unitprice = number_format($unitprice, 2, '.', '');
 $taxamount = number_format($taxamount, 2, '.', '');
+$totalQuantity += $key->qty;
+        $totalSum += $key->qty * $key->offer_amount;
+        $totalcgst=($totalSum * ($key->igst / 100));
+        $totalsgst=($totalSum * ($key->cgst / 100));
+        $totalsubtotal=($totalSum + $totalcgst + $totalsgst);
+        $totaltaxamount=($totalcgst + $totalsgst);
             @endphp
-                <tr> 
-                <td>{{$i}}</td>
+            <tr> 
+        <td>{{$i++}}</td>
+        <td><b>{{$key->product_name}}</b></td>
+        <td></td>
+        <td style="text-align: right;">{{$key->tax}} % </td>
+        <td style="text-align: right;"><b>{{$key->qty}} NOS</b></td>
+        <td style="text-align: right;">{{$key->offer_amount}}</td>
+        <td style="text-align: right;">NOS</td>
+        <td style="text-align: right;" colspan="2"><b>{{$key->qty * $key->offer_amount}}</b></td>
+    </tr>
+@endforeach
 
-                    <td>{{$key->product_name}}</td>
-                    <td>{{$unitprice}}</td>
-                    <td>{{$key->qty}} </td>
-                    <td>{{$key->hsncode}} </td>
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td style="border-top: 2px solid #000000; text-align: right;" colspan="2">{{$totalSum}}</td>
+</tr>
+</tbody>
 
-                    <td>{{$key->tax}} %</td>
-                    <td>{{($key->qty*$taxamount)}} </td>
-                    <td>{{$key->qty*$key->offer_amount}}</td>
-                   
-                </tr>
+         
+                <tr>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal; text-align: right;"><b>SGST</b></td>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal; text-align: right;">{{$key->cgst}}</td>
+    <td style="font-weight: normal; text-align: left;"> %</td>
+    <td style="font-weight: normal; text-align: right;" colspan="2"><b>{{$totalsgst}}</b></td>
+</tr>
+<tr>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal; text-align: right;"><b>CGST</b></td>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal;">&nbsp;</td>
+    <td style="font-weight: normal; text-align: right;">{{$key->igst}}</td>
+    <td style="font-weight: normal; text-align: left;"> %</td>
+    <td style="font-weight: normal; text-align: right;" colspan="2"><b>{{$totalcgst}}</b></td>
+</tr>
+<tr> 
+        <td style="text-align: right;"></td>
+        
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;" colspan="2"></td>
+    </tr>
+    <tr> 
+        <td style="text-align: right;" ></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;"></td>
+        <td style="text-align: right;" colspan="2"></td>
+    </tr>
                 @php 
                 $sum += $key->qty*$key->offer_amount;
 $taxableamount += $taxamount*$key->qty;
@@ -385,86 +423,178 @@ $subtotal+= $key->qty*$unitprice;
 $i++;
 
                 @endphp
-                @endforeach
+              
                 <!-- Add more rows as needed -->
-            </tbody>
-             <tfoot>
-                <tr class="total-row">
-                <td></td>
-                    <td style="border: 2px solid #000000;">Total</td>
-                    <td style="border: 2px solid #000000";></td>
-                    <td style="border: 2px solid #000000";></td>
-                    <td style="border: 2px solid #000000";></td>
-                    <td style="border: 2px solid #000000";></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-</tfoot>
-        </table>  
-        
-<div class="invoice-details">
-<div class="left-details">
-<p class="details-label"></p>
-<div class="special-notess box">
-<p class="details-label" style="font-size:15px;"><b>Special Notes and Instructions</b></p>
-</div>
-<div class="special-notes box" style="background: #f0f0f0">
-
-    </div>
-    </div>
-    <div class="right-details">
-    <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ round($subtotal) }}</span></p>
-    <!-- <p><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong><span class="highlight-back">₹{{ $subtotal }}</span></p> -->
-            <p><strong><span style="color: grey;"><b>DELIVERY CHARGE:</b></span></strong><span class="highlight-back" >{{ $key->shipping_charge }}</span></p>
-            <p><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong><span class="highlight-back">₹{{$taxableamount}}</span></p>
-            <!-- <p><strong><span style="color: grey;"><b>TAX:</b></span></strong><span class="highlight-back"></span></p> -->
-            <!-- <br><br> -->
-            <p><strong><span style="color: grey;"><b>TOTAL:</b></span></strong><span class="highlight-back">₹{{ $sum +$key->shipping_charge }}</span></p>
-        
-    </div>
-         
-</div>
-        <div style="color: grey;">Make all cheques payable to my company name</div>
-
-    <div class="invoice-details">
-        <div class="left-details">
-    <p class="details-label"></p>  
-    <div class="thank-you">
-                <p style="color: grey; text-align:center; font-size:25px;"><b>Thank you for your business!</b></p>
-                <p style="color: grey; font-size:14px;">Should you have any enquiries concerning this invoice,please contact us.</p>
-                <!-- Add more thank-you notes as needed -->
-            </div>
-        </div> 
-
-    <div class="right-details">
-    <p class="details-label"></p>
-        
-            <p class="details-label" style="color: grey; font-size: 15px;"><b>BANK ACCOUNT DETAILS</b></p>
-            <p><strong>Account holder:</strong><span class="highlight"> Nextwave Access Private Limited</span></p>
-            <p><strong>Account Number: </strong><span class="highlight">116105000951</span></p>
-            <p><strong>IFSC code: </strong><span class="highlight">ICIC0001161</span></p>
-        
-     </div>
-</div>    
-
-        <div class="company-details">
-            <p class="details-label"></p>
-            <p style="color: grey;">Kinfra Hi-tech Park, HMT Colony PO, Kalamassery,<br>
-               North Kalamassery, Kochi ,Kerala - 683503 <br>
-               Mob : +91 9947928331
-
-</p>
+                </tbody>
+          
            
-            <!-- Add more company details as needed -->
-        </div>
+          <tr class="total-row">
+          <td style="border: 2px solid #000000;"></td>
+              <td style="border: 2px solid #000000; text-align: right;">Total</td>
+              <td style="border: 2px solid #000000";></td>
+              <td style="border: 2px solid #000000";></td>
+              <td style="border: 2px solid #000000; font-size: 15px; text-align: right;"><b>{{$totalQuantity}} NOS</b></td>
+
+              <td style="border: 2px solid #000000";></td>
+              <td style="border: 2px solid #000000";></td>
+              <td style="border: 2px solid #000000; font-size: 20px; text-align: right;" colspan="2"><b>₹ {{ $totalsubtotal}}</b> </td>
+              
+          </tr>
+          <tr>    <td style="border-left: 1px solid #000000; border-right: none; font-weight: normal; text-align: left;" colspan="5">Amount Chargeable (in words)</td>
+<td style="border-right:1px solid #000000; border-left: none; font-weight: normal; text-align: right;" colspan="4"><i>E. & O.E</i></td>
+</tr>
+
+</tr>
+<tr>    <td style="font-weight: normal; text-align: left; font-size: 16px; border-bottom: 1px solid #000000;"  colspan="9"><b>INR {{ numberToWords($totalsubtotal) }} Only</b></td> </tr>   
+   
+<tr>
+<!-- QR code image on the right side -->
+<th style="text-align: right;"  rowspan="6">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Total%20Amount%3A%20{{ $totalsubtotal }}" alt="QR Code">
+</th>
+<!-- Table on the left side -->
+
+      <!-- Table rows -->
+
+          <th style="font-weight: normal; text-align: right;" colspan="2" rowspan="2">Taxable<br> Value</th>
+          <th style="font-weight: normal;" colspan="2">CGST</th>
+          <th style="font-weight: normal;" colspan="2">SGST/UTGST</th>
+          <th style="font-weight: normal;" colspan="2" rowspan="2">Total Tax Amount</th>
+</tr>
+      <tr>
         
-        <script>
-        function printPage() {
-            window.print();
-        }
-    </script>
-    </div>
-    
+       
+
+          <th style="font-weight: normal;">Rate</th>
+          <th style="font-weight: normal;">Amount</th>
+          <th style="font-weight: normal;">Rate</th>
+          <th style="font-weight: normal;">Amount</th>
+      </tr>
+      <tr> 
+
+      <td style="text-align: right;" colspan="2">{{$totalSum}}</td>
+          <td style="text-align: right;">{{$key->igst}} %</td>
+          <td style="text-align: right;">{{$totalcgst}}</td>
+          <td style="text-align: right;">{{$key->cgst}} %</td>
+          <td style="text-align: right;">{{$totalsgst}}</td>
+          <td style="text-align: right;">{{ $totaltaxamount}}</td>
+      </tr>
+      <!-- More table rows can be added here -->
+ 
+</td>
+</tr>
+</tr>
+<tr> 
+  
+  <td style="text-align: right;"  colspan="2"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+</tr>
+<tr> 
+  <td style="text-align: right;"  colspan="2"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+  <td style="text-align: right;"></td>
+</tr>
+
+<tr class="total-row">
+<td style="border: 2px solid #000000; text-align: right; " colspan="2"><b>Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  {{$totalSum}}</b></td>
+              <td style="border: 2px solid #000000; text-align: right;"><b></b></td>
+              <td style="border: 2px solid #000000; text-align: right;"><b>{{$totalcgst}}</b></td>
+              <td style="border: 2px solid #000000; text-align: right;"><b></b></td>
+              <td style="border: 2px solid #000000; font-size: 15px; text-align: right;"><b>{{$totalsgst}}</b></td>
+
+              <td style="border: 2px solid #000000; text-align: right;"><b>{{ $totaltaxamount}}</b></td>
+             
+              
+          </tr>
+</div>
+
+        
+          <tr>    <td style="font-weight: normal; text-align: left; font-size: 16px;"  colspan="9">Tax Amount(in words) : <b>INR {{ numberToWords($totaltaxamount) }} Only</b></td> </tr>   
+          <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
+          <tr>    <td style="font-weight: normal; text-align: left; border-bottom: 1px solid #000000;"  colspan="9">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td> </tr>   
+
+          <tr>    <td style="border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: none; font-weight: normal; text-align: left;" colspan="3">Customer's Seal and Signature<br><br><br></td>
+<td style="border-right:1px solid #000000; border-bottom: 1px solid #000000; font-weight: normal; text-align: right;" colspan="6"><b>for RoadMate</b><br><br><br>Authorised Signatory</td>
+</tr>
+  </table>
+ <center>  This is a Computer Generated Invoice</center>
+
+
+</table>
+
+  <script>
+  function printPage() {
+      window.print();
+  }
+</script>
+<?php
+function numberToWords($number) {
+// Define arrays for words
+$ones = array(
+  0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
+  10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen', 16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
+);
+$tens = array(
+  0 => '', 1 => '', 2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty', 5 => 'Fifty', 6 => 'Sixty', 7 => 'Seventy', 8 => 'Eighty', 9 => 'Ninety'
+);
+$hundreds = array(
+  '', 'One Hundred', 'Two Hundred', 'Three Hundred', 'Four Hundred', 'Five Hundred', 'Six Hundred', 'Seven Hundred', 'Eight Hundred', 'Nine Hundred'
+);
+
+// Split the number into integer and fractional parts
+$parts = explode('.', $number);
+$integerPart = $parts[0];
+$fractionalPart = isset($parts[1]) ? $parts[1] : '';
+
+$num = abs((int)$integerPart);
+$words = '';
+
+if ($num >= 1000) {
+  $words .= numberToWords(floor($num / 1000)) . ' Thousand ';
+  $num %= 1000;
+}
+
+if ($num >= 100) {
+  $words .= $hundreds[floor($num / 100)] . ' ';
+  $num %= 100;
+}
+
+if ($num >= 20) {
+  $words .= $tens[floor($num / 10)] . ' ';
+  $num %= 10;
+}
+
+if ($num > 0) {
+  $words .= $ones[$num] . ' ';
+}
+
+// Add "and" after the point if there's anything left
+if ($fractionalPart != '') {
+  $words .= 'and ';
+}
+
+// Convert the fractional part if it exists
+if ($fractionalPart != '') {
+  $words .= numberToWords($fractionalPart) . ' Paise';
+}
+
+return $words;
+}
+
+
+?>
+   
+  
+</div>
+
 </body>
 </div>
 

@@ -166,10 +166,7 @@
                            </tr>
                         </tfoot>
                      </table>
-                     <div class="card-footer clearfix">
-                        {{ $usrvehcl->links() }}
-                     </div>
-
+                 
                      <div class="modal" id="editcustvehl_modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                            <div class="modal-content">

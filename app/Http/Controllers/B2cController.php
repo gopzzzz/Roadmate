@@ -254,6 +254,8 @@ public function b2csale_orderinsert(Request $request)
 					'tbl_deliveryaddres.state',
 					'tbl_deliveryaddres.pincode',
 					'tbl_deliveryaddres.country',
+					'tbl_deliveryaddres.phone',
+
 					'tbl_hsncodes.tax',
 					'tbl_hsncodes.hsncode',
 					'tbl_hsncodes.cgst',
@@ -285,6 +287,7 @@ public function b2csale_orderinsert(Request $request)
 					'user_lists.delivery_id' ,
 						'tbl_brand_products.product_name',
 						'tbl_deliveryaddres.area',
+						'tbl_deliveryaddres.phone',
 						'tbl_deliveryaddres.area1',
 						'tbl_deliveryaddres.city',
 						'tbl_deliveryaddres.district',
