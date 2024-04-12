@@ -1326,9 +1326,11 @@ Route::get('/order_master', 'HomeController@order_master')->name('order_master')
 
 Route::post('/order_masterfetch', [App\Http\Controllers\HomeController::class, 'order_masterfetch'])->name('order_masterfetch');
 
+
+Route::post('/statusedit/{id}', [App\Http\Controllers\HomeController::class, 'statusedit'])->name('statusedit');
+
 Route::post('/orderfetch', [App\Http\Controllers\HomeController::class, 'orderfetch'])->name('orderfetch');
 
-Route::post('/statusedit/{id}', 'HomeController@statusedit')->name('statusedit');
 
 Route::get('/sale_order_master/{orderId}', 'HomeController@sale_order_master')->name('sale_order_master');
 

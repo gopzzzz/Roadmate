@@ -609,10 +609,17 @@
                   <label class="exampleModalLabel">Shop Name</labe>
                    <input class="form-control" name="shopname" id="shopname" required>
                       </div>
+
+                      <
                       <div class="form-group col-sm-6">
                     <label class="exampleModalLabel">Address</label>
                     <textarea class="form-control" name="address" id="address" required></textarea>
                   </div>
+                  
+          <div class="form-group col-sm-4">
+            <label class="exampleModalLabel">Images</label>
+            <img src="" alt="" width="75" id="existingImage">
+          </div>
                       <div class="form-group col-sm-6">
                     <label class="exampleModalLabel">Phone Number 1</label>
                     <input class="form-control" name="phone1" id="phone1" required>
@@ -798,12 +805,11 @@
     </select>
 </div>
 
-<div class="form-group col-sm-6">
-    <label class="exampleModalLabel">Existing Image</label>
-    @foreach($shops as $shop)
-        <img src="{{ asset('/img/'.$shop->image) }}" alt="" width="75"/>
-    @endforeach
-</div>
+<div class="form-group col-sm-4">
+            <label class="exampleModalLabel">Existing Images</label>
+            <img src="" alt="" width="75" id="existingImages
+            ">
+          </div>
 
 <div class="form-group col-sm-6">
     <label class="exampleModalLabel">New Image</label>

@@ -1,4 +1,3 @@
-
 @extends('layout.mainlayout')
 @section('content')
 <head>
@@ -7,16 +6,15 @@
 
  <style>
         .print-button {
-            background: linear-gradient(45deg, #007bff, #007bff); 
+            background: linear-gradient(45deg, #007bff, #007bff); /* Use a gradient background with a mix of two colors */
             color: #fff;
             padding: 10px 15px;
             font-size: 16px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            float: right; 
+            float: right; /* Align the button to the right */
         }
-        
         
         body {
             font-family: Arial, sans-serif;
@@ -77,16 +75,16 @@
     .additional-data-container {
         display: inline-block;
         margin-left: 5px;
-        border: 2px solid #2dd22d;
-        padding: 5px; 
-        border-radius: 8px; 
-        background: linear-gradient(45deg, #28a745, #28a745); 
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        border: 2px solid #2dd22d; /* Border color for the rectangle (teal) */
+        padding: 5px; /* Adjust padding as needed */
+        border-radius: 8px; /* Adjust border-radius for rounded corners */
+        background: linear-gradient(45deg, #28a745, #28a745); /* Gradient background from deep blue to light blue */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
     }
 
     .additional-data-arrow {
-        font-size: 20px;
-        color: #fff; 
+        font-size: 20px; /* Adjust the font size as needed */
+        color: #fff; /* Change the color to red */
     }
 </style>
 
@@ -142,13 +140,15 @@
                        
                   <!-- /.card-header -->
                 
-                 <br>
+                 
+
+                  <br>
+
                   <div class="row">
     <div class="col-md-4">
-    <input type="text" id="search" placeholder="Search by Shop Name or Order ID or Phone" class="form-control form-control-sm" autocomplete="off">
+    <input type="text" id="search" placeholder="Search by Customer Name or Order ID or Phone" class="form-control form-control-sm" autocomplete="off">
     </div>
-   
-    <div class="col-md-4"></div> 
+    <div class="col-md-4"></div> <!-- Empty column for spacing -->
     <div class="col-md-4 text-right">
     <div class="input-group input-group-sm">
         <label class="input-group-text" for="orderStatusFilter">
@@ -165,18 +165,13 @@
             <button id="applyFilter" class="btn btn-primary btn-sm ml-2">Apply Filter</button>
         </div>
     </div>
-    
 </div>
        
    
 </div>
 
-
-
 <br>
-
-
-  <table class="table table-bordered table-striped table-sm">
+<table class="table table-bordered table-striped table-sm">
         <thead>
       
 
@@ -241,6 +236,7 @@
            <td>{{ $key->delivery_date }}</td>
            <td>{{ $key->order_date }}</td>
            
+           
           <td style="width: 50px;">
     <form method="get" action="{{ route('sale_bill', ['orderId' => $key->id]) }}" target="_blank">
         <button type="submit" class="print-button">
@@ -266,11 +262,14 @@
 
        
         </tbody>
-    
+        <tfoot>
+      
+   
+            
+        </tfoot>
     </table>
 
     
-   
     <div class="row">
         <div class="col-12">
         <div class="row">
@@ -280,7 +279,7 @@
     </div>
 
    
-     
+   
     
 
 </div>
@@ -334,7 +333,56 @@
     </div>
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+$(document).on('click', '.editstatus', function () {
+    var id = $(this).data('id');
+    console.log('Clicked on editstatus with id:', id);
+
+    var form = $('#statusEditForm');
+    var url = "{{ route('statusedit', '_id_') }}";
+    url = url.replace('_id_', id);
+    form.attr('action', url);
+
+    $('#stat_id').val(id);
+    $.ajax({
+    type: "POST",
+    url: "{{ route('orderfetch') }}",
+    data: {
+        "_token": "{{ csrf_token() }}",
+        "id": id
+    },
+        success: function (res) {
+            console.log('AJAX Response:', res);
+			
+
+            if (res.id) {
+                $('#order_status').val(res.order_status);
+                $('#paystatus').val(res.payment_status);
+                $('#total_amount').val(res.total_amount);
+
+                if (res.payment_status == 1) {
+                    $("#paystatus").prop("disabled", true);
+                } else {
+                    $("#paystatus").prop("disabled", false);
+                }
+
+                $('#editstatusmodal').modal('show');
+                console.log('Modal shown');
+            } else {
+                console.error('Order details not found');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+});
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
    $(document).ready(function() {
     $('#search').on('keyup', function() {
@@ -397,12 +445,12 @@
     });
 });
 
-</script>
+</script> 
 
 <!-- Remaining JavaScript code remains unchanged -->
 
 <script>
-    document.getElementById('applyFilter').addEventListener('click', function() {
+    document.getElementById('applyFilter').addEventListener('click',  function() {
         var statusFilter = document.getElementById('orderStatusFilter').value;
         var baseUrl = window.location.href.split('?')[0]; // Get the base URL without query parameters
         var newUrl = baseUrl + '?status=' + statusFilter; // Construct new URL with the filter value

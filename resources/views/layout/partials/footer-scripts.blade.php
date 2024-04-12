@@ -1527,7 +1527,8 @@ $('.edit_fran').click(function(){
           $('#desc1').val(obj.description);
           $('#latitude1').val(obj.lattitude);
           $('#longitude1').val(obj.logitude);
-         
+		  $('#existingImages').attr('src', '{{ asset('img/') }}/' + obj.image);
+
 					},
 					});	
 		}
@@ -1581,7 +1582,8 @@ $('.edit_fran').click(function(){
           $('#desc').val(obj.description);
           $('#latitude').val(obj.lattitude);
           $('#longitude').val(obj.logitude);
-         
+		  $('#existingImage').attr('src', '{{ asset('img/') }}/' + obj.image);
+
 					},
 					});	
 		}
@@ -3604,51 +3606,7 @@ $('#category_name').on('change', function () {
 
 
 
-	$(document).on('click', '.editstatus', function () {
-    var id = $(this).data('id');
-    console.log('Clicked on editstatus with id:', id);
-
-    var form = $('#statusEditForm');
-    var url = "{{ route('statusedit', '_id_') }}";
-    url = url.replace('_id_', id);
-    form.attr('action', url);
-
-    $('#stat_id').val(id);
-
-    $.ajax({
-        type: "POST",
-        url: "{{ route('orderfetch') }}",
-        data: {
-            "_token": "{{ csrf_token() }}",
-            "id": id
-        },
-        success: function (res) {
-            console.log('AJAX Response:', res);
-			
-
-            if (res.id) {
-                $('#order_status').val(res.order_status);
-                $('#paystatus').val(res.payment_status);
-                $('#total_amount').val(res.total_amount);
-
-                if (res.payment_status == 1) {
-                    $("#paystatus").prop("disabled", true);
-                } else {
-                    $("#paystatus").prop("disabled", false);
-                }
-
-                $('#editstatusmodal').modal('show');
-                console.log('Modal shown');
-            } else {
-                console.error('Order details not found');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
-});
-
+	
 
 
 $(document).ready(function () {
