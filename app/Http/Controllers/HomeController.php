@@ -398,7 +398,6 @@ class HomeController extends Controller
 		$timslot->book_type=$request->type1;
 		$timslot->adate=$request->date;
 		$timslot->timeslots=$request->time;
-		$timslot->model_id= 0;
 		$timslot->crm_status= 0;
 		
 		$timslot->save();
