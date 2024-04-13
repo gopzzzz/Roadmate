@@ -313,16 +313,16 @@
 
    <thead>
     <tr>
-    <th style="width: 5%; font-weight: normal;">Sl No.</th>
-        <th style="font-weight: normal;">Description</th>
-        <th style="font-weight: normal;">Unit Price</th>
-        <th style="font-weight: normal;">Quantity</th>
-        <th style="font-weight: normal;  ">HSN Code</th>
-        <th style="font-weight: normal;">SGST</th>
-        <th style="font-weight: normal;">CGST</th>
-        <th style="font-weight: normal; ">Tax.Amt</th>
+    <th style="  border: 2px solid #000000;">Sl No.</th>
+        <th style=" border: 2px solid #000000;">Description</th>
+        <th style=" border: 2px solid #000000;">Unit Price</th>
+        <th style=" border: 2px solid #000000;">Quantity</th>
+        <th style=" border: 2px solid #000000;  ">HSN Code</th>
+        <th style=" border: 2px solid #000000;">SGST</th>
+        <th style=" border: 2px solid #000000;">CGST</th>
+        <th style=" border: 2px solid #000000; ">Tax.Amt</th>
 
-        <th style="font-weight: normal;" colspan="4">Amount</th>
+        <th style=" border: 2px solid #000000;" colspan="4">Amount</th>
     </tr>
 </thead>
 <tbody>
@@ -343,16 +343,16 @@
    
     @endphp
     <tr> 
-        <td>{{$i}}</td>
-        <td><b>{{$key->product_name}}</b></td>
-        <td>{{$unitprice}}</td>
-        <td style="text-align: right;"><b>{{$key->qty}}</b></td>
-        <td style="text-align: right;">{{$key->hsncode}}  </td>
+        <td style="border-right: 2px solid #000000;border-left: 2px solid #000000; ">{{$i}}</td>
+        <td style=" border: 2px solid #000000;">{{$key->product_name}}</td>
+        <td style="text-align: right; border: 2px solid #000000;">{{$unitprice}}</td>
+        <td style="text-align: right; border: 2px solid #000000;">{{$key->qty}}</td>
+        <td style="text-align: right; border: 2px solid #000000;">{{$key->hsncode}}  </td>
 
-        <td style="text-align: right;">{{$key->cgst}} %</td>
-        <td style="text-align: right;">{{$key->igst}} %</td>
-        <td style="text-align: right;" ><b>{{$taxamount * $key->qty}}</b></td>
-        <td style="text-align: right;"><b> {{$key->qty*$key->offer_amount}}</b></td>
+        <td style="text-align: right; border: 2px solid #000000;">{{$key->cgst}} %</td>
+        <td style="text-align: right; border: 2px solid #000000;">{{$key->igst}} %</td>
+        <td style="text-align: right; border-right: 2px solid #000000;" >{{$taxamount * $key->qty}}</td>
+        <td style="text-align: right; border-right: 2px solid #000000;"> {{$key->qty*$key->offer_amount}}</td>
 
     </tr>
 </tbody>
@@ -367,7 +367,7 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
                 </tbody>
            
                 <tr class="total-row">
-                <td></td>
+                <td style="border-right: 2px solid #000000; border-bottom: 2px solid #000000;border-left: 2px solid #000000; "></td>
                     <td style="border: 2px solid #000000;">Total</td>
                     <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000";></td>
@@ -375,8 +375,8 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
 
                     <td style="border: 2px solid #000000";>Total SGST</td>
                     <td style="border: 2px solid #000000";>Total CGST</td>
-                    <td></td>
-                    <td></td>
+                    <td style="border-right: 2px solid #000000; border-bottom: 2px solid #000000;" ></td>
+                    <td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000;"></td>
                     
                 </tr>
          
@@ -385,20 +385,20 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
            
        
   <tr  style="text-align: right;" colspan="4">
-    <td  style="text-align: right;  border-right: none;" colspan="5"><strong><span style="color: grey;"><b>SUBTOTAL:</b></span></strong></td>
+    <td  style="text-align: right;  border-right: none;" colspan="5"><strong><b>SUBTOTAL:</span></strong></td>
     <td  style="text-align: right; border-left: none;" colspan="4"><span class="highlight-back">₹{{ number_format($subtotal,2) }}</span></td>
   </tr>
   <tr  style="text-align: right;">
-    <td  style="text-align: right;  border-right: none;" colspan="5"><strong><span style="color: grey;"><b>DELIVERY CHARGE:</b></span></strong></td>
+    <td  style="text-align: right;  border-right: none;" colspan="5"><strong><b>DELIVERY CHARGE:</b></strong></td>
     <td  style="text-align: right; border-left: none;" colspan="4"><span class="highlight-back">{{ $key->shipping_charge }}</span></td>
   </tr>
   <tr  style="text-align: right;" colspan="4">
-    <td  style="text-align: right;  border-right: none;" colspan="5"><strong><span style="color: grey;"><b>(TAX RATE):</b></span></strong></td>
+    <td  style="text-align: right;  border-right: none;" colspan="5"><strong><b>(TAX RATE):</b></strong></td>
     <td  style="text-align: right; border-left: none;"  colspan="4"><span class="highlight-back">₹{{ number_format($taxableamount,2) }}</span></td>
   </tr>
   
   <tr  style="text-align: right;" colspan="4">
-    <td  style="text-align: right; border-right: none;"  colspan="5" ><strong><span style="color: grey;"><b>TOTAL:</b></span></strong></td>
+    <td  style="text-align: right; border-right: none;"  colspan="5" ><strong><b>TOTAL:</b></strong></td>
     <td  style="text-align: right; border-left: none;" colspan="4"><span class="highlight-back">₹{{ $totalsubtotal }}</span></td>
   </tr>
 
