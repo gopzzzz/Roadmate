@@ -259,7 +259,7 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
                 </tbody>
            
                 <tr class="total-row">
-                <td style="border-right: 2px solid #000000; border-bottom: 2px solid #000000;border-left: 2px solid #000000; "></td>
+                <td style="border: 2px solid #000000; "></td>
                     <td style="border: 2px solid #000000;">Total</td>
                     <td style="border: 2px solid #000000";></td>
                     <td style="border: 2px solid #000000; text-align: right;";><b>{{ $totalQuantity }} NOS</b></td>
@@ -267,8 +267,8 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
 
                     <td style="border: 2px solid #000000";>Total SGST</td>
                     <td style="border: 2px solid #000000";>Total CGST</td>
-                    <td style="border-right: 2px solid #000000; border-bottom: 2px solid #000000;" ></td>
-                    <td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000;"></td>
+                    <td style="border: 2px solid #000000;" ></td>
+                    <td style="border: 2px solid #000000;"></td>
                     
                 </tr>
               
