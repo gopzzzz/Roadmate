@@ -35,9 +35,9 @@
         }
 
         .invoice {
-            width: 1000px;
+            width: 1100px;
             margin: 1px auto;
-            padding: 20px;
+            padding: 15px;
             border: 1px solid #ccc;
             background-color: #ffffff;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -56,23 +56,10 @@
             font-weight: bold;
             color: #808080;
         }
-
-        .company-logo {
-            text-align: center;
-            margin-top: 10px;
-
-        }
-
-        .company-logo img {
-       
-            max-width: 210px; /* Adjust the size of the logo */
-            height: 85px;
-        }
-
         .invoice-details {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .left-details,
@@ -102,35 +89,12 @@
 
         text-align:left;/* Adjust spacing here */
     }
-
-
-    .highlight-background {
-        background-color: #D3D3D3;
-        padding: 2px;
-        border-radius: 1px;
-        display: inline-block;
-        width: 250px;
-        text-align:right;
-    }
-
     .highlight-back{
         background-color: #f0f0f0;
-        padding: 2px;
-        border-radius: 2px;
         display: inline-block;
-        width: 250px;
+        width: 200px;
         text-align:right;
     }
-
-    .highlight {
-        background-color: #ffffff;
-       
-        border-radius: 1px;
-        display: inline-block;
-        width: 250px;
-        text-align:right;
-    }
-   
     strong {
         display: inline-block;
         width: 150px;
@@ -157,26 +121,17 @@
     width: 90%;
 }
 
-.left-container, .right-container {
-    width: 50%;
-}
-
-        .billed-to p.details-label,
-        .ship-to p.details-label {
-            margin-bottom: 0;
-        }
-
         .invoice-items {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             
             
         }
 
         .invoice-items th {
             border: 1px solid #000000;
-            padding: 12px;
+            padding: 5px;
           
         }
          .invoice-items td {
@@ -184,84 +139,22 @@
             border-left:1px solid #000000;
             border-right:1px solid #000000;
             
-            padding: 12px;
+            padding: 5px;
             text-align: left;
             
         }
-
-      
-
         .total-row td {
             border-top: 1px solid #000000;
             border-right: 1px solid #000000;
             border-bottom: 1px solid #000000;
             
         }
-
-        .invoice-total {
-            float: right;
-            text-align: left;
-            margin-top: 10px;
-        }
-
-        .notes {
-            margin-top: 20px;
-        }
-
-        .notes p {
-            margin: 0;
-            margin-bottom: 2px;
-        }
-
-        .special-notes {
-            width: 98%;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #f8f9fa;
-           
-            margin-bottom: 5px; 
-            height: 160px; /* Adjust the height as needed */
-        }
-
-        .special-notess {
-            width: 98%;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #FCF55F;
-            margin-top: 12px;
-            height: 35px; /* Adjust the height as needed */
-        }
-
         .invoice-items th:first-child {
     border: 1px solid black; /* Adjust border style as needed */
 }
 
-        .bank-details {
-            width: 48%;
-            border-top: 1px solid #ccc;
-            padding-top: 20px;    
-            
-            margin-top: 20px;
-        }
-
-        .bank-details p {
-            margin: 0;
-            margin-bottom: 5px;
-        }
-        .thank-you {
-            
-            font-size: 15px;
-            margin-top: 10px;
-        }
-        
-
-        .company-details {
-            text-align: center;
-            margin-top: 20px;
-            width: 92%;
-            padding: 10px;
-            background-color: #f0f0f0;
-        }
+       
+       
     </style>
 </head>
 
@@ -272,8 +165,7 @@
 <div class="invoice-header">
             <div> <p style="font-size:20px;"><b>Tax Invoice</div></b></p>
         </div>
-        <div id="qrcode"></div>
-<br>
+
 
 
            
@@ -285,8 +177,8 @@
     <tr><th colspan="3" rowspan="3" style="font-weight: normal;"><b>RoadMate</b><br>
 4th Floor, Kinfra Hi-Tech Park<br>
 South Kalamassery, Kalamassery,<br>Ernakulam<br>Kerala-683503, India<br>GSTIN/UIN: 32AAHCN5463A1ZU</br>State Name: Kerala, Code: 32</br>
-E-Mail: info@roadmate.in</th><th  colspan="3" style="font-weight: normal;">Invoice No.<br><b>RM/{{$key->invoice_number}}/{{ date('y') }}</b></th>
-<th  colspan="3" style="font-weight: normal;">Dated<br><b>{{ $key->order_date }}</b></th></tr>
+E-Mail:<a href="mailto:info@roadmate.in" style="color: #3364FF; font-family: Arial; " target="_blank">info@roadmate.in</a></th><th  colspan="3" style="font-weight: normal;">Invoice No.<br><b>RM/{{$key->invoice_number}}/{{ date('y') }}</b></th>
+<th colspan="3" style="font-weight: normal;">Dated<br><b>{{ date('j-M-Y', strtotime($key->order_date)) }}</b></th>
 <tr>
 <th colspan="3" style="font-weight: normal;">Delivery Note<br><br></th>
 <th colspan="3" style="font-weight: normal;">Mode/Terms of Payment<br><br></th>
@@ -312,7 +204,7 @@ E-Mail: info@roadmate.in</th><th  colspan="3" style="font-weight: normal;">Invoi
 
 <thead>
     <tr>
-    <th style="  border: 2px solid #000000;">Sl No.</th>
+    <th style="border: 2px solid #000000;">Sl No.</th>
         <th style=" border: 2px solid #000000;">Description</th>
         <th style=" border: 2px solid #000000;">Unit Price</th>
         <th style=" border: 2px solid #000000;">Quantity</th>
@@ -329,7 +221,8 @@ E-Mail: info@roadmate.in</th><th  colspan="3" style="font-weight: normal;">Invoi
     $sum = 0;
     $taxableamount = 0;
     $subtotal = 0;
-   
+    $totalQuantity = 0;
+
 @endphp  
 
 @foreach($salebill as $key)
@@ -338,18 +231,20 @@ E-Mail: info@roadmate.in</th><th  colspan="3" style="font-weight: normal;">Invoi
         $taxamount = ($unitprice * ($key->tax / 100));
         $unitprice = number_format($unitprice, 2, '.', '');
         $taxamount = number_format($taxamount, 2, '.', '');
-   
-    @endphp
-    <tr> 
-    <td style="border-right: 2px solid #000000;border-left: 2px solid #000000; ">{{$i}}</td>
-        <td style=" border: 2px solid #000000;">{{$key->product_name}}</td>
-        <td style="text-align: right; border: 2px solid #000000;">{{$unitprice}}</td>
-        <td style="text-align: right; border: 2px solid #000000;">{{$key->qty}}</td>
-        <td style="text-align: right; border: 2px solid #000000;">{{$key->hsncode}}  </td>
+        $totalQuantity += $key->qty;
 
-        <td style="text-align: right; border: 2px solid #000000;">{{$key->tax}} %</td>
-        <td style="text-align: right; border-right: 2px solid #000000;" >{{$taxamount * $key->qty}}</td>
-        <td style="text-align: right; border-right: 2px solid #000000;"> {{$key->qty*$key->offer_amount}}</td>
+    @endphp
+ 
+    <tr> 
+        <td style="border-right: 2px solid #000000;border-left: 2px solid #000000; ">{{$i}}</td>
+        <td style=" border-right: 2px solid #000000;border-left: 2px solid #000000;">{{$key->product_name}}</td>
+        <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;">{{$unitprice}}</td>
+        <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;"><b>{{$key->qty}} NOS</b></td>
+        <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;">{{$key->hsncode}}  </td>
+
+        <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;">{{$key->tax}} %</td>
+        <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;" >{{$taxamount * $key->qty}}</td>
+        <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;"> {{$key->qty*$key->offer_amount}}</td>
 
     </tr>
 </tbody>
@@ -367,7 +262,7 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
                 <td style="border-right: 2px solid #000000; border-bottom: 2px solid #000000;border-left: 2px solid #000000; "></td>
                     <td style="border: 2px solid #000000;">Total</td>
                     <td style="border: 2px solid #000000";></td>
-                    <td style="border: 2px solid #000000";></td>
+                    <td style="border: 2px solid #000000; text-align: right;";><b>{{ $totalQuantity }} NOS</b></td>
                     <td style="border: 2px solid #000000";></td>
 
                     <td style="border: 2px solid #000000";></td>
@@ -407,11 +302,11 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
     <tr>    <td style="font-weight: normal; text-align: left; font-size: 16px; "  colspan="9"><b>INR {{ numberToWords($totalsubtotal) }} Only</b></td> </tr>   
          
     <tr>
-    <!-- QR code image on the right side -->
-    <th style="text-align:left; border-bottom: none; border-right: none;"  colspan="1">
+    <td style="text-align:left; border-bottom: none; border-right: 1px solid #000000;"  colspan="9">
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Total%20Amount%3A%20{{ $totalsubtotal }}" alt="QR Code">
         
-    </th>     <th  colspan="8" style="border-bottom: none; border-left: none;"></th>
+    </td>
+   </tr>
         
           <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
           <tr>    <td style="font-weight: normal; text-align: left; border-bottom: 1px solid #000000;"  colspan="9">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td> </tr>   
