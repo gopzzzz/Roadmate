@@ -210,7 +210,7 @@
           
            <td>{{ $key->phone }}</td>
            <td>Area : {{ $key->area }} ,  {{ $key->area1 }}<br>{{ $key->district }},{{ $key->state }} <br>{{ $key->country }},{{ $key->pincode }}</td>
-           <td>{{ $key->total_amount }}</td>
+           <td>{{ $key->total_amount + $key->shipping_charge}}</td>
            
            <td>      @if($key->payment_mode==0) Cash on Delivery @else Online @endif
            </td>

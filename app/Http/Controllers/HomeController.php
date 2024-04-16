@@ -5420,6 +5420,8 @@ public function productSearch(Request $request)
 			)->orderby('tbl_cancel_orders.id','DESC')->get();
 			return view('salesreturn',compact('role','sales'));
 		}
+
+		
 		public function b2csalesreturn(){
 			$role = Auth::user()->user_type;
 			$sales=DB::table('tbl_b2c_cancel_orders')

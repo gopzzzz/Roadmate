@@ -252,14 +252,14 @@
         <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;">{{$key->cgst}} %</td>
         <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;">{{$key->igst}} %</td>
         <td style="text-align: right; border-right: 2px solid #000000;border-left: 2px solid #000000;" >{{$taxamount * $key->qty}}</td>
-        <td style="text-align: right; border-right: 2px solid #000000;"> {{$key->qty*$key->selling_rate}}</td>
+        <td style="text-align: right; border-right: 2px solid #000000;"> {{$key->qty*$key->selling_rate+ $key->shipping_charge}}</td>
 
     </tr>
 </tbody>
      @php 
                 $sum += $key->qty*$key->selling_rate;
 $taxableamount += $taxamount*$key->qty;
-$subtotal+= $key->qty*$unitprice;
+$subtotal+= $key->qty*$unitprice+ $key->shipping_charge;
 $i++;
 $totalsubtotal= ($sum + $key->shipping_charge) ;
                 @endphp

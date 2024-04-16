@@ -60,7 +60,6 @@ class B2cController extends Controller
     return view('B2C.b2corders', ['orders' => $orders, 'role' => $role, 'statusFilter' => $statusFilter, 'searchQuery' => $searchQuery]);
 }
 
-
 	
 
 
