@@ -10,17 +10,19 @@
     <title>Invoice</title>
     <style>
         
-          /* Style the button for both screen and print media */
-          .print-button {
-            background: linear-gradient(45deg, #d22d2d, #d22d2d); /* Use a gradient background with a mix of two colors */
-            color: #fff;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            float: right; /* Align the button to the right */
-        }
+        .print-button {
+    background: linear-gradient(45deg, #d22d2d, #d22d2d);
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    position: absolute; /* Position the button */
+    top: 50px; /* Adjust the top position as needed */
+    right: 20px; /* Adjust the right position as needed */
+    z-index: 9999; /* Ensure it stays on top of other elements */
+}
      
         /* Style the button for print media */
         @media print {
