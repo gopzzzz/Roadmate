@@ -312,7 +312,9 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
         
     </td>
    </tr>
-        
+   <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;"  colspan="1"><b>Scan to Pay</b></td>
+   <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr>   
+
           <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
           <tr>    <td style="font-weight: normal; text-align: left; border-bottom: 1px solid #000000;"  colspan="9">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td> </tr>   
 
