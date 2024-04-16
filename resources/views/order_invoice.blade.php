@@ -345,7 +345,7 @@
         $unitprice = number_format($unitprice, 2, '.', '');
         $taxamount = number_format($taxamount, 2, '.', '');
         $totalQuantity += $key->qty;
-        $totalSum += $key->qty * $key->offer_amount;
+        $totalSum += $key->qty * $key->offer_amount+ $key->shipping_charge;
         $totalcgst=($totalSum * ($key->igst / 100));
         $totalsgst=($totalSum * ($key->cgst / 100));
         $totalsubtotal=($totalSum + $totalcgst + $totalsgst);
@@ -359,7 +359,7 @@
         <td style="text-align: right;"><b>{{$key->qty}} NOS</b></td>
         <td style="text-align: right;">{{$key->offer_amount}}</td>
         <td style="text-align: right;">NOS</td>
-        <td style="text-align: right;" colspan="2"><b>{{$key->qty * $key->offer_amount}}</b></td>
+        <td style="text-align: right;" colspan="2"><b>{{$key->qty * $key->offer_amount+ $key->shipping_charge}}</b></td>
     </tr>
 @endforeach
 
