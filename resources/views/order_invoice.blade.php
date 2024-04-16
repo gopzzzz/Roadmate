@@ -30,6 +30,9 @@
             .print-button {
                 display: none;
             }
+            .main-footer {
+                display: none;
+            }
         }
         body {
             font-family: Arial, sans-serif;
@@ -385,8 +388,7 @@ function numberToWords($number) {
 
 
 ?>
-         
-        
+     
     </div>
     
 </body>

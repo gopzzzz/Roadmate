@@ -23,9 +23,13 @@
     right: 20px; /* Adjust the right position as needed */
     z-index: 9999; /* Ensure it stays on top of other elements */
 }
+
         /* Style the button for print media */
         @media print {
             .print-button {
+                display: none;
+            }
+            .main-footer {
                 display: none;
             }
         }
@@ -162,7 +166,7 @@
 <body>
 <button class="print-button" onclick="printPage()">Print Page</button>
     <div class="invoice">
-  
+    
 <div class="invoice-header">
             <div> <p style="font-size:20px;"><b>Tax Invoice</div></b></p>
         </div>
@@ -383,7 +387,8 @@ return $words;
 
 ?>
    
-  
+   
+ 
 </div>
 
 </body>
