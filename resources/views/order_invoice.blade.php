@@ -166,6 +166,7 @@
 
 <body>
 <button class="print-button" onclick="printPage()">Print Page</button>
+<br><br>
     <div class="invoice">
   
 <div class="invoice-header">
