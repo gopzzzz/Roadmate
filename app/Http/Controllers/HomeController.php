@@ -4268,11 +4268,21 @@ public function statusedit(Request $request, $order_id)
         return redirect('sale_list')->with('error', 'Invalid total_amount received.');
     }
 
-    $order = Tbl_order_masters::where('id',$order_id)->first();
+    $order = Tbl_order_masters::where('id', $order_id)->first();
 
     if ($order) {
         $order->order_status = $request->order_status;
-        
+
+        // Update shipping_date if order status is Shipped
+        if ($request->order_status == 2) {
+            $order->shipping_date = date('Y-m-d');
+        }
+
+        // Update delivery_date if order status is Delivered
+        if ($request->order_status == 3) {
+            $order->delivery_date = date('Y-m-d');
+        }
+
         if ($request->has('paystatus') && $request->paystatus !== null) {
             $order->payment_status = $request->paystatus;
         } elseif ($order->payment_status === null) {
@@ -4281,35 +4291,33 @@ public function statusedit(Request $request, $order_id)
 
         if ($request->paystatus == '1') {
 
-			if($order->wallet_redeem_id==0){
-				$percentage = ($total_amount * 10) / 100;
-				\Log::info('Calculated Percentage: ' . $percentage);
-	
-				$shop_id = $order->shop_id;
-	
-				$wallet = Tbl_wallets::where('id', $shop_id)->first();
-	
-				if ($wallet) {
-					$wallet->wallet_amount += $wallet->amount + $percentage;
-					$wallet->save();
-					\Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
-				} else {
-					$w = new Tbl_wallets;
-					$w->shop_id = $shop_id;
-					$w->wallet_amount += $percentage;
-					$w->save();
-				}
-	
-				$wh = new Tbl_wallet_transactions;
-				$wh->amount = $percentage;
-				$wh->u_type =2;
+            if ($order->wallet_redeem_id == 0) {
+                $percentage = ($total_amount * 10) / 100;
+                \Log::info('Calculated Percentage: ' . $percentage);
 
-				$wh->type = 1;
-				$wh->shop_id = $shop_id;
-				$wh->save();
-			}
+                $shop_id = $order->shop_id;
 
-           
+                $wallet = Tbl_wallets::where('id', $shop_id)->first();
+
+                if ($wallet) {
+                    $wallet->wallet_amount += $wallet->amount + $percentage;
+                    $wallet->save();
+                    \Log::info('Wallet Amount Updated: ' . $wallet->wallet_amount);
+                } else {
+                    $w = new Tbl_wallets;
+                    $w->shop_id = $shop_id;
+                    $w->wallet_amount += $percentage;
+                    $w->save();
+                }
+
+                $wh = new Tbl_wallet_transactions;
+                $wh->amount = $percentage;
+                $wh->u_type = 2;
+
+                $wh->type = 1;
+                $wh->shop_id = $shop_id;
+                $wh->save();
+            }
         }
 
         $order->save();
@@ -4319,6 +4327,7 @@ public function statusedit(Request $request, $order_id)
         return redirect('sale_list')->with('error', 'Order not found.');
     }
 }
+
 
 	public function sale_order_master($orderId) {
 
@@ -4483,12 +4492,12 @@ public function statusedit(Request $request, $order_id)
 				  
 					Tbl_order_masters::where('id', $request->idd)->update([
 						'sale_status' => 1,
-						'order_status' => 1
+						'order_status' => 1,
+						'confirm_date' => date('Y-m-d')
 					]);
 		
 				  
-					// DB::commit();
-		
+				
 				
 					Session::flash('success', 'Sale Invoice generated successfully!');
 				} else {
