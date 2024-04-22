@@ -308,14 +308,14 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
     </tr>
     <tr>    <td style="font-weight: normal; text-align: left; font-size: 16px; "  colspan="9"><b>INR {{ numberToWords($totalsubtotal) }} Only</b></td> </tr>   
          
-    <tr>
+    <!-- <tr>
     <td style="text-align:left; border-bottom: none; border-right: 1px solid #000000;"  colspan="9">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Total%20Amount%3A%20{{ $totalsubtotal }}" alt="QR Code">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Total%20Amount%3A%20" alt="QR Code">
         
     </td>
-   </tr>
-   <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;"  colspan="1"><b>Scan to Pay</b></td>
-   <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr> 
+   </tr> -->
+   <!-- <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;"  colspan="1"><b>Scan to Pay</b></td>
+   <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr>  -->
    
               
                 <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
