@@ -19,8 +19,7 @@
     border: none;
     border-radius: 5px;
     position: absolute; /* Position the button */
-    top: 50px; /* Adjust the top position as needed */
-    right: 20px; /* Adjust the right position as needed */
+    top: 60px; /* Adjust the top position as needed */
     z-index: 9999; /* Ensure it stays on top of other elements */
 }
      
