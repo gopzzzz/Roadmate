@@ -4273,14 +4273,13 @@ public function statusedit(Request $request, $order_id)
     if ($order) {
         $order->order_status = $request->order_status;
 
-        // Update shipping_date if order status is Shipped
-        if ($request->order_status == 2) {
-            $order->shipping_date = date('Y-m-d');
+		if ($request->order_status == 2) {
+            $order->shipping_date = now(); // Set current date and time
         }
 
         // Update delivery_date if order status is Delivered
         if ($request->order_status == 3) {
-            $order->delivery_date = date('Y-m-d');
+            $order->delivery_date = now(); // Set current date and time
         }
 
         if ($request->has('paystatus') && $request->paystatus !== null) {
@@ -4493,8 +4492,9 @@ public function statusedit(Request $request, $order_id)
 					Tbl_order_masters::where('id', $request->idd)->update([
 						'sale_status' => 1,
 						'order_status' => 1,
-						'confirm_date' => date('Y-m-d')
+						'confirm_date' => now() // Set current date and time
 					]);
+					
 		
 				  
 				
