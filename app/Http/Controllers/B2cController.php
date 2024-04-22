@@ -172,7 +172,8 @@ public function b2csale_orderinsert(Request $request)
 		
 					
 					Tbl_b2corders::where('id', $request->idd)->update(['sale_status' => 1,
-					'order_status' => 1
+					'order_status' => 1,
+					'confirm_date' => date('Y-m-d')
 				]);
 		
 					
@@ -356,6 +357,15 @@ public function b2cstatusedit(Request $request, $order_id)
     if ($order) {
         $order->order_status = $request->order_status;
         
+		// Update shipping_date if order status is Shipped
+        if ($request->order_status == 2) {
+            $order->shipping_date = date('Y-m-d');
+        }
+
+        // Update delivery_date if order status is Delivered
+        if ($request->order_status == 3) {
+            $order->delivery_date = date('Y-m-d');
+        }
         if ($request->has('paystatus') && $request->paystatus !== null) {
             $order->payment_status = $request->paystatus;
         } elseif ($order->payment_status === null) {
