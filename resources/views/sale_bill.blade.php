@@ -22,17 +22,17 @@
     top: 60px; /* Adjust the top position as needed */
     z-index: 9999; /* Ensure it stays on top of other elements */
 }
+      /* Style the button for print media */
+      @media print {
+          .print-button {
+              display: none;
+          }
+          .main-footer {
+                display: none;
+            }
+      }
 
-        /* Style the button for print media */
-        @media print {
-            .print-button {
-                display: none;
-            }
-            .main-footer {
-                display: none;
-            }
-        }
-        body {
+     body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2; 
             font-size: 15px; 
@@ -163,8 +163,11 @@
 </head>
 
 <body>
-<button class="print-button" onclick="printPage()">Print Page</button>
+<button class="print-button" onclick="window.print()">Print Page</button>
 <br><br>
+<div class="print-content">
+  
+
     <div class="invoice">
     
 <div class="invoice-header">
@@ -392,7 +395,7 @@ return $words;
    
  
 </div>
-
+</div>
 </body>
 </div>
 
