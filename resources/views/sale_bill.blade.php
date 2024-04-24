@@ -278,10 +278,6 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
                     <td style="border: 2px solid #000000;"></td>
                     
                 </tr>
-         
-         
-          
-           
        
                 <tr  style="text-align: right;" colspan="4">
     <td  style="text-align: right;  border-right: none;" colspan="5"><strong><b>SUBTOTAL:</span></strong></td>
@@ -317,6 +313,10 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
    </tr> -->
    <!-- <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;"  colspan="1"><b>Scan to Pay</b></td>
    <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr>    -->
+   <tr>    <td style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size: 16px; text-align: left;" colspan="9">Tax Amount(in words) : <b>INR {{ numberToWords($taxableamount) }} Only</b></td>
+</tr>
+
+   
 
           <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
           <tr>    <td style="font-weight: normal; text-align: left; border-bottom: 1px solid #000000;"  colspan="9">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td> </tr>   

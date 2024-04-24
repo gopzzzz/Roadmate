@@ -2029,20 +2029,15 @@ catch (Exception $e)
 }
 public function cancelorder(){
     
-    
-    $postdata = file_get_contents("php://input");					
+  $postdata = file_get_contents("php://input");					
 
   $json = str_replace(array("\t","\n"), "", $postdata);
 
  $data1 = json_decode($json);
 
  $order_id=$data1->trans_id;
-
-
  $orderstatus=Tbl_order_trans::find($order_id);
  $orderstatus->order_status=2;
- 
-
  if($orderstatus->save()){
 
     $id=DB::table('tbl_order_trans')->where('id',$order_id)->first();
@@ -2057,18 +2052,13 @@ public function cancelorder(){
     }
     $masterorder->tax_amount=0;
     $masterorder->save();
-   
-
     $cancel =new Tbl_cancel_orders;
     $cancel->type=1;
     $cancel->order_trans_id=$order_id;
     $cancel->qty=0;
     $cancel->comment=$data1->reason;
     $cancel->save();
-
-
-
-  $json_data = 1;
+$json_data = 1;
 
   echo json_encode(array('error' => false, "data" => $json_data, "message" => "Success"));
 

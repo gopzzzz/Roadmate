@@ -4369,11 +4369,6 @@ public function statusedit(Request $request, $order_id)
 		$role=Auth::user()->user_type;
 		return view('sale_order_master',compact('role','markk','saleorder','orderId','godown'));
 	    }
-	
-		
-		
-		
-
 		public function sale_orderinsert(Request $request)
 		{
 			try {
@@ -4386,18 +4381,12 @@ public function statusedit(Request $request, $order_id)
 					return redirect('sale_order_master')->withErrors(["Shop with name $request->shopname not found"]);
 				}
 		
-		
-						$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
+		$check=DB::table('tbl_sale_order_masters')->orderBy('id','DESC')->first();
 						if($check==null){
 						 $invoice=1000;
 						}else{
 							$invoice=$check->invoice_number+1;
 						}
-						
-		
-						
-		
-			
 				$saleMaster = new Tbl_sale_order_masters;
 				$saleMaster->shop_id = $shop->id;
 				$saleMaster->order_id = $request->idd;
@@ -4418,16 +4407,9 @@ public function statusedit(Request $request, $order_id)
 			   
 				$saleMaster->order_date = $request->orderdate;
 				
-		
-			
-				
-		
 				if ($saleMaster->save()) {
 		
 					//echo "hi";exit;
-		
-					
-				  
 					foreach ($request->proid as $index => $proid) {
 		
 						
@@ -5405,7 +5387,7 @@ public function productSearch(Request $request)
 		)
 		->get();
 
-		
+		  
 	return response()->json($products);
 }
 
@@ -5423,6 +5405,7 @@ public function productSearch(Request $request)
 				'tbl_brand_products.product_name',
 				'tbl_order_masters.order_id',
 				'tbl_order_trans.offer_amount',
+				'tbl_order_trans.qty as quantity',
 				'tbl_order_trans.price',
 				'tbl_order_masters.payment_status'
 

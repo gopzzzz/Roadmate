@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
+
         
         .print-button {
     background: linear-gradient(45deg, #d22d2d, #d22d2d);
@@ -22,7 +23,6 @@
     top: 60px; /* Adjust the top position as needed */
     z-index: 9999; /* Ensure it stays on top of other elements */
 }
-
      
         /* Style the button for print media */
         @media print {
@@ -312,10 +312,11 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Total%20Amount%3A%20" alt="QR Code">
         
     </td>
-   </tr> -->
-   <!-- <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;"  colspan="1"><b>Scan to Pay</b></td>
+   </tr>  -->
+   <!-- <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;" colspan="1"><b>Scan to Pay</b></td>
    <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr>  -->
-   
+   <tr>    <td style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size: 16px; text-align: left;" colspan="9">Tax Amount(in words) : <b>INR {{ numberToWords($taxableamount) }} Only</b></td>
+</tr>
               
                 <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
                 <tr>    <td style="font-weight: normal; text-align: left; border-bottom: 1px solid #000000;"  colspan="9">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td> </tr>   
@@ -336,7 +337,7 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
     </script>
  <?php
 function numberToWords($number) {
-    // Define arrays for words
+   
     $ones = array(
         0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
         10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen', 16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
@@ -348,7 +349,7 @@ function numberToWords($number) {
         '', 'One Hundred', 'Two Hundred', 'Three Hundred', 'Four Hundred', 'Five Hundred', 'Six Hundred', 'Seven Hundred', 'Eight Hundred', 'Nine Hundred'
     );
 
-    // Split the number into integer and fractional parts
+  
     $parts = explode('.', $number);
     $integerPart = $parts[0];
     $fractionalPart = isset($parts[1]) ? $parts[1] : '';
@@ -375,22 +376,34 @@ function numberToWords($number) {
         $words .= $ones[$num] . ' ';
     }
 
-    // Add "and" after the point if there's anything left
+   
     if ($fractionalPart != '') {
         $words .= 'and ';
     }
 
-    // Convert the fractional part if it exists
     if ($fractionalPart != '') {
         $words .= numberToWords($fractionalPart) . ' Paise';
     }
 
     return $words;
 }
+?> 
+<script>
+function adjustInvoiceHeight() {
+    const invoice = document.querySelector('.invoice');
+    if (invoice) {
+        invoice.style.height = 'auto'; // Reset height to auto
+        const height = invoice.offsetHeight; // Get the height of the content
+        invoice.style.height = height + 'px'; // Set the height explicitly
+    }
+}
 
+// Call the function when the page is loaded
+window.addEventListener('load', adjustInvoiceHeight);
 
-?>
-     
+// Call the function again when the page is resized (optional)
+window.addEventListener('resize', adjustInvoiceHeight);
+</script>
     </div>
     
 </body>
