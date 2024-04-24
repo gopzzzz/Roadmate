@@ -163,7 +163,7 @@
 </head>
 
 <body>
-<button class="print-button" onclick="window.print()">Print Page</button>
+<button class="print-button" onclick="printPage()">Print Page</button>
 <br><br>
 <div class="print-content">
   
@@ -306,20 +306,22 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
     <tr>    <td style="font-weight: normal; text-align: left; font-size: 16px; "  colspan="9"><b>INR {{ numberToWords($totalsubtotal) }} Only</b></td> </tr>   
          
     <?php
-// Define the generateUPIPaymentLink function
-function generateUPIPaymentLink($amount) {
-    // Replace placeholders with actual values
-    $upiLink = "upi://pay?pa=gopikagopz380-2@okaxis&pn=Gopika%20Velayudhan&mc=MerchantCode&tid=TransactionId&tr=TransactionReference&tn=TransactionNote&am=$amount";
-    return urlencode($upiLink);
+
+function generateUPIPaymentLink($totalsubtotal, $recipientUPI, $recipientName) {
+    return "upi://pay?pa=$recipientUPI&pn=$recipientName&am=$totalsubtotal";
 }
+$amount = $totalsubtotal;
+$recipientUPI = "gopikagopz380-2@okaxis";
+$recipientName = "Gopika Velayudhan";
+$upiPaymentLink = generateUPIPaymentLink($totalsubtotal, $recipientUPI, $recipientName);
 ?>
-
-
 <tr>
-    <td style="text-align:left; border-bottom: none; border-right: 1px solid #000000;"  colspan="9">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= generateUPIPaymentLink($totalsubtotal) ?>" alt="UPI QR Code">
+    <td style="text-align: left; border-bottom: none; border-right: 1px solid #000000;" colspan="9">
+      
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($upiPaymentLink) ?>" alt="UPI QR Code">
     </td>
-   </tr>  
+</tr>
+
    <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;" colspan="1"><b>Scan to Pay</b></td>
    <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr> 
    <tr>    <td style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size: 16px; text-align: left;" colspan="9">Tax Amount(in words) : <b>INR {{ numberToWords($taxableamount) }} Only</b></td>
@@ -339,11 +341,11 @@ function generateUPIPaymentLink($amount) {
 
 </table>
 
-  <script>
-  function printPage() {
-      window.print();
-  }
-</script>
+<script>
+        function printPage() {
+            window.print();
+        }
+    </script>
 <?php
 function numberToWords($number) {
 // Define arrays for words

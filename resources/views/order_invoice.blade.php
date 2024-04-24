@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
-
         
         .print-button {
     background: linear-gradient(45deg, #d22d2d, #d22d2d);
@@ -164,6 +163,7 @@
 </head>
 
 <body>
+
 <button class="print-button" onclick="printPage()">Print Page</button>
 <br><br>
     <div class="invoice">
@@ -307,21 +307,26 @@ $totalsubtotal= ($sum + $key->shipping_charge) ;
     </tr>
     <tr>    <td style="font-weight: normal; text-align: left; font-size: 16px; "  colspan="9"><b>INR {{ numberToWords($totalsubtotal) }} Only</b></td> </tr>   
          
-    <?php
-// Define the generateUPIPaymentLink function
-function generateUPIPaymentLink($amount) {
-    // Replace placeholders with actual values
-    $upiLink = "upi://pay?pa=gopikagopz380-2@okaxis&pn=Gopika%20Velayudhan&mc=MerchantCode&tid=TransactionId&tr=TransactionReference&tn=TransactionNote&am=$amount";
-    return urlencode($upiLink);
+
+   
+
+<?php
+
+function generateUPIPaymentLink($totalsubtotal, $recipientUPI, $recipientName) {
+    return "upi://pay?pa=$recipientUPI&pn=$recipientName&am=$totalsubtotal";
 }
+$amount = $totalsubtotal;
+$recipientUPI = "gopikagopz380-2@okaxis";
+$recipientName = "Gopika Velayudhan";
+$upiPaymentLink = generateUPIPaymentLink($totalsubtotal, $recipientUPI, $recipientName);
 ?>
-
-
 <tr>
-    <td style="text-align:left; border-bottom: none; border-right: 1px solid #000000;"  colspan="9">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= generateUPIPaymentLink($totalsubtotal) ?>" alt="UPI QR Code">
+    <td style="text-align: left; border-bottom: none; border-right: 1px solid #000000;" colspan="9">
+      
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($upiPaymentLink) ?>" alt="UPI QR Code">
     </td>
-   </tr>  
+</tr>
+
    <tr>    <td style="font-weight: normal; text-align: left;  border-right: none;" colspan="1"><b>Scan to Pay</b></td>
    <td style="font-weight: normal; text-align: left; border-left: none;"  colspan="8"></td> </tr> 
    <tr>    <td style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size: 16px; text-align: left;" colspan="9">Tax Amount(in words) : <b>INR {{ numberToWords($taxableamount) }} Only</b></td>
@@ -330,8 +335,8 @@ function generateUPIPaymentLink($amount) {
          <tr>    <td style="font-weight: normal; text-align: left;"  colspan="9"><u>Declaration</u></td> </tr>   
                 <tr>    <td style="font-weight: normal; text-align: left; border-bottom: 1px solid #000000;"  colspan="9">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td> </tr>   
 
-                <tr>    <td style="border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: none; font-weight: normal; text-align: left;" colspan="3">Customer's Seal and Signature<br><br><br></td>
-    <td style="border-right:1px solid #000000; border-bottom: 1px solid #000000; font-weight: normal; text-align: right;" colspan="6"><b>for RoadMate</b><br><br><br>Authorised Signatory</td>
+                <tr>    <td style="border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: none; font-weight: normal; text-align: left;" colspan="4">Customer's Seal and Signature<br><br><br></td>
+    <td style="border-right:1px solid #000000; border-bottom: 1px solid #000000; font-weight: normal; text-align: right;" colspan="5"><b>for RoadMate</b><br><br><br>Authorised Signatory</td>
 </tr>
         </table>
        <center>  This is a Computer Generated Invoice</center>
@@ -339,11 +344,7 @@ function generateUPIPaymentLink($amount) {
     
     </table>
    
-        <script>
-        function printPage() {
-            window.print();
-        }
-    </script>
+
  <?php
 function numberToWords($number) {
    
@@ -397,22 +398,11 @@ function numberToWords($number) {
     return $words;
 }
 ?> 
-<script>
-function adjustInvoiceHeight() {
-    const invoice = document.querySelector('.invoice');
-    if (invoice) {
-        invoice.style.height = 'auto'; // Reset height to auto
-        const height = invoice.offsetHeight; // Get the height of the content
-        invoice.style.height = height + 'px'; // Set the height explicitly
-    }
-}
-
-// Call the function when the page is loaded
-window.addEventListener('load', adjustInvoiceHeight);
-
-// Call the function again when the page is resized (optional)
-window.addEventListener('resize', adjustInvoiceHeight);
-</script>
+    <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
     </div>
     
 </body>
