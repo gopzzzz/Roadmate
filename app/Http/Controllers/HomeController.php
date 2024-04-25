@@ -5405,7 +5405,6 @@ public function productSearch(Request $request)
 				'tbl_brand_products.product_name',
 				'tbl_order_masters.order_id',
 				'tbl_order_trans.offer_amount',
-				'tbl_order_trans.qty as quantity',
 				'tbl_order_trans.price',
 				'tbl_order_masters.payment_status'
 
@@ -5425,7 +5424,6 @@ public function productSearch(Request $request)
 			->select(
 				'tbl_b2c_cancel_orders.*',
 				'tbl_brand_products.product_name',
-				'tbl_b2cordertrans.qty',
 				'tbl_b2corders.order_id',
 				'tbl_b2cordertrans.selling_rate as offer_amount',
 				'tbl_b2cordertrans.price',

@@ -265,7 +265,7 @@
            <td>{{ $key->product_name }}</td>
            <td>{{ $key->comment }}</td>
 
-           <td>{{ $key->quantity }}</td>
+           <td>{{ $key->qty }}</td>
            <td>{{ $key->offer_amount }}</td>
            <td>{{ $key->price }}</td>
            
