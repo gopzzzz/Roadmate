@@ -299,6 +299,8 @@ $i++;
                     <th>Item</th>
 
                     <th>Quantity</th>
+                    <th>Comment</th>
+
                     <th>Selling Rate</th>
                     
 

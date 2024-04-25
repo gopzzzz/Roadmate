@@ -22,17 +22,17 @@
     top: 60px; /* Adjust the top position as needed */
     z-index: 9999; /* Ensure it stays on top of other elements */
 }
-      /* Style the button for print media */
-      @media print {
-          .print-button {
-              display: none;
-          }
-          .main-footer {
+     
+        /* Style the button for print media */
+        @media print {
+            .print-button {
                 display: none;
             }
-      }
-
-     body {
+            .main-footer {
+                display: none;
+            }
+        }
+        body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2; 
             font-size: 15px; 
@@ -341,11 +341,7 @@ $upiPaymentLink = generateUPIPaymentLink($totalsubtotal, $recipientUPI, $recipie
 
 </table>
 
-<script>
-        function printPage() {
-            window.print();
-        }
-    </script>
+
 <?php
 function numberToWords($number) {
 // Define arrays for words
@@ -402,7 +398,11 @@ return $words;
 
 
 ?>
-   
+      <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
    
  
 </div>
